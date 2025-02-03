@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "js/**"
+      - js/**
+      - .github/workflows/js-checks.yaml
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
