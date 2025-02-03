@@ -1,0 +1,35 @@
+name: Go Checks
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - go/**
+      - .github/workflows/go-checks.yaml
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Go 1.23
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          working-directory: go/streams
+          version: latest
+          args: --enable gofumpt --timeout=3m
+
+      - name: Run Tests
+        working-directory: go/streams
+        run: go test ./... -timeout 3m -count=1

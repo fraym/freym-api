@@ -1,21 +1,20 @@
 {
     "name": "freym-api",
-    "private": true,
     "scripts": {
         "build": "turbo build",
         "dev": "turbo dev",
         "lint": "turbo lint",
         "fix": "turbo fix",
-        "proto": "npm run proto --prefix packages/proto"
+        "generate": "npm run generate --prefix packages/proto"
     },
     "engines": {
-        "node": ">=18"
+        "node": ">=20"
     },
     "workspaces": [
-        "packages/*"
+        "*"
     ],
     "devDependencies": {
-        "@becklyn/eslint": "^1.0.4",
+        "@becklyn/eslint": "^1.0.5",
         "@becklyn/prettier": "^2.1.1",
         "@becklyn/tsconfig": "^1.0.0",
         "np": "^10.2.0",

@@ -9,16 +9,16 @@
                 "dist/**"
             ]
         },
-        "lint": {
+        "release": {
             "dependsOn": [
-                "^lint"
+                "^release"
+            ],
+            "outputs": [
+                "dist/**"
             ]
         },
-        "fix": {
-            "dependsOn": [
-                "^fix"
-            ]
-        },
+        "lint": {},
+        "fix": {},
         "dev": {
             "cache": false,
             "persistent": true

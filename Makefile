@@ -4,4 +4,15 @@ help: ## Show this help.
 .PHONY: proto
 proto: ## Generates api code from .proto files
 	cd ./go/proto && ./proto.sh
-	# cd ./js && npm install && npm run proto
+	cd ./js && npm install && npm run proto
+
+lint: ## Lint the code
+	cd ./go/streams && golangci-lint run --enable gofumpt
+	cd js && npm run lint
+
+release:
+	## todo: use the release.md file to generate the release notes
+	## push all needed git tags
+	## publish release on npmjs
+	## publish release on github
+
