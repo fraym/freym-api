@@ -1,0 +1,20 @@
+syntax = "proto3";
+package freym.auth.management;
+import "auth/management/shared.proto";
+
+message CreateUserRequest {
+	string tenant_id = 1;
+	string login = 2;
+	string email = 3;
+	string display_name = 4;
+	string password = 5;
+	repeated string assigned_role_ids = 6;
+	bool active = 7;
+	int64 blocked_until = 8;
+	EventMetadata event_metadata = 9;
+}
+
+message CreateUserResponse {
+	string id = 1;
+	string set_initial_password_token= 2;
+}

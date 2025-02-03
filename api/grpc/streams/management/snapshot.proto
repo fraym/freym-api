@@ -1,0 +1,13 @@
+syntax = "proto3";
+package freym.streams.management;
+import "streams/management/publish.proto";
+
+message CreateStreamSnapshotRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string stream = 3;
+	string last_snapshotted_event_id = 4;
+	PublishEvent snapshot_event = 5;
+}
+
+message CreateStreamSnapshotResponse {}

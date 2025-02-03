@@ -1,0 +1,36 @@
+syntax = "proto3";
+package freym.projections.delivery;
+
+message AuthData {
+	string tenant_id = 1;
+	repeated string scopes = 2;
+	map<string, string> data = 3;
+}
+
+message DataFilter {
+	map<string, DataFieldFilter> fields = 1;
+	repeated DataFilter and = 2;
+	repeated DataFilter or = 3;
+}
+
+message DataFieldFilter {
+	string type = 1;
+	string operation = 2;
+	string value = 3;
+}
+
+message EventMetadata {
+	string causation_id = 1;
+	string correlation_id = 2;
+	int64 deployment_id = 3;
+	string user_id = 4;
+}
+
+message DataOrder {
+	string field = 1;
+	bool descending = 2;
+}
+
+message Data {
+	map<string, string> data = 1;
+}

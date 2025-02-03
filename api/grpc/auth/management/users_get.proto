@@ -1,0 +1,22 @@
+syntax = "proto3";
+package freym.auth.management;
+
+message GetUsersRequest {
+	string tenant_id = 1;
+}
+
+message GetUsersResponse {
+	repeated User users = 1;
+}
+
+message User {
+	string id = 1;
+	string login = 2;
+	string email = 3;
+	string display_name = 4;
+	repeated string assigned_role_ids = 5;
+	bool active = 6;
+	int64 failed_attempts = 7;
+	int64 last_attempt = 8;
+	int64 blocked_until = 9;
+}

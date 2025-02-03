@@ -1,0 +1,65 @@
+syntax = "proto3";
+package freym.migrations.management;
+
+message CreateDeploymentRequest {
+	string namespace = 1;
+	repeated string permissions = 2;
+	repeated ObjectType projection_types = 3;
+	repeated ObjectType crud_types = 4;
+	repeated ObjectType nested_types = 5;
+	repeated EnumType enum_types = 6;
+	repeated View views = 7;
+	DeploymentOptions options = 8;
+
+}
+
+message CreateDeploymentResponse {
+	int64 deployment_id = 1;
+	DeploymentTarget target = 2;
+}
+
+
+message DeploymentOptions {
+	bool dangerously_remove_gdpr_fields = 1;
+	repeated string skip_services = 2;
+}
+
+
+enum DeploymentTarget {
+	DEPLOYMENT_TARGET_BLUE = 0;
+	DEPLOYMENT_TARGET_GREEN = 1;
+}
+
+message ObjectType {
+	string name = 1;
+	repeated TypeDirective directives = 2;
+	repeated TypeField fields = 3;
+}
+
+message TypeDirective {
+	string name = 1;
+	repeated TypeArgument arguments = 2;
+}
+
+message TypeField {
+	string name = 1;
+	repeated string type = 2;
+	repeated TypeDirective directives = 3;
+}
+
+message TypeArgument {
+	string name = 1;
+	string value = 2;
+}
+
+message EnumType {
+	string name = 1;
+	repeated string values = 2;
+}
+
+message View {
+	string name = 1;
+	string sql = 2;
+	repeated TypeDirective directives = 3;
+	repeated TypeField fields = 4;
+}

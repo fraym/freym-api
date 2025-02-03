@@ -1,0 +1,12 @@
+syntax = "proto3";
+package freym.streams.management;
+import "streams/management/event.proto";
+
+message BackchannelEventRequest {
+	oneof payload {
+		Event broadcast = 1;
+		Event notice = 2;
+	}
+}
+
+message BackchannelEventResponse {}

@@ -1,0 +1,59 @@
+syntax = "proto3";
+package freym.streams.management;
+import "streams/management/event.proto";
+
+message SubscribeRequest {
+	// Events have to be requeued in case of:
+	// - connection is closed before Handled message is received
+	// - NotHandled message is received
+	oneof payload {
+		// If not received within timeout after stream is opened, the stream is closed by the server.
+		Subscribe subscribe = 1;
+		// The client sends a Handled message as soon as the current event of a tenants topic is successfully handled.
+		// The client sends a Handled message with error when it failed to handle the current event of a tenants topic.
+		// The server will panic if no subscriber is able to handle an event, this will increase awareness of implementation errors.
+		Handled handled = 2;
+	}
+}
+
+message Subscribe {
+	SubscribeMetadata metadata = 1;
+	repeated string topics = 2;
+}
+
+message SubscribeMetadata {
+	string group = 1;
+	string subscriber_id = 2;
+	// when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id.
+	int64 deployment_id = 3;
+}
+
+message Handled {
+	string tenant_id = 1;
+	string topic = 2;
+	string error = 3;
+}
+
+
+// responses
+message SubscribeResponse {
+	oneof payload {
+		Subscribed subscribed = 1;
+		Panic panic = 2;
+		Event event = 3;
+	}
+}
+
+// The server will send a Subscribed in response to a new subscription.
+// In case of errors the error field is populated with a corresponding error message.
+// If the client does not receive this message within 5 sek after sending the Subscribe message, the stream is closed by the client.
+message Subscribed {
+	// The client will close the stream and retry the subscription non empty errors.
+	string error = 1;
+}
+
+// The server will send a Panic message when no other subscription was able to sucessfully handle an event.
+// Clients offer hooks that allow apps to observe panics and perform actions.
+message Panic {
+	string reason = 1;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package freym.migrations.management;
+
+message GetDeploymentRequest {
+	int64 deployment_id = 1;
+}
+
+message GetDeploymentResponse {
+	repeated ServiceStatus components = 1;
+}
+
+message ServiceStatus {
+	string service_name = 1;
+	uint32 progress = 2;
+}

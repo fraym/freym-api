@@ -1,0 +1,15 @@
+syntax = "proto3";
+package freym.auth.management;
+
+message RoleScope {
+	string client_id = 1;
+	string scope_name = 2;
+}
+
+
+message EventMetadata {
+	string causation_id = 1;
+	string correlation_id = 2;
+	int64 deployment_id = 3;
+	string user_id = 4;
+}

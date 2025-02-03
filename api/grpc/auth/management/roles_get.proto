@@ -1,0 +1,16 @@
+syntax = "proto3";
+package freym.auth.management;
+import "auth/management/shared.proto";
+
+message GetRolesRequest {
+	string tenant_id = 1;
+}
+
+message GetRolesResponse {
+	repeated Role roles = 1;
+}
+
+message Role {
+	string id = 1;
+	repeated RoleScope allowed_scopes = 2;
+}

@@ -1,0 +1,64 @@
+syntax = "proto3";
+package freym.streams.management;
+
+message GetEventRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string id = 3;
+}
+
+message GetLastEventRequest {
+	string tenant_id = 1;
+	string topic = 2;
+}
+
+message GetLastEventByTypesRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	repeated string types = 3;
+}
+
+// The Event is sent from server to client:
+// - Order is preserved per tenant and topic combination
+// - Persisted Events are send sequentially: the next event of a tenant and topic combination is sent to the client after a Handled message
+message Event {
+	string tenant_id = 1;
+	string topic = 2;
+	string id = 3;
+	string type = 4;
+	string stream = 5;
+	string reason = 6;
+	EventOptions options = 7;
+	EventMetadata metadata = 8;
+	map<string, EventPayload> payload = 9;
+	int64 raised_at = 10;
+}
+
+message EventOptions {
+	// Broadcast events are 
+	// - not persisted
+	// - order is not guaranteed
+	// - received by every subscriber of every group
+	// - handling in clients is not guaranteed
+	bool broadcast = 1;
+}
+
+message EventMetadata {
+	string correlation_id = 1; 
+	string causation_id = 2;
+	int64 order_serial = 3;
+	string user_id = 4;
+	// when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id.
+	int64 deployment_id = 5;
+}
+
+message EventPayload {
+	string value = 1;
+	EventGdprValue gdpr = 2;
+}
+
+message EventGdprValue {
+	string id = 1;
+	string default = 2;
+	bool is_invalidated = 3;
+}

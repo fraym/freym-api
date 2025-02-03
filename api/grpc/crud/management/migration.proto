@@ -1,0 +1,69 @@
+syntax = "proto3";
+package freym.crud.management;
+
+message DeploySchemaRequest {
+	string namespace = 1;
+	repeated ObjectType projection_types = 2;
+	repeated ObjectType crud_types = 3;
+	repeated ObjectType nested_types = 4;
+	repeated EnumType enum_types = 5;
+	DeploymentOptions options = 6;
+}
+
+message DeploySchemaResponse {}
+
+message ConfirmSchemaRequest {
+	int64 deployment_id = 1;
+}
+
+message ConfirmSchemaResponse {}
+
+message RollbackSchemaRequest {
+	int64 deployment_id = 1;
+}
+
+message RollbackSchemaResponse {}
+
+message GetSchemaDeploymentRequest {
+	int64 deployment_id = 1;
+}
+
+message GetSchemaDeploymentResponse {
+	uint32 progress = 1;
+}
+
+message DeploymentOptions {
+	DeploymentTarget target = 1;
+}
+
+enum DeploymentTarget {
+	DEPLOYMENT_TARGET_BLUE = 0;
+	DEPLOYMENT_TARGET_GREEN = 1;
+}
+
+message ObjectType {
+	string name = 1;
+	repeated TypeDirective directives = 2;
+	repeated TypeField fields = 3;
+}
+
+message TypeDirective {
+	string name = 1;
+	repeated TypeArgument arguments = 2;
+}
+
+message TypeField {
+	string name = 1;
+	repeated string type = 2;
+	repeated TypeDirective directives = 3;
+}
+
+message TypeArgument {
+	string name = 1;
+	string value = 2;
+}
+
+message EnumType {
+	string name = 1;
+	repeated string values = 2;
+}

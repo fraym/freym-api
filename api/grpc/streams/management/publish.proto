@@ -1,0 +1,31 @@
+syntax = "proto3";
+package freym.streams.management;
+import "streams/management/event.proto";
+
+message PublishRequest {
+	string topic = 1;
+	repeated PublishEvent events = 2;
+}
+
+message PublishEvent {
+	string id = 1;
+	string tenantId = 2;
+	string type = 3;
+	string stream = 4;
+	string reason = 5;
+	EventOptions options = 6;
+	EventMetadata metadata = 7;
+	map<string, PublishEventPayload> payload = 8;
+}
+
+message PublishResponse {}
+
+message PublishEventPayload {
+	string value = 1;
+	PublishEventGdprValue gdpr = 2;
+}
+
+message PublishEventGdprValue {
+	string id = 1;
+	string default = 2;
+}

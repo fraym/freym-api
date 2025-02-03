@@ -1,0 +1,20 @@
+syntax = "proto3";
+package freym.projections.delivery;
+import "projections/delivery/shared.proto";
+
+message UpsertRequest {
+	string projection = 1;
+	AuthData auth = 2;
+	string data_id = 3;
+	map<string, string> payload = 4;
+	EventMetadata event_metadata = 5;
+}
+
+message UpsertResponse {
+	map<string, string> new_data = 1;
+	string id = 2;
+	repeated string validation_errors = 3;
+	map<string, string> field_validation_errors = 4;
+}
+
+

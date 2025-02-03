@@ -1,0 +1,10 @@
+syntax = "proto3";
+package freym.sync.management;
+
+message GetPeerNodesRequest {
+	string app = 1;
+}
+
+message GetPeerNodesResponse {
+	repeated string peer_node_ip = 1;
+}

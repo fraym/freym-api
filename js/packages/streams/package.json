@@ -1,0 +1,34 @@
+{
+    "name": "@fraym/streams",
+    "version": "0.10.5",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/proto",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/proto.git"
+    },
+    "description": "JS client implementation for Freyms streams service",
+    "scripts": {
+        "build": "npm run fix && rm -rf dist && tsc",
+        "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
+        "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\"",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@fraym/proto": "*",
+        "@grpc/grpc-js": "^1.12.5",
+        "uuid": "^11.0.5"
+    },
+    "devDependencies": {
+        "@types/uuid": "^10.0.0"
+    },
+    "prettier": "@becklyn/prettier"
+}

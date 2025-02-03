@@ -1,0 +1,18 @@
+syntax = "proto3";
+package freym.sync.management;
+import "sync/management/lease.proto";
+import "sync/management/peer_nodes.proto";
+import "sync/management/lock.proto";
+
+service Service {
+	rpc CreateLease(CreateLeaseRequest) returns (CreateLeaseResponse);
+	rpc KeepLease(KeepLeaseRequest) returns (KeepLeaseResponse);
+	rpc DropLease(DropLeaseRequest) returns (DropLeaseResponse);
+
+	rpc GetPeerNodes(GetPeerNodesRequest) returns (stream GetPeerNodesResponse);
+
+	rpc LocalLock(LocalLockRequest) returns (LocalLockResponse);
+	rpc LocalUnlock(LocalUnlockRequest) returns (LocalUnlockResponse);
+	rpc GlobalLock(GlobalLockRequest) returns (GlobalLockResponse);
+	rpc GlobalUnlock(GlobalUnlockRequest) returns (GlobalUnlockResponse);
+}

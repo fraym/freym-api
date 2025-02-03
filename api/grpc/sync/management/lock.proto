@@ -1,0 +1,36 @@
+syntax = "proto3";
+package freym.sync.management;
+
+message LocalLockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	string global_concern = 3;
+	string local_concern = 4;
+}
+
+message LocalLockResponse {}
+
+message LocalUnlockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	string global_concern = 3;
+	string local_concern = 4;
+}
+
+message LocalUnlockResponse {}
+
+message GlobalLockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	string global_concern = 3;
+}
+
+message GlobalLockResponse {}
+
+message GlobalUnlockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	string global_concern = 3;
+}
+
+message GlobalUnlockResponse {}

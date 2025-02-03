@@ -1,0 +1,16 @@
+syntax = "proto3";
+package freym.crud.delivery;
+import "crud/delivery/shared.proto";
+
+message DeleteRequest {
+	string type = 1;
+	AuthData auth = 2;
+	string id = 3;
+	DataFilter filter = 4;
+	EventMetadata event_metadata = 5;
+}
+
+message DeleteResponse {
+	int64 number_of_deleted_entries = 1;
+}
+ 

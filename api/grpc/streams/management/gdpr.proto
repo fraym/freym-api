@@ -1,0 +1,20 @@
+syntax = "proto3";
+package freym.streams.management;
+
+message IntroduceGdprOnEventFieldRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string event_id = 3;
+	string field_name = 4;
+	string default_value = 5;
+}
+
+message IntroduceGdprOnEventFieldResponse {}
+
+message InvalidateGdprRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string gdpr_id = 3;
+}
+
+message InvalidateGdprResponse {}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package freym.streams.management;
+
+message IsStreamEmptyRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string stream = 3;
+}
+
+message IsStreamEmptyResponse {
+	bool is_empty= 1;
+}

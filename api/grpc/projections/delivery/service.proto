@@ -1,0 +1,15 @@
+syntax = "proto3";
+package freym.projections.delivery;
+import "projections/delivery/get_data.proto";
+import "projections/delivery/get_view_data.proto";
+import "projections/delivery/upsert.proto";
+import "projections/delivery/delete.proto";
+
+service Service {
+	rpc GetData(GetDataRequest) returns (GetDataResponse);
+	rpc GetViewData(GetViewDataRequest) returns (GetViewDataResponse);
+	rpc GetDataList(GetDataListRequest) returns (GetDataListResponse);
+	rpc GetViewDataList(GetViewDataListRequest) returns (GetViewDataListResponse);
+	rpc Upsert(UpsertRequest) returns (UpsertResponse);
+	rpc Delete(DeleteRequest) returns (DeleteResponse);
+}

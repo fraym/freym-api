@@ -1,0 +1,9 @@
+package-lock.json
+/freym
+node_modules
+.idea
+.test
+*.tsbuildinfo
+/core
+.turbo
+dist

@@ -1,0 +1,18 @@
+syntax = "proto3";
+package freym.auth.management;
+import "auth/management/shared.proto";
+
+message UpdateUserRequest {
+	string tenant_id = 1;
+	string id = 2;
+	string login = 3;
+	string email = 4;
+	string display_name = 5;
+	string password = 6;
+	repeated string assigned_role_ids = 7;
+	bool active = 8;
+	int64 blocked_until = 9;
+	EventMetadata event_metadata = 10;
+}
+
+message UpdateUserResponse {}

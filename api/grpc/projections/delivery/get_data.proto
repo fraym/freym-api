@@ -1,0 +1,40 @@
+syntax = "proto3";
+package freym.projections.delivery;
+import "projections/delivery/shared.proto";
+
+message GetDataRequest {
+	string projection = 1;
+	AuthData auth = 2;
+	string data_id = 3;
+	DataFilter filter = 4;
+	bool return_empty_data_if_not_found = 5;
+	DataWait wait = 6;
+	bool use_strong_consistency = 7;
+}
+
+message GetDataResponse {
+	Data result = 1;
+}
+
+message GetDataListRequest {
+	string projection = 1;
+	AuthData auth = 2;
+	int64 limit = 3;
+	int64 page = 4;
+	DataFilter filter = 5;
+	repeated DataOrder order = 6;
+	bool use_strong_consistency = 7;
+}
+
+message GetDataListResponse {
+	repeated Data result = 1;
+	int64 limit = 2;
+	int64 page = 3;
+	int64 total = 4;
+}
+
+message DataWait {
+	DataFilter condition_filter = 1;
+	int64 timeout = 2;
+}
+

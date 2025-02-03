@@ -1,0 +1,18 @@
+syntax = "proto3";
+package freym.crud.delivery;
+import "crud/delivery/shared.proto";
+
+message CloneRequest {
+	string type = 1;
+	AuthData auth = 2;
+	string id = 3;
+	string newId = 4;
+	map<string, string> data = 5;
+	EventMetadata event_metadata = 6;
+} 
+
+message CloneResponse {
+	map<string, string> new_data = 1;
+	repeated string validation_errors = 2;
+	map<string, string> field_validation_errors = 3;
+}

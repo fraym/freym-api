@@ -1,0 +1,30 @@
+{
+    "name": "@fraym/proto",
+    "version": "0.29.1",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/proto",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/proto.git"
+    },
+    "description": "JS generated protobuf code for our Freym services",
+    "scripts": {
+        "build": "./proto.sh && npm run fix && rm -rf dist && tsc",
+        "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
+        "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\"",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@grpc/grpc-js": "^1.12.5",
+        "ts-proto": "^2.6.1"
+    },
+    "prettier": "@becklyn/prettier"
+}

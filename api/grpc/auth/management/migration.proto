@@ -1,0 +1,39 @@
+syntax = "proto3";
+package freym.auth.management;
+
+message DeploySchemaRequest {
+	string namespace = 1;
+	repeated string permissions = 2;
+	DeploymentOptions options = 3;
+}
+
+message DeploySchemaResponse {}
+
+message ConfirmSchemaRequest {
+	int64 deployment_id = 1;
+}
+
+message ConfirmSchemaResponse {}
+
+message RollbackSchemaRequest {
+	int64 deployment_id = 1;
+}
+
+message RollbackSchemaResponse {}
+
+message GetSchemaDeploymentRequest {
+	int64 deployment_id = 1;
+}
+
+message GetSchemaDeploymentResponse {
+	uint32 progress = 1;
+}
+
+message DeploymentOptions {
+	DeploymentTarget target = 1;
+}
+
+enum DeploymentTarget {
+	DEPLOYMENT_TARGET_BLUE = 0;
+	DEPLOYMENT_TARGET_GREEN = 1;
+}

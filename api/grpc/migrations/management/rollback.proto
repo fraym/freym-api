@@ -1,0 +1,8 @@
+syntax = "proto3";
+package freym.migrations.management;
+
+message RollbackDeploymentRequest {
+	int64 deployment_id = 1;
+}
+
+message RollbackDeploymentResponse {}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package freym.crud.delivery;
+import "crud/delivery/get_data.proto";
+import "crud/delivery/create.proto";
+import "crud/delivery/update.proto";
+import "crud/delivery/delete.proto";
+import "crud/delivery/clone.proto";
+  
+service Service {
+	rpc GetData(GetDataRequest) returns (GetDataResponse);
+	rpc GetDataList(GetDataListRequest) returns (GetDataListResponse);
+	rpc Create(CreateRequest) returns (CreateResponse);
+	rpc Update(UpdateRequest) returns (UpdateResponse);
+	rpc Delete(DeleteRequest) returns (DeleteResponse);
+	rpc Clone(CloneRequest) returns (CloneResponse);
+}
