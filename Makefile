@@ -4,4 +4,8 @@ help: ## Show this help.
 .PHONY: proto
 proto: ## Generates api code from .proto files
 	cd ./go/proto && ./proto.sh
-	# cd ./js && npm install && npm run proto
+	cd ./js && npm install && npm run proto
+
+lint: ## Lint the code
+	cd ./go/streams && golangci-lint run --enable gofumpt
+	cd js && npm run lint
