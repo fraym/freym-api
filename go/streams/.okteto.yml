@@ -1,0 +1,19 @@
+dev:
+  streams-go:
+    image: go-dev-container:latest
+    imagePullPolicy: Never
+    command: bash
+
+    workdir: /code
+    sync:
+      - .:/code
+      - $HOME/.ssh:/root/.ssh
+    volumes:
+      - /root/
+      - /go/
+    secrets:
+      - ./.gitconfig:/root/.gitconfig
+    securityContext:
+      capabilities:
+        add:
+          - SYS_PTRACE
