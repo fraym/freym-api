@@ -10,7 +10,6 @@ import (
 	"github.com/fraym/freym-api/go/streams/domain/dto"
 	"github.com/fraym/freym-api/go/streams/internal/util"
 	"github.com/fraym/golog"
-	"github.com/samber/lo"
 )
 
 type Service struct {
@@ -121,7 +120,7 @@ func (s *Service) IterateAllEventsAfterEvent(ctx context.Context, tenant string,
 	}, lastEventCheck, perPage, queueSize)
 }
 
-func (s *Service) IterateStream(ctx context.Context, tenant string, topic string, stream string, perPage int, queueSize int, handler dto.HandlerFunc) error {
+func (s *Service) IterateStream(ctx context.Context, tenant string, topic string, stream string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
 		return err
@@ -130,84 +129,59 @@ func (s *Service) IterateStream(ctx context.Context, tenant string, topic string
 		return nil
 	}
 
-	lastEventId := ""
-	possibleSnapshotEventId := ""
+	snapshotEventId := ""
 
 	return util.Iterate(ctx, handler, func(ctx context.Context, page, perPage int) ([]*dto.SubscriptionEvent, error) {
-		var events []*managementpb.Event
-
-		if lastEventId == "" {
-			response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamResponse, error) {
-				return s.client.PaginateStream(ctx, managementpb.PaginateStreamRequest_builder{
-					TenantId: tenant,
-					Topic:    topic,
-					Stream:   stream,
-					Page:     0,
-					PerPage:  int64(perPage),
-				}.Build())
-			}, s.retryPause, 50)
-			if err != nil {
-				return nil, err
-			}
-
-			currentEvents := response.GetEvents()
-
-			if len(currentEvents) > 0 {
-				possibleSnapshotEventId = currentEvents[0].GetId()
-			}
-
-			events = currentEvents
-		} else {
-			response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamAfterEventIdResponse, error) {
-				return s.client.PaginateStreamAfterEventId(ctx, managementpb.PaginateStreamAfterEventIdRequest_builder{
-					TenantId: tenant,
-					Topic:    topic,
-					Stream:   stream,
-					EventId:  lastEventId,
-					Page:     0,
-					PerPage:  int64(perPage),
-				}.Build())
-			}, s.retryPause, 50)
-			if err != nil {
-				return nil, err
-			}
-
-			events = lo.Filter(response.GetEvents(), func(event *managementpb.Event, _ int) bool {
-				return event.GetId() != possibleSnapshotEventId
-			})
-		}
-
-		if len(events) > 0 {
-			lastEventId = events[len(events)-1].GetId()
-		}
-
-		return util.SubscriptionEventsFromPb(events)
-	}, lastEventCheck, perPage, queueSize)
-}
-
-func (s *Service) IterateStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error {
-	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
-	if err != nil {
-		return err
-	}
-	if lastEventCheck == nil {
-		return nil
-	}
-
-	return util.Iterate(ctx, handler, func(ctx context.Context, page, perPage int) ([]*dto.SubscriptionEvent, error) {
-		response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamAfterEventIdResponse, error) {
-			return s.client.PaginateStreamAfterEventId(ctx, managementpb.PaginateStreamAfterEventIdRequest_builder{
-				TenantId: tenant,
-				Topic:    topic,
-				Stream:   stream,
-				EventId:  eventId,
-				Page:     int64(page),
-				PerPage:  int64(perPage),
+		response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamResponse, error) {
+			return s.client.PaginateStream(ctx, managementpb.PaginateStreamRequest_builder{
+				TenantId:        tenant,
+				Topic:           topic,
+				Stream:          stream,
+				Page:            int64(page),
+				PerPage:         int64(perPage),
+				DeploymentId:    deploymentId,
+				SnapshotEventId: snapshotEventId,
 			}.Build())
 		}, s.retryPause, 50)
 		if err != nil {
 			return nil, err
 		}
+
+		snapshotEventId = response.GetSnapshotEventId()
+
+		return util.SubscriptionEventsFromPb(response.GetEvents())
+	}, lastEventCheck, perPage, queueSize)
+}
+
+func (s *Service) IterateStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
+	if err != nil {
+		return err
+	}
+	if lastEventCheck == nil {
+		return nil
+	}
+
+	snapshotEventId := ""
+
+	return util.Iterate(ctx, handler, func(ctx context.Context, page, perPage int) ([]*dto.SubscriptionEvent, error) {
+		response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamAfterEventIdResponse, error) {
+			return s.client.PaginateStreamAfterEventId(ctx, managementpb.PaginateStreamAfterEventIdRequest_builder{
+				TenantId:        tenant,
+				Topic:           topic,
+				Stream:          stream,
+				EventId:         eventId,
+				Page:            int64(page),
+				PerPage:         int64(perPage),
+				DeploymentId:    deploymentId,
+				SnapshotEventId: snapshotEventId,
+			}.Build())
+		}, s.retryPause, 50)
+		if err != nil {
+			return nil, err
+		}
+
+		snapshotEventId = response.GetSnapshotEventId()
 
 		return util.SubscriptionEventsFromPb(response.GetEvents())
 	}, lastEventCheck, perPage, queueSize)
@@ -293,8 +267,8 @@ func (s *Service) GetLastEventByTypes(ctx context.Context, tenantId string, topi
 	return util.SubscriptionEventFromPb(response)
 }
 
-func (s *Service) NewSubscription(topics []string, ignoreUnhandledEvents bool) *Subscription {
-	return newSubscription(s.ctx, s.config, s.client, s.logger, topics, ignoreUnhandledEvents)
+func (s *Service) NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *Subscription {
+	return newSubscription(s.ctx, s.config, s.client, s.logger, topics, ignoreUnhandledEvents, deploymentId)
 }
 
 func (s *Service) Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error {

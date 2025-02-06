@@ -1,0 +1,12 @@
+dev:
+  projections-nodejs:
+    image: node:18
+    imagePullPolicy: Never
+    command: bash
+
+    workdir: /code
+    sync:
+      - .:/code
+      - $HOME/.ssh:/root/.ssh
+    secrets:
+      - $HOME/.npmrc:/root/.npmrc

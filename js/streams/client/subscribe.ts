@@ -22,6 +22,7 @@ export const newSubscription = (
     topics: string[],
     ignoreUnhandledEvents: boolean,
     config: ClientConfig,
+    deploymentId: number | null,
     serviceClient: ServiceClient
 ): Subscription => {
     let stream: Stream | null = null;
@@ -110,7 +111,7 @@ export const newSubscription = (
         };
         stream = newStream;
 
-        await initStream(topics, config, newStream);
+        await initStream(topics, config, deploymentId, newStream);
 
         retries = 50;
         newStream.on("data", dataFn);
@@ -144,6 +145,7 @@ export const newSubscription = (
 export const initStream = async (
     topics: string[],
     config: ClientConfig,
+    deploymentId: number | null,
     stream: Stream
 ): Promise<Stream> => {
     return new Promise<Stream>((resolve, reject) => {
@@ -154,7 +156,7 @@ export const initStream = async (
                     metadata: {
                         group: config.groupId,
                         subscriberId: uuid(),
-                        deploymentId: config.deploymentId?.toString() ?? "",
+                        deploymentId: deploymentId?.toString() ?? "",
                     },
                     topics,
                 },

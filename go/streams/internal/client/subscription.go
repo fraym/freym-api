@@ -24,7 +24,8 @@ type Subscription struct {
 	logger  golog.Logger
 	handler *handler
 
-	topics []string
+	topics       []string
+	deploymentId int64
 }
 
 func newSubscription(
@@ -34,16 +35,18 @@ func newSubscription(
 	logger golog.Logger,
 	topics []string,
 	ignoreUnhandledEvents bool,
+	deploymentId int64,
 ) *Subscription {
 	return &Subscription{
-		mx:        &sync.Mutex{},
-		parentCtx: ctx,
-		stop:      nil,
-		config:    config,
-		client:    client,
-		logger:    logger,
-		handler:   NewHandler(ignoreUnhandledEvents),
-		topics:    topics,
+		mx:           &sync.Mutex{},
+		parentCtx:    ctx,
+		stop:         nil,
+		config:       config,
+		client:       client,
+		logger:       logger,
+		handler:      NewHandler(ignoreUnhandledEvents),
+		topics:       topics,
+		deploymentId: deploymentId,
 	}
 }
 
@@ -97,7 +100,7 @@ func (s *Subscription) Start() error {
 func (s *Subscription) connect(subscriptionCtx context.Context, errChan chan error) error {
 	connectionCtx, endConnection := context.WithCancel(subscriptionCtx)
 
-	connection, err := subscription.NewConnection(connectionCtx, s.client, s.logger, s.config)
+	connection, err := subscription.NewConnection(connectionCtx, s.deploymentId, s.client, s.logger, s.config)
 	if err != nil {
 		defer endConnection()
 		return err

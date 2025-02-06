@@ -84,6 +84,8 @@ type PublishEvent struct {
 	Type          string
 	CorrelationId string
 	CausationId   string
+	UserId        string
+	DeploymentId  int64
 	Reason        string
 	Payload       PublishEventPayloadMap
 	Broadcast     bool
@@ -136,7 +138,8 @@ func (e *PublishEvent) ToProtobufPublishEvent() (*managementpb.PublishEvent, err
 		Metadata: managementpb.EventMetadata_builder{
 			CorrelationId: e.CorrelationId,
 			CausationId:   e.CausationId,
-			// @todo
+			UserId:        e.UserId,
+			DeploymentId:  e.DeploymentId,
 		}.Build(),
 		Payload: payload,
 	}.Build(), nil

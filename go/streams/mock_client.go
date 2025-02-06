@@ -20,12 +20,12 @@ func (c *MockClient) GetAllEventsAfterEvent(ctx context.Context, tenant string, 
 	return c.Called(ctx, tenant, topic, includedEventTypes, eventId, perPage, queueSize, handler).Error(0)
 }
 
-func (c *MockClient) GetStream(ctx context.Context, tenant string, topic string, stream string, perPage int, queueSize int, handler dto.HandlerFunc) error {
-	return c.Called(ctx, tenant, topic, stream, perPage, queueSize, handler).Error(0)
+func (c *MockClient) GetStream(ctx context.Context, tenant string, topic string, stream string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+	return c.Called(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler).Error(0)
 }
 
-func (c *MockClient) GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error {
-	return c.Called(ctx, tenant, topic, stream, eventId, perPage, queueSize, handler).Error(0)
+func (c *MockClient) GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+	return c.Called(ctx, tenant, topic, stream, eventId, deploymentId, perPage, queueSize, handler).Error(0)
 }
 
 func (c *MockClient) IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error) {
@@ -57,8 +57,8 @@ func (c *MockClient) GetLastEventByTypes(ctx context.Context, tenantId string, t
 	return args.Get(0).(*dto.SubscriptionEvent), args.Error(1)
 }
 
-func (c *MockClient) NewSubscription(topics []string, ignoreUnhandledEvents bool) *client.Subscription {
-	args := c.Called(topics, ignoreUnhandledEvents)
+func (c *MockClient) NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription {
+	args := c.Called(topics, ignoreUnhandledEvents, deploymentId)
 	if args.Get(0) == nil {
 		return nil
 	}

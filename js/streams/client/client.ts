@@ -47,20 +47,18 @@ export interface Client {
         handler: HandlerFunc
     ) => Promise<void>;
     publish: (topic: string, events: PublishEvent[]) => Promise<void>;
-    // deprecated: typo
-    getStreamItarator: (
-        topic: string,
-        tenantId: string,
-        stream: string,
-        perPage: number
-    ) => Promise<StreamIterator>;
     getStreamIterator: (
         topic: string,
         tenantId: string,
         stream: string,
-        perPage: number
-    ) => Promise<StreamIterator>;
-    subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
+        perPage: number,
+        deploymentId?: number | null
+    ) => StreamIterator;
+    subscribe: (
+        topics?: string[],
+        ignoreUnhandledEvents?: boolean,
+        deploymentId?: number
+    ) => Subscription;
     invalidateGdprData: (tenantId: string, topic: string, gdprId: string) => Promise<void>;
     introduceGdprOnEventField: (
         tenantId: string,
@@ -85,6 +83,7 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
         "grpc.keepalive_time_ms": config.keepaliveInterval,
         "grpc.keepalive_timeout_ms": config.keepaliveTimeout,
         "grpc.keepalive_permit_without_calls": 1,
+        "grpc.max_receive_message_length": 2147483647,
     });
 
     const closeFunctions: (() => void)[] = [];
@@ -114,60 +113,6 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
             const orderSerial = lastEvent.orderSerial ? lastEvent.orderSerial : 0;
 
             return orderSerial > lastOrderSerial;
-        };
-    };
-
-    const getStreamIterator: (
-        topic: string,
-        tenantId: string,
-        stream: string,
-        perPage: number
-    ) => Promise<StreamIterator> = async (topic, tenantId, stream, perPage) => {
-        return {
-            forEach: async callback => {
-                const lastEventCheck = await getLastEventCheck(tenantId, topic);
-
-                if (!lastEventCheck) {
-                    return;
-                }
-
-                return await getStream(
-                    topic,
-                    tenantId,
-                    stream,
-                    perPage,
-                    async (event: SubscriptionEvent) => {
-                        callback(event);
-                    },
-                    lastEventCheck,
-                    config.deploymentId ?? null,
-                    serviceClient
-                );
-            },
-            forEachAfterEvent: async (eventId, callback) => {
-                const lastEventCheck = await getLastEventCheck(tenantId, topic);
-
-                if (!lastEventCheck) {
-                    return;
-                }
-
-                return await getStreamAfterEvent(
-                    topic,
-                    tenantId,
-                    stream,
-                    eventId,
-                    perPage,
-                    async (event: SubscriptionEvent) => {
-                        callback(event);
-                    },
-                    lastEventCheck,
-                    config.deploymentId ?? null,
-                    serviceClient
-                );
-            },
-            isEmpty: async () => {
-                return isStreamEmpty(topic, tenantId, stream, serviceClient);
-            },
         };
     };
 
@@ -224,19 +169,66 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
             );
         },
         publish: async (topic, events) => {
-            return await sendPublish(topic, events, config.deploymentId ?? null, serviceClient);
+            return await sendPublish(topic, events, serviceClient);
         },
-        getStreamItarator: async (topic, tenantId, stream, perPage) => {
-            return await getStreamIterator(topic, tenantId, stream, perPage);
+        getStreamIterator: (topic, tenantId, stream, perPage, deploymentId = null) => {
+            return {
+                forEach: async callback => {
+                    const lastEventCheck = await getLastEventCheck(tenantId, topic);
+
+                    if (!lastEventCheck) {
+                        return;
+                    }
+
+                    return await getStream(
+                        topic,
+                        tenantId,
+                        stream,
+                        perPage,
+                        async (event: SubscriptionEvent) => {
+                            callback(event);
+                        },
+                        lastEventCheck,
+                        deploymentId,
+                        serviceClient
+                    );
+                },
+                forEachAfterEvent: async (eventId, callback) => {
+                    const lastEventCheck = await getLastEventCheck(tenantId, topic);
+
+                    if (!lastEventCheck) {
+                        return;
+                    }
+
+                    return await getStreamAfterEvent(
+                        topic,
+                        tenantId,
+                        stream,
+                        eventId,
+                        perPage,
+                        async (event: SubscriptionEvent) => {
+                            callback(event);
+                        },
+                        lastEventCheck,
+                        deploymentId,
+                        serviceClient
+                    );
+                },
+                isEmpty: async () => {
+                    return isStreamEmpty(topic, tenantId, stream, serviceClient);
+                },
+            };
         },
-        getStreamIterator: async (topic, tenantId, stream, perPage) => {
-            return await getStreamIterator(topic, tenantId, stream, perPage);
-        },
-        subscribe: (topics: string[] = [], ignoreUnhandledEvents: boolean = false) => {
+        subscribe: (
+            topics: string[] = [],
+            ignoreUnhandledEvents: boolean = false,
+            deploymentId: number | null = null
+        ) => {
             const subscription = newSubscription(
                 topics,
                 ignoreUnhandledEvents,
                 config,
+                deploymentId,
                 serviceClient
             );
 
@@ -276,7 +268,6 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                 stream,
                 idOfLastEventThatGotSnapshotted,
                 snapshotEvent,
-                config.deploymentId ?? null,
                 serviceClient
             );
         },

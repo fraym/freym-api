@@ -21,6 +21,7 @@ type Connection interface {
 }
 
 type clientConnection struct {
+	deploymentId   int64
 	isClosed       bool
 	receiveCtx     context.Context
 	receiveCancel  context.CancelFunc
@@ -36,6 +37,7 @@ type clientConnection struct {
 
 func NewConnection(
 	ctx context.Context,
+	deploymentId int64,
 	client managementpb.ServiceClient,
 	logger golog.Logger,
 	config *config.Config,
@@ -49,6 +51,7 @@ func NewConnection(
 	sendCtx, sendCancel := context.WithCancel(grpcConnection.Context())
 
 	return &clientConnection{
+		deploymentId:   deploymentId,
 		isClosed:       false,
 		receiveCtx:     receiveCtx,
 		receiveCancel:  receiveCancel,
@@ -159,6 +162,7 @@ func (c *clientConnection) Subscribe(ctx context.Context, groupId string, topics
 			Metadata: managementpb.SubscribeMetadata_builder{
 				Group:        groupId,
 				SubscriberId: uuid.NewV4().String(),
+				DeploymentId: c.deploymentId,
 			}.Build(),
 			Topics: topics,
 		}.Build(),

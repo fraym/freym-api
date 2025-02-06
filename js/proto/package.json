@@ -7,7 +7,7 @@
         "type": "git",
         "url": "git+https://github.com/fraym/freym-api.git"
     },
-    "description": "JS generated protobuf code for our Freym services",
+    "description": "JS generated protobuf api code of all Freym services",
     "scripts": {
         "generate": "./proto.sh && npm run fix",
         "build": "rm -rf dist && tsc",
@@ -23,7 +23,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@grpc/grpc-js": "^1.12.5",
+        "@grpc/grpc-js": "^1.12.6",
         "ts-proto": "^2.6.1"
     },
     "prettier": "@becklyn/prettier"

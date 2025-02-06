@@ -14,6 +14,9 @@ jobs:
   checks:
     name: Checks
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [streams, projections]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -23,13 +26,13 @@ jobs:
         with:
           go-version: 1.23
 
-      - name: golangci-lint
+      - name: Run linters
         uses: golangci/golangci-lint-action@v6
         with:
-          working-directory: go/streams
+          working-directory: go/${{ matrix.module }}
           version: latest
           args: --enable gofumpt --timeout=3m
 
-      - name: Run Tests
-        working-directory: go/streams
+      - name: Run tests
+        working-directory: go/${{ matrix.module }}
         run: go test ./... -timeout 3m -count=1

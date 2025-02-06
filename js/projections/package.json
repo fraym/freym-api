@@ -1,0 +1,34 @@
+{
+    "name": "@fraym/projections",
+    "version": "0.30.0",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/freym-api",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/freym-api.git"
+    },
+    "description": "JS client implementation of the projections service of Freym",
+    "scripts": {
+        "build": "rm -rf dist && tsc",
+        "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
+        "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\""
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "engines": {
+        "node": ">=20"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@fraym/proto": "^0.30.0",
+        "@grpc/grpc-js": "^1.12.6",
+        "dotenv": "^16.4.7",
+        "uuid": "^11.0.5"
+    },
+    "devDependencies": {
+        "@types/uuid": "^10.0.0"
+    },
+    "prettier": "@becklyn/prettier"
+}

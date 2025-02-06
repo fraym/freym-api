@@ -4,7 +4,6 @@ export interface SubscriptionEvent extends BaseEvent {
     topic: string;
     raisedAt: Date;
     orderSerial?: number;
-    deploymentId?: number;
 }
 
 export interface PublishEvent extends BaseEvent {
@@ -21,6 +20,7 @@ export interface BaseEvent {
     causationId?: string;
     reason?: string;
     userId?: string;
+    deploymentId?: number;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */

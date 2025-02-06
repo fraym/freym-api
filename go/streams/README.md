@@ -1,10 +1,10 @@
 # streams
 
-Client implementation in go for the event streaming service [streams](https://github.com/fraym/streams).
+Client implementation in go for the Freym service [streams](https://github.com/fraym/streams).
 
 ## Docs
 
-Please have a look at our [documentation](https://docs.freym.becklyn.app/docs).
+Please have a look at our [documentation](https://docs.freym.becklyn.app/docs/services/streams/grpc).
 
 ## License
 

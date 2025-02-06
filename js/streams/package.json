@@ -7,7 +7,7 @@
         "type": "git",
         "url": "git+https://github.com/fraym/freym-api.git"
     },
-    "description": "JS client implementation for Freyms streams service",
+    "description": "JS client implementation of the streams service of Freym",
     "scripts": {
         "build": "rm -rf dist && tsc",
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
@@ -23,7 +23,8 @@
     "types": "dist/index.d.ts",
     "dependencies": {
         "@fraym/proto": "^0.30.0",
-        "@grpc/grpc-js": "^1.12.5",
+        "@grpc/grpc-js": "^1.12.6",
+        "dotenv": "^16.4.7",
         "uuid": "^11.0.5"
     },
     "devDependencies": {

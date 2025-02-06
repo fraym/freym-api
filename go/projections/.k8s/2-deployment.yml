@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projections-go
+  namespace: fraym
+  labels:
+    app: projections-go
+spec:
+  selector:
+    matchLabels:
+      app: projections-go
+  template:
+    metadata:
+      labels:
+        app: projections-go
+    spec:
+      containers:
+        - name: projections-go
+          image: golang:alpine
+          imagePullPolicy: Never
+          command: ["sleep", "infinity"]

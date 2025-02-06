@@ -16,10 +16,12 @@ export interface PaginateStreamRequest {
     perPage: string;
     /** when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id. */
     deploymentId: string;
+    snapshotEventId: string;
 }
 
 export interface PaginateStreamResponse {
     events: Event[];
+    snapshotEventId: string;
 }
 
 export interface PaginateStreamAfterEventIdRequest {
@@ -31,10 +33,12 @@ export interface PaginateStreamAfterEventIdRequest {
     perPage: string;
     /** when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id. */
     deploymentId: string;
+    snapshotEventId: string;
 }
 
 export interface PaginateStreamAfterEventIdResponse {
     events: Event[];
+    snapshotEventId: string;
 }
 
 export interface PaginateEventsRequest {
@@ -63,7 +67,15 @@ export interface PaginateEventsAfterEventIdResponse {
 }
 
 function createBasePaginateStreamRequest(): PaginateStreamRequest {
-    return { tenantId: "", topic: "", stream: "", page: "0", perPage: "0", deploymentId: "0" };
+    return {
+        tenantId: "",
+        topic: "",
+        stream: "",
+        page: "0",
+        perPage: "0",
+        deploymentId: "0",
+        snapshotEventId: "",
+    };
 }
 
 export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
@@ -88,6 +100,9 @@ export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
         }
         if (message.deploymentId !== "0") {
             writer.uint32(48).int64(message.deploymentId);
+        }
+        if (message.snapshotEventId !== "") {
+            writer.uint32(58).string(message.snapshotEventId);
         }
         return writer;
     },
@@ -147,6 +162,14 @@ export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
+                case 7: {
+                    if (tag !== 58) {
+                        break;
+                    }
+
+                    message.snapshotEventId = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -164,6 +187,9 @@ export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
             page: isSet(object.page) ? globalThis.String(object.page) : "0",
             perPage: isSet(object.perPage) ? globalThis.String(object.perPage) : "0",
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            snapshotEventId: isSet(object.snapshotEventId)
+                ? globalThis.String(object.snapshotEventId)
+                : "",
         };
     },
 
@@ -187,6 +213,9 @@ export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
         }
+        if (message.snapshotEventId !== "") {
+            obj.snapshotEventId = message.snapshotEventId;
+        }
         return obj;
     },
 
@@ -201,12 +230,13 @@ export const PaginateStreamRequest: MessageFns<PaginateStreamRequest> = {
         message.page = object.page ?? "0";
         message.perPage = object.perPage ?? "0";
         message.deploymentId = object.deploymentId ?? "0";
+        message.snapshotEventId = object.snapshotEventId ?? "";
         return message;
     },
 };
 
 function createBasePaginateStreamResponse(): PaginateStreamResponse {
-    return { events: [] };
+    return { events: [], snapshotEventId: "" };
 }
 
 export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
@@ -216,6 +246,9 @@ export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
     ): BinaryWriter {
         for (const v of message.events) {
             Event.encode(v!, writer.uint32(10).fork()).join();
+        }
+        if (message.snapshotEventId !== "") {
+            writer.uint32(18).string(message.snapshotEventId);
         }
         return writer;
     },
@@ -235,6 +268,14 @@ export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
                     message.events.push(Event.decode(reader, reader.uint32()));
                     continue;
                 }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.snapshotEventId = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -249,6 +290,9 @@ export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
             events: globalThis.Array.isArray(object?.events)
                 ? object.events.map((e: any) => Event.fromJSON(e))
                 : [],
+            snapshotEventId: isSet(object.snapshotEventId)
+                ? globalThis.String(object.snapshotEventId)
+                : "",
         };
     },
 
@@ -256,6 +300,9 @@ export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
         const obj: any = {};
         if (message.events?.length) {
             obj.events = message.events.map(e => Event.toJSON(e));
+        }
+        if (message.snapshotEventId !== "") {
+            obj.snapshotEventId = message.snapshotEventId;
         }
         return obj;
     },
@@ -266,6 +313,7 @@ export const PaginateStreamResponse: MessageFns<PaginateStreamResponse> = {
     fromPartial(object: DeepPartial<PaginateStreamResponse>): PaginateStreamResponse {
         const message = createBasePaginateStreamResponse();
         message.events = object.events?.map(e => Event.fromPartial(e)) || [];
+        message.snapshotEventId = object.snapshotEventId ?? "";
         return message;
     },
 };
@@ -279,6 +327,7 @@ function createBasePaginateStreamAfterEventIdRequest(): PaginateStreamAfterEvent
         page: "0",
         perPage: "0",
         deploymentId: "0",
+        snapshotEventId: "",
     };
 }
 
@@ -307,6 +356,9 @@ export const PaginateStreamAfterEventIdRequest: MessageFns<PaginateStreamAfterEv
         }
         if (message.deploymentId !== "0") {
             writer.uint32(56).int64(message.deploymentId);
+        }
+        if (message.snapshotEventId !== "") {
+            writer.uint32(66).string(message.snapshotEventId);
         }
         return writer;
     },
@@ -374,6 +426,14 @@ export const PaginateStreamAfterEventIdRequest: MessageFns<PaginateStreamAfterEv
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
+                case 8: {
+                    if (tag !== 66) {
+                        break;
+                    }
+
+                    message.snapshotEventId = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -392,6 +452,9 @@ export const PaginateStreamAfterEventIdRequest: MessageFns<PaginateStreamAfterEv
             page: isSet(object.page) ? globalThis.String(object.page) : "0",
             perPage: isSet(object.perPage) ? globalThis.String(object.perPage) : "0",
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            snapshotEventId: isSet(object.snapshotEventId)
+                ? globalThis.String(object.snapshotEventId)
+                : "",
         };
     },
 
@@ -418,6 +481,9 @@ export const PaginateStreamAfterEventIdRequest: MessageFns<PaginateStreamAfterEv
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
         }
+        if (message.snapshotEventId !== "") {
+            obj.snapshotEventId = message.snapshotEventId;
+        }
         return obj;
     },
 
@@ -437,12 +503,13 @@ export const PaginateStreamAfterEventIdRequest: MessageFns<PaginateStreamAfterEv
         message.page = object.page ?? "0";
         message.perPage = object.perPage ?? "0";
         message.deploymentId = object.deploymentId ?? "0";
+        message.snapshotEventId = object.snapshotEventId ?? "";
         return message;
     },
 };
 
 function createBasePaginateStreamAfterEventIdResponse(): PaginateStreamAfterEventIdResponse {
-    return { events: [] };
+    return { events: [], snapshotEventId: "" };
 }
 
 export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterEventIdResponse> = {
@@ -452,6 +519,9 @@ export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterE
     ): BinaryWriter {
         for (const v of message.events) {
             Event.encode(v!, writer.uint32(10).fork()).join();
+        }
+        if (message.snapshotEventId !== "") {
+            writer.uint32(18).string(message.snapshotEventId);
         }
         return writer;
     },
@@ -471,6 +541,14 @@ export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterE
                     message.events.push(Event.decode(reader, reader.uint32()));
                     continue;
                 }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.snapshotEventId = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -485,6 +563,9 @@ export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterE
             events: globalThis.Array.isArray(object?.events)
                 ? object.events.map((e: any) => Event.fromJSON(e))
                 : [],
+            snapshotEventId: isSet(object.snapshotEventId)
+                ? globalThis.String(object.snapshotEventId)
+                : "",
         };
     },
 
@@ -492,6 +573,9 @@ export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterE
         const obj: any = {};
         if (message.events?.length) {
             obj.events = message.events.map(e => Event.toJSON(e));
+        }
+        if (message.snapshotEventId !== "") {
+            obj.snapshotEventId = message.snapshotEventId;
         }
         return obj;
     },
@@ -506,6 +590,7 @@ export const PaginateStreamAfterEventIdResponse: MessageFns<PaginateStreamAfterE
     ): PaginateStreamAfterEventIdResponse {
         const message = createBasePaginateStreamAfterEventIdResponse();
         message.events = object.events?.map(e => Event.fromPartial(e)) || [];
+        message.snapshotEventId = object.snapshotEventId ?? "";
         return message;
     },
 };

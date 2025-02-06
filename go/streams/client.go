@@ -13,13 +13,13 @@ import (
 type Client interface {
 	GetAllEvents(ctx context.Context, tenant string, topic string, includedEventTypes []string, perPage int, queueSize int, handler dto.HandlerFunc) error
 	GetAllEventsAfterEvent(ctx context.Context, tenant string, topic string, includedEventTypes []string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error
-	GetStream(ctx context.Context, tenant string, topic string, stream string, perPage int, queueSize int, handler dto.HandlerFunc) error
-	GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error
+	GetStream(ctx context.Context, tenant string, topic string, stream string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error
+	GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error
 	IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error)
 	GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error)
 	GetLastEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
 	GetLastEventByTypes(ctx context.Context, tenantId string, topic string, types []string) (*dto.SubscriptionEvent, error)
-	NewSubscription(topics []string, ignoreUnhandledEvents bool) *client.Subscription
+	NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription
 	Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error
 	InvalidateGdprData(ctx context.Context, tenantId string, topic string, gdprId string) error
 	IntroduceGdprOnEventField(ctx context.Context, tenantId string, topic string, eventId string, fieldName string, defaultValue string) error
@@ -70,12 +70,12 @@ func (c *streamsClient) GetAllEventsAfterEvent(ctx context.Context, tenant strin
 	return c.service.IterateAllEventsAfterEvent(ctx, tenant, topic, includedEventTypes, eventId, perPage, queueSize, handler)
 }
 
-func (c *streamsClient) GetStream(ctx context.Context, tenant string, topic string, stream string, perPage int, queueSize int, handler dto.HandlerFunc) error {
-	return c.service.IterateStream(ctx, tenant, topic, stream, perPage, queueSize, handler)
+func (c *streamsClient) GetStream(ctx context.Context, tenant string, topic string, stream string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+	return c.service.IterateStream(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler)
 }
 
-func (c *streamsClient) GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error {
-	return c.service.IterateStreamAfterEvent(ctx, tenant, topic, stream, eventId, perPage, queueSize, handler)
+func (c *streamsClient) GetStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+	return c.service.IterateStreamAfterEvent(ctx, tenant, topic, stream, eventId, deploymentId, perPage, queueSize, handler)
 }
 
 func (c *streamsClient) IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error) {
@@ -94,8 +94,8 @@ func (c *streamsClient) GetLastEventByTypes(ctx context.Context, tenantId string
 	return c.service.GetLastEventByTypes(ctx, tenantId, topic, types)
 }
 
-func (c *streamsClient) NewSubscription(topics []string, ignoreUnhandledEvents bool) *client.Subscription {
-	return c.service.NewSubscription(topics, ignoreUnhandledEvents)
+func (c *streamsClient) NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription {
+	return c.service.NewSubscription(topics, ignoreUnhandledEvents, deploymentId)
 }
 
 func (c *streamsClient) Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error {

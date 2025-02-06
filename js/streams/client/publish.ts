@@ -9,7 +9,6 @@ import { retry } from "./util";
 export const sendPublish = async (
     topic: string,
     events: PublishEvent[],
-    deploymentId: number | null,
     serviceClient: ServiceClient
 ) => {
     return retry(
@@ -18,7 +17,7 @@ export const sendPublish = async (
                 serviceClient.publish(
                     {
                         events: events.map(event =>
-                            getProtobufPublishEventFromPublishedEvent(event, deploymentId)
+                            getProtobufPublishEventFromPublishedEvent(event)
                         ),
                         topic,
                     },
@@ -36,8 +35,7 @@ export const sendPublish = async (
 };
 
 export const getProtobufPublishEventFromPublishedEvent = (
-    event: PublishEvent,
-    deploymentId: number | null
+    event: PublishEvent
 ): ProtobufPublishEvent => {
     const payload: Record<string, EventPayload> = {};
 
@@ -65,7 +63,7 @@ export const getProtobufPublishEventFromPublishedEvent = (
             causationId: event.causationId ?? "",
             correlationId: event.correlationId ?? "",
             orderSerial: "0",
-            deploymentId: deploymentId?.toString() ?? "",
+            deploymentId: event.deploymentId?.toString() ?? "",
             userId: event.userId ?? "",
         },
         options: {

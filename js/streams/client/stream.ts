@@ -13,52 +13,32 @@ export const getStream = async (
     deploymentId: number | null,
     serviceClient: ServiceClient
 ): Promise<void> => {
-    let lastEventId: string | null = null;
-    let possibleSnapshotEventId: string | null = null;
-    let events: Event[] = [];
+    let page = 0;
+    let snapshotEventId: string | null = null;
 
     while (true) {
-        if (!lastEventId) {
-            events = await getStreamPage(
-                topic,
-                tenantId,
-                stream,
-                perPage,
-                0,
-                deploymentId,
-                serviceClient
-            );
+        const response = await getStreamPage(
+            topic,
+            tenantId,
+            stream,
+            perPage,
+            page,
+            deploymentId,
+            snapshotEventId,
+            serviceClient
+        );
 
-            if (events.length > 0) {
-                possibleSnapshotEventId = events[0]!.id;
-            }
-        } else {
-            events = await getStreamPageAfterEvent(
-                topic,
-                tenantId,
-                stream,
-                lastEventId,
-                perPage,
-                0,
-                deploymentId,
-                serviceClient
-            );
-        }
+        snapshotEventId = response.snapshotEventId;
+
+        page++;
 
         let lastEvent: SubscriptionEvent | null = null;
 
-        for (const eventData of events) {
+        for (const eventData of response.events) {
             const event = getSubscriptionEvent(eventData);
             if (event) {
-                if (lastEventId != null && possibleSnapshotEventId) {
-                    if (event.id === possibleSnapshotEventId) {
-                        continue;
-                    }
-                }
-
                 await handler(event);
                 lastEvent = event;
-                lastEventId = event.id;
             }
         }
 
@@ -68,6 +48,11 @@ export const getStream = async (
     }
 };
 
+interface StreamPageResponse {
+    events: Event[];
+    snapshotEventId: string;
+}
+
 const getStreamPage = async (
     topic: string,
     tenantId: string,
@@ -75,11 +60,12 @@ const getStreamPage = async (
     perPage: number,
     page: number,
     deploymentId: number | null,
+    snapshotEventId: string | null,
     serviceClient: ServiceClient
 ) => {
     return retry(
         () =>
-            new Promise<Event[]>((resolve, reject) => {
+            new Promise<StreamPageResponse>((resolve, reject) => {
                 serviceClient.paginateStream(
                     {
                         stream,
@@ -88,6 +74,7 @@ const getStreamPage = async (
                         page: page.toString(),
                         perPage: perPage.toString(),
                         deploymentId: deploymentId?.toString() ?? "",
+                        snapshotEventId: snapshotEventId ?? "",
                     },
                     async (error, data) => {
                         if (error) {
@@ -95,7 +82,7 @@ const getStreamPage = async (
                             return;
                         }
 
-                        resolve(data.events);
+                        resolve(data);
                     }
                 );
             })
@@ -114,9 +101,10 @@ export const getStreamAfterEvent = async (
     serviceClient: ServiceClient
 ): Promise<void> => {
     let page = 0;
+    let snapshotEventId: string | null = null;
 
     while (true) {
-        const events = await getStreamPageAfterEvent(
+        const response = await getStreamPageAfterEvent(
             topic,
             tenantId,
             stream,
@@ -124,14 +112,17 @@ export const getStreamAfterEvent = async (
             perPage,
             page,
             deploymentId,
+            snapshotEventId,
             serviceClient
         );
+
+        snapshotEventId = response.snapshotEventId;
 
         page++;
 
         let lastEvent: SubscriptionEvent | null = null;
 
-        for (const eventData of events) {
+        for (const eventData of response.events) {
             const event = getSubscriptionEvent(eventData);
             if (event) {
                 await handler(event);
@@ -153,11 +144,12 @@ const getStreamPageAfterEvent = async (
     perPage: number,
     page: number,
     deploymentId: number | null,
+    snapshotEventId: string | null,
     serviceClient: ServiceClient
 ) => {
     return retry(
         () =>
-            new Promise<Event[]>((resolve, reject) => {
+            new Promise<StreamPageResponse>((resolve, reject) => {
                 serviceClient.paginateStreamAfterEventId(
                     {
                         stream,
@@ -167,6 +159,7 @@ const getStreamPageAfterEvent = async (
                         page: page.toString(),
                         perPage: perPage.toString(),
                         deploymentId: deploymentId?.toString() ?? "",
+                        snapshotEventId: snapshotEventId ?? "",
                     },
                     async (error, data) => {
                         if (error) {
@@ -174,7 +167,7 @@ const getStreamPageAfterEvent = async (
                             return;
                         }
 
-                        resolve(data.events);
+                        resolve(data);
                     }
                 );
             })
@@ -212,7 +205,6 @@ export const createStreamSnapshot = async (
     stream: string,
     lastSnapshottedEventId: string,
     snapshotEvent: PublishEvent,
-    deploymentId: number | null,
     serviceClient: ServiceClient
 ): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
@@ -222,10 +214,7 @@ export const createStreamSnapshot = async (
                 stream,
                 tenantId,
                 lastSnapshottedEventId,
-                snapshotEvent: getProtobufPublishEventFromPublishedEvent(
-                    snapshotEvent,
-                    deploymentId
-                ),
+                snapshotEvent: getProtobufPublishEventFromPublishedEvent(snapshotEvent),
             },
             error => {
                 if (error) {
