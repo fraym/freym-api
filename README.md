@@ -1,5 +1,7 @@
 # Freym API
 
+[![JS Checks](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml) [![Go Checks](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml)
+
 ## Overview
 
 The Freym API provides a set of clients to interact with the Freym microservices.
