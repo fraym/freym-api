@@ -1,10 +1,13 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
+import { ProjectionData } from "./data";
 import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
 
-export type UpsertResponse<T extends object> = UpsertSuccessResponse<T> | UpsertValidationResponse;
+export type UpsertResponse<T extends ProjectionData> =
+    | UpsertSuccessResponse<T>
+    | UpsertValidationResponse;
 
-export interface UpsertSuccessResponse<T extends object> {
+export interface UpsertSuccessResponse<T extends ProjectionData> {
     data: T;
     id: string;
 }
@@ -14,24 +17,23 @@ export interface UpsertValidationResponse {
     fieldValidationErrors: Record<string, string>;
 }
 
-export const isUpsertSuccessResponse = <T extends object>(
+export const isUpsertSuccessResponse = <T extends ProjectionData>(
     response: UpsertResponse<T>
 ): response is UpsertSuccessResponse<T> => {
     return Object.prototype.hasOwnProperty.call(response, "data");
 };
 
-export const isUpsertValidationResponse = <T extends object>(
+export const isUpsertValidationResponse = <T extends ProjectionData>(
     response: UpsertResponse<T>
 ): response is UpsertValidationResponse => {
     return !Object.prototype.hasOwnProperty.call(response, "data");
 };
 
-export const upsertProjectionData = async <T extends object>(
+export const upsertProjectionData = async <T extends ProjectionData>(
     projection: string,
     auth: AuthData,
     dataId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload: Record<string, any>,
+    payload: Partial<T>,
     eventMetadata: Partial<EventMetadata> | null = null,
     serviceClient: ServiceClient
 ): Promise<UpsertResponse<T>> => {

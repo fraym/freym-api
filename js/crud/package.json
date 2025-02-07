@@ -1,5 +1,5 @@
 {
-    "name": "@fraym/projections",
+    "name": "@fraym/crud",
     "version": "0.30.0",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
@@ -7,7 +7,7 @@
         "type": "git",
         "url": "git+https://github.com/fraym/freym-api.git"
     },
-    "description": "JS client implementation of the projections service of Freym",
+    "description": "JS client implementation of the crud service of Freym",
     "scripts": {
         "build": "rm -rf dist && tsc",
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",

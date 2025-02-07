@@ -1,31 +1,31 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
+import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
-import { ProjectionData } from "./data";
+import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
 import { Order, getProtobufDataOrder } from "./order";
 
-export interface GetProjectionDataList<T extends ProjectionData> {
+export interface GetCrudDataList<T extends CrudData> {
     limit: number;
     page: number;
     total: number;
     data: T[];
 }
 
-export const getProjectionDataList = async <T extends ProjectionData>(
-    projection: string,
-    auth: AuthData,
+export const getCrudDataList = async <T extends CrudData>(
+    type: string,
+    authData: AuthData,
     limit: number,
     page: number,
     filter: Filter,
     order: Order[],
     useStrongConsistency: boolean,
     serviceClient: ServiceClient
-): Promise<GetProjectionDataList<T> | null> => {
-    return new Promise<GetProjectionDataList<T> | null>((resolve, reject) => {
+): Promise<GetCrudDataList<T>> => {
+    return new Promise<GetCrudDataList<T>>((resolve, reject) => {
         serviceClient.getDataList(
             {
-                projection,
-                auth: getProtobufAuthData(auth),
+                type,
+                auth: getProtobufAuthData(authData),
                 limit: limit.toString(),
                 page: page.toString(),
                 filter: getProtobufDataFilter(filter),

@@ -1,22 +1,24 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
+import { ProjectionData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
 import { Order, getProtobufDataOrder } from "./order";
 
-export interface GetViewDataList<T extends object> {
+export interface GetViewDataList<T extends ProjectionData> {
     limit: number;
     page: number;
     total: number;
     data: T[];
 }
 
-export const getViewDataList = async <T extends object>(
+export const getViewDataList = async <T extends ProjectionData>(
     view: string,
     auth: AuthData,
     limit: number,
     page: number,
     filter: Filter,
     order: Order[],
+    useStrongConsistency: boolean,
     serviceClient: ServiceClient
 ): Promise<GetViewDataList<T> | null> => {
     return new Promise<GetViewDataList<T> | null>((resolve, reject) => {
@@ -28,7 +30,7 @@ export const getViewDataList = async <T extends object>(
                 page: page.toString(),
                 filter: getProtobufDataFilter(filter),
                 order: getProtobufDataOrder(order),
-                useStrongConsistency: false,
+                useStrongConsistency,
             },
             (error, response) => {
                 if (error) {

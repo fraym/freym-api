@@ -1,13 +1,13 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
+import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
-import { ProjectionData } from "./data";
+import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
 import { Wait, getProtobufDataWait } from "./wait";
 
-export const getProjectionData = async <T extends ProjectionData>(
-    projection: string,
-    auth: AuthData,
-    dataId: string,
+export const getCrudData = async <T extends CrudData>(
+    type: string,
+    authData: AuthData,
+    id: string,
     filter: Filter,
     returnEmptyDataIfNotFound: boolean,
     useStrongConsistency: boolean,
@@ -17,10 +17,10 @@ export const getProjectionData = async <T extends ProjectionData>(
     return new Promise<T | null>((resolve, reject) => {
         serviceClient.getData(
             {
-                projection,
-                auth: getProtobufAuthData(auth),
-                dataId,
+                type,
+                auth: getProtobufAuthData(authData),
                 filter: getProtobufDataFilter(filter),
+                id,
                 returnEmptyDataIfNotFound,
                 wait: getProtobufDataWait(wait),
                 useStrongConsistency,
@@ -33,7 +33,7 @@ export const getProjectionData = async <T extends ProjectionData>(
 
                 const result = response.result;
 
-                if (!result || !result.data || Object.keys(result.data).length === 0) {
+                if (!result) {
                     resolve(null);
                     return;
                 }
