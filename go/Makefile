@@ -5,7 +5,7 @@ lint: ## Run linters
 	golangci-lint run --enable gofumpt
 
 test: ## Run tests
-	go test ./...
+	go test -short ./...
 
 cover: ## Calculate test coverage
 	go test -coverprofile=coverage.out ./... -timeout 2m

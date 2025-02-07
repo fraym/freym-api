@@ -11,7 +11,7 @@ lint: ## Run linters
 	cd ./js && npm run lint
 
 test: ## Run tests
-	cd ./go && go test ./...
+	cd ./go && go test -short ./...
 
 dev-go: ## Runs the go dev environment on the k8s cluster
 	kubectl apply -f .k8s/1-go-service.yml

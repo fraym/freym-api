@@ -1,12 +1,16 @@
-package projections
+package crud
 
 import (
 	"context"
 
-	"github.com/fraym/freym-api/go/projections/config"
-	"github.com/fraym/freym-api/go/projections/management"
-	"github.com/fraym/freym-api/go/proto/projections/managementpb"
+	"github.com/fraym/freym-api/go/crud/config"
+	"github.com/fraym/freym-api/go/crud/management"
+	"github.com/fraym/freym-api/go/proto/crud/managementpb"
 )
+
+type MigrationStatus struct {
+	Done bool
+}
 
 type ManagementClient interface {
 	DeploySchema(
@@ -16,7 +20,6 @@ type ManagementClient interface {
 		crudTypes []ObjectType,
 		nestedTypes []ObjectType,
 		enums []EnumType,
-		views []View,
 		options *DeploymentOptions,
 	) error
 	ConfirmSchema(ctx context.Context, deploymentId int64) error
@@ -25,14 +28,12 @@ type ManagementClient interface {
 	Close() error
 }
 
-type projectionsManagementClient struct {
+type crudManagementClient struct {
 	clientCloseFn func() error
 	client        managementpb.ServiceClient
 }
 
-func NewManagementClient(
-	conf *config.Config,
-) (ManagementClient, error) {
+func NewManagementClient(conf *config.Config) (ManagementClient, error) {
 	if conf == nil {
 		conf = config.NewDefaultConfig()
 	}
@@ -42,20 +43,19 @@ func NewManagementClient(
 		return nil, err
 	}
 
-	return &projectionsManagementClient{
+	return &crudManagementClient{
 		clientCloseFn: clientCloseFn,
 		client:        client,
 	}, nil
 }
 
-func (c *projectionsManagementClient) DeploySchema(
+func (c *crudManagementClient) DeploySchema(
 	ctx context.Context,
 	namespace string,
 	projectionTypes []ObjectType,
 	crudTypes []ObjectType,
 	nestedTypes []ObjectType,
 	enums []EnumType,
-	views []View,
 	options *DeploymentOptions,
 ) error {
 	newProjectionTypes, err := objectTypeListToPb(projectionTypes)
@@ -78,44 +78,38 @@ func (c *projectionsManagementClient) DeploySchema(
 		return err
 	}
 
-	newViews, err := viewListToPb(views)
-	if err != nil {
-		return err
-	}
-
 	_, err = c.client.DeploySchema(ctx, managementpb.DeploySchemaRequest_builder{
 		Namespace:       namespace,
 		ProjectionTypes: newProjectionTypes,
 		CrudTypes:       newCrudTypes,
 		NestedTypes:     newNestedTypes,
 		EnumTypes:       newEnums,
-		Views:           newViews,
 		Options:         options.toPb(),
 	}.Build())
 	return err
 }
 
-func (c *projectionsManagementClient) ConfirmSchema(ctx context.Context, deploymentId int64) error {
+func (c *crudManagementClient) ConfirmSchema(ctx context.Context, deploymentId int64) error {
 	_, err := c.client.ConfirmSchema(ctx, managementpb.ConfirmSchemaRequest_builder{
 		DeploymentId: deploymentId,
 	}.Build())
 	return err
 }
 
-func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, deploymentId int64) error {
+func (c *crudManagementClient) RollbackSchema(ctx context.Context, deploymentId int64) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
 		DeploymentId: deploymentId,
 	}.Build())
 	return err
 }
 
-func (c *projectionsManagementClient) GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error) {
+func (c *crudManagementClient) GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error) {
 	response, err := c.client.GetSchemaDeployment(ctx, managementpb.GetSchemaDeploymentRequest_builder{
 		DeploymentId: deploymentId,
 	}.Build())
 	return response.GetProgress(), err
 }
 
-func (c *projectionsManagementClient) Close() error {
+func (c *crudManagementClient) Close() error {
 	return c.clientCloseFn()
 }
