@@ -54,18 +54,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/go/proto/${{ github.ref_name }}',
-              sha: context.sha
-            })
-
-      - name: Publish go modules (set git tags)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/go/streams/${{ github.ref_name }}',
+              ref: 'refs/tags/go/${{ github.ref_name }}',
               sha: context.sha
             })
 

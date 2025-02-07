@@ -3,14 +3,12 @@ help: ## Show this help.
 
 .PHONY: proto
 proto: ## Generates api code from .proto files
-	cd ./go/proto && ./proto.sh
+	cd ./go && ./proto.sh
 	cd ./js && npm install && npm run generate
 
 lint: ## Run linters
-	cd ./go/streams && golangci-lint run --enable gofumpt
-	cd ./go/projections && golangci-lint run --enable gofumpt
-	cd js && npm run lint
+	cd ./go && golangci-lint run --enable gofumpt
+	cd ./js && npm run lint
 
 test: ## Run tests
-	cd ./go/streams && go test ./...
-	cd ./go/projections && go test ./...
+	cd ./go && go test ./...

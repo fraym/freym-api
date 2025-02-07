@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/js"
+    schedule:
+      interval: "daily"
+      time: "11:17"
+      timezone: "Europe/Berlin"
+    versioning-strategy: "increase"
+    target-branch: "main"
+    labels:
+      - "needs-review"
+    reviewers:
+      - "jesko-plitt"
+  - package-ecosystem: "gomod"
+    directory: "/go"
+    schedule:
+      interval: "daily"
+      time: "11:17"
+      timezone: "Europe/Berlin"
+    versioning-strategy: "increase"
+    target-branch: "main"
+    labels:
+      - "needs-review"
+    reviewers:
+      - "jesko-plitt"

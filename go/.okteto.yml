@@ -1,5 +1,5 @@
 dev:
-  streams-go:
+  freym-api:
     image: go-dev-container:latest
     imagePullPolicy: Never
     command: bash

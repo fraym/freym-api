@@ -1,5 +1,0 @@
-[url "ssh://git@github.com/Becklyn-Studios/"]
-	insteadOf = https://github.com/Becklyn-Studios/
-
-[url "ssh://git@github.com/fraym/"]
-	insteadOf = https://github.com/fraym/

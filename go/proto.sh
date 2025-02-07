@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd ../../api/grpc
+cd ../api/grpc
 
 for filename in ./auth/management/*.proto; do
 	params="$params --go_opt=Mauth/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/auth/managementpb"
@@ -63,7 +63,7 @@ protoc \
 	--go_opt=default_api_level=API_OPAQUE \
 	**/**/*.proto
 
-cd ../../go/proto 
+cd ../../go 
 go mod tidy
 go get -u all
 go mod tidy
