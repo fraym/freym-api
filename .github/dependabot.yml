@@ -4,7 +4,7 @@ updates:
     directory: "/js"
     schedule:
       interval: "daily"
-      time: "11:17"
+      time: "11:38"
       timezone: "Europe/Berlin"
     versioning-strategy: "increase"
     target-branch: "main"
@@ -16,10 +16,11 @@ updates:
     directory: "/go"
     schedule:
       interval: "daily"
-      time: "11:17"
+      time: "11:38"
       timezone: "Europe/Berlin"
-    versioning-strategy: "increase"
     target-branch: "main"
+    allow:
+      - dependency-type: "all"
     labels:
       - "needs-review"
     reviewers:
