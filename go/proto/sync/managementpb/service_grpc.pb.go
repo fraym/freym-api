@@ -23,10 +23,8 @@ const (
 	Service_KeepLease_FullMethodName    = "/freym.sync.management.Service/KeepLease"
 	Service_DropLease_FullMethodName    = "/freym.sync.management.Service/DropLease"
 	Service_GetPeerNodes_FullMethodName = "/freym.sync.management.Service/GetPeerNodes"
-	Service_LocalLock_FullMethodName    = "/freym.sync.management.Service/LocalLock"
-	Service_LocalUnlock_FullMethodName  = "/freym.sync.management.Service/LocalUnlock"
-	Service_GlobalLock_FullMethodName   = "/freym.sync.management.Service/GlobalLock"
-	Service_GlobalUnlock_FullMethodName = "/freym.sync.management.Service/GlobalUnlock"
+	Service_Lock_FullMethodName         = "/freym.sync.management.Service/Lock"
+	Service_Unlock_FullMethodName       = "/freym.sync.management.Service/Unlock"
 )
 
 // ServiceClient is the client API for Service service.
@@ -37,10 +35,8 @@ type ServiceClient interface {
 	KeepLease(ctx context.Context, in *KeepLeaseRequest, opts ...grpc.CallOption) (*KeepLeaseResponse, error)
 	DropLease(ctx context.Context, in *DropLeaseRequest, opts ...grpc.CallOption) (*DropLeaseResponse, error)
 	GetPeerNodes(ctx context.Context, in *GetPeerNodesRequest, opts ...grpc.CallOption) (Service_GetPeerNodesClient, error)
-	LocalLock(ctx context.Context, in *LocalLockRequest, opts ...grpc.CallOption) (*LocalLockResponse, error)
-	LocalUnlock(ctx context.Context, in *LocalUnlockRequest, opts ...grpc.CallOption) (*LocalUnlockResponse, error)
-	GlobalLock(ctx context.Context, in *GlobalLockRequest, opts ...grpc.CallOption) (*GlobalLockResponse, error)
-	GlobalUnlock(ctx context.Context, in *GlobalUnlockRequest, opts ...grpc.CallOption) (*GlobalUnlockResponse, error)
+	Lock(ctx context.Context, in *LockRequest, opts ...grpc.CallOption) (*LockResponse, error)
+	Unlock(ctx context.Context, in *UnlockRequest, opts ...grpc.CallOption) (*UnlockResponse, error)
 }
 
 type serviceClient struct {
@@ -110,36 +106,18 @@ func (x *serviceGetPeerNodesClient) Recv() (*GetPeerNodesResponse, error) {
 	return m, nil
 }
 
-func (c *serviceClient) LocalLock(ctx context.Context, in *LocalLockRequest, opts ...grpc.CallOption) (*LocalLockResponse, error) {
-	out := new(LocalLockResponse)
-	err := c.cc.Invoke(ctx, Service_LocalLock_FullMethodName, in, out, opts...)
+func (c *serviceClient) Lock(ctx context.Context, in *LockRequest, opts ...grpc.CallOption) (*LockResponse, error) {
+	out := new(LockResponse)
+	err := c.cc.Invoke(ctx, Service_Lock_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) LocalUnlock(ctx context.Context, in *LocalUnlockRequest, opts ...grpc.CallOption) (*LocalUnlockResponse, error) {
-	out := new(LocalUnlockResponse)
-	err := c.cc.Invoke(ctx, Service_LocalUnlock_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) GlobalLock(ctx context.Context, in *GlobalLockRequest, opts ...grpc.CallOption) (*GlobalLockResponse, error) {
-	out := new(GlobalLockResponse)
-	err := c.cc.Invoke(ctx, Service_GlobalLock_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) GlobalUnlock(ctx context.Context, in *GlobalUnlockRequest, opts ...grpc.CallOption) (*GlobalUnlockResponse, error) {
-	out := new(GlobalUnlockResponse)
-	err := c.cc.Invoke(ctx, Service_GlobalUnlock_FullMethodName, in, out, opts...)
+func (c *serviceClient) Unlock(ctx context.Context, in *UnlockRequest, opts ...grpc.CallOption) (*UnlockResponse, error) {
+	out := new(UnlockResponse)
+	err := c.cc.Invoke(ctx, Service_Unlock_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -154,10 +132,8 @@ type ServiceServer interface {
 	KeepLease(context.Context, *KeepLeaseRequest) (*KeepLeaseResponse, error)
 	DropLease(context.Context, *DropLeaseRequest) (*DropLeaseResponse, error)
 	GetPeerNodes(*GetPeerNodesRequest, Service_GetPeerNodesServer) error
-	LocalLock(context.Context, *LocalLockRequest) (*LocalLockResponse, error)
-	LocalUnlock(context.Context, *LocalUnlockRequest) (*LocalUnlockResponse, error)
-	GlobalLock(context.Context, *GlobalLockRequest) (*GlobalLockResponse, error)
-	GlobalUnlock(context.Context, *GlobalUnlockRequest) (*GlobalUnlockResponse, error)
+	Lock(context.Context, *LockRequest) (*LockResponse, error)
+	Unlock(context.Context, *UnlockRequest) (*UnlockResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -177,17 +153,11 @@ func (UnimplementedServiceServer) DropLease(context.Context, *DropLeaseRequest) 
 func (UnimplementedServiceServer) GetPeerNodes(*GetPeerNodesRequest, Service_GetPeerNodesServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetPeerNodes not implemented")
 }
-func (UnimplementedServiceServer) LocalLock(context.Context, *LocalLockRequest) (*LocalLockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LocalLock not implemented")
+func (UnimplementedServiceServer) Lock(context.Context, *LockRequest) (*LockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Lock not implemented")
 }
-func (UnimplementedServiceServer) LocalUnlock(context.Context, *LocalUnlockRequest) (*LocalUnlockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LocalUnlock not implemented")
-}
-func (UnimplementedServiceServer) GlobalLock(context.Context, *GlobalLockRequest) (*GlobalLockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GlobalLock not implemented")
-}
-func (UnimplementedServiceServer) GlobalUnlock(context.Context, *GlobalUnlockRequest) (*GlobalUnlockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GlobalUnlock not implemented")
+func (UnimplementedServiceServer) Unlock(context.Context, *UnlockRequest) (*UnlockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Unlock not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -277,74 +247,38 @@ func (x *serviceGetPeerNodesServer) Send(m *GetPeerNodesResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _Service_LocalLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LocalLockRequest)
+func _Service_Lock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).LocalLock(ctx, in)
+		return srv.(ServiceServer).Lock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_LocalLock_FullMethodName,
+		FullMethod: Service_Lock_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).LocalLock(ctx, req.(*LocalLockRequest))
+		return srv.(ServiceServer).Lock(ctx, req.(*LockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_LocalUnlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LocalUnlockRequest)
+func _Service_Unlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).LocalUnlock(ctx, in)
+		return srv.(ServiceServer).Unlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_LocalUnlock_FullMethodName,
+		FullMethod: Service_Unlock_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).LocalUnlock(ctx, req.(*LocalUnlockRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_GlobalLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GlobalLockRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).GlobalLock(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_GlobalLock_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GlobalLock(ctx, req.(*GlobalLockRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_GlobalUnlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GlobalUnlockRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).GlobalUnlock(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_GlobalUnlock_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GlobalUnlock(ctx, req.(*GlobalUnlockRequest))
+		return srv.(ServiceServer).Unlock(ctx, req.(*UnlockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -369,20 +303,12 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_DropLease_Handler,
 		},
 		{
-			MethodName: "LocalLock",
-			Handler:    _Service_LocalLock_Handler,
+			MethodName: "Lock",
+			Handler:    _Service_Lock_Handler,
 		},
 		{
-			MethodName: "LocalUnlock",
-			Handler:    _Service_LocalUnlock_Handler,
-		},
-		{
-			MethodName: "GlobalLock",
-			Handler:    _Service_GlobalLock_Handler,
-		},
-		{
-			MethodName: "GlobalUnlock",
-			Handler:    _Service_GlobalUnlock_Handler,
+			MethodName: "Unlock",
+			Handler:    _Service_Unlock_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

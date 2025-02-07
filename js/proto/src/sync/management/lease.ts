@@ -7,17 +7,10 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-export interface LocalLock {
+export interface Lock {
     leaseId: string;
     tenantId: string;
-    globalConcern: string;
-    localConcern: string;
-}
-
-export interface GlobalLock {
-    leaseId: string;
-    tenantId: string;
-    globalConcern: string;
+    resource: string[];
 }
 
 export interface CreateLeaseRequest {
@@ -25,8 +18,7 @@ export interface CreateLeaseRequest {
     app: string;
     ttl: number;
     leaseId: string;
-    alreadyRegisteredLocalLocks: LocalLock[];
-    alreadyRegisteredGlobalLocks: GlobalLock[];
+    alreadyRegisteredLocks: Lock[];
 }
 
 export interface CreateLeaseResponse {
@@ -46,31 +38,28 @@ export interface DropLeaseRequest {
 
 export interface DropLeaseResponse {}
 
-function createBaseLocalLock(): LocalLock {
-    return { leaseId: "", tenantId: "", globalConcern: "", localConcern: "" };
+function createBaseLock(): Lock {
+    return { leaseId: "", tenantId: "", resource: [] };
 }
 
-export const LocalLock: MessageFns<LocalLock> = {
-    encode(message: LocalLock, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const Lock: MessageFns<Lock> = {
+    encode(message: Lock, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         if (message.leaseId !== "") {
             writer.uint32(10).string(message.leaseId);
         }
         if (message.tenantId !== "") {
             writer.uint32(18).string(message.tenantId);
         }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        if (message.localConcern !== "") {
-            writer.uint32(34).string(message.localConcern);
+        for (const v of message.resource) {
+            writer.uint32(26).string(v!);
         }
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): LocalLock {
+    decode(input: BinaryReader | Uint8Array, length?: number): Lock {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseLocalLock();
+        const message = createBaseLock();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -95,15 +84,7 @@ export const LocalLock: MessageFns<LocalLock> = {
                         break;
                     }
 
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 34) {
-                        break;
-                    }
-
-                    message.localConcern = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -115,18 +96,17 @@ export const LocalLock: MessageFns<LocalLock> = {
         return message;
     },
 
-    fromJSON(object: any): LocalLock {
+    fromJSON(object: any): Lock {
         return {
             leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-            localConcern: isSet(object.localConcern) ? globalThis.String(object.localConcern) : "",
+            resource: globalThis.Array.isArray(object?.resource)
+                ? object.resource.map((e: any) => globalThis.String(e))
+                : [],
         };
     },
 
-    toJSON(message: LocalLock): unknown {
+    toJSON(message: Lock): unknown {
         const obj: any = {};
         if (message.leaseId !== "") {
             obj.leaseId = message.leaseId;
@@ -134,131 +114,26 @@ export const LocalLock: MessageFns<LocalLock> = {
         if (message.tenantId !== "") {
             obj.tenantId = message.tenantId;
         }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        if (message.localConcern !== "") {
-            obj.localConcern = message.localConcern;
+        if (message.resource?.length) {
+            obj.resource = message.resource;
         }
         return obj;
     },
 
-    create(base?: DeepPartial<LocalLock>): LocalLock {
-        return LocalLock.fromPartial(base ?? {});
+    create(base?: DeepPartial<Lock>): Lock {
+        return Lock.fromPartial(base ?? {});
     },
-    fromPartial(object: DeepPartial<LocalLock>): LocalLock {
-        const message = createBaseLocalLock();
+    fromPartial(object: DeepPartial<Lock>): Lock {
+        const message = createBaseLock();
         message.leaseId = object.leaseId ?? "";
         message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
-        message.localConcern = object.localConcern ?? "";
-        return message;
-    },
-};
-
-function createBaseGlobalLock(): GlobalLock {
-    return { leaseId: "", tenantId: "", globalConcern: "" };
-}
-
-export const GlobalLock: MessageFns<GlobalLock> = {
-    encode(message: GlobalLock, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.leaseId !== "") {
-            writer.uint32(10).string(message.leaseId);
-        }
-        if (message.tenantId !== "") {
-            writer.uint32(18).string(message.tenantId);
-        }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): GlobalLock {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseGlobalLock();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1: {
-                    if (tag !== 10) {
-                        break;
-                    }
-
-                    message.leaseId = reader.string();
-                    continue;
-                }
-                case 2: {
-                    if (tag !== 18) {
-                        break;
-                    }
-
-                    message.tenantId = reader.string();
-                    continue;
-                }
-                case 3: {
-                    if (tag !== 26) {
-                        break;
-                    }
-
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(object: any): GlobalLock {
-        return {
-            leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
-            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-        };
-    },
-
-    toJSON(message: GlobalLock): unknown {
-        const obj: any = {};
-        if (message.leaseId !== "") {
-            obj.leaseId = message.leaseId;
-        }
-        if (message.tenantId !== "") {
-            obj.tenantId = message.tenantId;
-        }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        return obj;
-    },
-
-    create(base?: DeepPartial<GlobalLock>): GlobalLock {
-        return GlobalLock.fromPartial(base ?? {});
-    },
-    fromPartial(object: DeepPartial<GlobalLock>): GlobalLock {
-        const message = createBaseGlobalLock();
-        message.leaseId = object.leaseId ?? "";
-        message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
+        message.resource = object.resource?.map(e => e) || [];
         return message;
     },
 };
 
 function createBaseCreateLeaseRequest(): CreateLeaseRequest {
-    return {
-        ip: "",
-        app: "",
-        ttl: 0,
-        leaseId: "",
-        alreadyRegisteredLocalLocks: [],
-        alreadyRegisteredGlobalLocks: [],
-    };
+    return { ip: "", app: "", ttl: 0, leaseId: "", alreadyRegisteredLocks: [] };
 }
 
 export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
@@ -275,11 +150,8 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         if (message.leaseId !== "") {
             writer.uint32(34).string(message.leaseId);
         }
-        for (const v of message.alreadyRegisteredLocalLocks) {
-            LocalLock.encode(v!, writer.uint32(42).fork()).join();
-        }
-        for (const v of message.alreadyRegisteredGlobalLocks) {
-            GlobalLock.encode(v!, writer.uint32(50).fork()).join();
+        for (const v of message.alreadyRegisteredLocks) {
+            Lock.encode(v!, writer.uint32(42).fork()).join();
         }
         return writer;
     },
@@ -328,19 +200,7 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
                         break;
                     }
 
-                    message.alreadyRegisteredLocalLocks.push(
-                        LocalLock.decode(reader, reader.uint32())
-                    );
-                    continue;
-                }
-                case 6: {
-                    if (tag !== 50) {
-                        break;
-                    }
-
-                    message.alreadyRegisteredGlobalLocks.push(
-                        GlobalLock.decode(reader, reader.uint32())
-                    );
+                    message.alreadyRegisteredLocks.push(Lock.decode(reader, reader.uint32()));
                     continue;
                 }
             }
@@ -358,15 +218,8 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             ttl: isSet(object.ttl) ? globalThis.Number(object.ttl) : 0,
             leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
-            alreadyRegisteredLocalLocks: globalThis.Array.isArray(
-                object?.alreadyRegisteredLocalLocks
-            )
-                ? object.alreadyRegisteredLocalLocks.map((e: any) => LocalLock.fromJSON(e))
-                : [],
-            alreadyRegisteredGlobalLocks: globalThis.Array.isArray(
-                object?.alreadyRegisteredGlobalLocks
-            )
-                ? object.alreadyRegisteredGlobalLocks.map((e: any) => GlobalLock.fromJSON(e))
+            alreadyRegisteredLocks: globalThis.Array.isArray(object?.alreadyRegisteredLocks)
+                ? object.alreadyRegisteredLocks.map((e: any) => Lock.fromJSON(e))
                 : [],
         };
     },
@@ -385,15 +238,8 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         if (message.leaseId !== "") {
             obj.leaseId = message.leaseId;
         }
-        if (message.alreadyRegisteredLocalLocks?.length) {
-            obj.alreadyRegisteredLocalLocks = message.alreadyRegisteredLocalLocks.map(e =>
-                LocalLock.toJSON(e)
-            );
-        }
-        if (message.alreadyRegisteredGlobalLocks?.length) {
-            obj.alreadyRegisteredGlobalLocks = message.alreadyRegisteredGlobalLocks.map(e =>
-                GlobalLock.toJSON(e)
-            );
+        if (message.alreadyRegisteredLocks?.length) {
+            obj.alreadyRegisteredLocks = message.alreadyRegisteredLocks.map(e => Lock.toJSON(e));
         }
         return obj;
     },
@@ -407,10 +253,8 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         message.app = object.app ?? "";
         message.ttl = object.ttl ?? 0;
         message.leaseId = object.leaseId ?? "";
-        message.alreadyRegisteredLocalLocks =
-            object.alreadyRegisteredLocalLocks?.map(e => LocalLock.fromPartial(e)) || [];
-        message.alreadyRegisteredGlobalLocks =
-            object.alreadyRegisteredGlobalLocks?.map(e => GlobalLock.fromPartial(e)) || [];
+        message.alreadyRegisteredLocks =
+            object.alreadyRegisteredLocks?.map(e => Lock.fromPartial(e)) || [];
         return message;
     },
 };

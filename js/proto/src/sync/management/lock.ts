@@ -7,65 +7,44 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-export interface LocalLockRequest {
+export interface LockRequest {
     leaseId: string;
     tenantId: string;
-    globalConcern: string;
-    localConcern: string;
+    resource: string[];
 }
 
-export interface LocalLockResponse {}
+export interface LockResponse {}
 
-export interface LocalUnlockRequest {
+export interface UnlockRequest {
     leaseId: string;
     tenantId: string;
-    globalConcern: string;
-    localConcern: string;
+    resource: string[];
 }
 
-export interface LocalUnlockResponse {}
+export interface UnlockResponse {}
 
-export interface GlobalLockRequest {
-    leaseId: string;
-    tenantId: string;
-    globalConcern: string;
+function createBaseLockRequest(): LockRequest {
+    return { leaseId: "", tenantId: "", resource: [] };
 }
 
-export interface GlobalLockResponse {}
-
-export interface GlobalUnlockRequest {
-    leaseId: string;
-    tenantId: string;
-    globalConcern: string;
-}
-
-export interface GlobalUnlockResponse {}
-
-function createBaseLocalLockRequest(): LocalLockRequest {
-    return { leaseId: "", tenantId: "", globalConcern: "", localConcern: "" };
-}
-
-export const LocalLockRequest: MessageFns<LocalLockRequest> = {
-    encode(message: LocalLockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const LockRequest: MessageFns<LockRequest> = {
+    encode(message: LockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         if (message.leaseId !== "") {
             writer.uint32(10).string(message.leaseId);
         }
         if (message.tenantId !== "") {
             writer.uint32(18).string(message.tenantId);
         }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        if (message.localConcern !== "") {
-            writer.uint32(34).string(message.localConcern);
+        for (const v of message.resource) {
+            writer.uint32(26).string(v!);
         }
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): LocalLockRequest {
+    decode(input: BinaryReader | Uint8Array, length?: number): LockRequest {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseLocalLockRequest();
+        const message = createBaseLockRequest();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -90,15 +69,7 @@ export const LocalLockRequest: MessageFns<LocalLockRequest> = {
                         break;
                     }
 
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 34) {
-                        break;
-                    }
-
-                    message.localConcern = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -110,18 +81,17 @@ export const LocalLockRequest: MessageFns<LocalLockRequest> = {
         return message;
     },
 
-    fromJSON(object: any): LocalLockRequest {
+    fromJSON(object: any): LockRequest {
         return {
             leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-            localConcern: isSet(object.localConcern) ? globalThis.String(object.localConcern) : "",
+            resource: globalThis.Array.isArray(object?.resource)
+                ? object.resource.map((e: any) => globalThis.String(e))
+                : [],
         };
     },
 
-    toJSON(message: LocalLockRequest): unknown {
+    toJSON(message: LockRequest): unknown {
         const obj: any = {};
         if (message.leaseId !== "") {
             obj.leaseId = message.leaseId;
@@ -129,41 +99,37 @@ export const LocalLockRequest: MessageFns<LocalLockRequest> = {
         if (message.tenantId !== "") {
             obj.tenantId = message.tenantId;
         }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        if (message.localConcern !== "") {
-            obj.localConcern = message.localConcern;
+        if (message.resource?.length) {
+            obj.resource = message.resource;
         }
         return obj;
     },
 
-    create(base?: DeepPartial<LocalLockRequest>): LocalLockRequest {
-        return LocalLockRequest.fromPartial(base ?? {});
+    create(base?: DeepPartial<LockRequest>): LockRequest {
+        return LockRequest.fromPartial(base ?? {});
     },
-    fromPartial(object: DeepPartial<LocalLockRequest>): LocalLockRequest {
-        const message = createBaseLocalLockRequest();
+    fromPartial(object: DeepPartial<LockRequest>): LockRequest {
+        const message = createBaseLockRequest();
         message.leaseId = object.leaseId ?? "";
         message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
-        message.localConcern = object.localConcern ?? "";
+        message.resource = object.resource?.map(e => e) || [];
         return message;
     },
 };
 
-function createBaseLocalLockResponse(): LocalLockResponse {
+function createBaseLockResponse(): LockResponse {
     return {};
 }
 
-export const LocalLockResponse: MessageFns<LocalLockResponse> = {
-    encode(_: LocalLockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const LockResponse: MessageFns<LockResponse> = {
+    encode(_: LockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): LocalLockResponse {
+    decode(input: BinaryReader | Uint8Array, length?: number): LockResponse {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseLocalLockResponse();
+        const message = createBaseLockResponse();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -176,49 +142,46 @@ export const LocalLockResponse: MessageFns<LocalLockResponse> = {
         return message;
     },
 
-    fromJSON(_: any): LocalLockResponse {
+    fromJSON(_: any): LockResponse {
         return {};
     },
 
-    toJSON(_: LocalLockResponse): unknown {
+    toJSON(_: LockResponse): unknown {
         const obj: any = {};
         return obj;
     },
 
-    create(base?: DeepPartial<LocalLockResponse>): LocalLockResponse {
-        return LocalLockResponse.fromPartial(base ?? {});
+    create(base?: DeepPartial<LockResponse>): LockResponse {
+        return LockResponse.fromPartial(base ?? {});
     },
-    fromPartial(_: DeepPartial<LocalLockResponse>): LocalLockResponse {
-        const message = createBaseLocalLockResponse();
+    fromPartial(_: DeepPartial<LockResponse>): LockResponse {
+        const message = createBaseLockResponse();
         return message;
     },
 };
 
-function createBaseLocalUnlockRequest(): LocalUnlockRequest {
-    return { leaseId: "", tenantId: "", globalConcern: "", localConcern: "" };
+function createBaseUnlockRequest(): UnlockRequest {
+    return { leaseId: "", tenantId: "", resource: [] };
 }
 
-export const LocalUnlockRequest: MessageFns<LocalUnlockRequest> = {
-    encode(message: LocalUnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const UnlockRequest: MessageFns<UnlockRequest> = {
+    encode(message: UnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         if (message.leaseId !== "") {
             writer.uint32(10).string(message.leaseId);
         }
         if (message.tenantId !== "") {
             writer.uint32(18).string(message.tenantId);
         }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        if (message.localConcern !== "") {
-            writer.uint32(34).string(message.localConcern);
+        for (const v of message.resource) {
+            writer.uint32(26).string(v!);
         }
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): LocalUnlockRequest {
+    decode(input: BinaryReader | Uint8Array, length?: number): UnlockRequest {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseLocalUnlockRequest();
+        const message = createBaseUnlockRequest();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -243,15 +206,7 @@ export const LocalUnlockRequest: MessageFns<LocalUnlockRequest> = {
                         break;
                     }
 
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 34) {
-                        break;
-                    }
-
-                    message.localConcern = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -263,18 +218,17 @@ export const LocalUnlockRequest: MessageFns<LocalUnlockRequest> = {
         return message;
     },
 
-    fromJSON(object: any): LocalUnlockRequest {
+    fromJSON(object: any): UnlockRequest {
         return {
             leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-            localConcern: isSet(object.localConcern) ? globalThis.String(object.localConcern) : "",
+            resource: globalThis.Array.isArray(object?.resource)
+                ? object.resource.map((e: any) => globalThis.String(e))
+                : [],
         };
     },
 
-    toJSON(message: LocalUnlockRequest): unknown {
+    toJSON(message: UnlockRequest): unknown {
         const obj: any = {};
         if (message.leaseId !== "") {
             obj.leaseId = message.leaseId;
@@ -282,41 +236,37 @@ export const LocalUnlockRequest: MessageFns<LocalUnlockRequest> = {
         if (message.tenantId !== "") {
             obj.tenantId = message.tenantId;
         }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        if (message.localConcern !== "") {
-            obj.localConcern = message.localConcern;
+        if (message.resource?.length) {
+            obj.resource = message.resource;
         }
         return obj;
     },
 
-    create(base?: DeepPartial<LocalUnlockRequest>): LocalUnlockRequest {
-        return LocalUnlockRequest.fromPartial(base ?? {});
+    create(base?: DeepPartial<UnlockRequest>): UnlockRequest {
+        return UnlockRequest.fromPartial(base ?? {});
     },
-    fromPartial(object: DeepPartial<LocalUnlockRequest>): LocalUnlockRequest {
-        const message = createBaseLocalUnlockRequest();
+    fromPartial(object: DeepPartial<UnlockRequest>): UnlockRequest {
+        const message = createBaseUnlockRequest();
         message.leaseId = object.leaseId ?? "";
         message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
-        message.localConcern = object.localConcern ?? "";
+        message.resource = object.resource?.map(e => e) || [];
         return message;
     },
 };
 
-function createBaseLocalUnlockResponse(): LocalUnlockResponse {
+function createBaseUnlockResponse(): UnlockResponse {
     return {};
 }
 
-export const LocalUnlockResponse: MessageFns<LocalUnlockResponse> = {
-    encode(_: LocalUnlockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const UnlockResponse: MessageFns<UnlockResponse> = {
+    encode(_: UnlockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): LocalUnlockResponse {
+    decode(input: BinaryReader | Uint8Array, length?: number): UnlockResponse {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseLocalUnlockResponse();
+        const message = createBaseUnlockResponse();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -329,294 +279,20 @@ export const LocalUnlockResponse: MessageFns<LocalUnlockResponse> = {
         return message;
     },
 
-    fromJSON(_: any): LocalUnlockResponse {
+    fromJSON(_: any): UnlockResponse {
         return {};
     },
 
-    toJSON(_: LocalUnlockResponse): unknown {
+    toJSON(_: UnlockResponse): unknown {
         const obj: any = {};
         return obj;
     },
 
-    create(base?: DeepPartial<LocalUnlockResponse>): LocalUnlockResponse {
-        return LocalUnlockResponse.fromPartial(base ?? {});
+    create(base?: DeepPartial<UnlockResponse>): UnlockResponse {
+        return UnlockResponse.fromPartial(base ?? {});
     },
-    fromPartial(_: DeepPartial<LocalUnlockResponse>): LocalUnlockResponse {
-        const message = createBaseLocalUnlockResponse();
-        return message;
-    },
-};
-
-function createBaseGlobalLockRequest(): GlobalLockRequest {
-    return { leaseId: "", tenantId: "", globalConcern: "" };
-}
-
-export const GlobalLockRequest: MessageFns<GlobalLockRequest> = {
-    encode(message: GlobalLockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.leaseId !== "") {
-            writer.uint32(10).string(message.leaseId);
-        }
-        if (message.tenantId !== "") {
-            writer.uint32(18).string(message.tenantId);
-        }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): GlobalLockRequest {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseGlobalLockRequest();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1: {
-                    if (tag !== 10) {
-                        break;
-                    }
-
-                    message.leaseId = reader.string();
-                    continue;
-                }
-                case 2: {
-                    if (tag !== 18) {
-                        break;
-                    }
-
-                    message.tenantId = reader.string();
-                    continue;
-                }
-                case 3: {
-                    if (tag !== 26) {
-                        break;
-                    }
-
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(object: any): GlobalLockRequest {
-        return {
-            leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
-            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-        };
-    },
-
-    toJSON(message: GlobalLockRequest): unknown {
-        const obj: any = {};
-        if (message.leaseId !== "") {
-            obj.leaseId = message.leaseId;
-        }
-        if (message.tenantId !== "") {
-            obj.tenantId = message.tenantId;
-        }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        return obj;
-    },
-
-    create(base?: DeepPartial<GlobalLockRequest>): GlobalLockRequest {
-        return GlobalLockRequest.fromPartial(base ?? {});
-    },
-    fromPartial(object: DeepPartial<GlobalLockRequest>): GlobalLockRequest {
-        const message = createBaseGlobalLockRequest();
-        message.leaseId = object.leaseId ?? "";
-        message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
-        return message;
-    },
-};
-
-function createBaseGlobalLockResponse(): GlobalLockResponse {
-    return {};
-}
-
-export const GlobalLockResponse: MessageFns<GlobalLockResponse> = {
-    encode(_: GlobalLockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): GlobalLockResponse {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseGlobalLockResponse();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(_: any): GlobalLockResponse {
-        return {};
-    },
-
-    toJSON(_: GlobalLockResponse): unknown {
-        const obj: any = {};
-        return obj;
-    },
-
-    create(base?: DeepPartial<GlobalLockResponse>): GlobalLockResponse {
-        return GlobalLockResponse.fromPartial(base ?? {});
-    },
-    fromPartial(_: DeepPartial<GlobalLockResponse>): GlobalLockResponse {
-        const message = createBaseGlobalLockResponse();
-        return message;
-    },
-};
-
-function createBaseGlobalUnlockRequest(): GlobalUnlockRequest {
-    return { leaseId: "", tenantId: "", globalConcern: "" };
-}
-
-export const GlobalUnlockRequest: MessageFns<GlobalUnlockRequest> = {
-    encode(message: GlobalUnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.leaseId !== "") {
-            writer.uint32(10).string(message.leaseId);
-        }
-        if (message.tenantId !== "") {
-            writer.uint32(18).string(message.tenantId);
-        }
-        if (message.globalConcern !== "") {
-            writer.uint32(26).string(message.globalConcern);
-        }
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): GlobalUnlockRequest {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseGlobalUnlockRequest();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1: {
-                    if (tag !== 10) {
-                        break;
-                    }
-
-                    message.leaseId = reader.string();
-                    continue;
-                }
-                case 2: {
-                    if (tag !== 18) {
-                        break;
-                    }
-
-                    message.tenantId = reader.string();
-                    continue;
-                }
-                case 3: {
-                    if (tag !== 26) {
-                        break;
-                    }
-
-                    message.globalConcern = reader.string();
-                    continue;
-                }
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(object: any): GlobalUnlockRequest {
-        return {
-            leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
-            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
-            globalConcern: isSet(object.globalConcern)
-                ? globalThis.String(object.globalConcern)
-                : "",
-        };
-    },
-
-    toJSON(message: GlobalUnlockRequest): unknown {
-        const obj: any = {};
-        if (message.leaseId !== "") {
-            obj.leaseId = message.leaseId;
-        }
-        if (message.tenantId !== "") {
-            obj.tenantId = message.tenantId;
-        }
-        if (message.globalConcern !== "") {
-            obj.globalConcern = message.globalConcern;
-        }
-        return obj;
-    },
-
-    create(base?: DeepPartial<GlobalUnlockRequest>): GlobalUnlockRequest {
-        return GlobalUnlockRequest.fromPartial(base ?? {});
-    },
-    fromPartial(object: DeepPartial<GlobalUnlockRequest>): GlobalUnlockRequest {
-        const message = createBaseGlobalUnlockRequest();
-        message.leaseId = object.leaseId ?? "";
-        message.tenantId = object.tenantId ?? "";
-        message.globalConcern = object.globalConcern ?? "";
-        return message;
-    },
-};
-
-function createBaseGlobalUnlockResponse(): GlobalUnlockResponse {
-    return {};
-}
-
-export const GlobalUnlockResponse: MessageFns<GlobalUnlockResponse> = {
-    encode(_: GlobalUnlockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): GlobalUnlockResponse {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseGlobalUnlockResponse();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(_: any): GlobalUnlockResponse {
-        return {};
-    },
-
-    toJSON(_: GlobalUnlockResponse): unknown {
-        const obj: any = {};
-        return obj;
-    },
-
-    create(base?: DeepPartial<GlobalUnlockResponse>): GlobalUnlockResponse {
-        return GlobalUnlockResponse.fromPartial(base ?? {});
-    },
-    fromPartial(_: DeepPartial<GlobalUnlockResponse>): GlobalUnlockResponse {
-        const message = createBaseGlobalUnlockResponse();
+    fromPartial(_: DeepPartial<UnlockResponse>): UnlockResponse {
+        const message = createBaseUnlockResponse();
         return message;
     },
 };

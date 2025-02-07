@@ -25,16 +25,7 @@ import {
     KeepLeaseRequest,
     KeepLeaseResponse,
 } from "./lease";
-import {
-    GlobalLockRequest,
-    GlobalLockResponse,
-    GlobalUnlockRequest,
-    GlobalUnlockResponse,
-    LocalLockRequest,
-    LocalLockResponse,
-    LocalUnlockRequest,
-    LocalUnlockResponse,
-} from "./lock";
+import { LockRequest, LockResponse, UnlockRequest, UnlockResponse } from "./lock";
 import { GetPeerNodesRequest, GetPeerNodesResponse } from "./peer_nodes";
 
 export type ServiceService = typeof ServiceService;
@@ -83,49 +74,26 @@ export const ServiceService = {
             Buffer.from(GetPeerNodesResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => GetPeerNodesResponse.decode(value),
     },
-    localLock: {
-        path: "/freym.sync.management.Service/LocalLock",
+    lock: {
+        path: "/freym.sync.management.Service/Lock",
         requestStream: false,
         responseStream: false,
-        requestSerialize: (value: LocalLockRequest) =>
-            Buffer.from(LocalLockRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => LocalLockRequest.decode(value),
-        responseSerialize: (value: LocalLockResponse) =>
-            Buffer.from(LocalLockResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => LocalLockResponse.decode(value),
+        requestSerialize: (value: LockRequest) => Buffer.from(LockRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => LockRequest.decode(value),
+        responseSerialize: (value: LockResponse) =>
+            Buffer.from(LockResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => LockResponse.decode(value),
     },
-    localUnlock: {
-        path: "/freym.sync.management.Service/LocalUnlock",
+    unlock: {
+        path: "/freym.sync.management.Service/Unlock",
         requestStream: false,
         responseStream: false,
-        requestSerialize: (value: LocalUnlockRequest) =>
-            Buffer.from(LocalUnlockRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => LocalUnlockRequest.decode(value),
-        responseSerialize: (value: LocalUnlockResponse) =>
-            Buffer.from(LocalUnlockResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => LocalUnlockResponse.decode(value),
-    },
-    globalLock: {
-        path: "/freym.sync.management.Service/GlobalLock",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: GlobalLockRequest) =>
-            Buffer.from(GlobalLockRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => GlobalLockRequest.decode(value),
-        responseSerialize: (value: GlobalLockResponse) =>
-            Buffer.from(GlobalLockResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => GlobalLockResponse.decode(value),
-    },
-    globalUnlock: {
-        path: "/freym.sync.management.Service/GlobalUnlock",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: GlobalUnlockRequest) =>
-            Buffer.from(GlobalUnlockRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => GlobalUnlockRequest.decode(value),
-        responseSerialize: (value: GlobalUnlockResponse) =>
-            Buffer.from(GlobalUnlockResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => GlobalUnlockResponse.decode(value),
+        requestSerialize: (value: UnlockRequest) =>
+            Buffer.from(UnlockRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => UnlockRequest.decode(value),
+        responseSerialize: (value: UnlockResponse) =>
+            Buffer.from(UnlockResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => UnlockResponse.decode(value),
     },
 } as const;
 
@@ -134,10 +102,8 @@ export interface ServiceServer extends UntypedServiceImplementation {
     keepLease: handleUnaryCall<KeepLeaseRequest, KeepLeaseResponse>;
     dropLease: handleUnaryCall<DropLeaseRequest, DropLeaseResponse>;
     getPeerNodes: handleServerStreamingCall<GetPeerNodesRequest, GetPeerNodesResponse>;
-    localLock: handleUnaryCall<LocalLockRequest, LocalLockResponse>;
-    localUnlock: handleUnaryCall<LocalUnlockRequest, LocalUnlockResponse>;
-    globalLock: handleUnaryCall<GlobalLockRequest, GlobalLockResponse>;
-    globalUnlock: handleUnaryCall<GlobalUnlockRequest, GlobalUnlockResponse>;
+    lock: handleUnaryCall<LockRequest, LockResponse>;
+    unlock: handleUnaryCall<UnlockRequest, UnlockResponse>;
 }
 
 export interface ServiceClient extends Client {
@@ -195,65 +161,35 @@ export interface ServiceClient extends Client {
         metadata?: Metadata,
         options?: Partial<CallOptions>
     ): ClientReadableStream<GetPeerNodesResponse>;
-    localLock(
-        request: LocalLockRequest,
-        callback: (error: ServiceError | null, response: LocalLockResponse) => void
+    lock(
+        request: LockRequest,
+        callback: (error: ServiceError | null, response: LockResponse) => void
     ): ClientUnaryCall;
-    localLock(
-        request: LocalLockRequest,
+    lock(
+        request: LockRequest,
         metadata: Metadata,
-        callback: (error: ServiceError | null, response: LocalLockResponse) => void
+        callback: (error: ServiceError | null, response: LockResponse) => void
     ): ClientUnaryCall;
-    localLock(
-        request: LocalLockRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: LocalLockResponse) => void
-    ): ClientUnaryCall;
-    localUnlock(
-        request: LocalUnlockRequest,
-        callback: (error: ServiceError | null, response: LocalUnlockResponse) => void
-    ): ClientUnaryCall;
-    localUnlock(
-        request: LocalUnlockRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: LocalUnlockResponse) => void
-    ): ClientUnaryCall;
-    localUnlock(
-        request: LocalUnlockRequest,
+    lock(
+        request: LockRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: LocalUnlockResponse) => void
+        callback: (error: ServiceError | null, response: LockResponse) => void
     ): ClientUnaryCall;
-    globalLock(
-        request: GlobalLockRequest,
-        callback: (error: ServiceError | null, response: GlobalLockResponse) => void
+    unlock(
+        request: UnlockRequest,
+        callback: (error: ServiceError | null, response: UnlockResponse) => void
     ): ClientUnaryCall;
-    globalLock(
-        request: GlobalLockRequest,
+    unlock(
+        request: UnlockRequest,
         metadata: Metadata,
-        callback: (error: ServiceError | null, response: GlobalLockResponse) => void
+        callback: (error: ServiceError | null, response: UnlockResponse) => void
     ): ClientUnaryCall;
-    globalLock(
-        request: GlobalLockRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: GlobalLockResponse) => void
-    ): ClientUnaryCall;
-    globalUnlock(
-        request: GlobalUnlockRequest,
-        callback: (error: ServiceError | null, response: GlobalUnlockResponse) => void
-    ): ClientUnaryCall;
-    globalUnlock(
-        request: GlobalUnlockRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: GlobalUnlockResponse) => void
-    ): ClientUnaryCall;
-    globalUnlock(
-        request: GlobalUnlockRequest,
+    unlock(
+        request: UnlockRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: GlobalUnlockResponse) => void
+        callback: (error: ServiceError | null, response: UnlockResponse) => void
     ): ClientUnaryCall;
 }
 

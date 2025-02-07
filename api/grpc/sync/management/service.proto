@@ -11,8 +11,6 @@ service Service {
 
 	rpc GetPeerNodes(GetPeerNodesRequest) returns (stream GetPeerNodesResponse);
 
-	rpc LocalLock(LocalLockRequest) returns (LocalLockResponse);
-	rpc LocalUnlock(LocalUnlockRequest) returns (LocalUnlockResponse);
-	rpc GlobalLock(GlobalLockRequest) returns (GlobalLockResponse);
-	rpc GlobalUnlock(GlobalUnlockRequest) returns (GlobalUnlockResponse);
+	rpc Lock(LockRequest) returns (LockResponse);
+	rpc Unlock(UnlockRequest) returns (UnlockResponse);
 }

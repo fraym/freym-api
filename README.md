@@ -1,6 +1,7 @@
 # Freym API
 
-[![JS Checks](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml) [![Go Checks](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml)
+[![JS Checks](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/js-checks.yaml)
+[![Go Checks](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml/badge.svg)](https://github.com/fraym/freym-api/actions/workflows/go-checks.yaml)
 
 ## Overview
 
