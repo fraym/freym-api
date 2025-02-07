@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: projections-nodejs
+  name: freym-api-js
   namespace: fraym
 spec:
   type: ClusterIP
   selector:
-    app: projections-nodejs
+    app: freym-api-js
   ports:
     - name: http
       protocol: TCP

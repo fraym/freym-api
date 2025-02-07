@@ -16,10 +16,28 @@ minikube start
 
 Install dev image if not already done (https://github.com/fraym/go-dev-container). See [README.md](https://github.com/fraym/go-dev-container) for documentation.
 
-Start dev container (from the directory root of the client you want to develop):
+Start dev container (go):
 
 ```shell
-make dev
+make dev-go
+```
+
+Start dev container (js):
+
+```shell
+make dev-js
 ```
 
 Connect your IDE to that dev container.
+
+Stop the dev container after development (go):
+
+```shell
+make dev-go-stop
+```
+
+Stop the dev container after development (js):
+
+```shell
+make dev-js-stop
+```
