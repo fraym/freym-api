@@ -36,6 +36,7 @@ message GetSchemaDeploymentResponse {
 message DeploymentOptions {
 	bool dangerously_remove_gdpr_fields = 1;
 	DeploymentTarget target = 2;
+	bool force = 3;
 }
 
 enum DeploymentTarget {

@@ -22,6 +22,7 @@ message CreateDeploymentResponse {
 message DeploymentOptions {
 	bool dangerously_remove_gdpr_fields = 1;
 	repeated string skip_services = 2;
+	bool force = 3;
 }
 
 

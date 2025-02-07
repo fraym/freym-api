@@ -95,6 +95,7 @@ export interface GetSchemaDeploymentResponse {
 export interface DeploymentOptions {
     dangerouslyRemoveGdprFields: boolean;
     target: DeploymentTarget;
+    force: boolean;
 }
 
 export interface ObjectType {
@@ -685,7 +686,11 @@ export const GetSchemaDeploymentResponse: MessageFns<GetSchemaDeploymentResponse
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return { dangerouslyRemoveGdprFields: false, target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE };
+    return {
+        dangerouslyRemoveGdprFields: false,
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+        force: false,
+    };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
@@ -695,6 +700,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             writer.uint32(16).int32(deploymentTargetToNumber(message.target));
+        }
+        if (message.force !== false) {
+            writer.uint32(24).bool(message.force);
         }
         return writer;
     },
@@ -722,6 +730,14 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                     message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
+                case 3: {
+                    if (tag !== 24) {
+                        break;
+                    }
+
+                    message.force = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -739,6 +755,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+            force: isSet(object.force) ? globalThis.Boolean(object.force) : false,
         };
     },
 
@@ -750,6 +767,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
+        if (message.force !== false) {
+            obj.force = message.force;
+        }
         return obj;
     },
 
@@ -760,6 +780,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         const message = createBaseDeploymentOptions();
         message.dangerouslyRemoveGdprFields = object.dangerouslyRemoveGdprFields ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        message.force = object.force ?? false;
         return message;
     },
 };

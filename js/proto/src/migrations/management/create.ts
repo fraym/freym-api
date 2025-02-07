@@ -79,6 +79,7 @@ export interface CreateDeploymentResponse {
 export interface DeploymentOptions {
     dangerouslyRemoveGdprFields: boolean;
     skipServices: string[];
+    force: boolean;
 }
 
 export interface ObjectType {
@@ -396,7 +397,7 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return { dangerouslyRemoveGdprFields: false, skipServices: [] };
+    return { dangerouslyRemoveGdprFields: false, skipServices: [], force: false };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
@@ -406,6 +407,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         }
         for (const v of message.skipServices) {
             writer.uint32(18).string(v!);
+        }
+        if (message.force !== false) {
+            writer.uint32(24).bool(message.force);
         }
         return writer;
     },
@@ -433,6 +437,14 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                     message.skipServices.push(reader.string());
                     continue;
                 }
+                case 3: {
+                    if (tag !== 24) {
+                        break;
+                    }
+
+                    message.force = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -450,6 +462,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
             skipServices: globalThis.Array.isArray(object?.skipServices)
                 ? object.skipServices.map((e: any) => globalThis.String(e))
                 : [],
+            force: isSet(object.force) ? globalThis.Boolean(object.force) : false,
         };
     },
 
@@ -461,6 +474,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         if (message.skipServices?.length) {
             obj.skipServices = message.skipServices;
         }
+        if (message.force !== false) {
+            obj.force = message.force;
+        }
         return obj;
     },
 
@@ -471,6 +487,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         const message = createBaseDeploymentOptions();
         message.dangerouslyRemoveGdprFields = object.dangerouslyRemoveGdprFields ?? false;
         message.skipServices = object.skipServices?.map(e => e) || [];
+        message.force = object.force ?? false;
         return message;
     },
 };

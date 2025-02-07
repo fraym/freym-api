@@ -93,6 +93,7 @@ export interface GetSchemaDeploymentResponse {
 
 export interface DeploymentOptions {
     target: DeploymentTarget;
+    force: boolean;
 }
 
 export interface ObjectType {
@@ -657,13 +658,16 @@ export const GetSchemaDeploymentResponse: MessageFns<GetSchemaDeploymentResponse
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE };
+    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE, force: false };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     encode(message: DeploymentOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             writer.uint32(8).int32(deploymentTargetToNumber(message.target));
+        }
+        if (message.force !== false) {
+            writer.uint32(16).bool(message.force);
         }
         return writer;
     },
@@ -683,6 +687,14 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                     message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
+                case 2: {
+                    if (tag !== 16) {
+                        break;
+                    }
+
+                    message.force = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -697,6 +709,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+            force: isSet(object.force) ? globalThis.Boolean(object.force) : false,
         };
     },
 
@@ -704,6 +717,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         const obj: any = {};
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
+        }
+        if (message.force !== false) {
+            obj.force = message.force;
         }
         return obj;
     },
@@ -714,6 +730,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     fromPartial(object: DeepPartial<DeploymentOptions>): DeploymentOptions {
         const message = createBaseDeploymentOptions();
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        message.force = object.force ?? false;
         return message;
     },
 };

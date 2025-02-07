@@ -3,9 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/js"
     schedule:
-      interval: "daily"
-      time: "11:38"
-      timezone: "Europe/Berlin"
+      interval: "monthly"
     versioning-strategy: "increase"
     target-branch: "main"
     labels:
@@ -15,9 +13,7 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/go"
     schedule:
-      interval: "daily"
-      time: "11:38"
-      timezone: "Europe/Berlin"
+      interval: "monthly"
     target-branch: "main"
     allow:
       - dependency-type: "all"
