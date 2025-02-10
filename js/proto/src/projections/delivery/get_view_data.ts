@@ -13,6 +13,7 @@ export interface GetViewDataRequest {
     auth: AuthData | undefined;
     filter: DataFilter | undefined;
     useStrongConsistency: boolean;
+    deploymentId: string;
 }
 
 export interface GetViewDataResponse {
@@ -27,6 +28,7 @@ export interface GetViewDataListRequest {
     filter: DataFilter | undefined;
     order: DataOrder[];
     useStrongConsistency: boolean;
+    deploymentId: string;
 }
 
 export interface GetViewDataListResponse {
@@ -37,7 +39,13 @@ export interface GetViewDataListResponse {
 }
 
 function createBaseGetViewDataRequest(): GetViewDataRequest {
-    return { view: "", auth: undefined, filter: undefined, useStrongConsistency: false };
+    return {
+        view: "",
+        auth: undefined,
+        filter: undefined,
+        useStrongConsistency: false,
+        deploymentId: "0",
+    };
 }
 
 export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
@@ -53,6 +61,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         }
         if (message.useStrongConsistency !== false) {
             writer.uint32(32).bool(message.useStrongConsistency);
+        }
+        if (message.deploymentId !== "0") {
+            writer.uint32(40).int64(message.deploymentId);
         }
         return writer;
     },
@@ -96,6 +107,14 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                     message.useStrongConsistency = reader.bool();
                     continue;
                 }
+                case 5: {
+                    if (tag !== 40) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -113,6 +132,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
         };
     },
 
@@ -129,6 +149,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         }
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
+        }
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
         }
         return obj;
     },
@@ -148,6 +171,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                 ? DataFilter.fromPartial(object.filter)
                 : undefined;
         message.useStrongConsistency = object.useStrongConsistency ?? false;
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };
@@ -222,6 +246,7 @@ function createBaseGetViewDataListRequest(): GetViewDataListRequest {
         filter: undefined,
         order: [],
         useStrongConsistency: false,
+        deploymentId: "0",
     };
 }
 
@@ -250,6 +275,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         }
         if (message.useStrongConsistency !== false) {
             writer.uint32(56).bool(message.useStrongConsistency);
+        }
+        if (message.deploymentId !== "0") {
+            writer.uint32(64).int64(message.deploymentId);
         }
         return writer;
     },
@@ -317,6 +345,14 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                     message.useStrongConsistency = reader.bool();
                     continue;
                 }
+                case 8: {
+                    if (tag !== 64) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -339,6 +375,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
         };
     },
 
@@ -365,6 +402,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
         }
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
         return obj;
     },
 
@@ -386,6 +426,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                 : undefined;
         message.order = object.order?.map(e => DataOrder.fromPartial(e)) || [];
         message.useStrongConsistency = object.useStrongConsistency ?? false;
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };

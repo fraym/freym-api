@@ -19,6 +19,7 @@ export const getProjectionDataList = async <T extends ProjectionData>(
     filter: Filter,
     order: Order[],
     useStrongConsistency: boolean,
+    deploymentId: number | null,
     serviceClient: ServiceClient
 ): Promise<GetProjectionDataList<T> | null> => {
     return new Promise<GetProjectionDataList<T> | null>((resolve, reject) => {
@@ -31,6 +32,7 @@ export const getProjectionDataList = async <T extends ProjectionData>(
                 filter: getProtobufDataFilter(filter),
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
+                deploymentId: deploymentId?.toString() ?? "",
             },
             (error, response) => {
                 if (error) {

@@ -21,8 +21,9 @@ export interface DeliveryClient {
         id: string,
         filter?: Filter,
         returnEmptyDataIfNotFound?: boolean,
-        wait?: Wait,
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number,
+        wait?: Wait
     ) => Promise<T | null>;
     getDataList: <T extends CrudData>(
         type: string,
@@ -31,7 +32,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number
     ) => Promise<GetCrudDataList<T>>;
     create: <T extends CrudData>(
         type: string,
@@ -84,8 +86,9 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         id: string,
         filter: Filter = { fields: {}, and: [], or: [] },
         returnEmptyDataIfNotFound: boolean = false,
-        wait?: Wait,
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null,
+        wait?: Wait
     ): Promise<T | null> => {
         return await getCrudData<T>(
             type,
@@ -94,6 +97,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             returnEmptyDataIfNotFound,
             !!useStrongConsistency,
+            deploymentId,
             serviceClient,
             wait
         );
@@ -106,7 +110,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null
     ): Promise<GetCrudDataList<T>> => {
         return await getCrudDataList<T>(
             type,
@@ -116,6 +121,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             order,
             !!useStrongConsistency,
+            deploymentId,
             serviceClient
         );
     };

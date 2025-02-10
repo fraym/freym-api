@@ -8,6 +8,7 @@ export const getViewData = async <T extends ProjectionData>(
     auth: AuthData,
     filter: Filter,
     useStrongConsistency: boolean,
+    deploymentId: number | null,
     serviceClient: ServiceClient
 ): Promise<T | null> => {
     return new Promise<T | null>((resolve, reject) => {
@@ -17,6 +18,7 @@ export const getViewData = async <T extends ProjectionData>(
                 auth: getProtobufAuthData(auth),
                 filter: getProtobufDataFilter(filter),
                 useStrongConsistency,
+                deploymentId: deploymentId?.toString() ?? "",
             },
             (error, response) => {
                 if (error) {

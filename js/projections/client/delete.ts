@@ -8,7 +8,7 @@ export const deleteProjectionData = async (
     auth: AuthData,
     dataId: string,
     filter: Filter,
-    eventMetadata: Partial<EventMetadata> | null = null,
+    eventMetadata: Partial<EventMetadata> | null,
     serviceClient: ServiceClient
 ): Promise<number> => {
     return new Promise<number>((resolve, reject) => {

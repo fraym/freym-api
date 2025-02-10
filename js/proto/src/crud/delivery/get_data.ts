@@ -16,6 +16,7 @@ export interface GetDataRequest {
     returnEmptyDataIfNotFound: boolean;
     wait: DataWait | undefined;
     useStrongConsistency: boolean;
+    deploymentId: string;
 }
 
 export interface GetDataResponse {
@@ -30,6 +31,7 @@ export interface GetDataListRequest {
     filter: DataFilter | undefined;
     order: DataOrder[];
     useStrongConsistency: boolean;
+    deploymentId: string;
 }
 
 export interface GetDataListResponse {
@@ -67,6 +69,7 @@ function createBaseGetDataRequest(): GetDataRequest {
         returnEmptyDataIfNotFound: false,
         wait: undefined,
         useStrongConsistency: false,
+        deploymentId: "0",
     };
 }
 
@@ -92,6 +95,9 @@ export const GetDataRequest: MessageFns<GetDataRequest> = {
         }
         if (message.useStrongConsistency !== false) {
             writer.uint32(56).bool(message.useStrongConsistency);
+        }
+        if (message.deploymentId !== "0") {
+            writer.uint32(64).int64(message.deploymentId);
         }
         return writer;
     },
@@ -159,6 +165,14 @@ export const GetDataRequest: MessageFns<GetDataRequest> = {
                     message.useStrongConsistency = reader.bool();
                     continue;
                 }
+                case 8: {
+                    if (tag !== 64) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -181,6 +195,7 @@ export const GetDataRequest: MessageFns<GetDataRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
         };
     },
 
@@ -207,6 +222,9 @@ export const GetDataRequest: MessageFns<GetDataRequest> = {
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
         }
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
         return obj;
     },
 
@@ -231,6 +249,7 @@ export const GetDataRequest: MessageFns<GetDataRequest> = {
                 ? DataWait.fromPartial(object.wait)
                 : undefined;
         message.useStrongConsistency = object.useStrongConsistency ?? false;
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };
@@ -305,6 +324,7 @@ function createBaseGetDataListRequest(): GetDataListRequest {
         filter: undefined,
         order: [],
         useStrongConsistency: false,
+        deploymentId: "0",
     };
 }
 
@@ -330,6 +350,9 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
         }
         if (message.useStrongConsistency !== false) {
             writer.uint32(72).bool(message.useStrongConsistency);
+        }
+        if (message.deploymentId !== "0") {
+            writer.uint32(80).int64(message.deploymentId);
         }
         return writer;
     },
@@ -397,6 +420,14 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
                     message.useStrongConsistency = reader.bool();
                     continue;
                 }
+                case 10: {
+                    if (tag !== 80) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -419,6 +450,7 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
         };
     },
 
@@ -445,6 +477,9 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
         }
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
         return obj;
     },
 
@@ -466,6 +501,7 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
                 : undefined;
         message.order = object.order?.map(e => DataOrder.fromPartial(e)) || [];
         message.useStrongConsistency = object.useStrongConsistency ?? false;
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };

@@ -11,6 +11,7 @@ export const getCrudData = async <T extends CrudData>(
     filter: Filter,
     returnEmptyDataIfNotFound: boolean,
     useStrongConsistency: boolean,
+    deploymentId: number | null,
     serviceClient: ServiceClient,
     wait?: Wait
 ): Promise<T | null> => {
@@ -24,6 +25,7 @@ export const getCrudData = async <T extends CrudData>(
                 returnEmptyDataIfNotFound,
                 wait: getProtobufDataWait(wait),
                 useStrongConsistency,
+                deploymentId: deploymentId?.toString() ?? "",
             },
             (error, response) => {
                 if (error) {

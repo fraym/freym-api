@@ -21,14 +21,16 @@ export interface DeliveryClient {
         id: string,
         filter?: Filter,
         returnEmptyDataIfNotFound?: boolean,
-        wait?: Wait,
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number,
+        wait?: Wait
     ) => Promise<T | null>;
     getViewData: <T extends ProjectionData>(
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number
     ) => Promise<T | null>;
     getDataList: <T extends ProjectionData>(
         projection: string,
@@ -37,7 +39,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number
     ) => Promise<GetProjectionDataList<T> | null>;
     getViewDataList: <T extends ProjectionData>(
         view: string,
@@ -46,7 +49,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        deploymentId?: number
     ) => Promise<GetProjectionDataList<T> | null>;
     upsertData: <T extends ProjectionData>(
         projection: string,
@@ -84,8 +88,9 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         id: string,
         filter: Filter = { fields: {}, and: [], or: [] },
         returnEmptyDataIfNotFound: boolean = false,
-        wait?: Wait,
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null,
+        wait?: Wait
     ): Promise<T | null> => {
         return await getProjectionData<T>(
             projection,
@@ -94,6 +99,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             returnEmptyDataIfNotFound,
             !!useStrongConsistency,
+            deploymentId,
             serviceClient,
             wait
         );
@@ -103,9 +109,17 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null
     ): Promise<T | null> => {
-        return await getDataFromView<T>(view, auth, filter, !!useStrongConsistency, serviceClient);
+        return await getDataFromView<T>(
+            view,
+            auth,
+            filter,
+            !!useStrongConsistency,
+            deploymentId,
+            serviceClient
+        );
     };
 
     const getDataList = async <T extends ProjectionData>(
@@ -115,7 +129,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null
     ): Promise<GetProjectionDataList<T> | null> => {
         return await getProjectionDataList<T>(
             projection,
@@ -125,6 +140,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             order,
             !!useStrongConsistency,
+            deploymentId,
             serviceClient
         );
     };
@@ -136,7 +152,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency?: boolean
+        useStrongConsistency: boolean = false,
+        deploymentId: number | null = null
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -146,6 +163,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             order,
             !!useStrongConsistency,
+            deploymentId,
             serviceClient
         );
     };

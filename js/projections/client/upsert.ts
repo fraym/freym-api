@@ -34,7 +34,7 @@ export const upsertProjectionData = async <T extends ProjectionData>(
     auth: AuthData,
     dataId: string,
     payload: Partial<T>,
-    eventMetadata: Partial<EventMetadata> | null = null,
+    eventMetadata: Partial<EventMetadata> | null,
     serviceClient: ServiceClient
 ): Promise<UpsertResponse<T>> => {
     const usedPayload: Record<string, string> = {};

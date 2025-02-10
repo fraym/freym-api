@@ -19,6 +19,7 @@ export const getCrudDataList = async <T extends CrudData>(
     filter: Filter,
     order: Order[],
     useStrongConsistency: boolean,
+    deploymentId: number | null,
     serviceClient: ServiceClient
 ): Promise<GetCrudDataList<T>> => {
     return new Promise<GetCrudDataList<T>>((resolve, reject) => {
@@ -31,6 +32,7 @@ export const getCrudDataList = async <T extends CrudData>(
                 filter: getProtobufDataFilter(filter),
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
+                deploymentId: deploymentId?.toString() ?? "",
             },
             (error, response) => {
                 if (error) {
