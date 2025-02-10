@@ -8,10 +8,6 @@ import (
 	"github.com/fraym/freym-api/go/proto/crud/managementpb"
 )
 
-type MigrationStatus struct {
-	Done bool
-}
-
 type ManagementClient interface {
 	DeploySchema(
 		ctx context.Context,

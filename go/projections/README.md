@@ -1,4 +1,4 @@
-# streams
+# projections
 
 Client implementation in go for the Freym service [projections](https://github.com/fraym/projections).
 

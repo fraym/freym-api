@@ -5,6 +5,7 @@ go 1.23.5
 require (
 	github.com/Becklyn/go-wire-core v1.4.4
 	github.com/fraym/golog v0.2.2
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/samber/lo v1.49.1
 	github.com/satori/go.uuid v1.2.0
