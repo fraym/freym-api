@@ -1,0 +1,57 @@
+export interface Deployment {
+    namespace: string;
+    permissions: string[];
+    projectionTypes: ObjectType[];
+    crudTypes: ObjectType[];
+    nestedTypes: ObjectType[];
+    enumTypes: EnumType[];
+    views: View[];
+    options: DeploymentOptions;
+}
+
+export interface DeploymentResponse {
+    deploymentId: number;
+    target: DeploymentTarget;
+}
+
+export type DeploymentTarget = "blue" | "green";
+
+export interface DeploymentOptions {
+    dangerouslyRemoveGdprFields: boolean;
+    skipServices: string[];
+    force: boolean;
+}
+
+export interface View {
+    name: string;
+    sql: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
+}
+
+export interface ObjectType {
+    name: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
+}
+
+export interface EnumType {
+    name: string;
+    values: string[];
+}
+
+export interface TypeField {
+    name: string;
+    type: string[];
+    directives: TypeDirective[];
+}
+
+export interface TypeDirective {
+    name: string;
+    arguments: TypeArgument[];
+}
+
+export interface TypeArgument {
+    name: string;
+    value: any;
+}

@@ -1,0 +1,34 @@
+type TestProjection
+    @permission(all: [])
+    @upsertOn(
+        on: { topic: "test", eventTypes: ["testType"] }
+        filterBy: {
+            fields: [
+                {
+                    projectionField: "field"
+                    eventField: "field"
+                    type: "String"
+                    operation: "equals"
+                }
+            ]
+        }
+    )
+    @removeOn(
+        on: { topic: "test", eventTypes: ["removeTestType"] }
+        filterBy: {
+            fields: [
+                {
+                    projectionField: "field"
+                    eventField: "field"
+                    type: "String"
+                    operation: "equals"
+                }
+            ]
+        }
+    ) {
+    field: String! @index
+}
+
+type TestView @view(sql: "./test.sql") {
+    testNumber: Int!
+}
