@@ -9,12 +9,13 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export interface RollbackDeploymentRequest {
     deploymentId: string;
+    namespace: string;
 }
 
 export interface RollbackDeploymentResponse {}
 
 function createBaseRollbackDeploymentRequest(): RollbackDeploymentRequest {
-    return { deploymentId: "0" };
+    return { deploymentId: "0", namespace: "" };
 }
 
 export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = {
@@ -24,6 +25,9 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
     ): BinaryWriter {
         if (message.deploymentId !== "0") {
             writer.uint32(8).int64(message.deploymentId);
+        }
+        if (message.namespace !== "") {
+            writer.uint32(18).string(message.namespace);
         }
         return writer;
     },
@@ -43,6 +47,14 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.namespace = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -55,6 +67,7 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
     fromJSON(object: any): RollbackDeploymentRequest {
         return {
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
         };
     },
 
@@ -62,6 +75,9 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
         const obj: any = {};
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
+        }
+        if (message.namespace !== "") {
+            obj.namespace = message.namespace;
         }
         return obj;
     },
@@ -72,6 +88,7 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
     fromPartial(object: DeepPartial<RollbackDeploymentRequest>): RollbackDeploymentRequest {
         const message = createBaseRollbackDeploymentRequest();
         message.deploymentId = object.deploymentId ?? "0";
+        message.namespace = object.namespace ?? "";
         return message;
     },
 };

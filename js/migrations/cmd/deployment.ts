@@ -4,6 +4,7 @@ import {
     createDeployment,
     getDeploymentStatus,
     rollbackDeployment,
+    rollbackDeploymentByNamespace,
 } from "@/api/deployment";
 import { getMigrationFromSchema } from "@/schema";
 import { loadSchema } from "@graphql-tools/load";
@@ -59,6 +60,18 @@ export const runRollbackDeployment = async (id: number) => {
         apiToken,
         serverAddress,
 
+        namespace,
+    });
+    console.log("done rolling back deployment");
+};
+
+export const runRollbackNamespaceDeployment = async () => {
+    console.log("rolling back deployment ...");
+    const { serverAddress, apiToken, namespace } = await useConfig();
+
+    await rollbackDeploymentByNamespace({
+        apiToken,
+        serverAddress,
         namespace,
     });
     console.log("done rolling back deployment");

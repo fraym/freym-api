@@ -78,3 +78,18 @@ export const rollbackDeployment = async (
         throw new Error(await response.text());
     }
 };
+
+export const rollbackDeploymentByNamespace = async (config: ClientConfig): Promise<void> => {
+    const response = await fetch(`${config.serverAddress}/api/deployment/rollback/namespace`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${config.apiToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ namespace: config.namespace }),
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+};

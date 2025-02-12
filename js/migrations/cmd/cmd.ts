@@ -4,6 +4,7 @@ import {
     runCreateDeployment,
     runPrintDeploymentStatus,
     runRollbackDeployment,
+    runRollbackNamespaceDeployment,
     runWait,
 } from "./deployment";
 
@@ -11,6 +12,7 @@ const COMMAND_STATUS = "status";
 const COMMAND_CREATE = "create";
 const COMMAND_CONFIRM = "confirm";
 const COMMAND_ROLLBACK = "rollback";
+const COMMAND_ROLLBACK_NAMESPACE = "rollback-namespace";
 const COMMAND_WAIT = "wait";
 
 const arg = process.argv[2] ?? COMMAND_CREATE;
@@ -38,6 +40,9 @@ switch (arg) {
         break;
     case COMMAND_ROLLBACK:
         runRollbackDeployment(getIdFromArgs());
+        break;
+    case COMMAND_ROLLBACK_NAMESPACE:
+        runRollbackNamespaceDeployment();
         break;
     case COMMAND_WAIT:
         runWait(getIdFromArgs());

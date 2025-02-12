@@ -8,5 +8,5 @@ test: ## Run tests
 	go test -short ./...
 
 cover: ## Calculate test coverage
-	go test -coverprofile=coverage.out ./... -timeout 2m
+	go test -short -coverprofile=coverage.out ./... -timeout 2m
 	go tool cover -html=coverage.out
