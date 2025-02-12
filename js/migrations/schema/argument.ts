@@ -1,15 +1,10 @@
-import { ConstValueNode, Kind } from "graphql";
+import { ConstListValueNode, ConstObjectValueNode, ConstValueNode, Kind } from "graphql";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getArgumentValue = (v: ConstValueNode): any => {
     switch (v.kind) {
         case Kind.LIST:
-            const listValue: any[] = [];
-
-            v.values.forEach(el => {
-                listValue.push(getArgumentValue(el));
-            });
-
-            return listValue;
+            return getValueFromListValueNode(v);
         case Kind.STRING:
             return v.value;
         case Kind.FLOAT:
@@ -23,12 +18,30 @@ export const getArgumentValue = (v: ConstValueNode): any => {
         case Kind.ENUM:
             return v.value;
         case Kind.OBJECT:
-            const objectValue: Record<string, any> = {};
-
-            v.fields.forEach(f => {
-                objectValue[f.name.value] = getArgumentValue(f.value);
-            });
-
-            return objectValue;
+            return getValueFromObjectValueNode(v);
     }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getValueFromListValueNode = (v: ConstListValueNode): any[] => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const listValue: any[] = [];
+
+    v.values.forEach(el => {
+        listValue.push(getArgumentValue(el));
+    });
+
+    return listValue;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getValueFromObjectValueNode = (v: ConstObjectValueNode): Record<string, any> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const objectValue: Record<string, any> = {};
+
+    v.fields.forEach(f => {
+        objectValue[f.name.value] = getArgumentValue(f.value);
+    });
+
+    return objectValue;
 };

@@ -1,6 +1,6 @@
 import { ConstDirectiveNode, FieldDefinitionNode, GraphQLObjectType } from "graphql";
-import { TypeArgument, TypeDirective } from "./data";
 import { getArgumentValue } from "./argument";
+import { TypeArgument, TypeDirective } from "./data";
 
 export const hasDirective = (t: GraphQLObjectType, name: string): boolean => {
     if (!t.astNode?.directives || t.astNode?.directives.length === 0) {

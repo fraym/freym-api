@@ -69,7 +69,6 @@ const resolveGlobs = async (glob: string, options: BaseLoaderOptions) => {
         !glob.includes("*") &&
         (await canLoad(glob, options)) &&
         !asArray(options.ignore || []).length &&
-        // @ts-ignore
         !options["includeSources"]
     )
         return [glob]; // bypass globby when no glob character, can be loaded, no ignores and source not requested. Fixes problem with pkg and passes ci tests
@@ -97,6 +96,7 @@ export const replaceEnvPlaceholdersGraphQLFileLoader: Loader<BaseLoaderOptions> 
 
                         const replacedSDL = replaceWithEnvData(rawSDL);
                         finalResult.push(parseGraphQLSDL(pointer, replacedSDL, options));
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     } catch (e: any) {
                         if (env["DEBUG"]) {
                             console.error(e);

@@ -1,12 +1,12 @@
-import { loadSchema } from "@graphql-tools/load";
 import {
     DeploymentStatus,
     confirmDeployment,
     createDeployment,
     getDeploymentStatus,
     rollbackDeployment,
-} from "../api/deployment";
-import { getMigrationFromSchema } from "../schema";
+} from "@/api/deployment";
+import { getMigrationFromSchema } from "@/schema";
+import { loadSchema } from "@graphql-tools/load";
 import { useConfig } from "./config";
 import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
 
@@ -68,7 +68,7 @@ export const runWait = async (id: number) => {
     console.log("waiting for migration to be ready to finish ...");
     const { serverAddress, apiToken, namespace } = await useConfig();
 
-    let isReady = false;
+    const isReady = false;
     let percentage = 0;
 
     while (!isReady) {
