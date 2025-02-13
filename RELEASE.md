@@ -1,13 +1,10 @@
-# v0.30.0
+# v0.31.0
 
-## :gift: New Features
+## :boom: Breaking Changes
 
-- Move `@freym/proto` and all api clients into this package
-
-## :sparkles: Improvements
-
-- Allow relative paths for sql file names for view projections
+- Use variadic args in sync client for resource definitions (go)
+- Rename migrations to deployments
 
 ## :bug: Bug Fixes
 
-- Fix stream pagination
+- Fix order of arguments (go)
