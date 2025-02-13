@@ -1,7 +1,10 @@
 # vNext
 
+# v0.31.0
+
 - (bug) Fix order of arguments (go)
 - (bc) Use variadic args in sync client for resource definitions (go)
+- (bc) Rename migrations to deployments
 
 # v0.30.0
 

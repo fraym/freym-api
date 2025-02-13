@@ -1,8 +1,0 @@
-syntax = "proto3";
-package freym.migrations.management;
-
-message ConfirmDeploymentRequest {
-	int64 deployment_id = 1;
-}
-
-message ConfirmDeploymentResponse {}

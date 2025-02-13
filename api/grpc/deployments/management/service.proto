@@ -1,0 +1,13 @@
+syntax = "proto3";
+package freym.deployments.management;
+import "deployments/management/create.proto";
+import "deployments/management/confirm.proto";
+import "deployments/management/rollback.proto";
+import "deployments/management/deployment.proto";
+  
+service Service {
+	rpc CreateDeployment(CreateDeploymentRequest) returns (CreateDeploymentResponse);
+	rpc ConfirmDeployment(ConfirmDeploymentRequest) returns (ConfirmDeploymentResponse);
+	rpc RollbackDeployment(RollbackDeploymentRequest) returns (RollbackDeploymentResponse);
+	rpc GetDeployment(GetDeploymentRequest) returns (GetDeploymentResponse);
+}

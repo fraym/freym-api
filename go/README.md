@@ -11,7 +11,7 @@ Client implementations of all Freym services
 - [projections](projections/README.md)
 - [crud](crud/README.md)
 - [auth](auth/README.md)
-- [migrations](migrations/README.md)
+- [deployments](deployments/README.md)
 
 ## Docs
 

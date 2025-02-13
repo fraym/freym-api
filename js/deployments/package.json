@@ -1,0 +1,44 @@
+{
+    "name": "@fraym/deployments",
+    "version": "0.31.0",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/freym-api",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/freym-api.git"
+    },
+    "description": "JS client implementation of the deployments service of Freym",
+    "scripts": {
+        "build": "rm -rf dist && tsc && npx swc . -d dist && chmod +x dist/cmd/cmd.js",
+        "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
+        "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\"",
+        "cmd": "dist/cmd/cmd.js"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "bin": {
+        "migration": "dist/cmd/cmd.js"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@graphql-tools/import": "^7.0.13",
+        "@graphql-tools/load": "^8.0.14",
+        "@grpc/grpc-js": "^1.12.6",
+        "dotenv": "^16.4.7",
+        "glob": "^11.0.1",
+        "globby": "11.1.0",
+        "graphql": "^16.10.0",
+        "unixify": "^1.0.0",
+        "yargs": "^17.7.2"
+    },
+    "devDependencies": {
+        "@types/unixify": "^1.0.2",
+        "@types/yargs": "^17.0.33"
+    },
+    "prettier": "@becklyn/prettier"
+}

@@ -37,9 +37,9 @@ for filename in ./sync/management/*.proto; do
 	params="$params --go-grpc_opt=Msync/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/sync/managementpb"
 done
 
-for filename in ./migrations/management/*.proto; do
-	params="$params --go_opt=Mmigrations/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/migrations/managementpb"
-	params="$params --go-grpc_opt=Mmigrations/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/migrations/managementpb"
+for filename in ./deployments/management/*.proto; do
+	params="$params --go_opt=Mdeployments/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/deployments/managementpb"
+	params="$params --go-grpc_opt=Mdeployments/management/$(basename $filename)=github.com/fraym/freym-api/go/proto/deployments/managementpb"
 done
 
 cd ../../go/proto 
@@ -48,7 +48,7 @@ rm -rf ./sync
 rm -rf ./streams
 rm -rf ./projections
 rm -rf ./crud
-rm -rf ./migrations
+rm -rf ./deployments
 rm -rf ./auth
 
 cd ../../api/grpc

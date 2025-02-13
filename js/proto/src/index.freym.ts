@@ -5,7 +5,7 @@
 
 export * as auth from "./index.freym.auth";
 export * as crud from "./index.freym.crud";
-export * as migrations from "./index.freym.migrations";
+export * as deployments from "./index.freym.deployments";
 export * as projections from "./index.freym.projections";
 export * as streams from "./index.freym.streams";
 export * as sync from "./index.freym.sync";
