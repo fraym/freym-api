@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"slices"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -82,7 +83,17 @@ func getObjectArgumentMapString(mapValue map[string]any) (string, error) {
 	var buffer bytes.Buffer
 	i := 0
 
-	for key, value := range mapValue {
+	var keys []string
+
+	for key := range mapValue {
+		keys = append(keys, key)
+	}
+
+	slices.Sort(keys)
+
+	for _, key := range keys {
+		value := mapValue[key]
+
 		if i != 0 {
 			buffer.WriteString(", ")
 		}

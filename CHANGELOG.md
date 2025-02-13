@@ -1,5 +1,7 @@
 # vNext
 
+- (bug) Fix order of arguments (go)
+
 # v0.30.0
 
 - (bug) Fix stream pagination
