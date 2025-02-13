@@ -10,10 +10,10 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   go-checks:
-    uses: ./.github/workflows/go-checks.yml
+    uses: ./.github/workflows/go-checks.yaml
 
   js-checks:
-    uses: ./.github/workflows/js-checks.yml
+    uses: ./.github/workflows/js-checks.yaml
 
   release:
     name: Release
