@@ -1,6 +1,7 @@
 # vNext
 
 - (bug) Fix order of arguments (go)
+- (bc) Use variadic args in sync client for resource definitions (go)
 
 # v0.30.0
 

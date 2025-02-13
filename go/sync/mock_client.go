@@ -19,11 +19,11 @@ func (c *MockClient[T]) IteratePeers(ctx context.Context, handler peer.Connectio
 	return c.Called(ctx, handler).Error(0)
 }
 
-func (c *MockClient[T]) Lock(tenantId string, resource []string) error {
+func (c *MockClient[T]) Lock(tenantId string, resource ...string) error {
 	return c.Called(tenantId, resource).Error(0)
 }
 
-func (c *MockClient[T]) Unlock(tenantId string, resource []string) {
+func (c *MockClient[T]) Unlock(tenantId string, resource ...string) {
 	c.Called(tenantId, resource)
 }
 
