@@ -1,10 +1,10 @@
-# streams
+# auth
 
-Client implementation in JavaScript for the Freym service [crud](https://github.com/fraym/crud).
+Client implementation in JavaScript for the Freym service [auth](https://github.com/fraym/auth).
 
 ## Docs
 
-Please have a look at our [documentation](https://docs.freym.becklyn.app/docs/services/crud/introduction).
+Please have a look at our [documentation](https://docs.freym.becklyn.app/docs/services/auth/introduction).
 
 ## License
 

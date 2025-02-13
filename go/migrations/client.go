@@ -6,12 +6,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fraym/freym-api/go/graphql/parser"
+	"github.com/fraym/freym-api/go/graphql/schema"
 	"github.com/fraym/freym-api/go/migrations/config"
 	"github.com/fraym/freym-api/go/migrations/management"
 	"github.com/fraym/freym-api/go/proto/migrations/managementpb"
 	"github.com/fraym/golog"
-	"github.com/fraym/graphql/parser"
-	"github.com/fraym/graphql/schema"
 	"github.com/samber/lo"
 )
 

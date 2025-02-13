@@ -3,8 +3,8 @@ package migrations
 import (
 	"encoding/json"
 
+	"github.com/fraym/freym-api/go/graphql/schema"
 	"github.com/fraym/freym-api/go/proto/migrations/managementpb"
-	"github.com/fraym/graphql/schema"
 )
 
 func enumsAndPermissionsToPb(enums []schema.Enum) ([]*managementpb.EnumType, []string, error) {

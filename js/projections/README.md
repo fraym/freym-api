@@ -1,4 +1,4 @@
-# streams
+# projections
 
 Client implementation in JavaScript for the Freym service [projections](https://github.com/fraym/projections).
 

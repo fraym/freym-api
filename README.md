@@ -9,12 +9,19 @@ The Freym API provides a set of clients to interact with the Freym microservices
 
 ## Clients
 
-| Service                                  | Language   |
-| ---------------------------------------- | ---------- |
-| [Streams](/go/streams/README.md)         | go         |
-| [Streams](/js/streams/README.md)         | JavaScript |
-| [Projections](/go/projections/README.md) | go         |
-| [Projections](/js/projections/README.md) | JavaScript |
+| Service                                 | Language   |
+| --------------------------------------- | ---------- |
+| [Sync](go/sync/README.md)               | go         |
+| [Streams](go/streams/README.md)         | go         |
+| [Streams](js/streams/README.md)         | JavaScript |
+| [Projections](go/projections/README.md) | go         |
+| [Projections](js/projections/README.md) | JavaScript |
+| [CRUD](go/crud/README.md)               | go         |
+| [CRUD](js/crud/README.md)               | JavaScript |
+| [Auth](go/auth/README.md)               | go         |
+| [Auth](js/auth/README.md)               | JavaScript |
+| [Migrations](go/migrations/README.md)   | go         |
+| [Migrations](js/migrations/README.md)   | JavaScript |
 
 ## Docs
 

@@ -1,4 +1,4 @@
-# streams
+# crud
 
 Client implementation in JavaScript for the Freym service [crud](https://github.com/fraym/crud).
 
