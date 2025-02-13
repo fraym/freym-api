@@ -3,14 +3,21 @@ name: Publish packages
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-      - 'v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  go-checks:
+    uses: ./.github/workflows/go-checks.yml
+
+  js-checks:
+    uses: ./.github/workflows/js-checks.yml
+
   release:
     name: Release
+    needs: [go-checks, js-checks]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,21 +26,11 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-        run: |
-          gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${tag}" \
-              --notes-file ./RELEASE.md
-
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         working-directory: js
@@ -58,4 +55,12 @@ jobs:
               sha: context.sha
             })
 
-      
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag}" \
+              --notes-file ./RELEASE.md

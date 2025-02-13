@@ -30,3 +30,12 @@ Please have a look at our [documentation](https://docs.freym.becklyn.app/docs).
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Releasing new versions
+
+- update versions in all `package.json` files
+  - package versions
+  - dependency version in case a package references another package in this monorepo
+- add a git tag in the form: `v#.#.#` or `v#.#.#-alpha.#`
+- Update `RELEASE.md` to contain the new release
+- GutHub Actions will automatically publish all packages once everything is pushed
