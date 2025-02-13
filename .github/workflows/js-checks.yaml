@@ -9,8 +9,6 @@ on:
       - .github/workflows/js-checks.yaml
   workflow_call:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   checks:
     name: JS Checks

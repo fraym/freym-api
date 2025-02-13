@@ -9,8 +9,6 @@ on:
       - .github/workflows/go-checks.yaml
   workflow_call:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   checks:
     name: Go Checks
