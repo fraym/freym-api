@@ -9,7 +9,7 @@
     },
     "description": "JS client implementation of the projections service of Freym",
     "scripts": {
-        "build": "rm -rf dist && tsc",
+        "build": "rm -rf dist && tsc && npx swc . -d dist",
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
         "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\""
     },

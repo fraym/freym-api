@@ -10,6 +10,8 @@ updates:
       - "needs-review"
     reviewers:
       - "jesko-plitt"
+    ignore:
+      - dependency-name: "globby"
   - package-ecosystem: "gomod"
     directory: "/go"
     schedule:

@@ -29,6 +29,6 @@ type TestProjection
     field: String! @index
 }
 
-type TestView @view(sql: "./test.sql") {
+type TestView @view(sqlFile: "./test.sql") {
     testNumber: Int!
 }

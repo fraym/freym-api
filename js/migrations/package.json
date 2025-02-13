@@ -9,7 +9,7 @@
     },
     "description": "JS client implementation of the migrations service of Freym",
     "scripts": {
-        "build": "rm -rf dist && tsc && chmod +x dist/cmd/cmd.js",
+        "build": "rm -rf dist && tsc && npx swc . -d dist && chmod +x dist/cmd/cmd.js",
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
         "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\"",
         "cmd": "dist/cmd/cmd.js"
@@ -31,7 +31,7 @@
         "@grpc/grpc-js": "^1.12.6",
         "dotenv": "^16.4.7",
         "glob": "^11.0.1",
-        "globby": "^14.1.0",
+        "globby": "11.1.0",
         "graphql": "^16.10.0",
         "unixify": "^1.0.0",
         "yargs": "^17.7.2"

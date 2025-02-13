@@ -1,0 +1,22 @@
+{
+    "$schema": "https://swc.rs/schema.json",
+    "jsc": {
+        "baseUrl": ".",
+        "parser": {
+            "syntax": "typescript",
+            "dynamicImport": false,
+            "decorators": false
+        },
+        "target": "es5",
+        "externalHelpers": false,
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "module": {
+        "type": "commonjs"
+        
+    },
+    "exclude": ["node_modules", "dist", "example", ".turbo"],
+    "minify": true
+}

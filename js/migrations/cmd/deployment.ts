@@ -30,7 +30,13 @@ export const runCreateDeployment = async () => {
     const schema = await loadSchema(schemaGlob, {
         loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
-    const deployment = await getMigrationFromSchema(schema, namespace, false);
+
+    // @todo: make options configurable
+    const deployment = await getMigrationFromSchema(schema, namespace, {
+        dangerouslyRemoveGdprFields: false,
+        skipServices: [],
+        force: false,
+    });
 
     const response = await createDeployment(
         { ...deployment },

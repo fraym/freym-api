@@ -1,5 +1,6 @@
 // This is heavily inspired by https://github.com/ardatan/graphql-tools/tree/master/packages/loaders/graphql-file
 import { promises as fsPromises } from "fs";
+import globby from "globby";
 import { isAbsolute, resolve } from "path";
 import { env, cwd as processCwd } from "process";
 import unixify from "unixify";
@@ -11,8 +12,6 @@ import {
     isValidPath,
     parseGraphQLSDL,
 } from "@graphql-tools/utils";
-
-const globby = import("globby");
 
 const { readFile, access } = fsPromises;
 
@@ -73,7 +72,7 @@ const resolveGlobs = async (glob: string, options: BaseLoaderOptions) => {
     )
         return [glob]; // bypass globby when no glob character, can be loaded, no ignores and source not requested. Fixes problem with pkg and passes ci tests
     const globs = buildGlobs(glob, options);
-    const result = await (await globby).globby(globs, { absolute: true, ...options, ignore: [] });
+    const result = await globby(globs, { absolute: true, ...options, ignore: [] });
     return result;
 };
 
@@ -93,9 +92,9 @@ export const replaceEnvPlaceholdersGraphQLFileLoader: Loader<BaseLoaderOptions> 
                         const rawSDL: string = await readFile(normalizedFilePath, {
                             encoding: "utf8",
                         });
-
-                        const replacedSDL = replaceWithEnvData(rawSDL);
-                        finalResult.push(parseGraphQLSDL(pointer, replacedSDL, options));
+                        finalResult.push(
+                            parseGraphQLSDL(normalizedFilePath, replaceWithEnvData(rawSDL), options)
+                        );
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     } catch (e: any) {
                         if (env["DEBUG"]) {

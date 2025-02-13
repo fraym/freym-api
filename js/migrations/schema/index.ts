@@ -1,6 +1,7 @@
 import { promises as fsPromises } from "fs";
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
-import { Deployment, ObjectType, View } from "./data";
+import path from "path";
+import { Deployment, DeploymentOptions, ObjectType, View } from "./data";
 import { getObjectDirectives, hasDirective } from "./directive";
 import { getEnums, getPermissions } from "./enum";
 import { getObjectFields } from "./field";
@@ -9,18 +10,14 @@ import { ensureValidName } from "./util";
 export const getMigrationFromSchema = async (
     schema: GraphQLSchema,
     namespace: string,
-    dangerouslyRemoveGdprFields: boolean
+    options: DeploymentOptions
 ): Promise<Deployment> => {
     return {
         ...(await getTypes(schema, namespace)),
         namespace,
         enumTypes: getEnums(schema, namespace),
         permissions: getPermissions(schema),
-        options: {
-            dangerouslyRemoveGdprFields, // @todo: make configurable
-            skipServices: [], // @todo: make configurable
-            force: false, // @todo: make configurable
-        },
+        options,
     };
 };
 
@@ -68,6 +65,16 @@ const getTypes = async (
                 fields: getObjectFields(t, namespace),
             });
         } else if (hasDirective(t, "view")) {
+            if (!t.astNode?.loc) {
+                throw new Error(`cannot resolve path of file that contains @view "${name}"`);
+            }
+
+            const absolutePath = t.astNode.loc.source.name;
+            const relativePath = absolutePath
+                .split("/")
+                .slice(0, -1)
+                .join("/")
+                .replace(process.cwd(), ".");
             const directives = getObjectDirectives(t);
             const viewDirective = directives.find(d => d.name === "view");
             const sqlFileArg = viewDirective?.arguments.find(a => a.name === "sqlFile");
@@ -77,9 +84,17 @@ const getTypes = async (
                 throw new Error(`view directive on type "${name}" requires a sqlFile argument`);
             }
 
-            const sql = await fsPromises.readFile(sqlFileName, {
+            const sqlFilePath = sqlFileName.startsWith(".")
+                ? "./" + path.join(relativePath, sqlFileName)
+                : sqlFileName.startsWith("/")
+                  ? sqlFileName.slice(1)
+                  : sqlFileName;
+
+            const sql = await fsPromises.readFile(sqlFilePath, {
                 encoding: "utf8",
             });
+
+            console.log(name, sql);
 
             views.push({
                 name,
