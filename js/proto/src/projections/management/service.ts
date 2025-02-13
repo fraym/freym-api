@@ -24,7 +24,7 @@ import {
     GetSchemaDeploymentResponse,
     RollbackSchemaRequest,
     RollbackSchemaResponse,
-} from "./migration";
+} from "./deployment";
 
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {

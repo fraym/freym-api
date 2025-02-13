@@ -1,6 +1,6 @@
 syntax = "proto3";
 package freym.auth.management;
-import "auth/management/migration.proto";
+import "auth/management/deployment.proto";
 import "auth/management/role_upsert.proto";
 import "auth/management/role_delete.proto";
 import "auth/management/roles_get.proto";

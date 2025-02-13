@@ -3,5 +3,5 @@
 //   protoc-gen-ts_proto  v2.6.1
 //   protoc               v5.29.3
 
-export * from "./projections/management/migration";
+export * from "./projections/management/deployment";
 export * from "./projections/management/service";

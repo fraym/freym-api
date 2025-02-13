@@ -1,6 +1,6 @@
 syntax = "proto3";
 package freym.projections.management;
-import "projections/management/migration.proto";
+import "projections/management/deployment.proto";
 
 service Service {
 	rpc DeploySchema(DeploySchemaRequest) returns (DeploySchemaResponse);

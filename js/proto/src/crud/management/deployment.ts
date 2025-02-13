@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.6.1
 //   protoc               v5.29.3
-// source: auth/management/migration.proto
+// source: crud/management/deployment.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
@@ -62,7 +62,10 @@ export function deploymentTargetToNumber(object: DeploymentTarget): number {
 
 export interface DeploySchemaRequest {
     namespace: string;
-    permissions: string[];
+    projectionTypes: ObjectType[];
+    crudTypes: ObjectType[];
+    nestedTypes: ObjectType[];
+    enumTypes: EnumType[];
     options: DeploymentOptions | undefined;
 }
 
@@ -93,8 +96,42 @@ export interface DeploymentOptions {
     force: boolean;
 }
 
+export interface ObjectType {
+    name: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
+}
+
+export interface TypeDirective {
+    name: string;
+    arguments: TypeArgument[];
+}
+
+export interface TypeField {
+    name: string;
+    type: string[];
+    directives: TypeDirective[];
+}
+
+export interface TypeArgument {
+    name: string;
+    value: string;
+}
+
+export interface EnumType {
+    name: string;
+    values: string[];
+}
+
 function createBaseDeploySchemaRequest(): DeploySchemaRequest {
-    return { namespace: "", permissions: [], options: undefined };
+    return {
+        namespace: "",
+        projectionTypes: [],
+        crudTypes: [],
+        nestedTypes: [],
+        enumTypes: [],
+        options: undefined,
+    };
 }
 
 export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
@@ -102,11 +139,20 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         if (message.namespace !== "") {
             writer.uint32(10).string(message.namespace);
         }
-        for (const v of message.permissions) {
-            writer.uint32(18).string(v!);
+        for (const v of message.projectionTypes) {
+            ObjectType.encode(v!, writer.uint32(18).fork()).join();
+        }
+        for (const v of message.crudTypes) {
+            ObjectType.encode(v!, writer.uint32(26).fork()).join();
+        }
+        for (const v of message.nestedTypes) {
+            ObjectType.encode(v!, writer.uint32(34).fork()).join();
+        }
+        for (const v of message.enumTypes) {
+            EnumType.encode(v!, writer.uint32(42).fork()).join();
         }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(26).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(50).fork()).join();
         }
         return writer;
     },
@@ -131,11 +177,35 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.permissions.push(reader.string());
+                    message.projectionTypes.push(ObjectType.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 3: {
                     if (tag !== 26) {
+                        break;
+                    }
+
+                    message.crudTypes.push(ObjectType.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.nestedTypes.push(ObjectType.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 5: {
+                    if (tag !== 42) {
+                        break;
+                    }
+
+                    message.enumTypes.push(EnumType.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 6: {
+                    if (tag !== 50) {
                         break;
                     }
 
@@ -154,8 +224,17 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     fromJSON(object: any): DeploySchemaRequest {
         return {
             namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
-            permissions: globalThis.Array.isArray(object?.permissions)
-                ? object.permissions.map((e: any) => globalThis.String(e))
+            projectionTypes: globalThis.Array.isArray(object?.projectionTypes)
+                ? object.projectionTypes.map((e: any) => ObjectType.fromJSON(e))
+                : [],
+            crudTypes: globalThis.Array.isArray(object?.crudTypes)
+                ? object.crudTypes.map((e: any) => ObjectType.fromJSON(e))
+                : [],
+            nestedTypes: globalThis.Array.isArray(object?.nestedTypes)
+                ? object.nestedTypes.map((e: any) => ObjectType.fromJSON(e))
+                : [],
+            enumTypes: globalThis.Array.isArray(object?.enumTypes)
+                ? object.enumTypes.map((e: any) => EnumType.fromJSON(e))
                 : [],
             options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
         };
@@ -166,8 +245,17 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         if (message.namespace !== "") {
             obj.namespace = message.namespace;
         }
-        if (message.permissions?.length) {
-            obj.permissions = message.permissions;
+        if (message.projectionTypes?.length) {
+            obj.projectionTypes = message.projectionTypes.map(e => ObjectType.toJSON(e));
+        }
+        if (message.crudTypes?.length) {
+            obj.crudTypes = message.crudTypes.map(e => ObjectType.toJSON(e));
+        }
+        if (message.nestedTypes?.length) {
+            obj.nestedTypes = message.nestedTypes.map(e => ObjectType.toJSON(e));
+        }
+        if (message.enumTypes?.length) {
+            obj.enumTypes = message.enumTypes.map(e => EnumType.toJSON(e));
         }
         if (message.options !== undefined) {
             obj.options = DeploymentOptions.toJSON(message.options);
@@ -181,7 +269,10 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     fromPartial(object: DeepPartial<DeploySchemaRequest>): DeploySchemaRequest {
         const message = createBaseDeploySchemaRequest();
         message.namespace = object.namespace ?? "";
-        message.permissions = object.permissions?.map(e => e) || [];
+        message.projectionTypes = object.projectionTypes?.map(e => ObjectType.fromPartial(e)) || [];
+        message.crudTypes = object.crudTypes?.map(e => ObjectType.fromPartial(e)) || [];
+        message.nestedTypes = object.nestedTypes?.map(e => ObjectType.fromPartial(e)) || [];
+        message.enumTypes = object.enumTypes?.map(e => EnumType.fromPartial(e)) || [];
         message.options =
             object.options !== undefined && object.options !== null
                 ? DeploymentOptions.fromPartial(object.options)
@@ -640,6 +731,430 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         const message = createBaseDeploymentOptions();
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         message.force = object.force ?? false;
+        return message;
+    },
+};
+
+function createBaseObjectType(): ObjectType {
+    return { name: "", directives: [], fields: [] };
+}
+
+export const ObjectType: MessageFns<ObjectType> = {
+    encode(message: ObjectType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        for (const v of message.directives) {
+            TypeDirective.encode(v!, writer.uint32(18).fork()).join();
+        }
+        for (const v of message.fields) {
+            TypeField.encode(v!, writer.uint32(26).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): ObjectType {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseObjectType();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.directives.push(TypeDirective.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.fields.push(TypeField.decode(reader, reader.uint32()));
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): ObjectType {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            directives: globalThis.Array.isArray(object?.directives)
+                ? object.directives.map((e: any) => TypeDirective.fromJSON(e))
+                : [],
+            fields: globalThis.Array.isArray(object?.fields)
+                ? object.fields.map((e: any) => TypeField.fromJSON(e))
+                : [],
+        };
+    },
+
+    toJSON(message: ObjectType): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.directives?.length) {
+            obj.directives = message.directives.map(e => TypeDirective.toJSON(e));
+        }
+        if (message.fields?.length) {
+            obj.fields = message.fields.map(e => TypeField.toJSON(e));
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<ObjectType>): ObjectType {
+        return ObjectType.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<ObjectType>): ObjectType {
+        const message = createBaseObjectType();
+        message.name = object.name ?? "";
+        message.directives = object.directives?.map(e => TypeDirective.fromPartial(e)) || [];
+        message.fields = object.fields?.map(e => TypeField.fromPartial(e)) || [];
+        return message;
+    },
+};
+
+function createBaseTypeDirective(): TypeDirective {
+    return { name: "", arguments: [] };
+}
+
+export const TypeDirective: MessageFns<TypeDirective> = {
+    encode(message: TypeDirective, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        for (const v of message.arguments) {
+            TypeArgument.encode(v!, writer.uint32(18).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): TypeDirective {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseTypeDirective();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.arguments.push(TypeArgument.decode(reader, reader.uint32()));
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): TypeDirective {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            arguments: globalThis.Array.isArray(object?.arguments)
+                ? object.arguments.map((e: any) => TypeArgument.fromJSON(e))
+                : [],
+        };
+    },
+
+    toJSON(message: TypeDirective): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.arguments?.length) {
+            obj.arguments = message.arguments.map(e => TypeArgument.toJSON(e));
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<TypeDirective>): TypeDirective {
+        return TypeDirective.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<TypeDirective>): TypeDirective {
+        const message = createBaseTypeDirective();
+        message.name = object.name ?? "";
+        message.arguments = object.arguments?.map(e => TypeArgument.fromPartial(e)) || [];
+        return message;
+    },
+};
+
+function createBaseTypeField(): TypeField {
+    return { name: "", type: [], directives: [] };
+}
+
+export const TypeField: MessageFns<TypeField> = {
+    encode(message: TypeField, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        for (const v of message.type) {
+            writer.uint32(18).string(v!);
+        }
+        for (const v of message.directives) {
+            TypeDirective.encode(v!, writer.uint32(26).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): TypeField {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseTypeField();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.type.push(reader.string());
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.directives.push(TypeDirective.decode(reader, reader.uint32()));
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): TypeField {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            type: globalThis.Array.isArray(object?.type)
+                ? object.type.map((e: any) => globalThis.String(e))
+                : [],
+            directives: globalThis.Array.isArray(object?.directives)
+                ? object.directives.map((e: any) => TypeDirective.fromJSON(e))
+                : [],
+        };
+    },
+
+    toJSON(message: TypeField): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.type?.length) {
+            obj.type = message.type;
+        }
+        if (message.directives?.length) {
+            obj.directives = message.directives.map(e => TypeDirective.toJSON(e));
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<TypeField>): TypeField {
+        return TypeField.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<TypeField>): TypeField {
+        const message = createBaseTypeField();
+        message.name = object.name ?? "";
+        message.type = object.type?.map(e => e) || [];
+        message.directives = object.directives?.map(e => TypeDirective.fromPartial(e)) || [];
+        return message;
+    },
+};
+
+function createBaseTypeArgument(): TypeArgument {
+    return { name: "", value: "" };
+}
+
+export const TypeArgument: MessageFns<TypeArgument> = {
+    encode(message: TypeArgument, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        if (message.value !== "") {
+            writer.uint32(18).string(message.value);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): TypeArgument {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseTypeArgument();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.value = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): TypeArgument {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            value: isSet(object.value) ? globalThis.String(object.value) : "",
+        };
+    },
+
+    toJSON(message: TypeArgument): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.value !== "") {
+            obj.value = message.value;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<TypeArgument>): TypeArgument {
+        return TypeArgument.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<TypeArgument>): TypeArgument {
+        const message = createBaseTypeArgument();
+        message.name = object.name ?? "";
+        message.value = object.value ?? "";
+        return message;
+    },
+};
+
+function createBaseEnumType(): EnumType {
+    return { name: "", values: [] };
+}
+
+export const EnumType: MessageFns<EnumType> = {
+    encode(message: EnumType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        for (const v of message.values) {
+            writer.uint32(18).string(v!);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): EnumType {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseEnumType();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.values.push(reader.string());
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): EnumType {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            values: globalThis.Array.isArray(object?.values)
+                ? object.values.map((e: any) => globalThis.String(e))
+                : [],
+        };
+    },
+
+    toJSON(message: EnumType): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.values?.length) {
+            obj.values = message.values;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<EnumType>): EnumType {
+        return EnumType.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<EnumType>): EnumType {
+        const message = createBaseEnumType();
+        message.name = object.name ?? "";
+        message.values = object.values?.map(e => e) || [];
         return message;
     },
 };

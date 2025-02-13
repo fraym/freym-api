@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.1
+
+- (bug) Cleanup deployment renaming
+
 # v0.31.0
 
 - (bug) Fix order of arguments (go)

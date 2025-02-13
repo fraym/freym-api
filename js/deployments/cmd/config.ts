@@ -2,14 +2,14 @@ import { config } from "dotenv";
 import { hideBin } from "yargs/helpers";
 import yargs from "yargs/yargs";
 
-export interface CmdConfig {
+export interface Config {
     schemaGlob: string;
     namespace: string;
     serverAddress: string;
     apiToken: string;
 }
 
-export const useConfig = async (): Promise<CmdConfig> => {
+export const useConfig = async (): Promise<Config> => {
     config();
 
     const argv = await yargs(hideBin(process.argv))
@@ -26,26 +26,20 @@ export const useConfig = async (): Promise<CmdConfig> => {
     let apiToken: string = argv.apiToken as string;
     let namespace: string = argv.namespace as string;
 
-    const secure =
-        process.env.MIGRATIONS_SECURE === "1" ||
-        process.env.MIGRATIONS_SECURE?.toLowerCase() === "true";
-
-    const httpProtocoll = secure ? "https" : "http";
-
-    if (process.env.MIGRATIONS_SCHEMA_GLOB) {
-        schemaGlob = process.env.MIGRATIONS_SCHEMA_GLOB;
+    if (process.env.DEPLOYMENTS_SCHEMA_GLOB) {
+        schemaGlob = process.env.DEPLOYMENTS_SCHEMA_GLOB;
     }
 
-    if (process.env.MIGRATIONS_SERVER_ADDRESS) {
-        serverAddress = `${httpProtocoll}${process.env.MIGRATIONS_SERVER_ADDRESS}`;
+    if (process.env.DEPLOYMENTS_SERVER_ADDRESS) {
+        serverAddress = process.env.DEPLOYMENTS_SERVER_ADDRESS ?? "";
     }
 
-    if (process.env.MIGRATIONS_API_TOKEN) {
-        apiToken = process.env.MIGRATIONS_API_TOKEN;
+    if (process.env.DEPLOYMENTS_API_TOKEN) {
+        apiToken = process.env.DEPLOYMENTS_API_TOKEN;
     }
 
-    if (process.env.MIGRATIONS_NAMESPACE) {
-        namespace = process.env.MIGRATIONS_NAMESPACE;
+    if (process.env.DEPLOYMENTS_NAMESPACE) {
+        namespace = process.env.DEPLOYMENTS_NAMESPACE;
     }
 
     if (namespace === "Fraym") {

@@ -1,6 +1,6 @@
 syntax = "proto3";
 package freym.crud.management;
-import "crud/management/migration.proto";
+import "crud/management/deployment.proto";
   
 service Service {
 	rpc DeploySchema(DeploySchemaRequest) returns (DeploySchemaResponse);

@@ -1,9 +1,9 @@
-import { ClientConfig } from "@/config/config";
+import { Config } from "@/cmd/config";
 import { Deployment, DeploymentResponse } from "@/schema/data";
 
 export const createDeployment = async (
     deployment: Deployment,
-    config: ClientConfig
+    config: Config
 ): Promise<DeploymentResponse> => {
     const response = await fetch(`${config.serverAddress}/api/deployment`, {
         method: "POST",
@@ -25,7 +25,7 @@ export type DeploymentStatus = Record<string, number>;
 
 export const getDeploymentStatus = async (
     deploymentId: number,
-    config: ClientConfig
+    config: Config
 ): Promise<DeploymentStatus> => {
     const response = await fetch(`${config.serverAddress}/api/deployment/${deploymentId}`, {
         method: "GET",
@@ -42,10 +42,7 @@ export const getDeploymentStatus = async (
     return await response.json();
 };
 
-export const confirmDeployment = async (
-    deploymentId: number,
-    config: ClientConfig
-): Promise<void> => {
+export const confirmDeployment = async (deploymentId: number, config: Config): Promise<void> => {
     const response = await fetch(`${config.serverAddress}/api/deployment/${deploymentId}/confirm`, {
         method: "POST",
         headers: {
@@ -59,10 +56,7 @@ export const confirmDeployment = async (
     }
 };
 
-export const rollbackDeployment = async (
-    deploymentId: number,
-    config: ClientConfig
-): Promise<void> => {
+export const rollbackDeployment = async (deploymentId: number, config: Config): Promise<void> => {
     const response = await fetch(
         `${config.serverAddress}/api/deployment/${deploymentId}/rollback`,
         {
@@ -79,7 +73,7 @@ export const rollbackDeployment = async (
     }
 };
 
-export const rollbackDeploymentByNamespace = async (config: ClientConfig): Promise<void> => {
+export const rollbackDeploymentByNamespace = async (config: Config): Promise<void> => {
     const response = await fetch(`${config.serverAddress}/api/deployment/rollback/namespace`, {
         method: "POST",
         headers: {

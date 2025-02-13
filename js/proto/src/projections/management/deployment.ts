@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.6.1
 //   protoc               v5.29.3
-// source: crud/management/migration.proto
+// source: projections/management/deployment.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
@@ -66,6 +66,7 @@ export interface DeploySchemaRequest {
     crudTypes: ObjectType[];
     nestedTypes: ObjectType[];
     enumTypes: EnumType[];
+    views: View[];
     options: DeploymentOptions | undefined;
 }
 
@@ -92,6 +93,7 @@ export interface GetSchemaDeploymentResponse {
 }
 
 export interface DeploymentOptions {
+    dangerouslyRemoveGdprFields: boolean;
     target: DeploymentTarget;
     force: boolean;
 }
@@ -123,6 +125,13 @@ export interface EnumType {
     values: string[];
 }
 
+export interface View {
+    name: string;
+    sql: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
+}
+
 function createBaseDeploySchemaRequest(): DeploySchemaRequest {
     return {
         namespace: "",
@@ -130,6 +139,7 @@ function createBaseDeploySchemaRequest(): DeploySchemaRequest {
         crudTypes: [],
         nestedTypes: [],
         enumTypes: [],
+        views: [],
         options: undefined,
     };
 }
@@ -151,8 +161,11 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         for (const v of message.enumTypes) {
             EnumType.encode(v!, writer.uint32(42).fork()).join();
         }
+        for (const v of message.views) {
+            View.encode(v!, writer.uint32(50).fork()).join();
+        }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(50).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(58).fork()).join();
         }
         return writer;
     },
@@ -209,6 +222,14 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
+                    message.views.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 7: {
+                    if (tag !== 58) {
+                        break;
+                    }
+
                     message.options = DeploymentOptions.decode(reader, reader.uint32());
                     continue;
                 }
@@ -236,6 +257,9 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
             enumTypes: globalThis.Array.isArray(object?.enumTypes)
                 ? object.enumTypes.map((e: any) => EnumType.fromJSON(e))
                 : [],
+            views: globalThis.Array.isArray(object?.views)
+                ? object.views.map((e: any) => View.fromJSON(e))
+                : [],
             options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
         };
     },
@@ -257,6 +281,9 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         if (message.enumTypes?.length) {
             obj.enumTypes = message.enumTypes.map(e => EnumType.toJSON(e));
         }
+        if (message.views?.length) {
+            obj.views = message.views.map(e => View.toJSON(e));
+        }
         if (message.options !== undefined) {
             obj.options = DeploymentOptions.toJSON(message.options);
         }
@@ -273,6 +300,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         message.crudTypes = object.crudTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.nestedTypes = object.nestedTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.enumTypes = object.enumTypes?.map(e => EnumType.fromPartial(e)) || [];
+        message.views = object.views?.map(e => View.fromPartial(e)) || [];
         message.options =
             object.options !== undefined && object.options !== null
                 ? DeploymentOptions.fromPartial(object.options)
@@ -658,16 +686,23 @@ export const GetSchemaDeploymentResponse: MessageFns<GetSchemaDeploymentResponse
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE, force: false };
+    return {
+        dangerouslyRemoveGdprFields: false,
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+        force: false,
+    };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     encode(message: DeploymentOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.dangerouslyRemoveGdprFields !== false) {
+            writer.uint32(8).bool(message.dangerouslyRemoveGdprFields);
+        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
-            writer.uint32(8).int32(deploymentTargetToNumber(message.target));
+            writer.uint32(16).int32(deploymentTargetToNumber(message.target));
         }
         if (message.force !== false) {
-            writer.uint32(16).bool(message.force);
+            writer.uint32(24).bool(message.force);
         }
         return writer;
     },
@@ -684,11 +719,19 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                         break;
                     }
 
-                    message.target = deploymentTargetFromJSON(reader.int32());
+                    message.dangerouslyRemoveGdprFields = reader.bool();
                     continue;
                 }
                 case 2: {
                     if (tag !== 16) {
+                        break;
+                    }
+
+                    message.target = deploymentTargetFromJSON(reader.int32());
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 24) {
                         break;
                     }
 
@@ -706,6 +749,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
 
     fromJSON(object: any): DeploymentOptions {
         return {
+            dangerouslyRemoveGdprFields: isSet(object.dangerouslyRemoveGdprFields)
+                ? globalThis.Boolean(object.dangerouslyRemoveGdprFields)
+                : false,
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
@@ -715,6 +761,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
 
     toJSON(message: DeploymentOptions): unknown {
         const obj: any = {};
+        if (message.dangerouslyRemoveGdprFields !== false) {
+            obj.dangerouslyRemoveGdprFields = message.dangerouslyRemoveGdprFields;
+        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
@@ -729,6 +778,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     },
     fromPartial(object: DeepPartial<DeploymentOptions>): DeploymentOptions {
         const message = createBaseDeploymentOptions();
+        message.dangerouslyRemoveGdprFields = object.dangerouslyRemoveGdprFields ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         message.force = object.force ?? false;
         return message;
@@ -1155,6 +1205,118 @@ export const EnumType: MessageFns<EnumType> = {
         const message = createBaseEnumType();
         message.name = object.name ?? "";
         message.values = object.values?.map(e => e) || [];
+        return message;
+    },
+};
+
+function createBaseView(): View {
+    return { name: "", sql: "", directives: [], fields: [] };
+}
+
+export const View: MessageFns<View> = {
+    encode(message: View, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        if (message.sql !== "") {
+            writer.uint32(18).string(message.sql);
+        }
+        for (const v of message.directives) {
+            TypeDirective.encode(v!, writer.uint32(26).fork()).join();
+        }
+        for (const v of message.fields) {
+            TypeField.encode(v!, writer.uint32(34).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): View {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseView();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.sql = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.directives.push(TypeDirective.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.fields.push(TypeField.decode(reader, reader.uint32()));
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): View {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            sql: isSet(object.sql) ? globalThis.String(object.sql) : "",
+            directives: globalThis.Array.isArray(object?.directives)
+                ? object.directives.map((e: any) => TypeDirective.fromJSON(e))
+                : [],
+            fields: globalThis.Array.isArray(object?.fields)
+                ? object.fields.map((e: any) => TypeField.fromJSON(e))
+                : [],
+        };
+    },
+
+    toJSON(message: View): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.sql !== "") {
+            obj.sql = message.sql;
+        }
+        if (message.directives?.length) {
+            obj.directives = message.directives.map(e => TypeDirective.toJSON(e));
+        }
+        if (message.fields?.length) {
+            obj.fields = message.fields.map(e => TypeField.toJSON(e));
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<View>): View {
+        return View.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<View>): View {
+        const message = createBaseView();
+        message.name = object.name ?? "";
+        message.sql = object.sql ?? "";
+        message.directives = object.directives?.map(e => TypeDirective.fromPartial(e)) || [];
+        message.fields = object.fields?.map(e => TypeField.fromPartial(e)) || [];
         return message;
     },
 };

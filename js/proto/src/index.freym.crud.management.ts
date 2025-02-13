@@ -3,5 +3,5 @@
 //   protoc-gen-ts_proto  v2.6.1
 //   protoc               v5.29.3
 
-export * from "./crud/management/migration";
+export * from "./crud/management/deployment";
 export * from "./crud/management/service";

@@ -13,89 +13,64 @@ import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
 
 export const runPrintDeploymentStatus = async (id: number) => {
     console.log("get deployment status ...");
-    const { serverAddress, apiToken, namespace } = await useConfig();
+    const config = await useConfig();
 
-    const status = await getDeploymentStatus(id, {
-        apiToken,
-        serverAddress,
-        namespace,
-    });
+    const status = await getDeploymentStatus(id, config);
     console.log(status);
 };
 
 export const runCreateDeployment = async () => {
     console.log("creating deployment ...");
-    const { schemaGlob, namespace, serverAddress, apiToken } = await useConfig();
+    const config = await useConfig();
 
-    const schema = await loadSchema(schemaGlob, {
+    const schema = await loadSchema(config.schemaGlob, {
         loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
 
     // @todo: make options configurable
-    const deployment = await getMigrationFromSchema(schema, namespace, {
+    const deployment = await getMigrationFromSchema(schema, config.namespace, {
         dangerouslyRemoveGdprFields: false,
         skipServices: [],
         force: false,
     });
 
-    const response = await createDeployment(
-        { ...deployment },
-        { apiToken, serverAddress, namespace }
-    );
+    const response = await createDeployment({ ...deployment }, config);
     console.log(`created deployment ${response.target}/${response.deploymentId}`);
 };
 
 export const runConfirmDeployment = async (id: number) => {
     console.log("confirming deployment ...");
-    const { serverAddress, apiToken, namespace } = await useConfig();
+    const config = await useConfig();
 
-    await confirmDeployment(id, {
-        apiToken,
-        serverAddress,
-
-        namespace,
-    });
+    await confirmDeployment(id, config);
     console.log("done confirming deployment");
 };
 
 export const runRollbackDeployment = async (id: number) => {
     console.log("rolling back deployment ...");
-    const { serverAddress, apiToken, namespace } = await useConfig();
+    const config = await useConfig();
 
-    await rollbackDeployment(id, {
-        apiToken,
-        serverAddress,
-
-        namespace,
-    });
+    await rollbackDeployment(id, config);
     console.log("done rolling back deployment");
 };
 
 export const runRollbackNamespaceDeployment = async () => {
     console.log("rolling back deployment ...");
-    const { serverAddress, apiToken, namespace } = await useConfig();
+    const config = await useConfig();
 
-    await rollbackDeploymentByNamespace({
-        apiToken,
-        serverAddress,
-        namespace,
-    });
+    await rollbackDeploymentByNamespace(config);
     console.log("done rolling back deployment");
 };
 
 export const runWait = async (id: number) => {
     console.log("waiting for deployment to be done...");
-    const { serverAddress, apiToken, namespace } = await useConfig();
+    const config = await useConfig();
 
     const isReady = false;
     let percentage = 0;
 
     while (!isReady) {
-        const status = await getDeploymentStatus(id, {
-            apiToken,
-            serverAddress,
-            namespace,
-        });
+        const status = await getDeploymentStatus(id, config);
 
         const newPercentage = getPercentage(status);
 

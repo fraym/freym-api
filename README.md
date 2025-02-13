@@ -9,19 +9,19 @@ The Freym API provides a set of clients to interact with the Freym microservices
 
 ## Clients
 
-| Service                                          | Language   |
-| ------------------------------------------------ | ---------- |
-| [Sync](go/sync/README.md)                        | go         |
-| [Streams](go/streams/README.md)                  | go         |
-| [Streams](js/streams/README.md)                  | JavaScript |
-| [Projections](go/projections/README.md)          | go         |
-| [Projections](js/projections/README.md)          | JavaScript |
-| [CRUD](go/crud/README.md)                        | go         |
-| [CRUD](js/crud/README.md)                        | JavaScript |
-| [Auth](go/auth/README.md)                        | go         |
-| [Auth](js/auth/README.md)                        | JavaScript |
-| [Deployments](go/deployments/README.md)          | go         |
-| [MiDeploymentsrations](js/deployments/README.md) | JavaScript |
+| Service                                 | Language   |
+| --------------------------------------- | ---------- |
+| [Sync](go/sync/README.md)               | go         |
+| [Streams](go/streams/README.md)         | go         |
+| [Streams](js/streams/README.md)         | JavaScript |
+| [Projections](go/projections/README.md) | go         |
+| [Projections](js/projections/README.md) | JavaScript |
+| [CRUD](go/crud/README.md)               | go         |
+| [CRUD](js/crud/README.md)               | JavaScript |
+| [Auth](go/auth/README.md)               | go         |
+| [Auth](js/auth/README.md)               | JavaScript |
+| [Deployments](go/deployments/README.md) | go         |
+| [Deployments](js/deployments/README.md) | JavaScript |
 
 ## Docs
 

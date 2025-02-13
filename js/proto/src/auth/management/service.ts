@@ -24,7 +24,7 @@ import {
     GetSchemaDeploymentResponse,
     RollbackSchemaRequest,
     RollbackSchemaResponse,
-} from "./migration";
+} from "./deployment";
 import { DeleteRoleRequest, DeleteRoleResponse } from "./role_delete";
 import { UpsertRoleRequest, UpsertRoleResponse } from "./role_upsert";
 import { GetRolesRequest, GetRolesResponse } from "./roles_get";
