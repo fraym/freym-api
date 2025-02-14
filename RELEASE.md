@@ -1,10 +1,5 @@
-# v0.31.0
-
-## :boom: Breaking Changes
-
-- Use variadic args in sync client for resource definitions (go)
-- Rename migrations to deployments
+# v0.31.2
 
 ## :bug: Bug Fixes
 
-- Fix order of arguments (go)
+- Fix streams backchannel message data (only send tenant and topic again)

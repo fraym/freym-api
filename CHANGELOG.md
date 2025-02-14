@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.2
+
+- (bug) Fix streams backchannel message data (only send tenant and topic again)
+
 # v0.31.1
 
 - (bug) Cleanup deployment renaming

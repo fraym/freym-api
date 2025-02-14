@@ -11,8 +11,13 @@ import { Event } from "./event";
 export interface BackchannelEventRequest {
     payload?:
         | { $case: "broadcast"; broadcast: Event }
-        | { $case: "notice"; notice: Event }
+        | { $case: "notice"; notice: BackchannelNotice }
         | undefined;
+}
+
+export interface BackchannelNotice {
+    tenantId: string;
+    topic: string;
 }
 
 export interface BackchannelEventResponse {}
@@ -31,7 +36,7 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
                 Event.encode(message.payload.broadcast, writer.uint32(10).fork()).join();
                 break;
             case "notice":
-                Event.encode(message.payload.notice, writer.uint32(18).fork()).join();
+                BackchannelNotice.encode(message.payload.notice, writer.uint32(18).fork()).join();
                 break;
         }
         return writer;
@@ -62,7 +67,7 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
 
                     message.payload = {
                         $case: "notice",
-                        notice: Event.decode(reader, reader.uint32()),
+                        notice: BackchannelNotice.decode(reader, reader.uint32()),
                     };
                     continue;
                 }
@@ -80,7 +85,7 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
             payload: isSet(object.broadcast)
                 ? { $case: "broadcast", broadcast: Event.fromJSON(object.broadcast) }
                 : isSet(object.notice)
-                  ? { $case: "notice", notice: Event.fromJSON(object.notice) }
+                  ? { $case: "notice", notice: BackchannelNotice.fromJSON(object.notice) }
                   : undefined,
         };
     },
@@ -90,7 +95,7 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
         if (message.payload?.$case === "broadcast") {
             obj.broadcast = Event.toJSON(message.payload.broadcast);
         } else if (message.payload?.$case === "notice") {
-            obj.notice = Event.toJSON(message.payload.notice);
+            obj.notice = BackchannelNotice.toJSON(message.payload.notice);
         }
         return obj;
     },
@@ -114,12 +119,88 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
                 if (object.payload?.notice !== undefined && object.payload?.notice !== null) {
                     message.payload = {
                         $case: "notice",
-                        notice: Event.fromPartial(object.payload.notice),
+                        notice: BackchannelNotice.fromPartial(object.payload.notice),
                     };
                 }
                 break;
             }
         }
+        return message;
+    },
+};
+
+function createBaseBackchannelNotice(): BackchannelNotice {
+    return { tenantId: "", topic: "" };
+}
+
+export const BackchannelNotice: MessageFns<BackchannelNotice> = {
+    encode(message: BackchannelNotice, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.tenantId !== "") {
+            writer.uint32(10).string(message.tenantId);
+        }
+        if (message.topic !== "") {
+            writer.uint32(18).string(message.topic);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelNotice {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseBackchannelNotice();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.tenantId = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.topic = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): BackchannelNotice {
+        return {
+            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+        };
+    },
+
+    toJSON(message: BackchannelNotice): unknown {
+        const obj: any = {};
+        if (message.tenantId !== "") {
+            obj.tenantId = message.tenantId;
+        }
+        if (message.topic !== "") {
+            obj.topic = message.topic;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<BackchannelNotice>): BackchannelNotice {
+        return BackchannelNotice.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<BackchannelNotice>): BackchannelNotice {
+        const message = createBaseBackchannelNotice();
+        message.tenantId = object.tenantId ?? "";
+        message.topic = object.topic ?? "";
         return message;
     },
 };
