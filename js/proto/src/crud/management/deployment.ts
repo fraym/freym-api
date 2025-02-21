@@ -72,6 +72,12 @@ export interface DeploySchemaRequest {
 
 export interface DeploySchemaResponse {}
 
+export interface ActivateSchemaRequest {
+    deploymentId: string;
+}
+
+export interface ActivateSchemaResponse {}
+
 export interface ConfirmSchemaRequest {
     deploymentId: string;
 }
@@ -338,6 +344,112 @@ export const DeploySchemaResponse: MessageFns<DeploySchemaResponse> = {
     },
     fromPartial(_: DeepPartial<DeploySchemaResponse>): DeploySchemaResponse {
         const message = createBaseDeploySchemaResponse();
+        return message;
+    },
+};
+
+function createBaseActivateSchemaRequest(): ActivateSchemaRequest {
+    return { deploymentId: "0" };
+}
+
+export const ActivateSchemaRequest: MessageFns<ActivateSchemaRequest> = {
+    encode(
+        message: ActivateSchemaRequest,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.deploymentId !== "0") {
+            writer.uint32(8).int64(message.deploymentId);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): ActivateSchemaRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseActivateSchemaRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 8) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): ActivateSchemaRequest {
+        return {
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+        };
+    },
+
+    toJSON(message: ActivateSchemaRequest): unknown {
+        const obj: any = {};
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<ActivateSchemaRequest>): ActivateSchemaRequest {
+        return ActivateSchemaRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<ActivateSchemaRequest>): ActivateSchemaRequest {
+        const message = createBaseActivateSchemaRequest();
+        message.deploymentId = object.deploymentId ?? "0";
+        return message;
+    },
+};
+
+function createBaseActivateSchemaResponse(): ActivateSchemaResponse {
+    return {};
+}
+
+export const ActivateSchemaResponse: MessageFns<ActivateSchemaResponse> = {
+    encode(_: ActivateSchemaResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): ActivateSchemaResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseActivateSchemaResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(_: any): ActivateSchemaResponse {
+        return {};
+    },
+
+    toJSON(_: ActivateSchemaResponse): unknown {
+        const obj: any = {};
+        return obj;
+    },
+
+    create(base?: DeepPartial<ActivateSchemaResponse>): ActivateSchemaResponse {
+        return ActivateSchemaResponse.fromPartial(base ?? {});
+    },
+    fromPartial(_: DeepPartial<ActivateSchemaResponse>): ActivateSchemaResponse {
+        const message = createBaseActivateSchemaResponse();
         return message;
     },
 };

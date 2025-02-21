@@ -10,6 +10,12 @@ message DeploySchemaRequest {
 
 message DeploySchemaResponse {}
 
+message ActivateSchemaRequest {
+	int64 deployment_id = 1;
+}
+
+message ActivateSchemaResponse {}
+
 message ConfirmSchemaRequest {
 	int64 deployment_id = 1;
 }

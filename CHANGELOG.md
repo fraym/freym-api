@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.5
+
+- (bug) Add activation deployment step to all services
+
 # v0.31.4
 
 - (bug) Add activation deployment step

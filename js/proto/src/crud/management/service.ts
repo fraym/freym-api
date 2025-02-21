@@ -16,6 +16,8 @@ import {
     makeGenericClientConstructor,
 } from "@grpc/grpc-js";
 import {
+    ActivateSchemaRequest,
+    ActivateSchemaResponse,
     ConfirmSchemaRequest,
     ConfirmSchemaResponse,
     DeploySchemaRequest,
@@ -38,6 +40,17 @@ export const ServiceService = {
         responseSerialize: (value: DeploySchemaResponse) =>
             Buffer.from(DeploySchemaResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => DeploySchemaResponse.decode(value),
+    },
+    activateSchema: {
+        path: "/freym.crud.management.Service/ActivateSchema",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: ActivateSchemaRequest) =>
+            Buffer.from(ActivateSchemaRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => ActivateSchemaRequest.decode(value),
+        responseSerialize: (value: ActivateSchemaResponse) =>
+            Buffer.from(ActivateSchemaResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => ActivateSchemaResponse.decode(value),
     },
     confirmSchema: {
         path: "/freym.crud.management.Service/ConfirmSchema",
@@ -76,6 +89,7 @@ export const ServiceService = {
 
 export interface ServiceServer extends UntypedServiceImplementation {
     deploySchema: handleUnaryCall<DeploySchemaRequest, DeploySchemaResponse>;
+    activateSchema: handleUnaryCall<ActivateSchemaRequest, ActivateSchemaResponse>;
     confirmSchema: handleUnaryCall<ConfirmSchemaRequest, ConfirmSchemaResponse>;
     rollbackSchema: handleUnaryCall<RollbackSchemaRequest, RollbackSchemaResponse>;
     getSchemaDeployment: handleUnaryCall<GetSchemaDeploymentRequest, GetSchemaDeploymentResponse>;
@@ -96,6 +110,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: DeploySchemaResponse) => void
+    ): ClientUnaryCall;
+    activateSchema(
+        request: ActivateSchemaRequest,
+        callback: (error: ServiceError | null, response: ActivateSchemaResponse) => void
+    ): ClientUnaryCall;
+    activateSchema(
+        request: ActivateSchemaRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: ActivateSchemaResponse) => void
+    ): ClientUnaryCall;
+    activateSchema(
+        request: ActivateSchemaRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: ActivateSchemaResponse) => void
     ): ClientUnaryCall;
     confirmSchema(
         request: ConfirmSchemaRequest,

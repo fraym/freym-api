@@ -4,6 +4,7 @@ import "projections/management/deployment.proto";
 
 service Service {
 	rpc DeploySchema(DeploySchemaRequest) returns (DeploySchemaResponse);
+	rpc ActivateSchema(ActivateSchemaRequest) returns (ActivateSchemaResponse);
 	rpc ConfirmSchema(ConfirmSchemaRequest) returns (ConfirmSchemaResponse);
 	rpc RollbackSchema(RollbackSchemaRequest) returns (RollbackSchemaResponse);
 	rpc GetSchemaDeployment(GetSchemaDeploymentRequest) returns (GetSchemaDeploymentResponse);

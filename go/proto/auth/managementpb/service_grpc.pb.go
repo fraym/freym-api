@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Service_DeploySchema_FullMethodName        = "/freym.auth.management.Service/DeploySchema"
+	Service_ActivateSchema_FullMethodName      = "/freym.auth.management.Service/ActivateSchema"
 	Service_ConfirmSchema_FullMethodName       = "/freym.auth.management.Service/ConfirmSchema"
 	Service_RollbackSchema_FullMethodName      = "/freym.auth.management.Service/RollbackSchema"
 	Service_GetSchemaDeployment_FullMethodName = "/freym.auth.management.Service/GetSchemaDeployment"
@@ -37,6 +38,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
 	DeploySchema(ctx context.Context, in *DeploySchemaRequest, opts ...grpc.CallOption) (*DeploySchemaResponse, error)
+	ActivateSchema(ctx context.Context, in *ActivateSchemaRequest, opts ...grpc.CallOption) (*ActivateSchemaResponse, error)
 	ConfirmSchema(ctx context.Context, in *ConfirmSchemaRequest, opts ...grpc.CallOption) (*ConfirmSchemaResponse, error)
 	RollbackSchema(ctx context.Context, in *RollbackSchemaRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(ctx context.Context, in *GetSchemaDeploymentRequest, opts ...grpc.CallOption) (*GetSchemaDeploymentResponse, error)
@@ -60,6 +62,15 @@ func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 func (c *serviceClient) DeploySchema(ctx context.Context, in *DeploySchemaRequest, opts ...grpc.CallOption) (*DeploySchemaResponse, error) {
 	out := new(DeploySchemaResponse)
 	err := c.cc.Invoke(ctx, Service_DeploySchema_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ActivateSchema(ctx context.Context, in *ActivateSchemaRequest, opts ...grpc.CallOption) (*ActivateSchemaResponse, error) {
+	out := new(ActivateSchemaResponse)
+	err := c.cc.Invoke(ctx, Service_ActivateSchema_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -161,6 +172,7 @@ func (c *serviceClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts 
 // for forward compatibility
 type ServiceServer interface {
 	DeploySchema(context.Context, *DeploySchemaRequest) (*DeploySchemaResponse, error)
+	ActivateSchema(context.Context, *ActivateSchemaRequest) (*ActivateSchemaResponse, error)
 	ConfirmSchema(context.Context, *ConfirmSchemaRequest) (*ConfirmSchemaResponse, error)
 	RollbackSchema(context.Context, *RollbackSchemaRequest) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(context.Context, *GetSchemaDeploymentRequest) (*GetSchemaDeploymentResponse, error)
@@ -180,6 +192,9 @@ type UnimplementedServiceServer struct {
 
 func (UnimplementedServiceServer) DeploySchema(context.Context, *DeploySchemaRequest) (*DeploySchemaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeploySchema not implemented")
+}
+func (UnimplementedServiceServer) ActivateSchema(context.Context, *ActivateSchemaRequest) (*ActivateSchemaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateSchema not implemented")
 }
 func (UnimplementedServiceServer) ConfirmSchema(context.Context, *ConfirmSchemaRequest) (*ConfirmSchemaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmSchema not implemented")
@@ -238,6 +253,24 @@ func _Service_DeploySchema_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).DeploySchema(ctx, req.(*DeploySchemaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ActivateSchema_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateSchemaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ActivateSchema(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ActivateSchema_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ActivateSchema(ctx, req.(*ActivateSchemaRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -432,6 +465,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeploySchema",
 			Handler:    _Service_DeploySchema_Handler,
+		},
+		{
+			MethodName: "ActivateSchema",
+			Handler:    _Service_ActivateSchema_Handler,
 		},
 		{
 			MethodName: "ConfirmSchema",
