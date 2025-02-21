@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import { DeploymentTarget } from "@/schema/data";
 import {
     runConfirmDeployment,
     runCreateDeployment,
@@ -22,10 +23,20 @@ const getIdFromArgs = (): number => {
     const id = idString ? parseInt(idString, 10) : undefined;
 
     if (!id || id > 0) {
-        throw new Error("id is required and has to by a number > 0");
+        throw new Error("id is required and has to be a number > 0");
     }
 
     return id;
+};
+
+const getTargetFromArgs = (): DeploymentTarget => {
+    const targetString = process.argv[3];
+
+    if (targetString !== "blue" && targetString !== "green") {
+        throw new Error("deployment target is required and has be one of 'blue' or 'green'");
+    }
+
+    return targetString;
 };
 
 switch (arg) {
@@ -33,7 +44,7 @@ switch (arg) {
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment();
+        runCreateDeployment(getTargetFromArgs());
         break;
     case COMMAND_CONFIRM:
         runConfirmDeployment(getIdFromArgs());

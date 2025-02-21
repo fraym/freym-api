@@ -73,13 +73,13 @@ export interface CreateDeploymentRequest {
 
 export interface CreateDeploymentResponse {
     deploymentId: string;
-    target: DeploymentTarget;
 }
 
 export interface DeploymentOptions {
     dangerouslyRemoveGdprFields: boolean;
     skipServices: string[];
     force: boolean;
+    target: DeploymentTarget;
 }
 
 export interface ObjectType {
@@ -316,7 +316,7 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
 };
 
 function createBaseCreateDeploymentResponse(): CreateDeploymentResponse {
-    return { deploymentId: "0", target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE };
+    return { deploymentId: "0" };
 }
 
 export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
@@ -326,9 +326,6 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
     ): BinaryWriter {
         if (message.deploymentId !== "0") {
             writer.uint32(8).int64(message.deploymentId);
-        }
-        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
-            writer.uint32(16).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -348,14 +345,6 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
-                case 2: {
-                    if (tag !== 16) {
-                        break;
-                    }
-
-                    message.target = deploymentTargetFromJSON(reader.int32());
-                    continue;
-                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -368,9 +357,6 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
     fromJSON(object: any): CreateDeploymentResponse {
         return {
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
-            target: isSet(object.target)
-                ? deploymentTargetFromJSON(object.target)
-                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         };
     },
 
@@ -378,9 +364,6 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
         const obj: any = {};
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
-        }
-        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
-            obj.target = deploymentTargetToJSON(message.target);
         }
         return obj;
     },
@@ -391,13 +374,17 @@ export const CreateDeploymentResponse: MessageFns<CreateDeploymentResponse> = {
     fromPartial(object: DeepPartial<CreateDeploymentResponse>): CreateDeploymentResponse {
         const message = createBaseCreateDeploymentResponse();
         message.deploymentId = object.deploymentId ?? "0";
-        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return { dangerouslyRemoveGdprFields: false, skipServices: [], force: false };
+    return {
+        dangerouslyRemoveGdprFields: false,
+        skipServices: [],
+        force: false,
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+    };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
@@ -410,6 +397,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         }
         if (message.force !== false) {
             writer.uint32(24).bool(message.force);
+        }
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(32).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -445,6 +435,14 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                     message.force = reader.bool();
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.target = deploymentTargetFromJSON(reader.int32());
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -463,6 +461,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                 ? object.skipServices.map((e: any) => globalThis.String(e))
                 : [],
             force: isSet(object.force) ? globalThis.Boolean(object.force) : false,
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         };
     },
 
@@ -477,6 +478,9 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         if (message.force !== false) {
             obj.force = message.force;
         }
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
+        }
         return obj;
     },
 
@@ -488,6 +492,7 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
         message.dangerouslyRemoveGdprFields = object.dangerouslyRemoveGdprFields ?? false;
         message.skipServices = object.skipServices?.map(e => e) || [];
         message.force = object.force ?? false;
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },
 };

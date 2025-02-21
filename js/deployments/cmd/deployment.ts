@@ -7,6 +7,7 @@ import {
     rollbackDeploymentByNamespace,
 } from "@/api/deployment";
 import { getMigrationFromSchema } from "@/schema";
+import { DeploymentTarget } from "@/schema/data";
 import { loadSchema } from "@graphql-tools/load";
 import { useConfig } from "./config";
 import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
@@ -19,7 +20,7 @@ export const runPrintDeploymentStatus = async (id: number) => {
     console.log(status);
 };
 
-export const runCreateDeployment = async () => {
+export const runCreateDeployment = async (target: DeploymentTarget) => {
     console.log("creating deployment ...");
     const config = await useConfig();
 
@@ -32,10 +33,11 @@ export const runCreateDeployment = async () => {
         dangerouslyRemoveGdprFields: false,
         skipServices: [],
         force: false,
+        target,
     });
 
     const response = await createDeployment({ ...deployment }, config);
-    console.log(`created deployment ${response.target}/${response.deploymentId}`);
+    console.log(`created deployment ${response.deploymentId}`);
 };
 
 export const runConfirmDeployment = async (id: number) => {

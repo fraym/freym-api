@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.3
+
+- (bug) Fix deployment apis (creator defines the target)
+
 # v0.31.2
 
 - (bug) Fix streams backchannel message data (only send tenant and topic again)

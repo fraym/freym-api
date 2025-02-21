@@ -15,7 +15,6 @@ message CreateDeploymentRequest {
 
 message CreateDeploymentResponse {
 	int64 deployment_id = 1;
-	DeploymentTarget target = 2;
 }
 
 
@@ -23,6 +22,7 @@ message DeploymentOptions {
 	bool dangerously_remove_gdpr_fields = 1;
 	repeated string skip_services = 2;
 	bool force = 3;
+	DeploymentTarget target = 4;
 }
 
 

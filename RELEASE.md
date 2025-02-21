@@ -1,5 +1,5 @@
-# v0.31.2
+# v0.31.3
 
 ## :bug: Bug Fixes
 
-- Fix streams backchannel message data (only send tenant and topic again)
+- Fix deployment apis (creator defines the target)

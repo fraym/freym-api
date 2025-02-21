@@ -2,13 +2,14 @@ syntax = "proto3";
 package freym.projections.management;
 
 message DeploySchemaRequest {
-	string namespace = 1;
-	repeated ObjectType projection_types = 2;
-	repeated ObjectType crud_types = 3;
-	repeated ObjectType nested_types = 4;
-	repeated EnumType enum_types = 5;
-	repeated View views = 6;
-	DeploymentOptions options = 7;
+	int64 deployment_id = 1;
+	string namespace = 2;
+	repeated ObjectType projection_types = 3;
+	repeated ObjectType crud_types = 4;
+	repeated ObjectType nested_types = 5;
+	repeated EnumType enum_types = 6;
+	repeated View views = 7;
+	DeploymentOptions options = 8;
 }
 
 message DeploySchemaResponse {}

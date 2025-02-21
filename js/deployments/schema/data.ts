@@ -11,7 +11,6 @@ export interface Deployment {
 
 export interface DeploymentResponse {
     deploymentId: number;
-    target: DeploymentTarget;
 }
 
 export type DeploymentTarget = "blue" | "green";
@@ -20,6 +19,7 @@ export interface DeploymentOptions {
     dangerouslyRemoveGdprFields: boolean;
     skipServices: string[];
     force: boolean;
+    target: DeploymentTarget;
 }
 
 export interface View {

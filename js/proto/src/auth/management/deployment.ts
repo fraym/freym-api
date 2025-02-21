@@ -61,6 +61,7 @@ export function deploymentTargetToNumber(object: DeploymentTarget): number {
 }
 
 export interface DeploySchemaRequest {
+    deploymentId: string;
     namespace: string;
     permissions: string[];
     options: DeploymentOptions | undefined;
@@ -94,19 +95,22 @@ export interface DeploymentOptions {
 }
 
 function createBaseDeploySchemaRequest(): DeploySchemaRequest {
-    return { namespace: "", permissions: [], options: undefined };
+    return { deploymentId: "0", namespace: "", permissions: [], options: undefined };
 }
 
 export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     encode(message: DeploySchemaRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.deploymentId !== "0") {
+            writer.uint32(8).int64(message.deploymentId);
+        }
         if (message.namespace !== "") {
-            writer.uint32(10).string(message.namespace);
+            writer.uint32(18).string(message.namespace);
         }
         for (const v of message.permissions) {
-            writer.uint32(18).string(v!);
+            writer.uint32(26).string(v!);
         }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(26).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(34).fork()).join();
         }
         return writer;
     },
@@ -119,11 +123,11 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1: {
-                    if (tag !== 10) {
+                    if (tag !== 8) {
                         break;
                     }
 
-                    message.namespace = reader.string();
+                    message.deploymentId = reader.int64().toString();
                     continue;
                 }
                 case 2: {
@@ -131,11 +135,19 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.permissions.push(reader.string());
+                    message.namespace = reader.string();
                     continue;
                 }
                 case 3: {
                     if (tag !== 26) {
+                        break;
+                    }
+
+                    message.permissions.push(reader.string());
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 34) {
                         break;
                     }
 
@@ -153,6 +165,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
 
     fromJSON(object: any): DeploySchemaRequest {
         return {
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
             namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
             permissions: globalThis.Array.isArray(object?.permissions)
                 ? object.permissions.map((e: any) => globalThis.String(e))
@@ -163,6 +176,9 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
 
     toJSON(message: DeploySchemaRequest): unknown {
         const obj: any = {};
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
         if (message.namespace !== "") {
             obj.namespace = message.namespace;
         }
@@ -180,6 +196,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     },
     fromPartial(object: DeepPartial<DeploySchemaRequest>): DeploySchemaRequest {
         const message = createBaseDeploySchemaRequest();
+        message.deploymentId = object.deploymentId ?? "0";
         message.namespace = object.namespace ?? "";
         message.permissions = object.permissions?.map(e => e) || [];
         message.options =

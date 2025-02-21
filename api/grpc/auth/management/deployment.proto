@@ -2,9 +2,10 @@ syntax = "proto3";
 package freym.auth.management;
 
 message DeploySchemaRequest {
-	string namespace = 1;
-	repeated string permissions = 2;
-	DeploymentOptions options = 3;
+	int64 deployment_id = 1;
+	string namespace = 2;
+	repeated string permissions = 3;
+	DeploymentOptions options = 4;
 }
 
 message DeploySchemaResponse {}

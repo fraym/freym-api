@@ -61,6 +61,7 @@ export function deploymentTargetToNumber(object: DeploymentTarget): number {
 }
 
 export interface DeploySchemaRequest {
+    deploymentId: string;
     namespace: string;
     projectionTypes: ObjectType[];
     crudTypes: ObjectType[];
@@ -134,6 +135,7 @@ export interface View {
 
 function createBaseDeploySchemaRequest(): DeploySchemaRequest {
     return {
+        deploymentId: "0",
         namespace: "",
         projectionTypes: [],
         crudTypes: [],
@@ -146,26 +148,29 @@ function createBaseDeploySchemaRequest(): DeploySchemaRequest {
 
 export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     encode(message: DeploySchemaRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.deploymentId !== "0") {
+            writer.uint32(8).int64(message.deploymentId);
+        }
         if (message.namespace !== "") {
-            writer.uint32(10).string(message.namespace);
+            writer.uint32(18).string(message.namespace);
         }
         for (const v of message.projectionTypes) {
-            ObjectType.encode(v!, writer.uint32(18).fork()).join();
-        }
-        for (const v of message.crudTypes) {
             ObjectType.encode(v!, writer.uint32(26).fork()).join();
         }
-        for (const v of message.nestedTypes) {
+        for (const v of message.crudTypes) {
             ObjectType.encode(v!, writer.uint32(34).fork()).join();
         }
+        for (const v of message.nestedTypes) {
+            ObjectType.encode(v!, writer.uint32(42).fork()).join();
+        }
         for (const v of message.enumTypes) {
-            EnumType.encode(v!, writer.uint32(42).fork()).join();
+            EnumType.encode(v!, writer.uint32(50).fork()).join();
         }
         for (const v of message.views) {
-            View.encode(v!, writer.uint32(50).fork()).join();
+            View.encode(v!, writer.uint32(58).fork()).join();
         }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(58).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(66).fork()).join();
         }
         return writer;
     },
@@ -178,11 +183,11 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1: {
-                    if (tag !== 10) {
+                    if (tag !== 8) {
                         break;
                     }
 
-                    message.namespace = reader.string();
+                    message.deploymentId = reader.int64().toString();
                     continue;
                 }
                 case 2: {
@@ -190,7 +195,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.projectionTypes.push(ObjectType.decode(reader, reader.uint32()));
+                    message.namespace = reader.string();
                     continue;
                 }
                 case 3: {
@@ -198,7 +203,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.crudTypes.push(ObjectType.decode(reader, reader.uint32()));
+                    message.projectionTypes.push(ObjectType.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 4: {
@@ -206,7 +211,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.nestedTypes.push(ObjectType.decode(reader, reader.uint32()));
+                    message.crudTypes.push(ObjectType.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 5: {
@@ -214,7 +219,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.enumTypes.push(EnumType.decode(reader, reader.uint32()));
+                    message.nestedTypes.push(ObjectType.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 6: {
@@ -222,11 +227,19 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.views.push(View.decode(reader, reader.uint32()));
+                    message.enumTypes.push(EnumType.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 7: {
                     if (tag !== 58) {
+                        break;
+                    }
+
+                    message.views.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 8: {
+                    if (tag !== 66) {
                         break;
                     }
 
@@ -244,6 +257,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
 
     fromJSON(object: any): DeploySchemaRequest {
         return {
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
             namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
             projectionTypes: globalThis.Array.isArray(object?.projectionTypes)
                 ? object.projectionTypes.map((e: any) => ObjectType.fromJSON(e))
@@ -266,6 +280,9 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
 
     toJSON(message: DeploySchemaRequest): unknown {
         const obj: any = {};
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
         if (message.namespace !== "") {
             obj.namespace = message.namespace;
         }
@@ -295,6 +312,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
     },
     fromPartial(object: DeepPartial<DeploySchemaRequest>): DeploySchemaRequest {
         const message = createBaseDeploySchemaRequest();
+        message.deploymentId = object.deploymentId ?? "0";
         message.namespace = object.namespace ?? "";
         message.projectionTypes = object.projectionTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.crudTypes = object.crudTypes?.map(e => ObjectType.fromPartial(e)) || [];

@@ -2,12 +2,13 @@ syntax = "proto3";
 package freym.crud.management;
 
 message DeploySchemaRequest {
-	string namespace = 1;
-	repeated ObjectType projection_types = 2;
-	repeated ObjectType crud_types = 3;
-	repeated ObjectType nested_types = 4;
-	repeated EnumType enum_types = 5;
-	DeploymentOptions options = 6;
+	int64 deployment_id = 1;
+	string namespace = 2;
+	repeated ObjectType projection_types = 3;
+	repeated ObjectType crud_types = 4;
+	repeated ObjectType nested_types = 5;
+	repeated EnumType enum_types = 6;
+	DeploymentOptions options = 7;
 }
 
 message DeploySchemaResponse {}

@@ -21,15 +21,11 @@ type DeploymentOptions struct {
 	DangerouslyRemoveGdprFields bool
 	SkipServices                []string
 	Force                       bool
-}
-
-type DeploymentResponse struct {
-	DeploymentId int64
-	Target       managementpb.DeploymentTarget
+	Target                      managementpb.DeploymentTarget
 }
 
 type Client interface {
-	DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*DeploymentResponse, error)
+	DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error)
 	ConfirmDeployment(ctx context.Context, deploymentId int64) error
 	RollbackDeployment(ctx context.Context) error
 	Close() error
@@ -71,7 +67,7 @@ func NewClient(
 	}, nil
 }
 
-func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*DeploymentResponse, error) {
+func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error) {
 	requestData, err := c.getDataFromString(schemaString)
 	if err != nil {
 		return nil, err
@@ -89,6 +85,7 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 		DangerouslyRemoveGdprFields: options.DangerouslyRemoveGdprFields,
 		SkipServices:                options.SkipServices,
 		Force:                       options.Force,
+		Target:                      options.Target,
 	}.Build())
 
 	response, err := c.client.CreateDeployment(ctx, requestData)
@@ -158,10 +155,9 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 		c.isMigrating = false
 		c.migratingDeploymentId = 0
 		c.mx.Unlock()
-		return &DeploymentResponse{
-			DeploymentId: response.GetDeploymentId(),
-			Target:       response.GetTarget(),
-		}, nil
+
+		deploymentId := response.GetDeploymentId()
+		return &deploymentId, nil
 	}
 }
 
