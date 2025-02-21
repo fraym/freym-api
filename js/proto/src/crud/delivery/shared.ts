@@ -7,6 +7,59 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
+export const DeploymentTarget = {
+    DEPLOYMENT_TARGET_BLUE: "DEPLOYMENT_TARGET_BLUE",
+    DEPLOYMENT_TARGET_GREEN: "DEPLOYMENT_TARGET_GREEN",
+} as const;
+
+export type DeploymentTarget = (typeof DeploymentTarget)[keyof typeof DeploymentTarget];
+
+export namespace DeploymentTarget {
+    export type DEPLOYMENT_TARGET_BLUE = typeof DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+    export type DEPLOYMENT_TARGET_GREEN = typeof DeploymentTarget.DEPLOYMENT_TARGET_GREEN;
+}
+
+export function deploymentTargetFromJSON(object: any): DeploymentTarget {
+    switch (object) {
+        case 0:
+        case "DEPLOYMENT_TARGET_BLUE":
+            return DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        case 1:
+        case "DEPLOYMENT_TARGET_GREEN":
+            return DeploymentTarget.DEPLOYMENT_TARGET_GREEN;
+        default:
+            throw new globalThis.Error(
+                "Unrecognized enum value " + object + " for enum DeploymentTarget"
+            );
+    }
+}
+
+export function deploymentTargetToJSON(object: DeploymentTarget): string {
+    switch (object) {
+        case DeploymentTarget.DEPLOYMENT_TARGET_BLUE:
+            return "DEPLOYMENT_TARGET_BLUE";
+        case DeploymentTarget.DEPLOYMENT_TARGET_GREEN:
+            return "DEPLOYMENT_TARGET_GREEN";
+        default:
+            throw new globalThis.Error(
+                "Unrecognized enum value " + object + " for enum DeploymentTarget"
+            );
+    }
+}
+
+export function deploymentTargetToNumber(object: DeploymentTarget): number {
+    switch (object) {
+        case DeploymentTarget.DEPLOYMENT_TARGET_BLUE:
+            return 0;
+        case DeploymentTarget.DEPLOYMENT_TARGET_GREEN:
+            return 1;
+        default:
+            throw new globalThis.Error(
+                "Unrecognized enum value " + object + " for enum DeploymentTarget"
+            );
+    }
+}
+
 export interface AuthData {
     tenantId: string;
     scopes: string[];
@@ -38,8 +91,8 @@ export interface DataFieldFilter {
 export interface EventMetadata {
     causationId: string;
     correlationId: string;
-    deploymentId: string;
     userId: string;
+    target: DeploymentTarget;
 }
 
 function createBaseAuthData(): AuthData {
@@ -535,7 +588,12 @@ export const DataFieldFilter: MessageFns<DataFieldFilter> = {
 };
 
 function createBaseEventMetadata(): EventMetadata {
-    return { causationId: "", correlationId: "", deploymentId: "0", userId: "" };
+    return {
+        causationId: "",
+        correlationId: "",
+        userId: "",
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+    };
 }
 
 export const EventMetadata: MessageFns<EventMetadata> = {
@@ -546,11 +604,11 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.correlationId !== "") {
             writer.uint32(18).string(message.correlationId);
         }
-        if (message.deploymentId !== "0") {
-            writer.uint32(24).int64(message.deploymentId);
-        }
         if (message.userId !== "") {
-            writer.uint32(34).string(message.userId);
+            writer.uint32(26).string(message.userId);
+        }
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(32).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -579,19 +637,19 @@ export const EventMetadata: MessageFns<EventMetadata> = {
                     continue;
                 }
                 case 3: {
-                    if (tag !== 24) {
-                        break;
-                    }
-
-                    message.deploymentId = reader.int64().toString();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 34) {
+                    if (tag !== 26) {
                         break;
                     }
 
                     message.userId = reader.string();
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
             }
@@ -609,8 +667,10 @@ export const EventMetadata: MessageFns<EventMetadata> = {
             correlationId: isSet(object.correlationId)
                 ? globalThis.String(object.correlationId)
                 : "",
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
             userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         };
     },
 
@@ -622,11 +682,11 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.correlationId !== "") {
             obj.correlationId = message.correlationId;
         }
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
-        }
         if (message.userId !== "") {
             obj.userId = message.userId;
+        }
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
         }
         return obj;
     },
@@ -638,8 +698,8 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         const message = createBaseEventMetadata();
         message.causationId = object.causationId ?? "";
         message.correlationId = object.correlationId ?? "";
-        message.deploymentId = object.deploymentId ?? "0";
         message.userId = object.userId ?? "";
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },
 };

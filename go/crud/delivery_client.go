@@ -61,8 +61,10 @@ type DeliveryClient interface {
 		authData *AuthData,
 		id string,
 		filter *Filter,
-		returnEmptyDataIfNotFound bool,
 		wait *Wait,
+		returnEmptyDataIfNotFound bool,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
 	) (*Entry, error)
 	GetEntryList(
 		ctx context.Context,
@@ -71,6 +73,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *Filter,
 		order []Order,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
 	) (*EntryList, error)
 	CreateEntry(
 		ctx context.Context,
@@ -140,8 +144,10 @@ func (c *crudDeliveryClient) GetEntry(
 	authData *AuthData,
 	id string,
 	filter *Filter,
-	returnEmptyDataIfNotFound bool,
 	wait *Wait,
+	returnEmptyDataIfNotFound bool,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*Entry, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -153,8 +159,10 @@ func (c *crudDeliveryClient) GetEntry(
 		Auth:                      pbAuthData,
 		Id:                        id,
 		Filter:                    filter.toProtobufFilter(),
-		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
 		Wait:                      wait.toDeliveryWait(),
+		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
+		UseStrongConsistency:      useStrongConsistency,
+		Target:                    target,
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -175,6 +183,8 @@ func (c *crudDeliveryClient) GetEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*EntryList, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -192,12 +202,14 @@ func (c *crudDeliveryClient) GetEntryList(
 	}
 
 	response, err := c.client.GetDataList(ctx, deliverypb.GetDataListRequest_builder{
-		Type:   typeName,
-		Auth:   pbAuthData,
-		Limit:  limit,
-		Page:   page,
-		Filter: filter.toProtobufFilter(),
-		Order:  toProtobufOrder(order),
+		Type:                 typeName,
+		Auth:                 pbAuthData,
+		Limit:                limit,
+		Page:                 page,
+		Filter:               filter.toProtobufFilter(),
+		Order:                toProtobufOrder(order),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
 	}.Build())
 	if err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package crud
 import (
 	"context"
 
+	"github.com/fraym/freym-api/go/proto/crud/deliverypb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -16,10 +17,12 @@ func (c *MockDeliveryClient) GetEntry(
 	authData *AuthData,
 	id string,
 	filter *Filter,
-	returnEmptyDataIfNotFound bool,
 	wait *Wait,
+	returnEmptyDataIfNotFound bool,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*Entry, error) {
-	args := c.Called(ctx, typeName, authData, id, filter, returnEmptyDataIfNotFound, wait)
+	args := c.Called(ctx, typeName, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -33,8 +36,10 @@ func (c *MockDeliveryClient) GetEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*EntryList, error) {
-	args := c.Called(ctx, typeName, authData, pagination, filter, order)
+	args := c.Called(ctx, typeName, authData, pagination, filter, order, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

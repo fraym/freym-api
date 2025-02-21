@@ -15,7 +15,6 @@ export interface RoleScope {
 export interface EventMetadata {
     causationId: string;
     correlationId: string;
-    deploymentId: string;
     userId: string;
 }
 
@@ -96,7 +95,7 @@ export const RoleScope: MessageFns<RoleScope> = {
 };
 
 function createBaseEventMetadata(): EventMetadata {
-    return { causationId: "", correlationId: "", deploymentId: "0", userId: "" };
+    return { causationId: "", correlationId: "", userId: "" };
 }
 
 export const EventMetadata: MessageFns<EventMetadata> = {
@@ -107,11 +106,8 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.correlationId !== "") {
             writer.uint32(18).string(message.correlationId);
         }
-        if (message.deploymentId !== "0") {
-            writer.uint32(24).int64(message.deploymentId);
-        }
         if (message.userId !== "") {
-            writer.uint32(34).string(message.userId);
+            writer.uint32(26).string(message.userId);
         }
         return writer;
     },
@@ -140,15 +136,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
                     continue;
                 }
                 case 3: {
-                    if (tag !== 24) {
-                        break;
-                    }
-
-                    message.deploymentId = reader.int64().toString();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 34) {
+                    if (tag !== 26) {
                         break;
                     }
 
@@ -170,7 +158,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
             correlationId: isSet(object.correlationId)
                 ? globalThis.String(object.correlationId)
                 : "",
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
             userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
         };
     },
@@ -182,9 +169,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         }
         if (message.correlationId !== "") {
             obj.correlationId = message.correlationId;
-        }
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
         }
         if (message.userId !== "") {
             obj.userId = message.userId;
@@ -199,7 +183,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         const message = createBaseEventMetadata();
         message.causationId = object.causationId ?? "";
         message.correlationId = object.correlationId ?? "";
-        message.deploymentId = object.deploymentId ?? "0";
         message.userId = object.userId ?? "";
         return message;
     },

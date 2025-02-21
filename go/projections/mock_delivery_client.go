@@ -3,6 +3,7 @@ package projections
 import (
 	"context"
 
+	"github.com/fraym/freym-api/go/proto/projections/deliverypb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -19,8 +20,9 @@ func (c *MockDeliveryClient) GetData(
 	returnEmptyDataIfNotFound bool,
 	wait *Wait,
 	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*Data, error) {
-	args := c.Called(ctx, projection, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency)
+	args := c.Called(ctx, projection, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -32,8 +34,10 @@ func (c *MockDeliveryClient) GetViewData(
 	view string,
 	authData *AuthData,
 	filter *Filter,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*Data, error) {
-	args := c.Called(ctx, view, authData, filter)
+	args := c.Called(ctx, view, authData, filter, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -48,8 +52,9 @@ func (c *MockDeliveryClient) GetDataList(
 	filter *Filter,
 	order []Order,
 	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*DataList, error) {
-	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency)
+	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -63,8 +68,10 @@ func (c *MockDeliveryClient) GetViewDataList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
 ) (*DataList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order)
+	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

@@ -22,8 +22,13 @@ message DataFieldFilter {
 message EventMetadata {
 	string causation_id = 1;
 	string correlation_id = 2;
-	int64 deployment_id = 3;
-	string user_id = 4;
+	string user_id = 3;
+	DeploymentTarget target = 4;
+}
+
+enum DeploymentTarget {
+	DEPLOYMENT_TARGET_BLUE = 0;
+	DEPLOYMENT_TARGET_GREEN = 1;
 }
 
 message DataOrder {

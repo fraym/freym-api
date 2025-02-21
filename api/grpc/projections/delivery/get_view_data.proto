@@ -7,7 +7,7 @@ message GetViewDataRequest {
 	AuthData auth = 2;
 	DataFilter filter = 3;
 	bool use_strong_consistency = 4;
-	int64 deployment_id = 5;
+	DeploymentTarget target = 5;
 }
 
 message GetViewDataResponse {
@@ -22,7 +22,7 @@ message GetViewDataListRequest {
 	DataFilter filter = 5;
 	repeated DataOrder order = 6;
 	bool use_strong_consistency = 7;
-	int64 deployment_id = 8;
+	DeploymentTarget target = 8;
 }
 
 message GetViewDataListResponse {

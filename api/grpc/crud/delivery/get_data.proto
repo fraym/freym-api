@@ -10,7 +10,7 @@ message GetDataRequest {
 	bool return_empty_data_if_not_found = 5;
 	DataWait wait = 6;
 	bool use_strong_consistency = 7;
-	int64 deployment_id = 8;
+	DeploymentTarget target = 8;
 }
 
 message GetDataResponse {
@@ -25,7 +25,7 @@ message GetDataListRequest {
 	DataFilter filter = 7;
 	repeated DataOrder order = 8;
 	bool use_strong_consistency = 9;
-	int64 deployment_id = 10;
+	DeploymentTarget target = 10;
 }
 
 message GetDataListResponse {

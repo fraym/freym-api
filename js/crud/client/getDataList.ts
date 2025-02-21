@@ -1,4 +1,4 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
+import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
@@ -19,7 +19,7 @@ export const getCrudDataList = async <T extends CrudData>(
     filter: Filter,
     order: Order[],
     useStrongConsistency: boolean,
-    deploymentId: number | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<GetCrudDataList<T>> => {
     return new Promise<GetCrudDataList<T>>((resolve, reject) => {
@@ -32,7 +32,7 @@ export const getCrudDataList = async <T extends CrudData>(
                 filter: getProtobufDataFilter(filter),
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
-                deploymentId: deploymentId?.toString() ?? "",
+                target,
             },
             (error, response) => {
                 if (error) {

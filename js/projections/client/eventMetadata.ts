@@ -1,8 +1,10 @@
+import { DeploymentTarget } from "@fraym/proto/dist/index.freym.projections.delivery";
+
 export interface EventMetadata {
     causationId: string;
     correlationId: string;
-    deploymentId: string;
     userId: string;
+    target: DeploymentTarget;
 }
 
 export const fillMetadataWithDefaults = (
@@ -12,15 +14,15 @@ export const fillMetadataWithDefaults = (
         return {
             causationId: "",
             correlationId: "",
-            deploymentId: "",
             userId: "",
+            target: "DEPLOYMENT_TARGET_BLUE",
         };
     }
 
     return {
         causationId: metadata.causationId || "",
         correlationId: metadata.correlationId || "",
-        deploymentId: metadata.deploymentId || "",
         userId: metadata.userId || "",
+        target: metadata.target || "DEPLOYMENT_TARGET_BLUE",
     };
 };

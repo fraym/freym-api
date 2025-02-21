@@ -1,4 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
+import {
+    DeploymentTarget,
+    ServiceClient,
+} from "@fraym/proto/dist/index.freym.projections.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { ProjectionData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
@@ -19,7 +22,7 @@ export const getProjectionDataList = async <T extends ProjectionData>(
     filter: Filter,
     order: Order[],
     useStrongConsistency: boolean,
-    deploymentId: number | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<GetProjectionDataList<T> | null> => {
     return new Promise<GetProjectionDataList<T> | null>((resolve, reject) => {
@@ -32,7 +35,7 @@ export const getProjectionDataList = async <T extends ProjectionData>(
                 filter: getProtobufDataFilter(filter),
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
-                deploymentId: deploymentId?.toString() ?? "",
+                target,
             },
             (error, response) => {
                 if (error) {

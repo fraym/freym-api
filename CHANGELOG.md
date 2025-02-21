@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.6
+
+- (bug) Use target instead of deploymentId in projections and crud
+
 # v0.31.5
 
 - (bug) Add activation deployment step to all services

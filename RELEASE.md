@@ -1,5 +1,5 @@
-# v0.31.5
+# v0.31.6
 
 ## :bug: Bug Fixes
 
-- Add activation deployment step to all services
+- Use target instead of deploymentId in projections and crud

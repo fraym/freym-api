@@ -20,6 +20,47 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type DeploymentTarget int32
+
+const (
+	DeploymentTarget_DEPLOYMENT_TARGET_BLUE  DeploymentTarget = 0
+	DeploymentTarget_DEPLOYMENT_TARGET_GREEN DeploymentTarget = 1
+)
+
+// Enum value maps for DeploymentTarget.
+var (
+	DeploymentTarget_name = map[int32]string{
+		0: "DEPLOYMENT_TARGET_BLUE",
+		1: "DEPLOYMENT_TARGET_GREEN",
+	}
+	DeploymentTarget_value = map[string]int32{
+		"DEPLOYMENT_TARGET_BLUE":  0,
+		"DEPLOYMENT_TARGET_GREEN": 1,
+	}
+)
+
+func (x DeploymentTarget) Enum() *DeploymentTarget {
+	p := new(DeploymentTarget)
+	*p = x
+	return p
+}
+
+func (x DeploymentTarget) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DeploymentTarget) Descriptor() protoreflect.EnumDescriptor {
+	return file_crud_delivery_shared_proto_enumTypes[0].Descriptor()
+}
+
+func (DeploymentTarget) Type() protoreflect.EnumType {
+	return &file_crud_delivery_shared_proto_enumTypes[0]
+}
+
+func (x DeploymentTarget) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
 type AuthData struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_TenantId string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
@@ -283,8 +324,8 @@ type EventMetadata struct {
 	state                    protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_CausationId   string                 `protobuf:"bytes,1,opt,name=causation_id,json=causationId,proto3"`
 	xxx_hidden_CorrelationId string                 `protobuf:"bytes,2,opt,name=correlation_id,json=correlationId,proto3"`
-	xxx_hidden_DeploymentId  int64                  `protobuf:"varint,3,opt,name=deployment_id,json=deploymentId,proto3"`
-	xxx_hidden_UserId        string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3"`
+	xxx_hidden_UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3"`
+	xxx_hidden_Target        DeploymentTarget       `protobuf:"varint,4,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -328,18 +369,18 @@ func (x *EventMetadata) GetCorrelationId() string {
 	return ""
 }
 
-func (x *EventMetadata) GetDeploymentId() int64 {
-	if x != nil {
-		return x.xxx_hidden_DeploymentId
-	}
-	return 0
-}
-
 func (x *EventMetadata) GetUserId() string {
 	if x != nil {
 		return x.xxx_hidden_UserId
 	}
 	return ""
+}
+
+func (x *EventMetadata) GetTarget() DeploymentTarget {
+	if x != nil {
+		return x.xxx_hidden_Target
+	}
+	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
 func (x *EventMetadata) SetCausationId(v string) {
@@ -350,12 +391,12 @@ func (x *EventMetadata) SetCorrelationId(v string) {
 	x.xxx_hidden_CorrelationId = v
 }
 
-func (x *EventMetadata) SetDeploymentId(v int64) {
-	x.xxx_hidden_DeploymentId = v
-}
-
 func (x *EventMetadata) SetUserId(v string) {
 	x.xxx_hidden_UserId = v
+}
+
+func (x *EventMetadata) SetTarget(v DeploymentTarget) {
+	x.xxx_hidden_Target = v
 }
 
 type EventMetadata_builder struct {
@@ -363,8 +404,8 @@ type EventMetadata_builder struct {
 
 	CausationId   string
 	CorrelationId string
-	DeploymentId  int64
 	UserId        string
+	Target        DeploymentTarget
 }
 
 func (b0 EventMetadata_builder) Build() *EventMetadata {
@@ -373,8 +414,8 @@ func (b0 EventMetadata_builder) Build() *EventMetadata {
 	_, _ = b, x
 	x.xxx_hidden_CausationId = b.CausationId
 	x.xxx_hidden_CorrelationId = b.CorrelationId
-	x.xxx_hidden_DeploymentId = b.DeploymentId
 	x.xxx_hidden_UserId = b.UserId
+	x.xxx_hidden_Target = b.Target
 	return m0
 }
 
@@ -418,39 +459,49 @@ var file_crud_delivery_shared_proto_rawDesc = string([]byte{
 	0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x6f, 0x70, 0x65,
 	0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6f, 0x70,
 	0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x97, 0x01,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0xb1, 0x01,
 	0x0a, 0x0d, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x12,
 	0x21, 0x0a, 0x0c, 0x63, 0x61, 0x75, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x63, 0x61, 0x75, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e,
 	0x49, 0x64, 0x12, 0x25, 0x0a, 0x0e, 0x63, 0x6f, 0x72, 0x72, 0x65, 0x6c, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x63, 0x6f, 0x72, 0x72,
-	0x65, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x23, 0x0a, 0x0d, 0x64, 0x65, 0x70,
-	0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x0c, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x17,
-	0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65,
+	0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72,
+	0x49, 0x64, 0x12, 0x3d, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x0e, 0x32, 0x25, 0x2e, 0x66, 0x72, 0x65, 0x79, 0x6d, 0x2e, 0x63, 0x72, 0x75, 0x64, 0x2e,
+	0x64, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x79, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d,
+	0x65, 0x6e, 0x74, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x52, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65,
+	0x74, 0x2a, 0x4b, 0x0a, 0x10, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54,
+	0x61, 0x72, 0x67, 0x65, 0x74, 0x12, 0x1a, 0x0a, 0x16, 0x44, 0x45, 0x50, 0x4c, 0x4f, 0x59, 0x4d,
+	0x45, 0x4e, 0x54, 0x5f, 0x54, 0x41, 0x52, 0x47, 0x45, 0x54, 0x5f, 0x42, 0x4c, 0x55, 0x45, 0x10,
+	0x00, 0x12, 0x1b, 0x0a, 0x17, 0x44, 0x45, 0x50, 0x4c, 0x4f, 0x59, 0x4d, 0x45, 0x4e, 0x54, 0x5f,
+	0x54, 0x41, 0x52, 0x47, 0x45, 0x54, 0x5f, 0x47, 0x52, 0x45, 0x45, 0x4e, 0x10, 0x01, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
+var file_crud_delivery_shared_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_crud_delivery_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_crud_delivery_shared_proto_goTypes = []any{
-	(*AuthData)(nil),        // 0: freym.crud.delivery.AuthData
-	(*DataFilter)(nil),      // 1: freym.crud.delivery.DataFilter
-	(*DataFieldFilter)(nil), // 2: freym.crud.delivery.DataFieldFilter
-	(*EventMetadata)(nil),   // 3: freym.crud.delivery.EventMetadata
-	nil,                     // 4: freym.crud.delivery.AuthData.DataEntry
-	nil,                     // 5: freym.crud.delivery.DataFilter.FieldsEntry
+	(DeploymentTarget)(0),   // 0: freym.crud.delivery.DeploymentTarget
+	(*AuthData)(nil),        // 1: freym.crud.delivery.AuthData
+	(*DataFilter)(nil),      // 2: freym.crud.delivery.DataFilter
+	(*DataFieldFilter)(nil), // 3: freym.crud.delivery.DataFieldFilter
+	(*EventMetadata)(nil),   // 4: freym.crud.delivery.EventMetadata
+	nil,                     // 5: freym.crud.delivery.AuthData.DataEntry
+	nil,                     // 6: freym.crud.delivery.DataFilter.FieldsEntry
 }
 var file_crud_delivery_shared_proto_depIdxs = []int32{
-	4, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
-	5, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
-	1, // 2: freym.crud.delivery.DataFilter.and:type_name -> freym.crud.delivery.DataFilter
-	1, // 3: freym.crud.delivery.DataFilter.or:type_name -> freym.crud.delivery.DataFilter
-	2, // 4: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	5, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
+	6, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
+	2, // 2: freym.crud.delivery.DataFilter.and:type_name -> freym.crud.delivery.DataFilter
+	2, // 3: freym.crud.delivery.DataFilter.or:type_name -> freym.crud.delivery.DataFilter
+	0, // 4: freym.crud.delivery.EventMetadata.target:type_name -> freym.crud.delivery.DeploymentTarget
+	3, // 5: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_crud_delivery_shared_proto_init() }
@@ -463,13 +514,14 @@ func file_crud_delivery_shared_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_delivery_shared_proto_rawDesc), len(file_crud_delivery_shared_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_crud_delivery_shared_proto_goTypes,
 		DependencyIndexes: file_crud_delivery_shared_proto_depIdxs,
+		EnumInfos:         file_crud_delivery_shared_proto_enumTypes,
 		MessageInfos:      file_crud_delivery_shared_proto_msgTypes,
 	}.Build()
 	File_crud_delivery_shared_proto = out.File

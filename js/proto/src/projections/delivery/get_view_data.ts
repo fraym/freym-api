@@ -6,14 +6,23 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { AuthData, Data, DataFilter, DataOrder } from "./shared";
+import {
+    AuthData,
+    Data,
+    DataFilter,
+    DataOrder,
+    DeploymentTarget,
+    deploymentTargetFromJSON,
+    deploymentTargetToJSON,
+    deploymentTargetToNumber,
+} from "./shared";
 
 export interface GetViewDataRequest {
     view: string;
     auth: AuthData | undefined;
     filter: DataFilter | undefined;
     useStrongConsistency: boolean;
-    deploymentId: string;
+    target: DeploymentTarget;
 }
 
 export interface GetViewDataResponse {
@@ -28,7 +37,7 @@ export interface GetViewDataListRequest {
     filter: DataFilter | undefined;
     order: DataOrder[];
     useStrongConsistency: boolean;
-    deploymentId: string;
+    target: DeploymentTarget;
 }
 
 export interface GetViewDataListResponse {
@@ -44,7 +53,7 @@ function createBaseGetViewDataRequest(): GetViewDataRequest {
         auth: undefined,
         filter: undefined,
         useStrongConsistency: false,
-        deploymentId: "0",
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
     };
 }
 
@@ -62,8 +71,8 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         if (message.useStrongConsistency !== false) {
             writer.uint32(32).bool(message.useStrongConsistency);
         }
-        if (message.deploymentId !== "0") {
-            writer.uint32(40).int64(message.deploymentId);
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(40).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -112,7 +121,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                         break;
                     }
 
-                    message.deploymentId = reader.int64().toString();
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
             }
@@ -132,7 +141,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         };
     },
 
@@ -150,8 +161,8 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
         }
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
         }
         return obj;
     },
@@ -171,7 +182,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                 ? DataFilter.fromPartial(object.filter)
                 : undefined;
         message.useStrongConsistency = object.useStrongConsistency ?? false;
-        message.deploymentId = object.deploymentId ?? "0";
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },
 };
@@ -246,7 +257,7 @@ function createBaseGetViewDataListRequest(): GetViewDataListRequest {
         filter: undefined,
         order: [],
         useStrongConsistency: false,
-        deploymentId: "0",
+        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
     };
 }
 
@@ -276,8 +287,8 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         if (message.useStrongConsistency !== false) {
             writer.uint32(56).bool(message.useStrongConsistency);
         }
-        if (message.deploymentId !== "0") {
-            writer.uint32(64).int64(message.deploymentId);
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(64).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -350,7 +361,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                         break;
                     }
 
-                    message.deploymentId = reader.int64().toString();
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
             }
@@ -375,7 +386,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
             useStrongConsistency: isSet(object.useStrongConsistency)
                 ? globalThis.Boolean(object.useStrongConsistency)
                 : false,
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         };
     },
 
@@ -402,8 +415,8 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         if (message.useStrongConsistency !== false) {
             obj.useStrongConsistency = message.useStrongConsistency;
         }
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
         }
         return obj;
     },
@@ -426,7 +439,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                 : undefined;
         message.order = object.order?.map(e => DataOrder.fromPartial(e)) || [];
         message.useStrongConsistency = object.useStrongConsistency ?? false;
-        message.deploymentId = object.deploymentId ?? "0";
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },
 };

@@ -8,7 +8,7 @@ type EventMetadata struct {
 	CorrelationId string
 	CausationId   string
 	UserId        string
-	DeploymentId  int64
+	Target        deliverypb.DeploymentTarget
 }
 
 func (m *EventMetadata) getProtobufEventMetadata() *deliverypb.EventMetadata {
@@ -19,7 +19,7 @@ func (m *EventMetadata) getProtobufEventMetadata() *deliverypb.EventMetadata {
 	return deliverypb.EventMetadata_builder{
 		CorrelationId: m.CorrelationId,
 		CausationId:   m.CausationId,
-		DeploymentId:  m.DeploymentId,
+		Target:        m.Target,
 		UserId:        m.UserId,
 	}.Build()
 }
