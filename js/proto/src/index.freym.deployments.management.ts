@@ -3,6 +3,7 @@
 //   protoc-gen-ts_proto  v2.6.1
 //   protoc               v5.29.3
 
+export * from "./deployments/management/activate";
 export * from "./deployments/management/confirm";
 export * from "./deployments/management/create";
 export * from "./deployments/management/deployment";

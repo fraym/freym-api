@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 import { DeploymentTarget } from "@/schema/data";
 import {
+    runActivateDeployment,
     runConfirmDeployment,
     runCreateDeployment,
     runPrintDeploymentStatus,
@@ -11,6 +12,7 @@ import {
 
 const COMMAND_STATUS = "status";
 const COMMAND_CREATE = "create";
+const COMMAND_ACTIVATE = "activate";
 const COMMAND_CONFIRM = "confirm";
 const COMMAND_ROLLBACK = "rollback";
 const COMMAND_ROLLBACK_NAMESPACE = "rollback-namespace";
@@ -45,6 +47,9 @@ switch (arg) {
         break;
     case COMMAND_CREATE:
         runCreateDeployment(getTargetFromArgs());
+        break;
+    case COMMAND_ACTIVATE:
+        runActivateDeployment(getIdFromArgs());
         break;
     case COMMAND_CONFIRM:
         runConfirmDeployment(getIdFromArgs());

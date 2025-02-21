@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Service_CreateDeployment_FullMethodName   = "/freym.deployments.management.Service/CreateDeployment"
+	Service_ActivateDeployment_FullMethodName = "/freym.deployments.management.Service/ActivateDeployment"
 	Service_ConfirmDeployment_FullMethodName  = "/freym.deployments.management.Service/ConfirmDeployment"
 	Service_RollbackDeployment_FullMethodName = "/freym.deployments.management.Service/RollbackDeployment"
 	Service_GetDeployment_FullMethodName      = "/freym.deployments.management.Service/GetDeployment"
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
 	CreateDeployment(ctx context.Context, in *CreateDeploymentRequest, opts ...grpc.CallOption) (*CreateDeploymentResponse, error)
+	ActivateDeployment(ctx context.Context, in *ActivateDeploymentRequest, opts ...grpc.CallOption) (*ActivateDeploymentResponse, error)
 	ConfirmDeployment(ctx context.Context, in *ConfirmDeploymentRequest, opts ...grpc.CallOption) (*ConfirmDeploymentResponse, error)
 	RollbackDeployment(ctx context.Context, in *RollbackDeploymentRequest, opts ...grpc.CallOption) (*RollbackDeploymentResponse, error)
 	GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*GetDeploymentResponse, error)
@@ -46,6 +48,15 @@ func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 func (c *serviceClient) CreateDeployment(ctx context.Context, in *CreateDeploymentRequest, opts ...grpc.CallOption) (*CreateDeploymentResponse, error) {
 	out := new(CreateDeploymentResponse)
 	err := c.cc.Invoke(ctx, Service_CreateDeployment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ActivateDeployment(ctx context.Context, in *ActivateDeploymentRequest, opts ...grpc.CallOption) (*ActivateDeploymentResponse, error) {
+	out := new(ActivateDeploymentResponse)
+	err := c.cc.Invoke(ctx, Service_ActivateDeployment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +95,7 @@ func (c *serviceClient) GetDeployment(ctx context.Context, in *GetDeploymentRequ
 // for forward compatibility
 type ServiceServer interface {
 	CreateDeployment(context.Context, *CreateDeploymentRequest) (*CreateDeploymentResponse, error)
+	ActivateDeployment(context.Context, *ActivateDeploymentRequest) (*ActivateDeploymentResponse, error)
 	ConfirmDeployment(context.Context, *ConfirmDeploymentRequest) (*ConfirmDeploymentResponse, error)
 	RollbackDeployment(context.Context, *RollbackDeploymentRequest) (*RollbackDeploymentResponse, error)
 	GetDeployment(context.Context, *GetDeploymentRequest) (*GetDeploymentResponse, error)
@@ -96,6 +108,9 @@ type UnimplementedServiceServer struct {
 
 func (UnimplementedServiceServer) CreateDeployment(context.Context, *CreateDeploymentRequest) (*CreateDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDeployment not implemented")
+}
+func (UnimplementedServiceServer) ActivateDeployment(context.Context, *ActivateDeploymentRequest) (*ActivateDeploymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateDeployment not implemented")
 }
 func (UnimplementedServiceServer) ConfirmDeployment(context.Context, *ConfirmDeploymentRequest) (*ConfirmDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmDeployment not implemented")
@@ -133,6 +148,24 @@ func _Service_CreateDeployment_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).CreateDeployment(ctx, req.(*CreateDeploymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ActivateDeployment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ActivateDeploymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ActivateDeployment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ActivateDeployment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ActivateDeployment(ctx, req.(*ActivateDeploymentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -201,6 +234,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDeployment",
 			Handler:    _Service_CreateDeployment_Handler,
+		},
+		{
+			MethodName: "ActivateDeployment",
+			Handler:    _Service_ActivateDeployment_Handler,
 		},
 		{
 			MethodName: "ConfirmDeployment",

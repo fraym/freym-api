@@ -1,0 +1,8 @@
+syntax = "proto3";
+package freym.deployments.management;
+
+message ActivateDeploymentRequest {
+	int64 deployment_id = 1;
+}
+
+message ActivateDeploymentResponse {}

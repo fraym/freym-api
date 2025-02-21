@@ -1,5 +1,5 @@
-# v0.31.3
+# v0.31.4
 
 ## :bug: Bug Fixes
 
-- Fix deployment apis (creator defines the target)
+- Add activation deployment step

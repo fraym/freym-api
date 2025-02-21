@@ -1,5 +1,6 @@
 import {
     DeploymentStatus,
+    activateDeployment,
     confirmDeployment,
     createDeployment,
     getDeploymentStatus,
@@ -40,12 +41,20 @@ export const runCreateDeployment = async (target: DeploymentTarget) => {
     console.log(`created deployment ${response.deploymentId}`);
 };
 
+export const runActivateDeployment = async (id: number) => {
+    console.log("activating deployment ...");
+    const config = await useConfig();
+
+    await activateDeployment(id, config);
+    console.log("activated deployment");
+};
+
 export const runConfirmDeployment = async (id: number) => {
     console.log("confirming deployment ...");
     const config = await useConfig();
 
     await confirmDeployment(id, config);
-    console.log("done confirming deployment");
+    console.log("confirmed deployment");
 };
 
 export const runRollbackDeployment = async (id: number) => {
@@ -53,7 +62,7 @@ export const runRollbackDeployment = async (id: number) => {
     const config = await useConfig();
 
     await rollbackDeployment(id, config);
-    console.log("done rolling back deployment");
+    console.log("rolled back deployment");
 };
 
 export const runRollbackNamespaceDeployment = async () => {
@@ -61,7 +70,7 @@ export const runRollbackNamespaceDeployment = async () => {
     const config = await useConfig();
 
     await rollbackDeploymentByNamespace(config);
-    console.log("done rolling back deployment");
+    console.log("rolled back deployment");
 };
 
 export const runWait = async (id: number) => {

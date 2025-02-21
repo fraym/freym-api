@@ -42,6 +42,23 @@ export const getDeploymentStatus = async (
     return await response.json();
 };
 
+export const activateDeployment = async (deploymentId: number, config: Config): Promise<void> => {
+    const response = await fetch(
+        `${config.serverAddress}/api/deployment/${deploymentId}/activate`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+};
+
 export const confirmDeployment = async (deploymentId: number, config: Config): Promise<void> => {
     const response = await fetch(`${config.serverAddress}/api/deployment/${deploymentId}/confirm`, {
         method: "POST",

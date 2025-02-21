@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.4
+
+- (bug) Add activation deployment step
+
 # v0.31.3
 
 - (bug) Fix deployment apis (creator defines the target)

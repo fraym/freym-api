@@ -26,6 +26,7 @@ type DeploymentOptions struct {
 
 type Client interface {
 	DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error)
+	ActivateDeployment(ctx context.Context, deploymentId int64) error
 	ConfirmDeployment(ctx context.Context, deploymentId int64) error
 	RollbackDeployment(ctx context.Context) error
 	Close() error
@@ -159,6 +160,13 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 		deploymentId := response.GetDeploymentId()
 		return &deploymentId, nil
 	}
+}
+
+func (c *deploymentsClient) ActivateDeployment(ctx context.Context, deploymentId int64) error {
+	_, err := c.client.ActivateDeployment(context.Background(), managementpb.ActivateDeploymentRequest_builder{
+		DeploymentId: deploymentId,
+	}.Build())
+	return err
 }
 
 func (c *deploymentsClient) ConfirmDeployment(ctx context.Context, deploymentId int64) error {

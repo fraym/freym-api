@@ -18,6 +18,10 @@ func (c *MockClient) DeploySchema(ctx context.Context, schemaString string, opti
 	return args.Get(0).(*int64), args.Error(1)
 }
 
+func (c *MockClient) ActivateDeployment(ctx context.Context, deploymentId int64) error {
+	return c.Called(ctx, deploymentId).Error(0)
+}
+
 func (c *MockClient) ConfirmDeployment(ctx context.Context, deploymentId int64) error {
 	return c.Called(ctx, deploymentId).Error(0)
 }
