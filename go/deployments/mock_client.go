@@ -30,6 +30,10 @@ func (c *MockClient) RollbackDeployment(ctx context.Context) error {
 	return c.Called(ctx).Error(0)
 }
 
+func (c *MockClient) RollbackDeploymentById(ctx context.Context, deploymentId int64) error {
+	return c.Called(ctx, deploymentId).Error(0)
+}
+
 func (c *MockClient) Close() error {
 	return c.Called().Error(0)
 }

@@ -12,19 +12,24 @@ type MockManagementClient struct {
 
 func (c *MockManagementClient) DeploySchema(
 	ctx context.Context,
+	deploymentId int64,
 	namespace string,
 	permissions []string,
 	options *DeploymentOptions,
 ) error {
-	return c.Called(ctx, namespace, permissions, options).Error(0)
+	return c.Called(ctx, deploymentId, namespace, permissions, options).Error(0)
+}
+
+func (c *MockManagementClient) ActivateSchema(ctx context.Context, deploymentId int64) error {
+	return c.Called(ctx, deploymentId).Error(0)
 }
 
 func (c *MockManagementClient) ConfirmSchema(ctx context.Context, deploymentId int64) error {
 	return c.Called(ctx, deploymentId).Error(0)
 }
 
-func (c *MockManagementClient) RollbackSchema(ctx context.Context, deploymentId int64) error {
-	return c.Called(ctx, deploymentId).Error(0)
+func (c *MockManagementClient) RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error {
+	return c.Called(ctx, deploymentId, namespace).Error(0)
 }
 
 func (c *MockManagementClient) GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error) {

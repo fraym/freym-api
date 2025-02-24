@@ -11,6 +11,7 @@ import (
 type ManagementClient interface {
 	DeploySchema(
 		ctx context.Context,
+		deploymentId int64,
 		namespace string,
 		projectionTypes []ObjectType,
 		crudTypes []ObjectType,
@@ -19,8 +20,9 @@ type ManagementClient interface {
 		views []View,
 		options *DeploymentOptions,
 	) error
+	ActivateSchema(ctx context.Context, deploymentId int64) error
 	ConfirmSchema(ctx context.Context, deploymentId int64) error
-	RollbackSchema(ctx context.Context, deploymentId int64) error
+	RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error
 	GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error)
 	Close() error
 }
@@ -50,6 +52,7 @@ func NewManagementClient(
 
 func (c *projectionsManagementClient) DeploySchema(
 	ctx context.Context,
+	deploymentId int64,
 	namespace string,
 	projectionTypes []ObjectType,
 	crudTypes []ObjectType,
@@ -84,6 +87,7 @@ func (c *projectionsManagementClient) DeploySchema(
 	}
 
 	_, err = c.client.DeploySchema(ctx, managementpb.DeploySchemaRequest_builder{
+		DeploymentId:    deploymentId,
 		Namespace:       namespace,
 		ProjectionTypes: newProjectionTypes,
 		CrudTypes:       newCrudTypes,
@@ -95,6 +99,13 @@ func (c *projectionsManagementClient) DeploySchema(
 	return err
 }
 
+func (c *projectionsManagementClient) ActivateSchema(ctx context.Context, deploymentId int64) error {
+	_, err := c.client.ActivateSchema(ctx, managementpb.ActivateSchemaRequest_builder{
+		DeploymentId: deploymentId,
+	}.Build())
+	return err
+}
+
 func (c *projectionsManagementClient) ConfirmSchema(ctx context.Context, deploymentId int64) error {
 	_, err := c.client.ConfirmSchema(ctx, managementpb.ConfirmSchemaRequest_builder{
 		DeploymentId: deploymentId,
@@ -102,9 +113,10 @@ func (c *projectionsManagementClient) ConfirmSchema(ctx context.Context, deploym
 	return err
 }
 
-func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, deploymentId int64) error {
+func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
 		DeploymentId: deploymentId,
+		Namespace:    namespace,
 	}.Build())
 	return err
 }

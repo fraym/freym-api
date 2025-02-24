@@ -29,6 +29,7 @@ type Client interface {
 	ActivateDeployment(ctx context.Context, deploymentId int64) error
 	ConfirmDeployment(ctx context.Context, deploymentId int64) error
 	RollbackDeployment(ctx context.Context) error
+	RollbackDeploymentById(ctx context.Context, deploymentId int64) error
 	Close() error
 }
 
@@ -179,6 +180,13 @@ func (c *deploymentsClient) ConfirmDeployment(ctx context.Context, deploymentId 
 func (c *deploymentsClient) RollbackDeployment(ctx context.Context) error {
 	_, err := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
 		Namespace: c.conf.Namespace,
+	}.Build())
+	return err
+}
+
+func (c *deploymentsClient) RollbackDeploymentById(ctx context.Context, deploymentId int64) error {
+	_, err := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
+		DeploymentId: deploymentId,
 	}.Build())
 	return err
 }

@@ -27,6 +27,7 @@ message ConfirmSchemaResponse {}
 
 message RollbackSchemaRequest {
 	int64 deployment_id = 1;
+	string namespace = 2;
 }
 
 message RollbackSchemaResponse {}

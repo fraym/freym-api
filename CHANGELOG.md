@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.7
+
+- (bug) Add missing parameters in migration apis
+
 # v0.31.6
 
 - (bug) Use target instead of deploymentId in projections and crud

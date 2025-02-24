@@ -27,12 +27,14 @@ func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
 type ManagementClient interface {
 	DeploySchema(
 		ctx context.Context,
+		deploymentId int64,
 		namespace string,
 		permissions []string,
 		options *DeploymentOptions,
 	) error
+	ActivateSchema(ctx context.Context, deploymentId int64) error
 	ConfirmSchema(ctx context.Context, deploymentId int64) error
-	RollbackSchema(ctx context.Context, deploymentId int64) error
+	RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error
 	GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error)
 	Close() error
 }
@@ -63,14 +65,23 @@ func NewManagementClient(
 
 func (c *authManagementClient) DeploySchema(
 	ctx context.Context,
+	deploymentId int64,
 	namespace string,
 	permissions []string,
 	options *DeploymentOptions,
 ) error {
 	_, err := c.client.DeploySchema(ctx, managementpb.DeploySchemaRequest_builder{
-		Namespace:   namespace,
-		Permissions: permissions,
-		Options:     options.toPb(),
+		DeploymentId: deploymentId,
+		Namespace:    namespace,
+		Permissions:  permissions,
+		Options:      options.toPb(),
+	}.Build())
+	return err
+}
+
+func (c *authManagementClient) ActivateSchema(ctx context.Context, deploymentId int64) error {
+	_, err := c.client.ActivateSchema(ctx, managementpb.ActivateSchemaRequest_builder{
+		DeploymentId: deploymentId,
 	}.Build())
 	return err
 }
@@ -82,9 +93,10 @@ func (c *authManagementClient) ConfirmSchema(ctx context.Context, deploymentId i
 	return err
 }
 
-func (c *authManagementClient) RollbackSchema(ctx context.Context, deploymentId int64) error {
+func (c *authManagementClient) RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
 		DeploymentId: deploymentId,
+		Namespace:    namespace,
 	}.Build())
 	return err
 }
