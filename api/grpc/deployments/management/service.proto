@@ -11,5 +11,6 @@ service Service {
 	rpc ActivateDeployment(ActivateDeploymentRequest) returns (ActivateDeploymentResponse);
 	rpc ConfirmDeployment(ConfirmDeploymentRequest) returns (ConfirmDeploymentResponse);
 	rpc RollbackDeployment(RollbackDeploymentRequest) returns (RollbackDeploymentResponse);
+	rpc RollbackDeploymentById(RollbackDeploymentByIdRequest) returns (RollbackDeploymentResponse);
 	rpc GetDeployment(GetDeploymentRequest) returns (GetDeploymentResponse);
 }

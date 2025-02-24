@@ -65,11 +65,11 @@ export const runRollbackDeployment = async (id: number) => {
     console.log("rolled back deployment");
 };
 
-export const runRollbackNamespaceDeployment = async () => {
+export const runRollbackNamespaceDeployment = async (target: DeploymentTarget) => {
     console.log("rolling back deployment ...");
     const config = await useConfig();
 
-    await rollbackDeploymentByNamespace(config);
+    await rollbackDeploymentByNamespace(config, target);
     console.log("rolled back deployment");
 };
 

@@ -19,7 +19,11 @@ import { ActivateDeploymentRequest, ActivateDeploymentResponse } from "./activat
 import { ConfirmDeploymentRequest, ConfirmDeploymentResponse } from "./confirm";
 import { CreateDeploymentRequest, CreateDeploymentResponse } from "./create";
 import { GetDeploymentRequest, GetDeploymentResponse } from "./deployment";
-import { RollbackDeploymentRequest, RollbackDeploymentResponse } from "./rollback";
+import {
+    RollbackDeploymentByIdRequest,
+    RollbackDeploymentRequest,
+    RollbackDeploymentResponse,
+} from "./rollback";
 
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {
@@ -67,6 +71,17 @@ export const ServiceService = {
             Buffer.from(RollbackDeploymentResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => RollbackDeploymentResponse.decode(value),
     },
+    rollbackDeploymentById: {
+        path: "/freym.deployments.management.Service/RollbackDeploymentById",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RollbackDeploymentByIdRequest) =>
+            Buffer.from(RollbackDeploymentByIdRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RollbackDeploymentByIdRequest.decode(value),
+        responseSerialize: (value: RollbackDeploymentResponse) =>
+            Buffer.from(RollbackDeploymentResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RollbackDeploymentResponse.decode(value),
+    },
     getDeployment: {
         path: "/freym.deployments.management.Service/GetDeployment",
         requestStream: false,
@@ -85,6 +100,10 @@ export interface ServiceServer extends UntypedServiceImplementation {
     activateDeployment: handleUnaryCall<ActivateDeploymentRequest, ActivateDeploymentResponse>;
     confirmDeployment: handleUnaryCall<ConfirmDeploymentRequest, ConfirmDeploymentResponse>;
     rollbackDeployment: handleUnaryCall<RollbackDeploymentRequest, RollbackDeploymentResponse>;
+    rollbackDeploymentById: handleUnaryCall<
+        RollbackDeploymentByIdRequest,
+        RollbackDeploymentResponse
+    >;
     getDeployment: handleUnaryCall<GetDeploymentRequest, GetDeploymentResponse>;
 }
 
@@ -145,6 +164,21 @@ export interface ServiceClient extends Client {
     ): ClientUnaryCall;
     rollbackDeployment(
         request: RollbackDeploymentRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RollbackDeploymentResponse) => void
+    ): ClientUnaryCall;
+    rollbackDeploymentById(
+        request: RollbackDeploymentByIdRequest,
+        callback: (error: ServiceError | null, response: RollbackDeploymentResponse) => void
+    ): ClientUnaryCall;
+    rollbackDeploymentById(
+        request: RollbackDeploymentByIdRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RollbackDeploymentResponse) => void
+    ): ClientUnaryCall;
+    rollbackDeploymentById(
+        request: RollbackDeploymentByIdRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: RollbackDeploymentResponse) => void

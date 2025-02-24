@@ -6,59 +6,12 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-
-export const DeploymentTarget = {
-    DEPLOYMENT_TARGET_BLUE: "DEPLOYMENT_TARGET_BLUE",
-    DEPLOYMENT_TARGET_GREEN: "DEPLOYMENT_TARGET_GREEN",
-} as const;
-
-export type DeploymentTarget = (typeof DeploymentTarget)[keyof typeof DeploymentTarget];
-
-export namespace DeploymentTarget {
-    export type DEPLOYMENT_TARGET_BLUE = typeof DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
-    export type DEPLOYMENT_TARGET_GREEN = typeof DeploymentTarget.DEPLOYMENT_TARGET_GREEN;
-}
-
-export function deploymentTargetFromJSON(object: any): DeploymentTarget {
-    switch (object) {
-        case 0:
-        case "DEPLOYMENT_TARGET_BLUE":
-            return DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
-        case 1:
-        case "DEPLOYMENT_TARGET_GREEN":
-            return DeploymentTarget.DEPLOYMENT_TARGET_GREEN;
-        default:
-            throw new globalThis.Error(
-                "Unrecognized enum value " + object + " for enum DeploymentTarget"
-            );
-    }
-}
-
-export function deploymentTargetToJSON(object: DeploymentTarget): string {
-    switch (object) {
-        case DeploymentTarget.DEPLOYMENT_TARGET_BLUE:
-            return "DEPLOYMENT_TARGET_BLUE";
-        case DeploymentTarget.DEPLOYMENT_TARGET_GREEN:
-            return "DEPLOYMENT_TARGET_GREEN";
-        default:
-            throw new globalThis.Error(
-                "Unrecognized enum value " + object + " for enum DeploymentTarget"
-            );
-    }
-}
-
-export function deploymentTargetToNumber(object: DeploymentTarget): number {
-    switch (object) {
-        case DeploymentTarget.DEPLOYMENT_TARGET_BLUE:
-            return 0;
-        case DeploymentTarget.DEPLOYMENT_TARGET_GREEN:
-            return 1;
-        default:
-            throw new globalThis.Error(
-                "Unrecognized enum value " + object + " for enum DeploymentTarget"
-            );
-    }
-}
+import {
+    DeploymentTarget,
+    deploymentTargetFromJSON,
+    deploymentTargetToJSON,
+    deploymentTargetToNumber,
+} from "./shared";
 
 export interface CreateDeploymentRequest {
     namespace: string;

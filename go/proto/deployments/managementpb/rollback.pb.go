@@ -21,11 +21,11 @@ const (
 )
 
 type RollbackDeploymentRequest struct {
-	state                   protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_DeploymentId int64                  `protobuf:"varint,1,opt,name=deployment_id,json=deploymentId,proto3"`
-	xxx_hidden_Namespace    string                 `protobuf:"bytes,2,opt,name=namespace,proto3"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Target    DeploymentTarget       `protobuf:"varint,1,opt,name=target,proto3,enum=freym.deployments.management.DeploymentTarget"`
+	xxx_hidden_Namespace string                 `protobuf:"bytes,2,opt,name=namespace,proto3"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *RollbackDeploymentRequest) Reset() {
@@ -53,11 +53,11 @@ func (x *RollbackDeploymentRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *RollbackDeploymentRequest) GetDeploymentId() int64 {
+func (x *RollbackDeploymentRequest) GetTarget() DeploymentTarget {
 	if x != nil {
-		return x.xxx_hidden_DeploymentId
+		return x.xxx_hidden_Target
 	}
-	return 0
+	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
 func (x *RollbackDeploymentRequest) GetNamespace() string {
@@ -67,8 +67,8 @@ func (x *RollbackDeploymentRequest) GetNamespace() string {
 	return ""
 }
 
-func (x *RollbackDeploymentRequest) SetDeploymentId(v int64) {
-	x.xxx_hidden_DeploymentId = v
+func (x *RollbackDeploymentRequest) SetTarget(v DeploymentTarget) {
+	x.xxx_hidden_Target = v
 }
 
 func (x *RollbackDeploymentRequest) SetNamespace(v string) {
@@ -78,16 +78,73 @@ func (x *RollbackDeploymentRequest) SetNamespace(v string) {
 type RollbackDeploymentRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	DeploymentId int64
-	Namespace    string
+	Target    DeploymentTarget
+	Namespace string
 }
 
 func (b0 RollbackDeploymentRequest_builder) Build() *RollbackDeploymentRequest {
 	m0 := &RollbackDeploymentRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.xxx_hidden_DeploymentId = b.DeploymentId
+	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Namespace = b.Namespace
+	return m0
+}
+
+type RollbackDeploymentByIdRequest struct {
+	state                   protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_DeploymentId int64                  `protobuf:"varint,1,opt,name=deployment_id,json=deploymentId,proto3"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
+}
+
+func (x *RollbackDeploymentByIdRequest) Reset() {
+	*x = RollbackDeploymentByIdRequest{}
+	mi := &file_deployments_management_rollback_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RollbackDeploymentByIdRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RollbackDeploymentByIdRequest) ProtoMessage() {}
+
+func (x *RollbackDeploymentByIdRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_deployments_management_rollback_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RollbackDeploymentByIdRequest) GetDeploymentId() int64 {
+	if x != nil {
+		return x.xxx_hidden_DeploymentId
+	}
+	return 0
+}
+
+func (x *RollbackDeploymentByIdRequest) SetDeploymentId(v int64) {
+	x.xxx_hidden_DeploymentId = v
+}
+
+type RollbackDeploymentByIdRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	DeploymentId int64
+}
+
+func (b0 RollbackDeploymentByIdRequest_builder) Build() *RollbackDeploymentByIdRequest {
+	m0 := &RollbackDeploymentByIdRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_DeploymentId = b.DeploymentId
 	return m0
 }
 
@@ -99,7 +156,7 @@ type RollbackDeploymentResponse struct {
 
 func (x *RollbackDeploymentResponse) Reset() {
 	*x = RollbackDeploymentResponse{}
-	mi := &file_deployments_management_rollback_proto_msgTypes[1]
+	mi := &file_deployments_management_rollback_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -111,7 +168,7 @@ func (x *RollbackDeploymentResponse) String() string {
 func (*RollbackDeploymentResponse) ProtoMessage() {}
 
 func (x *RollbackDeploymentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_deployments_management_rollback_proto_msgTypes[1]
+	mi := &file_deployments_management_rollback_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -141,28 +198,40 @@ var file_deployments_management_rollback_proto_rawDesc = string([]byte{
 	0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2f, 0x72, 0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63,
 	0x6b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x1c, 0x66, 0x72, 0x65, 0x79, 0x6d, 0x2e, 0x64,
 	0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67,
-	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x5e, 0x0a, 0x19, 0x52, 0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63,
-	0x6b, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x23, 0x0a, 0x0d, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74,
-	0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x64, 0x65, 0x70, 0x6c, 0x6f,
-	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x61, 0x6d, 0x65, 0x73,
-	0x70, 0x61, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x61, 0x6d, 0x65,
-	0x73, 0x70, 0x61, 0x63, 0x65, 0x22, 0x1c, 0x0a, 0x1a, 0x52, 0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63,
-	0x6b, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x1a, 0x23, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x73, 0x2f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2f, 0x73, 0x68,
+	0x61, 0x72, 0x65, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x81, 0x01, 0x0a, 0x19, 0x52,
+	0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x46, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67,
+	0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x2e, 0x2e, 0x66, 0x72, 0x65, 0x79, 0x6d,
+	0x2e, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x6d, 0x61, 0x6e,
+	0x61, 0x67, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65,
+	0x6e, 0x74, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x52, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74,
+	0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x22, 0x44,
+	0x0a, 0x1d, 0x52, 0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79,
+	0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x23, 0x0a, 0x0d, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65,
+	0x6e, 0x74, 0x49, 0x64, 0x22, 0x1c, 0x0a, 0x1a, 0x52, 0x6f, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b,
+	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
-var file_deployments_management_rollback_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_deployments_management_rollback_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_deployments_management_rollback_proto_goTypes = []any{
-	(*RollbackDeploymentRequest)(nil),  // 0: freym.deployments.management.RollbackDeploymentRequest
-	(*RollbackDeploymentResponse)(nil), // 1: freym.deployments.management.RollbackDeploymentResponse
+	(*RollbackDeploymentRequest)(nil),     // 0: freym.deployments.management.RollbackDeploymentRequest
+	(*RollbackDeploymentByIdRequest)(nil), // 1: freym.deployments.management.RollbackDeploymentByIdRequest
+	(*RollbackDeploymentResponse)(nil),    // 2: freym.deployments.management.RollbackDeploymentResponse
+	(DeploymentTarget)(0),                 // 3: freym.deployments.management.DeploymentTarget
 }
 var file_deployments_management_rollback_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	3, // 0: freym.deployments.management.RollbackDeploymentRequest.target:type_name -> freym.deployments.management.DeploymentTarget
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_deployments_management_rollback_proto_init() }
@@ -170,13 +239,14 @@ func file_deployments_management_rollback_proto_init() {
 	if File_deployments_management_rollback_proto != nil {
 		return
 	}
+	file_deployments_management_shared_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_deployments_management_rollback_proto_rawDesc), len(file_deployments_management_rollback_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

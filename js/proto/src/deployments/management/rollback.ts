@@ -6,16 +6,26 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import {
+    DeploymentTarget,
+    deploymentTargetFromJSON,
+    deploymentTargetToJSON,
+    deploymentTargetToNumber,
+} from "./shared";
 
 export interface RollbackDeploymentRequest {
-    deploymentId: string;
+    target: DeploymentTarget;
     namespace: string;
+}
+
+export interface RollbackDeploymentByIdRequest {
+    deploymentId: string;
 }
 
 export interface RollbackDeploymentResponse {}
 
 function createBaseRollbackDeploymentRequest(): RollbackDeploymentRequest {
-    return { deploymentId: "0", namespace: "" };
+    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE, namespace: "" };
 }
 
 export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = {
@@ -23,8 +33,8 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
         message: RollbackDeploymentRequest,
         writer: BinaryWriter = new BinaryWriter()
     ): BinaryWriter {
-        if (message.deploymentId !== "0") {
-            writer.uint32(8).int64(message.deploymentId);
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(8).int32(deploymentTargetToNumber(message.target));
         }
         if (message.namespace !== "") {
             writer.uint32(18).string(message.namespace);
@@ -44,7 +54,7 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
                         break;
                     }
 
-                    message.deploymentId = reader.int64().toString();
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
                 case 2: {
@@ -66,15 +76,17 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
 
     fromJSON(object: any): RollbackDeploymentRequest {
         return {
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
             namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
         };
     },
 
     toJSON(message: RollbackDeploymentRequest): unknown {
         const obj: any = {};
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
         }
         if (message.namespace !== "") {
             obj.namespace = message.namespace;
@@ -87,8 +99,71 @@ export const RollbackDeploymentRequest: MessageFns<RollbackDeploymentRequest> = 
     },
     fromPartial(object: DeepPartial<RollbackDeploymentRequest>): RollbackDeploymentRequest {
         const message = createBaseRollbackDeploymentRequest();
-        message.deploymentId = object.deploymentId ?? "0";
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         message.namespace = object.namespace ?? "";
+        return message;
+    },
+};
+
+function createBaseRollbackDeploymentByIdRequest(): RollbackDeploymentByIdRequest {
+    return { deploymentId: "0" };
+}
+
+export const RollbackDeploymentByIdRequest: MessageFns<RollbackDeploymentByIdRequest> = {
+    encode(
+        message: RollbackDeploymentByIdRequest,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.deploymentId !== "0") {
+            writer.uint32(8).int64(message.deploymentId);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RollbackDeploymentByIdRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRollbackDeploymentByIdRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 8) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): RollbackDeploymentByIdRequest {
+        return {
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+        };
+    },
+
+    toJSON(message: RollbackDeploymentByIdRequest): unknown {
+        const obj: any = {};
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<RollbackDeploymentByIdRequest>): RollbackDeploymentByIdRequest {
+        return RollbackDeploymentByIdRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<RollbackDeploymentByIdRequest>): RollbackDeploymentByIdRequest {
+        const message = createBaseRollbackDeploymentByIdRequest();
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };

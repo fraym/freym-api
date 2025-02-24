@@ -26,9 +26,8 @@ type DeploymentOptions struct {
 
 type Client interface {
 	DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error)
-	ActivateDeployment(ctx context.Context, deploymentId int64) error
 	ConfirmDeployment(ctx context.Context, deploymentId int64) error
-	RollbackDeployment(ctx context.Context) error
+	RollbackDeployment(ctx context.Context, target managementpb.DeploymentTarget) error
 	RollbackDeploymentById(ctx context.Context, deploymentId int64) error
 	Close() error
 }
@@ -101,9 +100,12 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 	errChan := make(chan error)
 	finishDone := make(chan bool)
 
-	go func(deploymentId int64) {
+	c.mx.Lock()
+	c.migratingDeploymentId = response.GetDeploymentId()
+
+	go func(ctx context.Context, deploymentId int64) {
 		for {
-			status, err := c.client.GetDeployment(context.Background(), managementpb.GetDeploymentRequest_builder{
+			status, err := c.client.GetDeployment(ctx, managementpb.GetDeploymentRequest_builder{
 				DeploymentId: deploymentId,
 			}.Build())
 			if err != nil {
@@ -132,18 +134,37 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 			time.Sleep(time.Second)
 		}
 
+		if _, err := c.client.ActivateDeployment(ctx, managementpb.ActivateDeploymentRequest_builder{
+			DeploymentId: deploymentId,
+		}.Build()); err != nil {
+			errChan <- err
+			return
+		}
+
 		finishDone <- true
-	}(response.GetDeploymentId())
+	}(ctx, c.migratingDeploymentId)
+
+	c.mx.Unlock()
 
 	select {
 	case err := <-errChan:
 		c.logger.Info().WithError(err).Write("rolling back migration due to error")
 
-		if _, rollbackErr := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
-			DeploymentId: response.GetDeploymentId(),
-			Namespace:    c.conf.Namespace,
-		}.Build()); rollbackErr != nil {
-			return nil, rollbackErr
+		deploymentId := response.GetDeploymentId()
+
+		if deploymentId > 0 {
+			if _, rollbackErr := c.client.RollbackDeploymentById(context.Background(), managementpb.RollbackDeploymentByIdRequest_builder{
+				DeploymentId: response.GetDeploymentId(),
+			}.Build()); rollbackErr != nil {
+				return nil, rollbackErr
+			}
+		} else {
+			if _, rollbackErr := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
+				Namespace: c.conf.Namespace,
+				Target:    options.Target,
+			}.Build()); rollbackErr != nil {
+				return nil, rollbackErr
+			}
 		}
 
 		c.mx.Lock()
@@ -177,15 +198,16 @@ func (c *deploymentsClient) ConfirmDeployment(ctx context.Context, deploymentId 
 	return err
 }
 
-func (c *deploymentsClient) RollbackDeployment(ctx context.Context) error {
+func (c *deploymentsClient) RollbackDeployment(ctx context.Context, target managementpb.DeploymentTarget) error {
 	_, err := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
 		Namespace: c.conf.Namespace,
+		Target:    target,
 	}.Build())
 	return err
 }
 
 func (c *deploymentsClient) RollbackDeploymentById(ctx context.Context, deploymentId int64) error {
-	_, err := c.client.RollbackDeployment(context.Background(), managementpb.RollbackDeploymentRequest_builder{
+	_, err := c.client.RollbackDeploymentById(context.Background(), managementpb.RollbackDeploymentByIdRequest_builder{
 		DeploymentId: deploymentId,
 	}.Build())
 	return err
@@ -199,15 +221,9 @@ func (c *deploymentsClient) Close() error {
 	if c.isMigrating && c.migratingDeploymentId > 0 {
 		c.logger.Info().Write("rolling back unfinished migration because of shutdown")
 
-		request := managementpb.RollbackDeploymentRequest_builder{
-			Namespace: c.conf.Namespace,
-		}
-
-		if c.migratingDeploymentId > 0 {
-			request.DeploymentId = c.migratingDeploymentId
-		}
-
-		if _, err := c.client.RollbackDeployment(context.Background(), request.Build()); err != nil {
+		if _, err := c.client.RollbackDeploymentById(context.Background(), managementpb.RollbackDeploymentByIdRequest_builder{
+			DeploymentId: c.migratingDeploymentId,
+		}.Build()); err != nil {
 			return err
 		}
 	}

@@ -7,5 +7,6 @@ service Service {
 	rpc ActivateSchema(ActivateSchemaRequest) returns (ActivateSchemaResponse);
 	rpc ConfirmSchema(ConfirmSchemaRequest) returns (ConfirmSchemaResponse);
 	rpc RollbackSchema(RollbackSchemaRequest) returns (RollbackSchemaResponse);
+	rpc RollbackSchemaByDeployment(RollbackSchemaByDeploymentRequest) returns (RollbackSchemaResponse);
 	rpc GetSchemaDeployment(GetSchemaDeploymentRequest) returns (GetSchemaDeploymentResponse);
 }

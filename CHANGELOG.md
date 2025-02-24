@@ -1,5 +1,9 @@
 # vNext
 
+# v0.31.8
+
+- (bug) Add missing deployment target to namespace rollback apis
+
 # v0.31.7
 
 - (bug) Add missing parameters in migration apis

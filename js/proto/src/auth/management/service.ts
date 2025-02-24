@@ -24,6 +24,7 @@ import {
     DeploySchemaResponse,
     GetSchemaDeploymentRequest,
     GetSchemaDeploymentResponse,
+    RollbackSchemaByDeploymentRequest,
     RollbackSchemaRequest,
     RollbackSchemaResponse,
 } from "./deployment";
@@ -77,6 +78,17 @@ export const ServiceService = {
         requestSerialize: (value: RollbackSchemaRequest) =>
             Buffer.from(RollbackSchemaRequest.encode(value).finish()),
         requestDeserialize: (value: Buffer) => RollbackSchemaRequest.decode(value),
+        responseSerialize: (value: RollbackSchemaResponse) =>
+            Buffer.from(RollbackSchemaResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RollbackSchemaResponse.decode(value),
+    },
+    rollbackSchemaByDeployment: {
+        path: "/freym.auth.management.Service/RollbackSchemaByDeployment",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RollbackSchemaByDeploymentRequest) =>
+            Buffer.from(RollbackSchemaByDeploymentRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RollbackSchemaByDeploymentRequest.decode(value),
         responseSerialize: (value: RollbackSchemaResponse) =>
             Buffer.from(RollbackSchemaResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => RollbackSchemaResponse.decode(value),
@@ -176,6 +188,10 @@ export interface ServiceServer extends UntypedServiceImplementation {
     activateSchema: handleUnaryCall<ActivateSchemaRequest, ActivateSchemaResponse>;
     confirmSchema: handleUnaryCall<ConfirmSchemaRequest, ConfirmSchemaResponse>;
     rollbackSchema: handleUnaryCall<RollbackSchemaRequest, RollbackSchemaResponse>;
+    rollbackSchemaByDeployment: handleUnaryCall<
+        RollbackSchemaByDeploymentRequest,
+        RollbackSchemaResponse
+    >;
     getSchemaDeployment: handleUnaryCall<GetSchemaDeploymentRequest, GetSchemaDeploymentResponse>;
     upsertRole: handleUnaryCall<UpsertRoleRequest, UpsertRoleResponse>;
     deleteRole: handleUnaryCall<DeleteRoleRequest, DeleteRoleResponse>;
@@ -243,6 +259,21 @@ export interface ServiceClient extends Client {
     ): ClientUnaryCall;
     rollbackSchema(
         request: RollbackSchemaRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void

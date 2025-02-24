@@ -3,6 +3,7 @@ package crud
 import (
 	"context"
 
+	"github.com/fraym/freym-api/go/proto/crud/managementpb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -31,8 +32,12 @@ func (c *MockManagementClient) ConfirmSchema(ctx context.Context, deploymentId i
 	return c.Called(ctx, deploymentId).Error(0)
 }
 
-func (c *MockManagementClient) RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error {
-	return c.Called(ctx, deploymentId, namespace).Error(0)
+func (c *MockManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
+	return c.Called(ctx, namespace, target).Error(0)
+}
+
+func (c *MockManagementClient) RollbackSchemaByDeployment(ctx context.Context, deploymentId int64) error {
+	return c.Called(ctx, deploymentId).Error(0)
 }
 
 func (c *MockManagementClient) GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error) {

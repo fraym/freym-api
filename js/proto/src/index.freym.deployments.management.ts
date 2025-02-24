@@ -5,6 +5,7 @@
 
 export * from "./deployments/management/activate";
 export * from "./deployments/management/confirm";
+export * from "./deployments/management/shared";
 export * from "./deployments/management/create";
 export * from "./deployments/management/deployment";
 export * from "./deployments/management/rollback";

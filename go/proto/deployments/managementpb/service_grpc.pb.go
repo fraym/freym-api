@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Service_CreateDeployment_FullMethodName   = "/freym.deployments.management.Service/CreateDeployment"
-	Service_ActivateDeployment_FullMethodName = "/freym.deployments.management.Service/ActivateDeployment"
-	Service_ConfirmDeployment_FullMethodName  = "/freym.deployments.management.Service/ConfirmDeployment"
-	Service_RollbackDeployment_FullMethodName = "/freym.deployments.management.Service/RollbackDeployment"
-	Service_GetDeployment_FullMethodName      = "/freym.deployments.management.Service/GetDeployment"
+	Service_CreateDeployment_FullMethodName       = "/freym.deployments.management.Service/CreateDeployment"
+	Service_ActivateDeployment_FullMethodName     = "/freym.deployments.management.Service/ActivateDeployment"
+	Service_ConfirmDeployment_FullMethodName      = "/freym.deployments.management.Service/ConfirmDeployment"
+	Service_RollbackDeployment_FullMethodName     = "/freym.deployments.management.Service/RollbackDeployment"
+	Service_RollbackDeploymentById_FullMethodName = "/freym.deployments.management.Service/RollbackDeploymentById"
+	Service_GetDeployment_FullMethodName          = "/freym.deployments.management.Service/GetDeployment"
 )
 
 // ServiceClient is the client API for Service service.
@@ -34,6 +35,7 @@ type ServiceClient interface {
 	ActivateDeployment(ctx context.Context, in *ActivateDeploymentRequest, opts ...grpc.CallOption) (*ActivateDeploymentResponse, error)
 	ConfirmDeployment(ctx context.Context, in *ConfirmDeploymentRequest, opts ...grpc.CallOption) (*ConfirmDeploymentResponse, error)
 	RollbackDeployment(ctx context.Context, in *RollbackDeploymentRequest, opts ...grpc.CallOption) (*RollbackDeploymentResponse, error)
+	RollbackDeploymentById(ctx context.Context, in *RollbackDeploymentByIdRequest, opts ...grpc.CallOption) (*RollbackDeploymentResponse, error)
 	GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*GetDeploymentResponse, error)
 }
 
@@ -81,6 +83,15 @@ func (c *serviceClient) RollbackDeployment(ctx context.Context, in *RollbackDepl
 	return out, nil
 }
 
+func (c *serviceClient) RollbackDeploymentById(ctx context.Context, in *RollbackDeploymentByIdRequest, opts ...grpc.CallOption) (*RollbackDeploymentResponse, error) {
+	out := new(RollbackDeploymentResponse)
+	err := c.cc.Invoke(ctx, Service_RollbackDeploymentById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*GetDeploymentResponse, error) {
 	out := new(GetDeploymentResponse)
 	err := c.cc.Invoke(ctx, Service_GetDeployment_FullMethodName, in, out, opts...)
@@ -98,6 +109,7 @@ type ServiceServer interface {
 	ActivateDeployment(context.Context, *ActivateDeploymentRequest) (*ActivateDeploymentResponse, error)
 	ConfirmDeployment(context.Context, *ConfirmDeploymentRequest) (*ConfirmDeploymentResponse, error)
 	RollbackDeployment(context.Context, *RollbackDeploymentRequest) (*RollbackDeploymentResponse, error)
+	RollbackDeploymentById(context.Context, *RollbackDeploymentByIdRequest) (*RollbackDeploymentResponse, error)
 	GetDeployment(context.Context, *GetDeploymentRequest) (*GetDeploymentResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
@@ -117,6 +129,9 @@ func (UnimplementedServiceServer) ConfirmDeployment(context.Context, *ConfirmDep
 }
 func (UnimplementedServiceServer) RollbackDeployment(context.Context, *RollbackDeploymentRequest) (*RollbackDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RollbackDeployment not implemented")
+}
+func (UnimplementedServiceServer) RollbackDeploymentById(context.Context, *RollbackDeploymentByIdRequest) (*RollbackDeploymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RollbackDeploymentById not implemented")
 }
 func (UnimplementedServiceServer) GetDeployment(context.Context, *GetDeploymentRequest) (*GetDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeployment not implemented")
@@ -206,6 +221,24 @@ func _Service_RollbackDeployment_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_RollbackDeploymentById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RollbackDeploymentByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RollbackDeploymentById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RollbackDeploymentById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RollbackDeploymentById(ctx, req.(*RollbackDeploymentByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_GetDeployment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDeploymentRequest)
 	if err := dec(in); err != nil {
@@ -246,6 +279,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RollbackDeployment",
 			Handler:    _Service_RollbackDeployment_Handler,
+		},
+		{
+			MethodName: "RollbackDeploymentById",
+			Handler:    _Service_RollbackDeploymentById_Handler,
 		},
 		{
 			MethodName: "GetDeployment",

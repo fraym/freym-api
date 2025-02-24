@@ -1,0 +1,7 @@
+syntax = "proto3";
+package freym.deployments.management;
+
+enum DeploymentTarget {
+	DEPLOYMENT_TARGET_BLUE = 0;
+	DEPLOYMENT_TARGET_GREEN = 1;
+}

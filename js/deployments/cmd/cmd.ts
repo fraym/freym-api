@@ -58,7 +58,7 @@ switch (arg) {
         runRollbackDeployment(getIdFromArgs());
         break;
     case COMMAND_ROLLBACK_NAMESPACE:
-        runRollbackNamespaceDeployment();
+        runRollbackNamespaceDeployment(getTargetFromArgs());
         break;
     case COMMAND_WAIT:
         runWait(getIdFromArgs());

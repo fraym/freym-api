@@ -19,18 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Service_DeploySchema_FullMethodName        = "/freym.auth.management.Service/DeploySchema"
-	Service_ActivateSchema_FullMethodName      = "/freym.auth.management.Service/ActivateSchema"
-	Service_ConfirmSchema_FullMethodName       = "/freym.auth.management.Service/ConfirmSchema"
-	Service_RollbackSchema_FullMethodName      = "/freym.auth.management.Service/RollbackSchema"
-	Service_GetSchemaDeployment_FullMethodName = "/freym.auth.management.Service/GetSchemaDeployment"
-	Service_UpsertRole_FullMethodName          = "/freym.auth.management.Service/UpsertRole"
-	Service_DeleteRole_FullMethodName          = "/freym.auth.management.Service/DeleteRole"
-	Service_GetRoles_FullMethodName            = "/freym.auth.management.Service/GetRoles"
-	Service_CreateUser_FullMethodName          = "/freym.auth.management.Service/CreateUser"
-	Service_UpdateUser_FullMethodName          = "/freym.auth.management.Service/UpdateUser"
-	Service_DeleteUser_FullMethodName          = "/freym.auth.management.Service/DeleteUser"
-	Service_GetUsers_FullMethodName            = "/freym.auth.management.Service/GetUsers"
+	Service_DeploySchema_FullMethodName               = "/freym.auth.management.Service/DeploySchema"
+	Service_ActivateSchema_FullMethodName             = "/freym.auth.management.Service/ActivateSchema"
+	Service_ConfirmSchema_FullMethodName              = "/freym.auth.management.Service/ConfirmSchema"
+	Service_RollbackSchema_FullMethodName             = "/freym.auth.management.Service/RollbackSchema"
+	Service_RollbackSchemaByDeployment_FullMethodName = "/freym.auth.management.Service/RollbackSchemaByDeployment"
+	Service_GetSchemaDeployment_FullMethodName        = "/freym.auth.management.Service/GetSchemaDeployment"
+	Service_UpsertRole_FullMethodName                 = "/freym.auth.management.Service/UpsertRole"
+	Service_DeleteRole_FullMethodName                 = "/freym.auth.management.Service/DeleteRole"
+	Service_GetRoles_FullMethodName                   = "/freym.auth.management.Service/GetRoles"
+	Service_CreateUser_FullMethodName                 = "/freym.auth.management.Service/CreateUser"
+	Service_UpdateUser_FullMethodName                 = "/freym.auth.management.Service/UpdateUser"
+	Service_DeleteUser_FullMethodName                 = "/freym.auth.management.Service/DeleteUser"
+	Service_GetUsers_FullMethodName                   = "/freym.auth.management.Service/GetUsers"
 )
 
 // ServiceClient is the client API for Service service.
@@ -41,6 +42,7 @@ type ServiceClient interface {
 	ActivateSchema(ctx context.Context, in *ActivateSchemaRequest, opts ...grpc.CallOption) (*ActivateSchemaResponse, error)
 	ConfirmSchema(ctx context.Context, in *ConfirmSchemaRequest, opts ...grpc.CallOption) (*ConfirmSchemaResponse, error)
 	RollbackSchema(ctx context.Context, in *RollbackSchemaRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error)
+	RollbackSchemaByDeployment(ctx context.Context, in *RollbackSchemaByDeploymentRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(ctx context.Context, in *GetSchemaDeploymentRequest, opts ...grpc.CallOption) (*GetSchemaDeploymentResponse, error)
 	UpsertRole(ctx context.Context, in *UpsertRoleRequest, opts ...grpc.CallOption) (*UpsertRoleResponse, error)
 	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*DeleteRoleResponse, error)
@@ -89,6 +91,15 @@ func (c *serviceClient) ConfirmSchema(ctx context.Context, in *ConfirmSchemaRequ
 func (c *serviceClient) RollbackSchema(ctx context.Context, in *RollbackSchemaRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error) {
 	out := new(RollbackSchemaResponse)
 	err := c.cc.Invoke(ctx, Service_RollbackSchema_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) RollbackSchemaByDeployment(ctx context.Context, in *RollbackSchemaByDeploymentRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error) {
+	out := new(RollbackSchemaResponse)
+	err := c.cc.Invoke(ctx, Service_RollbackSchemaByDeployment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -175,6 +186,7 @@ type ServiceServer interface {
 	ActivateSchema(context.Context, *ActivateSchemaRequest) (*ActivateSchemaResponse, error)
 	ConfirmSchema(context.Context, *ConfirmSchemaRequest) (*ConfirmSchemaResponse, error)
 	RollbackSchema(context.Context, *RollbackSchemaRequest) (*RollbackSchemaResponse, error)
+	RollbackSchemaByDeployment(context.Context, *RollbackSchemaByDeploymentRequest) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(context.Context, *GetSchemaDeploymentRequest) (*GetSchemaDeploymentResponse, error)
 	UpsertRole(context.Context, *UpsertRoleRequest) (*UpsertRoleResponse, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
@@ -201,6 +213,9 @@ func (UnimplementedServiceServer) ConfirmSchema(context.Context, *ConfirmSchemaR
 }
 func (UnimplementedServiceServer) RollbackSchema(context.Context, *RollbackSchemaRequest) (*RollbackSchemaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RollbackSchema not implemented")
+}
+func (UnimplementedServiceServer) RollbackSchemaByDeployment(context.Context, *RollbackSchemaByDeploymentRequest) (*RollbackSchemaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RollbackSchemaByDeployment not implemented")
 }
 func (UnimplementedServiceServer) GetSchemaDeployment(context.Context, *GetSchemaDeploymentRequest) (*GetSchemaDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSchemaDeployment not implemented")
@@ -307,6 +322,24 @@ func _Service_RollbackSchema_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).RollbackSchema(ctx, req.(*RollbackSchemaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_RollbackSchemaByDeployment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RollbackSchemaByDeploymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RollbackSchemaByDeployment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RollbackSchemaByDeployment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RollbackSchemaByDeployment(ctx, req.(*RollbackSchemaByDeploymentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -477,6 +510,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RollbackSchema",
 			Handler:    _Service_RollbackSchema_Handler,
+		},
+		{
+			MethodName: "RollbackSchemaByDeployment",
+			Handler:    _Service_RollbackSchemaByDeployment_Handler,
 		},
 		{
 			MethodName: "GetSchemaDeployment",

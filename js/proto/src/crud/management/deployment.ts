@@ -85,8 +85,12 @@ export interface ConfirmSchemaRequest {
 export interface ConfirmSchemaResponse {}
 
 export interface RollbackSchemaRequest {
-    deploymentId: string;
+    target: DeploymentTarget;
     namespace: string;
+}
+
+export interface RollbackSchemaByDeploymentRequest {
+    deploymentId: string;
 }
 
 export interface RollbackSchemaResponse {}
@@ -559,7 +563,7 @@ export const ConfirmSchemaResponse: MessageFns<ConfirmSchemaResponse> = {
 };
 
 function createBaseRollbackSchemaRequest(): RollbackSchemaRequest {
-    return { deploymentId: "0", namespace: "" };
+    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE, namespace: "" };
 }
 
 export const RollbackSchemaRequest: MessageFns<RollbackSchemaRequest> = {
@@ -567,8 +571,8 @@ export const RollbackSchemaRequest: MessageFns<RollbackSchemaRequest> = {
         message: RollbackSchemaRequest,
         writer: BinaryWriter = new BinaryWriter()
     ): BinaryWriter {
-        if (message.deploymentId !== "0") {
-            writer.uint32(8).int64(message.deploymentId);
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            writer.uint32(8).int32(deploymentTargetToNumber(message.target));
         }
         if (message.namespace !== "") {
             writer.uint32(18).string(message.namespace);
@@ -588,7 +592,7 @@ export const RollbackSchemaRequest: MessageFns<RollbackSchemaRequest> = {
                         break;
                     }
 
-                    message.deploymentId = reader.int64().toString();
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
                 case 2: {
@@ -610,15 +614,17 @@ export const RollbackSchemaRequest: MessageFns<RollbackSchemaRequest> = {
 
     fromJSON(object: any): RollbackSchemaRequest {
         return {
-            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            target: isSet(object.target)
+                ? deploymentTargetFromJSON(object.target)
+                : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
             namespace: isSet(object.namespace) ? globalThis.String(object.namespace) : "",
         };
     },
 
     toJSON(message: RollbackSchemaRequest): unknown {
         const obj: any = {};
-        if (message.deploymentId !== "0") {
-            obj.deploymentId = message.deploymentId;
+        if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
+            obj.target = deploymentTargetToJSON(message.target);
         }
         if (message.namespace !== "") {
             obj.namespace = message.namespace;
@@ -631,8 +637,75 @@ export const RollbackSchemaRequest: MessageFns<RollbackSchemaRequest> = {
     },
     fromPartial(object: DeepPartial<RollbackSchemaRequest>): RollbackSchemaRequest {
         const message = createBaseRollbackSchemaRequest();
-        message.deploymentId = object.deploymentId ?? "0";
+        message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         message.namespace = object.namespace ?? "";
+        return message;
+    },
+};
+
+function createBaseRollbackSchemaByDeploymentRequest(): RollbackSchemaByDeploymentRequest {
+    return { deploymentId: "0" };
+}
+
+export const RollbackSchemaByDeploymentRequest: MessageFns<RollbackSchemaByDeploymentRequest> = {
+    encode(
+        message: RollbackSchemaByDeploymentRequest,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.deploymentId !== "0") {
+            writer.uint32(8).int64(message.deploymentId);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RollbackSchemaByDeploymentRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRollbackSchemaByDeploymentRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 8) {
+                        break;
+                    }
+
+                    message.deploymentId = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): RollbackSchemaByDeploymentRequest {
+        return {
+            deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+        };
+    },
+
+    toJSON(message: RollbackSchemaByDeploymentRequest): unknown {
+        const obj: any = {};
+        if (message.deploymentId !== "0") {
+            obj.deploymentId = message.deploymentId;
+        }
+        return obj;
+    },
+
+    create(
+        base?: DeepPartial<RollbackSchemaByDeploymentRequest>
+    ): RollbackSchemaByDeploymentRequest {
+        return RollbackSchemaByDeploymentRequest.fromPartial(base ?? {});
+    },
+    fromPartial(
+        object: DeepPartial<RollbackSchemaByDeploymentRequest>
+    ): RollbackSchemaByDeploymentRequest {
+        const message = createBaseRollbackSchemaByDeploymentRequest();
+        message.deploymentId = object.deploymentId ?? "0";
         return message;
     },
 };

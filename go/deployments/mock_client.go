@@ -3,6 +3,7 @@ package deployments
 import (
 	"context"
 
+	"github.com/fraym/freym-api/go/proto/deployments/managementpb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -26,8 +27,8 @@ func (c *MockClient) ConfirmDeployment(ctx context.Context, deploymentId int64) 
 	return c.Called(ctx, deploymentId).Error(0)
 }
 
-func (c *MockClient) RollbackDeployment(ctx context.Context) error {
-	return c.Called(ctx).Error(0)
+func (c *MockClient) RollbackDeployment(ctx context.Context, target managementpb.DeploymentTarget) error {
+	return c.Called(ctx, target).Error(0)
 }
 
 func (c *MockClient) RollbackDeploymentById(ctx context.Context, deploymentId int64) error {

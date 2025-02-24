@@ -24,6 +24,7 @@ import {
     DeploySchemaResponse,
     GetSchemaDeploymentRequest,
     GetSchemaDeploymentResponse,
+    RollbackSchemaByDeploymentRequest,
     RollbackSchemaRequest,
     RollbackSchemaResponse,
 } from "./deployment";
@@ -74,6 +75,17 @@ export const ServiceService = {
             Buffer.from(RollbackSchemaResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => RollbackSchemaResponse.decode(value),
     },
+    rollbackSchemaByDeployment: {
+        path: "/freym.projections.management.Service/RollbackSchemaByDeployment",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RollbackSchemaByDeploymentRequest) =>
+            Buffer.from(RollbackSchemaByDeploymentRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RollbackSchemaByDeploymentRequest.decode(value),
+        responseSerialize: (value: RollbackSchemaResponse) =>
+            Buffer.from(RollbackSchemaResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RollbackSchemaResponse.decode(value),
+    },
     getSchemaDeployment: {
         path: "/freym.projections.management.Service/GetSchemaDeployment",
         requestStream: false,
@@ -92,6 +104,10 @@ export interface ServiceServer extends UntypedServiceImplementation {
     activateSchema: handleUnaryCall<ActivateSchemaRequest, ActivateSchemaResponse>;
     confirmSchema: handleUnaryCall<ConfirmSchemaRequest, ConfirmSchemaResponse>;
     rollbackSchema: handleUnaryCall<RollbackSchemaRequest, RollbackSchemaResponse>;
+    rollbackSchemaByDeployment: handleUnaryCall<
+        RollbackSchemaByDeploymentRequest,
+        RollbackSchemaResponse
+    >;
     getSchemaDeployment: handleUnaryCall<GetSchemaDeploymentRequest, GetSchemaDeploymentResponse>;
 }
 
@@ -152,6 +168,21 @@ export interface ServiceClient extends Client {
     ): ClientUnaryCall;
     rollbackSchema(
         request: RollbackSchemaRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void
+    ): ClientUnaryCall;
+    rollbackSchemaByDeployment(
+        request: RollbackSchemaByDeploymentRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: RollbackSchemaResponse) => void

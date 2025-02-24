@@ -1,5 +1,5 @@
 import { Config } from "@/cmd/config";
-import { Deployment, DeploymentResponse } from "@/schema/data";
+import { Deployment, DeploymentResponse, DeploymentTarget } from "@/schema/data";
 
 export const createDeployment = async (
     deployment: Deployment,
@@ -90,14 +90,20 @@ export const rollbackDeployment = async (deploymentId: number, config: Config): 
     }
 };
 
-export const rollbackDeploymentByNamespace = async (config: Config): Promise<void> => {
+export const rollbackDeploymentByNamespace = async (
+    config: Config,
+    target: DeploymentTarget
+): Promise<void> => {
     const response = await fetch(`${config.serverAddress}/api/deployment/rollback/namespace`, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${config.apiToken}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ namespace: config.namespace }),
+        body: JSON.stringify({
+            namespace: config.namespace,
+            target,
+        }),
     });
 
     if (!response.ok) {

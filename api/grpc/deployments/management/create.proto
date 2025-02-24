@@ -1,5 +1,6 @@
 syntax = "proto3";
 package freym.deployments.management;
+import "deployments/management/shared.proto";
 
 message CreateDeploymentRequest {
 	string namespace = 1;
@@ -23,12 +24,6 @@ message DeploymentOptions {
 	repeated string skip_services = 2;
 	bool force = 3;
 	DeploymentTarget target = 4;
-}
-
-
-enum DeploymentTarget {
-	DEPLOYMENT_TARGET_BLUE = 0;
-	DEPLOYMENT_TARGET_GREEN = 1;
 }
 
 message ObjectType {

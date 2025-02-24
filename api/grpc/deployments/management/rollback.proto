@@ -1,9 +1,14 @@
 syntax = "proto3";
 package freym.deployments.management;
+import "deployments/management/shared.proto";
 
 message RollbackDeploymentRequest {
-	int64 deployment_id = 1;
+	DeploymentTarget target = 1;
 	string namespace = 2;
+}
+
+message RollbackDeploymentByIdRequest {
+	int64 deployment_id = 1;
 }
 
 message RollbackDeploymentResponse {}

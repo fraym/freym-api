@@ -22,7 +22,8 @@ type ManagementClient interface {
 	) error
 	ActivateSchema(ctx context.Context, deploymentId int64) error
 	ConfirmSchema(ctx context.Context, deploymentId int64) error
-	RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error
+	RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error
+	RollbackSchemaByDeployment(ctx context.Context, deploymentId int64) error
 	GetSchemaDeployment(ctx context.Context, deploymentId int64) (uint32, error)
 	Close() error
 }
@@ -113,10 +114,17 @@ func (c *projectionsManagementClient) ConfirmSchema(ctx context.Context, deploym
 	return err
 }
 
-func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, deploymentId int64, namespace string) error {
+func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
+		Target:    target,
+		Namespace: namespace,
+	}.Build())
+	return err
+}
+
+func (c *projectionsManagementClient) RollbackSchemaByDeployment(ctx context.Context, deploymentId int64) error {
+	_, err := c.client.RollbackSchemaByDeployment(ctx, managementpb.RollbackSchemaByDeploymentRequest_builder{
 		DeploymentId: deploymentId,
-		Namespace:    namespace,
 	}.Build())
 	return err
 }

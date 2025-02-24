@@ -1,5 +1,5 @@
-# v0.31.7
+# v0.31.8
 
 ## :bug: Bug Fixes
 
-- Add missing parameters in migration apis
+- Add missing deployment target to namespace rollback apis
