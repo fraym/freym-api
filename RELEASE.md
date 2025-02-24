@@ -1,5 +1,5 @@
-# v0.31.6
+# v0.31.7
 
 ## :bug: Bug Fixes
 
-- Use target instead of deploymentId in projections and crud
+- Add missing parameters in migration apis
