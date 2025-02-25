@@ -8,7 +8,7 @@ import (
 	"github.com/fraym/freym-api/go/proto/streams/managementpb"
 	"github.com/fraym/freym-api/go/streams/config"
 	"github.com/fraym/golog"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type HandlerFn func(response *managementpb.SubscribeResponse) error
@@ -161,7 +161,7 @@ func (c *clientConnection) Subscribe(ctx context.Context, groupId string, topics
 		Subscribe: managementpb.Subscribe_builder{
 			Metadata: managementpb.SubscribeMetadata_builder{
 				Group:        groupId,
-				SubscriberId: uuid.NewV4().String(),
+				SubscriberId: uuid.NewString(),
 				DeploymentId: c.deploymentId,
 			}.Build(),
 			Topics: topics,

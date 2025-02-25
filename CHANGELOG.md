@@ -1,5 +1,7 @@
 # vNext
 
+- (internal) Switch uuid package
+
 # v0.31.8
 
 - (bug) Add missing deployment target to namespace rollback apis

@@ -6,10 +6,10 @@ require (
 	github.com/Becklyn/go-wire-core v1.4.4
 	github.com/fraym/golog v0.2.2
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/google/uuid v1.6.0
 	github.com/graphql-go/graphql v0.8.1
 	github.com/pkg/errors v0.9.1
 	github.com/samber/lo v1.49.1
-	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.5
