@@ -1,6 +1,6 @@
 {
     "name": "@fraym/proto",
-    "version": "0.31.8",
+    "version": "0.31.9",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -23,7 +23,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@grpc/grpc-js": "^1.12.6",
+        "@grpc/grpc-js": "^1.13.0",
         "ts-proto": "^2.6.1"
     },
     "prettier": "@becklyn/prettier"

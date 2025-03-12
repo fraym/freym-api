@@ -60,12 +60,16 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		correlationId string
 		causationId   string
 		orderSerial   int64
+		userId        string
+		deploymentId  int64
 	)
 
 	if meta := data.GetMetadata(); meta != nil {
 		correlationId = meta.GetCorrelationId()
 		causationId = meta.GetCausationId()
 		orderSerial = meta.GetOrderSerial()
+		userId = meta.GetUserId()
+		deploymentId = meta.GetDeploymentId()
 	}
 
 	return &dto.SubscriptionEvent{
@@ -80,5 +84,7 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		Topic:         data.GetTopic(),
 		RaisedAt:      time.Unix(0, data.GetRaisedAt()),
 		OrderSerial:   orderSerial,
+		UserId:        userId,
+		DeploymentId:  deploymentId,
 	}, nil
 }

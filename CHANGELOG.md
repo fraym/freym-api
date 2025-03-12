@@ -1,6 +1,9 @@
 # vNext
 
-- (internal) Switch uuid package
+# v0.31.9
+
+- (bug) Add `userId` and `deploymentId` to subscription event in go streams package
+- (internal) Switch go uuid package
 
 # v0.31.8
 

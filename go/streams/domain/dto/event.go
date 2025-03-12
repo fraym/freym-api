@@ -73,6 +73,8 @@ type SubscriptionEvent struct {
 	Topic         string
 	RaisedAt      time.Time
 	OrderSerial   int64
+	UserId        string
+	DeploymentId  int64
 }
 
 type HandlerFunc = func(ctx context.Context, event *SubscriptionEvent) error

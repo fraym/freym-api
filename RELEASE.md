@@ -1,5 +1,9 @@
-# v0.31.8
+# v0.31.9
 
 ## :bug: Bug Fixes
 
-- Add missing deployment target to namespace rollback apis
+- Add `userId` and `deploymentId` to subscription event in go streams package
+
+## :hammer_and_wrench: Internal
+
+- Switch go uuid package
