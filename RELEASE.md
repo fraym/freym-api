@@ -1,5 +1,5 @@
-# v0.32.1
+# v0.32.2
 
 ## :bug: Bug Fixes
 
-- Fix proto JS package
+- Fix exports in sync JS package

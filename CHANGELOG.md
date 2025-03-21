@@ -1,5 +1,9 @@
 # vNext
 
+# v0.32.2
+
+- (bug) Fix exports in sync JS package
+
 # v0.32.1
 
 - (bug) Fix proto JS package
