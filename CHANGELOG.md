@@ -1,5 +1,10 @@
 # vNext
 
+# v0.32.0
+
+- (feature) Add read locks to sync
+- (feature) JS sync client
+
 # v0.31.9
 
 - (bug) Add `userId` and `deploymentId` to subscription event in go streams package
