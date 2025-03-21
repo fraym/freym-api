@@ -1,6 +1,5 @@
-# v0.32.0
+# v0.32.1
 
-## :gift: New Features
+## :bug: Bug Fixes
 
-- Add read locks to sync
-- JS sync client
+- Fix proto JS package

@@ -51,6 +51,7 @@ export const newConnection = async (): Promise<Connection> => {
             });
 
             if (response === "stop") {
+                onConnect();
                 throw new Error("Stopping locking service...");
             }
         },

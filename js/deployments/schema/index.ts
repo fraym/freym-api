@@ -94,8 +94,6 @@ const getTypes = async (
                 encoding: "utf8",
             });
 
-            console.log(name, sql);
-
             views.push({
                 name,
                 sql,

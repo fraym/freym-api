@@ -42,7 +42,6 @@ export const createLease = async (
     let leaseId = "";
 
     const [waitForStopExecution, stopExecution] = await createResolvablePromise<void>();
-
     const [waitForStop, stopped] = await createResolvablePromise<void>();
 
     const renew = async () => {

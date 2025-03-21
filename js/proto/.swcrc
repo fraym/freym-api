@@ -1,22 +1,18 @@
 {
     "$schema": "https://swc.rs/schema.json",
     "jsc": {
-        "baseUrl": ".",
+        "baseUrl": "./src",
         "parser": {
             "syntax": "typescript",
             "dynamicImport": false,
             "decorators": false
         },
         "target": "es5",
-        "externalHelpers": false,
-        "paths": {
-            "@/*": ["./*"]
-        }
+        "externalHelpers": false
     },
     "module": {
         "type": "commonjs"
-        
     },
-    "exclude": ["node_modules", "dist", ".turbo"],
+    "exclude": ["node_modules", "dist", ".turbo", "eslint.config.mjs"],
     "minify": true
 }

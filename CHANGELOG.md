@@ -1,5 +1,9 @@
 # vNext
 
+# v0.32.1
+
+- (bug) Fix proto JS package
+
 # v0.32.0
 
 - (feature) Add read locks to sync

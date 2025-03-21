@@ -2,10 +2,7 @@
     "extends": "@becklyn/tsconfig/base.json",
     "compilerOptions": {
         "outDir": "dist",
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./*"]
-        },
+        "baseUrl": "./src",
         "emitDeclarationOnly": true,
         "declarationMap": false
     },

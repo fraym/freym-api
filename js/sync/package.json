@@ -1,6 +1,6 @@
 {
     "name": "@fraym/sync",
-    "version": "0.32.0",
+    "version": "0.32.1",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -13,19 +13,17 @@
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
         "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\""
     },
-    "files": [
-        "dist/**/*"
-    ],
     "engines": {
         "node": ">=20"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "dependencies": {
-        "@fraym/proto": "^0.32.0",
+        "@fraym/proto": "^0.32.1",
         "@grpc/grpc-js": "^1.13.0",
         "async-mutex": "^0.5.0",
         "dotenv": "^16.4.7"
     },
-    "prettier": "@becklyn/prettier"
+    "prettier": "@becklyn/prettier",
+    "files": [
+        "dist"
+    ]
 }
