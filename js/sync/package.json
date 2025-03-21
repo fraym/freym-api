@@ -1,0 +1,31 @@
+{
+    "name": "@fraym/sync",
+    "version": "0.31.9",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/freym-api",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/freym-api.git"
+    },
+    "description": "JS client implementation of the sync service of Freym",
+    "scripts": {
+        "build": "rm -rf dist && tsc && npx swc . -d dist",
+        "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
+        "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\""
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "engines": {
+        "node": ">=20"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {
+        "@fraym/proto": "^0.31.9",
+        "@grpc/grpc-js": "^1.13.0",
+        "async-mutex": "^0.5.0",
+        "dotenv": "^16.4.7"
+    },
+    "prettier": "@becklyn/prettier"
+}

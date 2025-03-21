@@ -148,6 +148,134 @@ func (b0 LockResponse_builder) Build() *LockResponse {
 	return m0
 }
 
+type RLockRequest struct {
+	state               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
+	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *RLockRequest) Reset() {
+	*x = RLockRequest{}
+	mi := &file_sync_management_lock_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RLockRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RLockRequest) ProtoMessage() {}
+
+func (x *RLockRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RLockRequest) GetLeaseId() string {
+	if x != nil {
+		return x.xxx_hidden_LeaseId
+	}
+	return ""
+}
+
+func (x *RLockRequest) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *RLockRequest) GetResource() []string {
+	if x != nil {
+		return x.xxx_hidden_Resource
+	}
+	return nil
+}
+
+func (x *RLockRequest) SetLeaseId(v string) {
+	x.xxx_hidden_LeaseId = v
+}
+
+func (x *RLockRequest) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *RLockRequest) SetResource(v []string) {
+	x.xxx_hidden_Resource = v
+}
+
+type RLockRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	LeaseId  string
+	TenantId string
+	Resource []string
+}
+
+func (b0 RLockRequest_builder) Build() *RLockRequest {
+	m0 := &RLockRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_LeaseId = b.LeaseId
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Resource = b.Resource
+	return m0
+}
+
+type RLockResponse struct {
+	state         protoimpl.MessageState `protogen:"opaque.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RLockResponse) Reset() {
+	*x = RLockResponse{}
+	mi := &file_sync_management_lock_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RLockResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RLockResponse) ProtoMessage() {}
+
+func (x *RLockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+type RLockResponse_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+}
+
+func (b0 RLockResponse_builder) Build() *RLockResponse {
+	m0 := &RLockResponse{}
+	b, x := &b0, m0
+	_, _ = b, x
+	return m0
+}
+
 type UnlockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
@@ -159,7 +287,7 @@ type UnlockRequest struct {
 
 func (x *UnlockRequest) Reset() {
 	*x = UnlockRequest{}
-	mi := &file_sync_management_lock_proto_msgTypes[2]
+	mi := &file_sync_management_lock_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -171,7 +299,7 @@ func (x *UnlockRequest) String() string {
 func (*UnlockRequest) ProtoMessage() {}
 
 func (x *UnlockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[2]
+	mi := &file_sync_management_lock_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -241,7 +369,7 @@ type UnlockResponse struct {
 
 func (x *UnlockResponse) Reset() {
 	*x = UnlockResponse{}
-	mi := &file_sync_management_lock_proto_msgTypes[3]
+	mi := &file_sync_management_lock_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -253,7 +381,7 @@ func (x *UnlockResponse) String() string {
 func (*UnlockResponse) ProtoMessage() {}
 
 func (x *UnlockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[3]
+	mi := &file_sync_management_lock_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,6 +404,134 @@ func (b0 UnlockResponse_builder) Build() *UnlockResponse {
 	return m0
 }
 
+type RUnlockRequest struct {
+	state               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
+	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *RUnlockRequest) Reset() {
+	*x = RUnlockRequest{}
+	mi := &file_sync_management_lock_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RUnlockRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RUnlockRequest) ProtoMessage() {}
+
+func (x *RUnlockRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RUnlockRequest) GetLeaseId() string {
+	if x != nil {
+		return x.xxx_hidden_LeaseId
+	}
+	return ""
+}
+
+func (x *RUnlockRequest) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *RUnlockRequest) GetResource() []string {
+	if x != nil {
+		return x.xxx_hidden_Resource
+	}
+	return nil
+}
+
+func (x *RUnlockRequest) SetLeaseId(v string) {
+	x.xxx_hidden_LeaseId = v
+}
+
+func (x *RUnlockRequest) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *RUnlockRequest) SetResource(v []string) {
+	x.xxx_hidden_Resource = v
+}
+
+type RUnlockRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	LeaseId  string
+	TenantId string
+	Resource []string
+}
+
+func (b0 RUnlockRequest_builder) Build() *RUnlockRequest {
+	m0 := &RUnlockRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_LeaseId = b.LeaseId
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Resource = b.Resource
+	return m0
+}
+
+type RUnlockResponse struct {
+	state         protoimpl.MessageState `protogen:"opaque.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RUnlockResponse) Reset() {
+	*x = RUnlockResponse{}
+	mi := &file_sync_management_lock_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RUnlockResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RUnlockResponse) ProtoMessage() {}
+
+func (x *RUnlockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+type RUnlockResponse_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+}
+
+func (b0 RUnlockResponse_builder) Build() *RUnlockResponse {
+	m0 := &RUnlockResponse{}
+	b, x := &b0, m0
+	_, _ = b, x
+	return m0
+}
+
 var File_sync_management_lock_proto protoreflect.FileDescriptor
 
 var file_sync_management_lock_proto_rawDesc = string([]byte{
@@ -289,23 +545,42 @@ var file_sync_management_lock_proto_rawDesc = string([]byte{
 	0x52, 0x08, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65,
 	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65,
 	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x22, 0x0e, 0x0a, 0x0c, 0x4c, 0x6f, 0x63, 0x6b, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x63, 0x0a, 0x0d, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x65, 0x61, 0x73, 0x65,
-	0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6c, 0x65, 0x61, 0x73, 0x65,
-	0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12,
-	0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x18, 0x03, 0x20, 0x03, 0x28,
-	0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x22, 0x10, 0x0a, 0x0e, 0x55,
-	0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x62, 0x0a, 0x0c, 0x52, 0x4c, 0x6f, 0x63, 0x6b, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x49,
+	0x64, 0x12, 0x1b, 0x0a, 0x09, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1a,
+	0x0a, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09,
+	0x52, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x52, 0x4c,
+	0x6f, 0x63, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x63, 0x0a, 0x0d, 0x55,
+	0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08,
+	0x6c, 0x65, 0x61, 0x73, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x6c, 0x65, 0x61, 0x73, 0x65, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x74, 0x65, 0x6e, 0x61, 0x6e,
+	0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x74, 0x65, 0x6e, 0x61,
+	0x6e, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x22, 0x10, 0x0a, 0x0e, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x64, 0x0a, 0x0e, 0x52, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x49, 0x64, 0x12,
+	0x1b, 0x0a, 0x09, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08,
+	0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08,
+	0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x22, 0x11, 0x0a, 0x0f, 0x52, 0x55, 0x6e, 0x6c,
+	0x6f, 0x63, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 })
 
-var file_sync_management_lock_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_sync_management_lock_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_sync_management_lock_proto_goTypes = []any{
-	(*LockRequest)(nil),    // 0: freym.sync.management.LockRequest
-	(*LockResponse)(nil),   // 1: freym.sync.management.LockResponse
-	(*UnlockRequest)(nil),  // 2: freym.sync.management.UnlockRequest
-	(*UnlockResponse)(nil), // 3: freym.sync.management.UnlockResponse
+	(*LockRequest)(nil),     // 0: freym.sync.management.LockRequest
+	(*LockResponse)(nil),    // 1: freym.sync.management.LockResponse
+	(*RLockRequest)(nil),    // 2: freym.sync.management.RLockRequest
+	(*RLockResponse)(nil),   // 3: freym.sync.management.RLockResponse
+	(*UnlockRequest)(nil),   // 4: freym.sync.management.UnlockRequest
+	(*UnlockResponse)(nil),  // 5: freym.sync.management.UnlockResponse
+	(*RUnlockRequest)(nil),  // 6: freym.sync.management.RUnlockRequest
+	(*RUnlockResponse)(nil), // 7: freym.sync.management.RUnlockResponse
 }
 var file_sync_management_lock_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -326,7 +601,7 @@ func file_sync_management_lock_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sync_management_lock_proto_rawDesc), len(file_sync_management_lock_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -27,6 +27,14 @@ func (c *MockClient[T]) Unlock(tenantId string, resource ...string) {
 	c.Called(tenantId, resource)
 }
 
+func (c *MockClient[T]) RLock(tenantId string, resource ...string) error {
+	return c.Called(tenantId, resource).Error(0)
+}
+
+func (c *MockClient[T]) RUnlock(tenantId string, resource ...string) {
+	c.Called(tenantId, resource)
+}
+
 func (c *MockClient[T]) GetPeerPool() peer.PeerPool[T] {
 	return c.Called().Get(0).(peer.PeerPool[T])
 }

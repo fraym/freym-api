@@ -1,5 +1,5 @@
 dev:
-  projections-nodejs:
+  freym-api-js:
     image: node:20
     imagePullPolicy: Never
     command: bash

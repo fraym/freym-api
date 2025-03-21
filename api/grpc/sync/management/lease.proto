@@ -13,6 +13,7 @@ message CreateLeaseRequest {
 	int32 ttl = 3;
 	string lease_id = 4;
  	repeated Lock already_registered_locks = 5;
+ 	repeated Lock already_registered_rlocks = 6;
 }
 
 message CreateLeaseResponse {

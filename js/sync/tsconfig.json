@@ -7,9 +7,8 @@
             "@/*": ["./*"]
         },
         "emitDeclarationOnly": true,
-        "declarationMap": false,
-        "target": "es5"
+        "declarationMap": false
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules", "dist", "example", ".turbo"]
+    "exclude": ["node_modules", "dist", ".turbo"]
 }

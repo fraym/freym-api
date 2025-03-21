@@ -24,7 +24,7 @@ const getIdFromArgs = (): number => {
     const idString = process.argv[3];
     const id = idString ? parseInt(idString, 10) : undefined;
 
-    if (!id || id > 0) {
+    if (!id || id <= 0) {
         throw new Error("id is required and has to be a number > 0");
     }
 

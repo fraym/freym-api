@@ -23,6 +23,7 @@ type lease struct {
 	cancelLease context.CancelFunc
 	leaseId     string
 	locks       []lock
+	rLocks      []lock
 
 	appPrefix string
 	ttl       int32
@@ -49,6 +50,7 @@ func NewLease(
 		cancelLease: nil,
 		leaseId:     "",
 		locks:       nil,
+		rLocks:      nil,
 		appPrefix:   appPrefix,
 		ttl:         20,
 		ownIp:       ownIp,
@@ -72,16 +74,6 @@ func (l *lease) LeaseId() string {
 	return l.leaseId
 }
 
-func (l *lease) Disconnect() {
-	l.mx.Lock()
-	defer l.mx.Unlock()
-
-	if l.cancelLease != nil {
-		l.cancelLease()
-		l.cancelLease = nil
-	}
-}
-
 func (l *lease) WaitForStop() {
 	l.stopWg.Wait()
 }
@@ -100,6 +92,20 @@ func (l *lease) getRegisteredLocksForPb() []*managementpb.Lock {
 	})
 }
 
+func (l *lease) getRegisteredRLocksForPb() []*managementpb.Lock {
+	if len(l.rLocks) == 0 {
+		return nil
+	}
+
+	return lo.Map(l.rLocks, func(lock lock, _ int) *managementpb.Lock {
+		return managementpb.Lock_builder{
+			LeaseId:  l.leaseId,
+			TenantId: lock.tenant,
+			Resource: lock.resource,
+		}.Build()
+	})
+}
+
 func (l *lease) Renew() error {
 	l.mx.Lock()
 	defer l.mx.Unlock()
@@ -108,11 +114,12 @@ func (l *lease) Renew() error {
 	l.cancelLease = cancel
 
 	leaseResponse, err := l.client.CreateLease(l.ctx, managementpb.CreateLeaseRequest_builder{
-		Ip:                     l.ownIp,
-		App:                    l.appPrefix,
-		Ttl:                    l.ttl,
-		LeaseId:                l.leaseId,
-		AlreadyRegisteredLocks: l.getRegisteredLocksForPb(),
+		Ip:                      l.ownIp,
+		App:                     l.appPrefix,
+		Ttl:                     l.ttl,
+		LeaseId:                 l.leaseId,
+		AlreadyRegisteredLocks:  l.getRegisteredLocksForPb(),
+		AlreadyRegisteredRlocks: l.getRegisteredRLocksForPb(),
 	}.Build())
 	if err != nil {
 		return err
@@ -129,11 +136,13 @@ func (l *lease) Renew() error {
 func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
 	ticker := time.NewTicker(time.Duration(l.ttl/2) * time.Second)
 	defer ticker.Stop()
-	defer l.cancelLease()
 
 	for {
 		select {
 		case <-leaseCtx.Done():
+			l.mx.Lock()
+			l.cancelLeaseIfExists()
+			l.mx.Unlock()
 			return
 		case <-l.ctx.Done():
 			_, err := l.client.DropLease(context.Background(), managementpb.DropLeaseRequest_builder{
@@ -143,6 +152,9 @@ func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
 				l.logger.Warn().WithError(err).Write("unable to drop lease")
 			}
 			l.stopWg.Done()
+			l.mx.Lock()
+			l.cancelLeaseIfExists()
+			l.mx.Unlock()
 			return
 		case <-ticker.C:
 			_, err := l.client.KeepLease(leaseCtx, managementpb.KeepLeaseRequest_builder{
@@ -152,9 +164,10 @@ func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
 			if err != nil {
 				l.logger.Warn().WithError(err).Write("unable to keep lease")
 
-				l.mx.RLock()
+				l.mx.Lock()
 				l.onRenew()
-				l.mx.RUnlock()
+				l.cancelLeaseIfExists()
+				l.mx.Unlock()
 
 				if err := util.Retry(l.Renew, time.Millisecond*100, 50); err != nil {
 					l.logger.Fatal().WithError(err).Write("unable to renew lease")
@@ -165,9 +178,24 @@ func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
 	}
 }
 
-func (l *lease) Track(tenant string, resource []string) {
+func (l *lease) cancelLeaseIfExists() {
+	if l.cancelLease != nil {
+		l.cancelLease()
+		l.cancelLease = nil
+	}
+}
+
+func (l *lease) Track(tenant string, resource []string, read bool) {
 	l.mx.Lock()
 	defer l.mx.Unlock()
+
+	if read {
+		l.rLocks = append(l.rLocks, lock{
+			tenant:   tenant,
+			resource: resource,
+		})
+		return
+	}
 
 	l.locks = append(l.locks, lock{
 		tenant:   tenant,
@@ -175,9 +203,26 @@ func (l *lease) Track(tenant string, resource []string) {
 	})
 }
 
-func (l *lease) Untrack(tenant string, resource []string) {
+func (l *lease) Untrack(tenant string, resource []string, read bool) {
 	l.mx.Lock()
 	defer l.mx.Unlock()
+
+	if read {
+		found := false
+		var newRLocks []lock
+
+		for _, rLock := range l.rLocks {
+			if !found && rLock.tenant == tenant && util.SlicesEqual(rLock.resource, resource) {
+				found = true
+				continue
+			}
+
+			newRLocks = append(newRLocks, rLock)
+		}
+
+		l.rLocks = newRLocks
+		return
+	}
 
 	l.locks = lo.Filter(l.locks, func(lock lock, _ int) bool {
 		return lock.tenant != tenant || !util.SlicesEqual(lock.resource, resource)

@@ -9,6 +9,14 @@ message LockRequest {
 
 message LockResponse {}
 
+message RLockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	repeated string resource = 3;
+}
+
+message RLockResponse {}
+
 message UnlockRequest {
 	string lease_id = 1;
 	string tenant_id = 2;
@@ -16,3 +24,11 @@ message UnlockRequest {
 }
 
 message UnlockResponse {}
+
+message RUnlockRequest {
+	string lease_id = 1;
+	string tenant_id = 2;
+	repeated string resource = 3;
+}
+
+message RUnlockResponse {}

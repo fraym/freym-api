@@ -19,6 +19,7 @@ export interface CreateLeaseRequest {
     ttl: number;
     leaseId: string;
     alreadyRegisteredLocks: Lock[];
+    alreadyRegisteredRlocks: Lock[];
 }
 
 export interface CreateLeaseResponse {
@@ -133,7 +134,14 @@ export const Lock: MessageFns<Lock> = {
 };
 
 function createBaseCreateLeaseRequest(): CreateLeaseRequest {
-    return { ip: "", app: "", ttl: 0, leaseId: "", alreadyRegisteredLocks: [] };
+    return {
+        ip: "",
+        app: "",
+        ttl: 0,
+        leaseId: "",
+        alreadyRegisteredLocks: [],
+        alreadyRegisteredRlocks: [],
+    };
 }
 
 export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
@@ -152,6 +160,9 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         }
         for (const v of message.alreadyRegisteredLocks) {
             Lock.encode(v!, writer.uint32(42).fork()).join();
+        }
+        for (const v of message.alreadyRegisteredRlocks) {
+            Lock.encode(v!, writer.uint32(50).fork()).join();
         }
         return writer;
     },
@@ -203,6 +214,14 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
                     message.alreadyRegisteredLocks.push(Lock.decode(reader, reader.uint32()));
                     continue;
                 }
+                case 6: {
+                    if (tag !== 50) {
+                        break;
+                    }
+
+                    message.alreadyRegisteredRlocks.push(Lock.decode(reader, reader.uint32()));
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -220,6 +239,9 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
             leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
             alreadyRegisteredLocks: globalThis.Array.isArray(object?.alreadyRegisteredLocks)
                 ? object.alreadyRegisteredLocks.map((e: any) => Lock.fromJSON(e))
+                : [],
+            alreadyRegisteredRlocks: globalThis.Array.isArray(object?.alreadyRegisteredRlocks)
+                ? object.alreadyRegisteredRlocks.map((e: any) => Lock.fromJSON(e))
                 : [],
         };
     },
@@ -241,6 +263,9 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         if (message.alreadyRegisteredLocks?.length) {
             obj.alreadyRegisteredLocks = message.alreadyRegisteredLocks.map(e => Lock.toJSON(e));
         }
+        if (message.alreadyRegisteredRlocks?.length) {
+            obj.alreadyRegisteredRlocks = message.alreadyRegisteredRlocks.map(e => Lock.toJSON(e));
+        }
         return obj;
     },
 
@@ -255,6 +280,8 @@ export const CreateLeaseRequest: MessageFns<CreateLeaseRequest> = {
         message.leaseId = object.leaseId ?? "";
         message.alreadyRegisteredLocks =
             object.alreadyRegisteredLocks?.map(e => Lock.fromPartial(e)) || [];
+        message.alreadyRegisteredRlocks =
+            object.alreadyRegisteredRlocks?.map(e => Lock.fromPartial(e)) || [];
         return message;
     },
 };

@@ -75,7 +75,7 @@ func (s *Service) Lock(tenant string, resource []string) error {
 		return err
 	}
 
-	s.lease.Track(tenant, resource)
+	s.lease.Track(tenant, resource, false)
 
 	return nil
 }
@@ -103,7 +103,56 @@ func (s *Service) Unlock(tenant string, resource []string) {
 				"resource": resource,
 			}).WithError(err).Write("unable to unlock")
 		} else {
-			s.lease.Untrack(tenant, resource)
+			s.lease.Untrack(tenant, resource, false)
+		}
+	}()
+}
+
+func (s *Service) RLock(tenant string, resource []string) error {
+	if err := s.connection.WaitForConnect(); err != nil {
+		return err
+	}
+
+	if err := util.Retry(func() error {
+		_, err := s.client.RLock(context.Background(), managementpb.RLockRequest_builder{
+			LeaseId:  s.lease.LeaseId(),
+			TenantId: tenant,
+			Resource: resource,
+		}.Build())
+		return err
+	}, s.retryPause, 50); err != nil {
+		return err
+	}
+
+	s.lease.Track(tenant, resource, true)
+
+	return nil
+}
+
+func (s *Service) RUnlock(tenant string, resource []string) {
+	go func() {
+		if err := s.connection.WaitForConnect(); err != nil {
+			s.logger.Fatal().WithFields(map[string]any{
+				"tenant":   tenant,
+				"resource": resource,
+			}).WithError(err).Write("unable to runlock")
+			return
+		}
+
+		if err := util.Retry(func() error {
+			_, err := s.client.RUnlock(context.Background(), managementpb.RUnlockRequest_builder{
+				LeaseId:  s.lease.LeaseId(),
+				TenantId: tenant,
+				Resource: resource,
+			}.Build())
+			return err
+		}, s.retryPause, 50); err != nil {
+			s.logger.Fatal().WithFields(map[string]any{
+				"tenant":   tenant,
+				"resource": resource,
+			}).WithError(err).Write("unable to runlock")
+		} else {
+			s.lease.Untrack(tenant, resource, true)
 		}
 	}()
 }

@@ -27,6 +27,7 @@ type TestProjection
         }
     ) {
     field: String! @index
+    field2: String
 }
 
 type TestView @view(sqlFile: "./test.sql") {

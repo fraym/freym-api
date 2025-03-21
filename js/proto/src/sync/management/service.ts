@@ -25,7 +25,16 @@ import {
     KeepLeaseRequest,
     KeepLeaseResponse,
 } from "./lease";
-import { LockRequest, LockResponse, UnlockRequest, UnlockResponse } from "./lock";
+import {
+    LockRequest,
+    LockResponse,
+    RLockRequest,
+    RLockResponse,
+    RUnlockRequest,
+    RUnlockResponse,
+    UnlockRequest,
+    UnlockResponse,
+} from "./lock";
 import { GetPeerNodesRequest, GetPeerNodesResponse } from "./peer_nodes";
 
 export type ServiceService = typeof ServiceService;
@@ -95,6 +104,27 @@ export const ServiceService = {
             Buffer.from(UnlockResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => UnlockResponse.decode(value),
     },
+    rLock: {
+        path: "/freym.sync.management.Service/RLock",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RLockRequest) => Buffer.from(RLockRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RLockRequest.decode(value),
+        responseSerialize: (value: RLockResponse) =>
+            Buffer.from(RLockResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RLockResponse.decode(value),
+    },
+    rUnlock: {
+        path: "/freym.sync.management.Service/RUnlock",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RUnlockRequest) =>
+            Buffer.from(RUnlockRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RUnlockRequest.decode(value),
+        responseSerialize: (value: RUnlockResponse) =>
+            Buffer.from(RUnlockResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RUnlockResponse.decode(value),
+    },
 } as const;
 
 export interface ServiceServer extends UntypedServiceImplementation {
@@ -104,6 +134,8 @@ export interface ServiceServer extends UntypedServiceImplementation {
     getPeerNodes: handleServerStreamingCall<GetPeerNodesRequest, GetPeerNodesResponse>;
     lock: handleUnaryCall<LockRequest, LockResponse>;
     unlock: handleUnaryCall<UnlockRequest, UnlockResponse>;
+    rLock: handleUnaryCall<RLockRequest, RLockResponse>;
+    rUnlock: handleUnaryCall<RUnlockRequest, RUnlockResponse>;
 }
 
 export interface ServiceClient extends Client {
@@ -190,6 +222,36 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: UnlockResponse) => void
+    ): ClientUnaryCall;
+    rLock(
+        request: RLockRequest,
+        callback: (error: ServiceError | null, response: RLockResponse) => void
+    ): ClientUnaryCall;
+    rLock(
+        request: RLockRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RLockResponse) => void
+    ): ClientUnaryCall;
+    rLock(
+        request: RLockRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RLockResponse) => void
+    ): ClientUnaryCall;
+    rUnlock(
+        request: RUnlockRequest,
+        callback: (error: ServiceError | null, response: RUnlockResponse) => void
+    ): ClientUnaryCall;
+    rUnlock(
+        request: RUnlockRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RUnlockResponse) => void
+    ): ClientUnaryCall;
+    rUnlock(
+        request: RUnlockRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RUnlockResponse) => void
     ): ClientUnaryCall;
 }
 

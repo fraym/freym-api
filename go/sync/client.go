@@ -17,6 +17,8 @@ type Client[T peer.ServiceClient] interface {
 	IteratePeers(ctx context.Context, handler peer.ConnectionHandlerFn[T]) error
 	Lock(tenantId string, resource ...string) error
 	Unlock(tenantId string, resource ...string)
+	RLock(tenantId string, resource ...string) error
+	RUnlock(tenantId string, resource ...string)
 	GetPeerPool() peer.PeerPool[T]
 	Stop() error
 }
@@ -80,6 +82,14 @@ func (c *syncClient[T]) Lock(tenantId string, resource ...string) error {
 
 func (c *syncClient[T]) Unlock(tenantId string, resource ...string) {
 	c.service.Unlock(tenantId, resource)
+}
+
+func (c *syncClient[T]) RLock(tenantId string, resource ...string) error {
+	return c.service.RLock(tenantId, resource)
+}
+
+func (c *syncClient[T]) RUnlock(tenantId string, resource ...string) {
+	c.service.RUnlock(tenantId, resource)
 }
 
 func (c *syncClient[T]) GetPeerPool() peer.PeerPool[T] {

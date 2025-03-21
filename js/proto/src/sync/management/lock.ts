@@ -15,6 +15,14 @@ export interface LockRequest {
 
 export interface LockResponse {}
 
+export interface RLockRequest {
+    leaseId: string;
+    tenantId: string;
+    resource: string[];
+}
+
+export interface RLockResponse {}
+
 export interface UnlockRequest {
     leaseId: string;
     tenantId: string;
@@ -22,6 +30,14 @@ export interface UnlockRequest {
 }
 
 export interface UnlockResponse {}
+
+export interface RUnlockRequest {
+    leaseId: string;
+    tenantId: string;
+    resource: string[];
+}
+
+export interface RUnlockResponse {}
 
 function createBaseLockRequest(): LockRequest {
     return { leaseId: "", tenantId: "", resource: [] };
@@ -160,6 +176,143 @@ export const LockResponse: MessageFns<LockResponse> = {
     },
 };
 
+function createBaseRLockRequest(): RLockRequest {
+    return { leaseId: "", tenantId: "", resource: [] };
+}
+
+export const RLockRequest: MessageFns<RLockRequest> = {
+    encode(message: RLockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.leaseId !== "") {
+            writer.uint32(10).string(message.leaseId);
+        }
+        if (message.tenantId !== "") {
+            writer.uint32(18).string(message.tenantId);
+        }
+        for (const v of message.resource) {
+            writer.uint32(26).string(v!);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RLockRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRLockRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.leaseId = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.tenantId = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.resource.push(reader.string());
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): RLockRequest {
+        return {
+            leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
+            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            resource: globalThis.Array.isArray(object?.resource)
+                ? object.resource.map((e: any) => globalThis.String(e))
+                : [],
+        };
+    },
+
+    toJSON(message: RLockRequest): unknown {
+        const obj: any = {};
+        if (message.leaseId !== "") {
+            obj.leaseId = message.leaseId;
+        }
+        if (message.tenantId !== "") {
+            obj.tenantId = message.tenantId;
+        }
+        if (message.resource?.length) {
+            obj.resource = message.resource;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<RLockRequest>): RLockRequest {
+        return RLockRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<RLockRequest>): RLockRequest {
+        const message = createBaseRLockRequest();
+        message.leaseId = object.leaseId ?? "";
+        message.tenantId = object.tenantId ?? "";
+        message.resource = object.resource?.map(e => e) || [];
+        return message;
+    },
+};
+
+function createBaseRLockResponse(): RLockResponse {
+    return {};
+}
+
+export const RLockResponse: MessageFns<RLockResponse> = {
+    encode(_: RLockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RLockResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRLockResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(_: any): RLockResponse {
+        return {};
+    },
+
+    toJSON(_: RLockResponse): unknown {
+        const obj: any = {};
+        return obj;
+    },
+
+    create(base?: DeepPartial<RLockResponse>): RLockResponse {
+        return RLockResponse.fromPartial(base ?? {});
+    },
+    fromPartial(_: DeepPartial<RLockResponse>): RLockResponse {
+        const message = createBaseRLockResponse();
+        return message;
+    },
+};
+
 function createBaseUnlockRequest(): UnlockRequest {
     return { leaseId: "", tenantId: "", resource: [] };
 }
@@ -293,6 +446,143 @@ export const UnlockResponse: MessageFns<UnlockResponse> = {
     },
     fromPartial(_: DeepPartial<UnlockResponse>): UnlockResponse {
         const message = createBaseUnlockResponse();
+        return message;
+    },
+};
+
+function createBaseRUnlockRequest(): RUnlockRequest {
+    return { leaseId: "", tenantId: "", resource: [] };
+}
+
+export const RUnlockRequest: MessageFns<RUnlockRequest> = {
+    encode(message: RUnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.leaseId !== "") {
+            writer.uint32(10).string(message.leaseId);
+        }
+        if (message.tenantId !== "") {
+            writer.uint32(18).string(message.tenantId);
+        }
+        for (const v of message.resource) {
+            writer.uint32(26).string(v!);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RUnlockRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRUnlockRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.leaseId = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.tenantId = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.resource.push(reader.string());
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): RUnlockRequest {
+        return {
+            leaseId: isSet(object.leaseId) ? globalThis.String(object.leaseId) : "",
+            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            resource: globalThis.Array.isArray(object?.resource)
+                ? object.resource.map((e: any) => globalThis.String(e))
+                : [],
+        };
+    },
+
+    toJSON(message: RUnlockRequest): unknown {
+        const obj: any = {};
+        if (message.leaseId !== "") {
+            obj.leaseId = message.leaseId;
+        }
+        if (message.tenantId !== "") {
+            obj.tenantId = message.tenantId;
+        }
+        if (message.resource?.length) {
+            obj.resource = message.resource;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<RUnlockRequest>): RUnlockRequest {
+        return RUnlockRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<RUnlockRequest>): RUnlockRequest {
+        const message = createBaseRUnlockRequest();
+        message.leaseId = object.leaseId ?? "";
+        message.tenantId = object.tenantId ?? "";
+        message.resource = object.resource?.map(e => e) || [];
+        return message;
+    },
+};
+
+function createBaseRUnlockResponse(): RUnlockResponse {
+    return {};
+}
+
+export const RUnlockResponse: MessageFns<RUnlockResponse> = {
+    encode(_: RUnlockResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): RUnlockResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseRUnlockResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(_: any): RUnlockResponse {
+        return {};
+    },
+
+    toJSON(_: RUnlockResponse): unknown {
+        const obj: any = {};
+        return obj;
+    },
+
+    create(base?: DeepPartial<RUnlockResponse>): RUnlockResponse {
+        return RUnlockResponse.fromPartial(base ?? {});
+    },
+    fromPartial(_: DeepPartial<RUnlockResponse>): RUnlockResponse {
+        const message = createBaseRUnlockResponse();
         return message;
     },
 };

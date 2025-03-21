@@ -13,4 +13,6 @@ service Service {
 
 	rpc Lock(LockRequest) returns (LockResponse);
 	rpc Unlock(UnlockRequest) returns (UnlockResponse);
+	rpc RLock(RLockRequest) returns (RLockResponse);
+	rpc RUnlock(RUnlockRequest) returns (RUnlockResponse);
 }

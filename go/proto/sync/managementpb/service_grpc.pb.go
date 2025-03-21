@@ -25,6 +25,8 @@ const (
 	Service_GetPeerNodes_FullMethodName = "/freym.sync.management.Service/GetPeerNodes"
 	Service_Lock_FullMethodName         = "/freym.sync.management.Service/Lock"
 	Service_Unlock_FullMethodName       = "/freym.sync.management.Service/Unlock"
+	Service_RLock_FullMethodName        = "/freym.sync.management.Service/RLock"
+	Service_RUnlock_FullMethodName      = "/freym.sync.management.Service/RUnlock"
 )
 
 // ServiceClient is the client API for Service service.
@@ -37,6 +39,8 @@ type ServiceClient interface {
 	GetPeerNodes(ctx context.Context, in *GetPeerNodesRequest, opts ...grpc.CallOption) (Service_GetPeerNodesClient, error)
 	Lock(ctx context.Context, in *LockRequest, opts ...grpc.CallOption) (*LockResponse, error)
 	Unlock(ctx context.Context, in *UnlockRequest, opts ...grpc.CallOption) (*UnlockResponse, error)
+	RLock(ctx context.Context, in *RLockRequest, opts ...grpc.CallOption) (*RLockResponse, error)
+	RUnlock(ctx context.Context, in *RUnlockRequest, opts ...grpc.CallOption) (*RUnlockResponse, error)
 }
 
 type serviceClient struct {
@@ -124,6 +128,24 @@ func (c *serviceClient) Unlock(ctx context.Context, in *UnlockRequest, opts ...g
 	return out, nil
 }
 
+func (c *serviceClient) RLock(ctx context.Context, in *RLockRequest, opts ...grpc.CallOption) (*RLockResponse, error) {
+	out := new(RLockResponse)
+	err := c.cc.Invoke(ctx, Service_RLock_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) RUnlock(ctx context.Context, in *RUnlockRequest, opts ...grpc.CallOption) (*RUnlockResponse, error) {
+	out := new(RUnlockResponse)
+	err := c.cc.Invoke(ctx, Service_RUnlock_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -134,6 +156,8 @@ type ServiceServer interface {
 	GetPeerNodes(*GetPeerNodesRequest, Service_GetPeerNodesServer) error
 	Lock(context.Context, *LockRequest) (*LockResponse, error)
 	Unlock(context.Context, *UnlockRequest) (*UnlockResponse, error)
+	RLock(context.Context, *RLockRequest) (*RLockResponse, error)
+	RUnlock(context.Context, *RUnlockRequest) (*RUnlockResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -158,6 +182,12 @@ func (UnimplementedServiceServer) Lock(context.Context, *LockRequest) (*LockResp
 }
 func (UnimplementedServiceServer) Unlock(context.Context, *UnlockRequest) (*UnlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Unlock not implemented")
+}
+func (UnimplementedServiceServer) RLock(context.Context, *RLockRequest) (*RLockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RLock not implemented")
+}
+func (UnimplementedServiceServer) RUnlock(context.Context, *RUnlockRequest) (*RUnlockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RUnlock not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -283,6 +313,42 @@ func _Service_Unlock_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_RLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RLockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RLock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RLock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RLock(ctx, req.(*RLockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_RUnlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RUnlockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RUnlock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RUnlock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RUnlock(ctx, req.(*RUnlockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -309,6 +375,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Unlock",
 			Handler:    _Service_Unlock_Handler,
+		},
+		{
+			MethodName: "RLock",
+			Handler:    _Service_RLock_Handler,
+		},
+		{
+			MethodName: "RUnlock",
+			Handler:    _Service_RUnlock_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
