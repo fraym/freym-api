@@ -1,6 +1,7 @@
 module github.com/fraym/freym-api/go
 
 go 1.23.5
+toolchain go1.24.1
 
 require (
 	github.com/Becklyn/go-wire-core v1.4.4
@@ -26,7 +27,7 @@ require (
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
+	github.com/rs/zerolog v1.34.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
