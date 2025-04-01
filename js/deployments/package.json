@@ -28,7 +28,7 @@
     "dependencies": {
         "@graphql-tools/import": "^7.0.18",
         "@graphql-tools/load": "^8.0.19",
-        "@grpc/grpc-js": "^1.13.0",
+        "@grpc/grpc-js": "^1.13.2",
         "dotenv": "^16.4.7",
         "glob": "^11.0.1",
         "globby": "11.1.0",

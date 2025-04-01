@@ -23,7 +23,7 @@
     "types": "dist/index.d.ts",
     "dependencies": {
         "@fraym/proto": "^0.32.2",
-        "@grpc/grpc-js": "^1.13.0",
+        "@grpc/grpc-js": "^1.13.2",
         "dotenv": "^16.4.7",
         "uuid": "^11.1.0"
     },

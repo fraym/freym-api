@@ -23,7 +23,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@grpc/grpc-js": "^1.13.0",
+        "@grpc/grpc-js": "^1.13.2",
         "ts-proto": "^2.6.1"
     },
     "prettier": "@becklyn/prettier"
