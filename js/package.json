@@ -18,7 +18,7 @@
         "@becklyn/prettier": "^2.1.1",
         "@becklyn/tsconfig": "^1.0.0",
         "@swc/cli": "^0.6.0",
-        "@swc/core": "^1.11.11",
+        "@swc/core": "^1.11.13",
         "np": "^10.2.0",
         "turbo": "^2.4.4",
         "typescript": "^5.8.2"
