@@ -1,6 +1,7 @@
 module github.com/fraym/freym-api/go
 
 go 1.23.5
+toolchain go1.24.1
 
 require (
 	github.com/Becklyn/go-wire-core v1.4.4
@@ -12,7 +13,7 @@ require (
 	github.com/samber/lo v1.49.1
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/grpc v1.71.0
-	google.golang.org/protobuf v1.36.5
+	google.golang.org/protobuf v1.36.6
 )
 
 require (
