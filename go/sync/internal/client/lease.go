@@ -208,19 +208,14 @@ func (l *lease) Untrack(tenant string, resource []string, read bool) {
 	defer l.mx.Unlock()
 
 	if read {
-		found := false
-		var newRLocks []lock
+		_, index, found := lo.FindIndexOf(l.rLocks, func(rLock lock) bool {
+			return rLock.tenant == tenant && util.SlicesEqual(rLock.resource, resource)
+		})
 
-		for _, rLock := range l.rLocks {
-			if !found && rLock.tenant == tenant && util.SlicesEqual(rLock.resource, resource) {
-				found = true
-				continue
-			}
-
-			newRLocks = append(newRLocks, rLock)
+		if found {
+			l.rLocks[index] = l.rLocks[len(l.rLocks)-1]
+			l.rLocks = l.rLocks[:len(l.rLocks)-1]
 		}
-
-		l.rLocks = newRLocks
 		return
 	}
 
