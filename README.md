@@ -12,6 +12,7 @@ The Freym API provides a set of clients to interact with the Freym microservices
 | Service                                 | Language   |
 | --------------------------------------- | ---------- |
 | [Sync](go/sync/README.md)               | go         |
+| [Sync](js/sync/README.md)               | JavaScript |
 | [Streams](go/streams/README.md)         | go         |
 | [Streams](js/streams/README.md)         | JavaScript |
 | [Projections](go/projections/README.md) | go         |
