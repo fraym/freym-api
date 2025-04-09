@@ -1,5 +1,11 @@
-# v0.32.2
+# v0.33.0
 
-## :bug: Bug Fixes
+## :gift: New Features
 
-- Fix exports in sync JS package
+- Add JSON functions to projections go client
+
+## :sparkles: Improvements
+
+- Allow all supported types in js auth packages `generateJwt` for `expirationTime`
+- Update all dependencies
+- Improve `RUnlock` performance in go sync client
