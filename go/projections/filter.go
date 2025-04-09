@@ -67,3 +67,64 @@ func getFieldFilter(field *FieldFilter) *deliverypb.DataFieldFilter {
 		Value:     string(bytes),
 	}.Build()
 }
+
+type JsonFilter struct {
+	// all these field filters have to match
+	Fields map[string]FieldJsonFilter
+	// these filters will be calculated using the and operator
+	And []JsonFilter
+	// these filters will be calculated using the or operator
+	Or []JsonFilter
+}
+
+type FieldJsonFilter struct {
+	Operation string
+	Type      string
+	Value     string
+}
+
+func (f *JsonFilter) toProtobufFilter() *deliverypb.DataFilter {
+	if f == nil || (len(f.Fields) == 0 && len(f.And) == 0 && len(f.Or) == 0) {
+		return nil
+	}
+
+	fields := map[string]*deliverypb.DataFieldFilter{}
+	var and []*deliverypb.DataFilter
+	var or []*deliverypb.DataFilter
+
+	for fieldName, field := range f.Fields {
+		fields[fieldName] = getFieldJsonFilter(&field)
+	}
+
+	for _, andFilter := range f.And {
+		filter := andFilter.toProtobufFilter()
+		if filter != nil {
+			and = append(and, filter)
+		}
+	}
+
+	for _, orFilter := range f.Or {
+		filter := orFilter.toProtobufFilter()
+		if filter != nil {
+			or = append(or, filter)
+		}
+	}
+
+	if len(fields) == 0 && len(and) == 0 && len(or) == 0 {
+		return nil
+	}
+
+	return deliverypb.DataFilter_builder{
+		Fields: fields,
+		And:    and,
+		Or:     or,
+	}.Build()
+}
+
+func getFieldJsonFilter(field *FieldJsonFilter) *deliverypb.DataFieldFilter {
+	return deliverypb.DataFieldFilter_builder{
+		Operation: field.Operation,
+		Type:      field.Type,
+		Value:     field.Value,
+	}.Build()
+}

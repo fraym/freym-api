@@ -2,7 +2,6 @@ package projections
 
 import (
 	"context"
-	"time"
 
 	"github.com/Becklyn/go-wire-core/json"
 	"github.com/fraym/freym-api/go/projections/config"
@@ -10,37 +9,34 @@ import (
 	"github.com/fraym/freym-api/go/proto/projections/deliverypb"
 )
 
-type DataList struct {
-	Limit int64
-	Page  int64
-	Total int64
-	Data  []Data
-}
-
-type Data map[string]any
-
-type UpsertResponse struct {
-	ValidationErrors      []string
-	FieldValidationErrors map[string]string
-	Data                  Data
-	ID                    string
-}
-
-type Wait struct {
-	ConditionFilter  *Filter
-	ConditionTimeout time.Duration
-}
-
-func (w *Wait) toDeliveryWait() *deliverypb.DataWait {
-	if w == nil || w.ConditionFilter == nil {
-		return nil
+type (
+	Data     map[string]any
+	JsonData map[string]string
+	DataList struct {
+		Limit int64
+		Page  int64
+		Total int64
+		Data  []Data
 	}
-
-	return deliverypb.DataWait_builder{
-		ConditionFilter: w.ConditionFilter.toProtobufFilter(),
-		Timeout:         w.ConditionTimeout.Milliseconds(),
-	}.Build()
-}
+	JsonDataList struct {
+		Limit int64
+		Page  int64
+		Total int64
+		Data  []JsonData
+	}
+	UpsertResponse struct {
+		ValidationErrors      []string
+		FieldValidationErrors map[string]string
+		Data                  Data
+		ID                    string
+	}
+	JsonUpsertResponse struct {
+		ValidationErrors      []string
+		FieldValidationErrors map[string]string
+		Data                  JsonData
+		ID                    string
+	}
+)
 
 type DeliveryClient interface {
 	GetData(
@@ -54,6 +50,17 @@ type DeliveryClient interface {
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*Data, error)
+	GetJsonData(
+		ctx context.Context,
+		projection string,
+		authData *AuthData,
+		id string,
+		filter *JsonFilter,
+		returnEmptyDataIfNotFound bool,
+		wait *JsonWait,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+	) (*JsonData, error)
 	GetViewData(
 		ctx context.Context,
 		view string,
@@ -62,6 +69,14 @@ type DeliveryClient interface {
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*Data, error)
+	GetViewJsonData(
+		ctx context.Context,
+		view string,
+		authData *AuthData,
+		filter *JsonFilter,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+	) (*JsonData, error)
 	GetDataList(
 		ctx context.Context,
 		projection string,
@@ -72,6 +87,16 @@ type DeliveryClient interface {
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*DataList, error)
+	GetJsonDataList(
+		ctx context.Context,
+		projection string,
+		authData *AuthData,
+		pagination *Pagination,
+		filter *JsonFilter,
+		order []Order,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+	) (*JsonDataList, error)
 	GetViewDataList(
 		ctx context.Context,
 		view string,
@@ -82,6 +107,16 @@ type DeliveryClient interface {
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*DataList, error)
+	GetViewJsonDataList(
+		ctx context.Context,
+		view string,
+		authData *AuthData,
+		pagination *Pagination,
+		filter *JsonFilter,
+		order []Order,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+	) (*JsonDataList, error)
 	UpsertData(
 		ctx context.Context,
 		projection string,
@@ -90,6 +125,14 @@ type DeliveryClient interface {
 		payload Data,
 		eventMetadata *EventMetadata,
 	) (*UpsertResponse, error)
+	UpsertJsonData(
+		ctx context.Context,
+		projection string,
+		authData *AuthData,
+		id string,
+		payload JsonData,
+		eventMetadata *EventMetadata,
+	) (*JsonUpsertResponse, error)
 	DeleteDataById(
 		ctx context.Context,
 		projection string,
@@ -102,6 +145,13 @@ type DeliveryClient interface {
 		projection string,
 		authData *AuthData,
 		filter *Filter,
+		eventMetadata *EventMetadata,
+	) (int64, error)
+	DeleteDataByJsonFilter(
+		ctx context.Context,
+		projection string,
+		authData *AuthData,
+		filter *JsonFilter,
 		eventMetadata *EventMetadata,
 	) (int64, error)
 	Close() error
@@ -168,6 +218,46 @@ func (c *projectionsDeliveryClient) GetData(
 	return getDataMap(result.GetData())
 }
 
+func (c *projectionsDeliveryClient) GetJsonData(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	id string,
+	filter *JsonFilter,
+	returnEmptyDataIfNotFound bool,
+	wait *JsonWait,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonData, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.GetData(ctx, deliverypb.GetDataRequest_builder{
+		Projection:                projection,
+		Auth:                      pbAuthData,
+		DataId:                    id,
+		Filter:                    filter.toProtobufFilter(),
+		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
+		Wait:                      wait.toDeliveryWait(),
+		UseStrongConsistency:      useStrongConsistency,
+		Target:                    target,
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	result := response.GetResult()
+
+	if result == nil {
+		return nil, nil
+	}
+
+	data := JsonData(result.GetData())
+	return &data, nil
+}
+
 func (c *projectionsDeliveryClient) GetViewData(
 	ctx context.Context,
 	view string,
@@ -198,6 +288,39 @@ func (c *projectionsDeliveryClient) GetViewData(
 		return nil, nil
 	}
 	return getDataMap(result.GetData())
+}
+
+func (c *projectionsDeliveryClient) GetViewJsonData(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	filter *JsonFilter,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonData, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
+		View:                 view,
+		Auth:                 pbAuthData,
+		Filter:               filter.toProtobufFilter(),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	result := response.GetResult()
+
+	if result == nil {
+		return nil, nil
+	}
+	data := JsonData(result.GetData())
+	return &data, nil
 }
 
 func (c *projectionsDeliveryClient) GetDataList(
@@ -251,6 +374,59 @@ func (c *projectionsDeliveryClient) GetDataList(
 	}
 
 	return &DataList{
+		Limit: response.GetLimit(),
+		Page:  response.GetPage(),
+		Total: response.GetTotal(),
+		Data:  result,
+	}, nil
+}
+
+func (c *projectionsDeliveryClient) GetJsonDataList(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *JsonFilter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonDataList, error) {
+	var (
+		limit int64
+		page  int64
+	)
+
+	if pagination != nil {
+		limit = pagination.Limit
+		page = pagination.Page
+	}
+
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.GetDataList(ctx, deliverypb.GetDataListRequest_builder{
+		Projection:           projection,
+		Auth:                 pbAuthData,
+		Limit:                limit,
+		Page:                 page,
+		Filter:               filter.toProtobufFilter(),
+		Order:                toProtobufOrder(order),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	var result []JsonData
+
+	for _, element := range response.GetResult() {
+		result = append(result, element.GetData())
+	}
+
+	return &JsonDataList{
 		Limit: response.GetLimit(),
 		Page:  response.GetPage(),
 		Total: response.GetTotal(),
@@ -316,6 +492,59 @@ func (c *projectionsDeliveryClient) GetViewDataList(
 	}, nil
 }
 
+func (c *projectionsDeliveryClient) GetViewJsonDataList(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *JsonFilter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonDataList, error) {
+	var (
+		limit int64
+		page  int64
+	)
+
+	if pagination != nil {
+		limit = pagination.Limit
+		page = pagination.Page
+	}
+
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.GetViewDataList(ctx, deliverypb.GetViewDataListRequest_builder{
+		View:                 view,
+		Auth:                 pbAuthData,
+		Limit:                limit,
+		Page:                 page,
+		Filter:               filter.toProtobufFilter(),
+		Order:                toProtobufOrder(order),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	var result []JsonData
+
+	for _, element := range response.GetResult() {
+		result = append(result, element.GetData())
+	}
+
+	return &JsonDataList{
+		Limit: response.GetLimit(),
+		Page:  response.GetPage(),
+		Total: response.GetTotal(),
+		Data:  result,
+	}, nil
+}
+
 func (c *projectionsDeliveryClient) UpsertData(
 	ctx context.Context,
 	projection string,
@@ -364,6 +593,49 @@ func (c *projectionsDeliveryClient) UpsertData(
 	}, nil
 }
 
+func (c *projectionsDeliveryClient) UpsertJsonData(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	id string,
+	payload JsonData,
+	eventMetadata *EventMetadata,
+) (*JsonUpsertResponse, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	pbPayload := map[string]string{}
+
+	for key, value := range payload {
+		byteValue, err := json.Marshal(value)
+		if err != nil {
+			return nil, err
+		}
+
+		pbPayload[key] = string(byteValue)
+	}
+
+	response, err := c.client.Upsert(ctx, deliverypb.UpsertRequest_builder{
+		Projection:    projection,
+		Auth:          pbAuthData,
+		DataId:        id,
+		Payload:       pbPayload,
+		EventMetadata: eventMetadata.getProtobufEventMetadata(),
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	return &JsonUpsertResponse{
+		ValidationErrors:      response.GetValidationErrors(),
+		FieldValidationErrors: response.GetFieldValidationErrors(),
+		Data:                  response.GetNewData(),
+		ID:                    response.GetId(),
+	}, nil
+}
+
 func (c *projectionsDeliveryClient) DeleteDataById(
 	ctx context.Context,
 	projection string,
@@ -394,6 +666,31 @@ func (c *projectionsDeliveryClient) DeleteDataByFilter(
 	projection string,
 	authData *AuthData,
 	filter *Filter,
+	eventMetadata *EventMetadata,
+) (int64, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return 0, err
+	}
+
+	response, err := c.client.Delete(ctx, deliverypb.DeleteRequest_builder{
+		Projection:    projection,
+		Auth:          pbAuthData,
+		Filter:        filter.toProtobufFilter(),
+		EventMetadata: eventMetadata.getProtobufEventMetadata(),
+	}.Build())
+	if err != nil {
+		return 0, err
+	}
+
+	return response.GetNumberOfDeletedEntries(), nil
+}
+
+func (c *projectionsDeliveryClient) DeleteDataByJsonFilter(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	filter *JsonFilter,
 	eventMetadata *EventMetadata,
 ) (int64, error) {
 	pbAuthData, err := authData.getProtobufAuthData()

@@ -29,6 +29,24 @@ func (c *MockDeliveryClient) GetData(
 	return args.Get(0).(*Data), args.Error(1)
 }
 
+func (c *MockDeliveryClient) GetJsonData(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	id string,
+	filter *JsonFilter,
+	returnEmptyDataIfNotFound bool,
+	wait *JsonWait,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonData, error) {
+	args := c.Called(ctx, projection, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*JsonData), args.Error(1)
+}
+
 func (c *MockDeliveryClient) GetViewData(
 	ctx context.Context,
 	view string,
@@ -42,6 +60,21 @@ func (c *MockDeliveryClient) GetViewData(
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*Data), args.Error(1)
+}
+
+func (c *MockDeliveryClient) GetViewJsonData(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	filter *JsonFilter,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonData, error) {
+	args := c.Called(ctx, view, authData, filter, useStrongConsistency, target)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*JsonData), args.Error(1)
 }
 
 func (c *MockDeliveryClient) GetDataList(
@@ -61,6 +94,23 @@ func (c *MockDeliveryClient) GetDataList(
 	return args.Get(0).(*DataList), args.Error(1)
 }
 
+func (c *MockDeliveryClient) GetJsonDataList(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *JsonFilter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonDataList, error) {
+	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*JsonDataList), args.Error(1)
+}
+
 func (c *MockDeliveryClient) GetViewDataList(
 	ctx context.Context,
 	view string,
@@ -78,6 +128,23 @@ func (c *MockDeliveryClient) GetViewDataList(
 	return args.Get(0).(*DataList), args.Error(1)
 }
 
+func (c *MockDeliveryClient) GetViewJsonDataList(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *JsonFilter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*JsonDataList, error) {
+	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*JsonDataList), args.Error(1)
+}
+
 func (c *MockDeliveryClient) UpsertData(
 	ctx context.Context,
 	projection string,
@@ -91,6 +158,21 @@ func (c *MockDeliveryClient) UpsertData(
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*UpsertResponse), args.Error(1)
+}
+
+func (c *MockDeliveryClient) UpsertJsonData(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	id string,
+	payload JsonData,
+	eventMetadata *EventMetadata,
+) (*JsonUpsertResponse, error) {
+	args := c.Called(ctx, projection, authData, id, payload, eventMetadata)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*JsonUpsertResponse), args.Error(1)
 }
 
 func (c *MockDeliveryClient) DeleteDataById(
@@ -109,6 +191,17 @@ func (c *MockDeliveryClient) DeleteDataByFilter(
 	projection string,
 	authData *AuthData,
 	filter *Filter,
+	eventMetadata *EventMetadata,
+) (int64, error) {
+	args := c.Called(ctx, projection, authData, filter, eventMetadata)
+	return args.Get(0).(int64), args.Error(1)
+}
+
+func (c *MockDeliveryClient) DeleteDataByJsonFilter(
+	ctx context.Context,
+	projection string,
+	authData *AuthData,
+	filter *JsonFilter,
 	eventMetadata *EventMetadata,
 ) (int64, error) {
 	args := c.Called(ctx, projection, authData, filter, eventMetadata)

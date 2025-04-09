@@ -1,5 +1,12 @@
 # vNext
 
+# v0.33.0
+
+- (improvement) Allow all supported types in js auth packages `generateJwt` for `expirationTime`
+- (improvement) Update all dependencies
+- (feature) Add JSON functions to projections go client
+- (improvement) Improve `RUnlock` performance in go sync client
+
 # v0.32.2
 
 - (bug) Fix exports in sync JS package
