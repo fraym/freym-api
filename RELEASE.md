@@ -1,5 +1,5 @@
-# v0.34.0
+# v0.34.1
 
-## :gift: New Features
+## :sparkles: Improvements
 
-- Add pagination to auth get users
+- Add user ID to auth data

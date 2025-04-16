@@ -1,5 +1,9 @@
 # vNext
 
+# v0.34.1
+
+- (improvement) Add user ID to auth data
+
 # v0.34.0
 
 - (feature) Add pagination to auth users

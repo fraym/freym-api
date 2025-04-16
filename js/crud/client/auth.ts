@@ -5,6 +5,7 @@ export interface AuthData {
     scopes: string[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: Record<string, any>;
+    userId?: string;
 }
 
 export const getProtobufAuthData = (auth: AuthData): pbAuthData => {
@@ -16,6 +17,7 @@ export const getProtobufAuthData = (auth: AuthData): pbAuthData => {
 
     return {
         tenantId: auth.tenantId,
+        userId: auth.userId ?? "",
         scopes: auth.scopes,
         data,
     };

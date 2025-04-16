@@ -8,6 +8,7 @@ import (
 
 type AuthData struct {
 	TenantId string
+	UserId   string
 	Scopes   []string
 	Data     map[string]any
 }
@@ -26,6 +27,7 @@ func (a *AuthData) getProtobufAuthData() (*deliverypb.AuthData, error) {
 
 	return deliverypb.AuthData_builder{
 		TenantId: a.TenantId,
+		UserId:   a.UserId,
 		Scopes:   a.Scopes,
 		Data:     data,
 	}.Build(), nil

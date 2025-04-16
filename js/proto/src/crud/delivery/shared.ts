@@ -64,6 +64,7 @@ export interface AuthData {
     tenantId: string;
     scopes: string[];
     data: { [key: string]: string };
+    userId: string;
 }
 
 export interface AuthData_DataEntry {
@@ -96,7 +97,7 @@ export interface EventMetadata {
 }
 
 function createBaseAuthData(): AuthData {
-    return { tenantId: "", scopes: [], data: {} };
+    return { tenantId: "", scopes: [], data: {}, userId: "" };
 }
 
 export const AuthData: MessageFns<AuthData> = {
@@ -110,6 +111,9 @@ export const AuthData: MessageFns<AuthData> = {
         Object.entries(message.data).forEach(([key, value]) => {
             AuthData_DataEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
         });
+        if (message.userId !== "") {
+            writer.uint32(34).string(message.userId);
+        }
         return writer;
     },
 
@@ -147,6 +151,14 @@ export const AuthData: MessageFns<AuthData> = {
                     }
                     continue;
                 }
+                case 4: {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.userId = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -171,6 +183,7 @@ export const AuthData: MessageFns<AuthData> = {
                       {}
                   )
                 : {},
+            userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
         };
     },
 
@@ -191,6 +204,9 @@ export const AuthData: MessageFns<AuthData> = {
                 });
             }
         }
+        if (message.userId !== "") {
+            obj.userId = message.userId;
+        }
         return obj;
     },
 
@@ -210,6 +226,7 @@ export const AuthData: MessageFns<AuthData> = {
             },
             {}
         );
+        message.userId = object.userId ?? "";
         return message;
     },
 };
