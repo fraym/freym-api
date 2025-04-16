@@ -1,18 +1,16 @@
-export interface EventMetadata {
+import { Metadata as AuthMetadata } from "@fraym/proto/dist/index.freym.auth.management";
+
+export interface Metadata {
     causationId: string;
     correlationId: string;
-    deploymentId: string;
     userId: string;
 }
 
-export const fillMetadataWithDefaults = (
-    metadata: Partial<EventMetadata> | null
-): EventMetadata => {
+export const fillMetadataWithDefaults = (metadata: Partial<Metadata> | null): AuthMetadata => {
     if (!metadata) {
         return {
             causationId: "",
             correlationId: "",
-            deploymentId: "",
             userId: "",
         };
     }
@@ -20,7 +18,6 @@ export const fillMetadataWithDefaults = (
     return {
         causationId: metadata.causationId || "",
         correlationId: metadata.correlationId || "",
-        deploymentId: metadata.deploymentId || "",
         userId: metadata.userId || "",
     };
 };

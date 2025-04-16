@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { EventMetadata } from "./shared";
+import { Metadata } from "./shared";
 
 export interface UpdateUserRequest {
     tenantId: string;
@@ -18,7 +18,7 @@ export interface UpdateUserRequest {
     assignedRoleIds: string[];
     active: boolean;
     blockedUntil: string;
-    eventMetadata: EventMetadata | undefined;
+    metadata: Metadata | undefined;
 }
 
 export interface UpdateUserResponse {}
@@ -34,7 +34,7 @@ function createBaseUpdateUserRequest(): UpdateUserRequest {
         assignedRoleIds: [],
         active: false,
         blockedUntil: "0",
-        eventMetadata: undefined,
+        metadata: undefined,
     };
 }
 
@@ -67,8 +67,8 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
         if (message.blockedUntil !== "0") {
             writer.uint32(72).int64(message.blockedUntil);
         }
-        if (message.eventMetadata !== undefined) {
-            EventMetadata.encode(message.eventMetadata, writer.uint32(82).fork()).join();
+        if (message.metadata !== undefined) {
+            Metadata.encode(message.metadata, writer.uint32(82).fork()).join();
         }
         return writer;
     },
@@ -157,7 +157,7 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
                         break;
                     }
 
-                    message.eventMetadata = EventMetadata.decode(reader, reader.uint32());
+                    message.metadata = Metadata.decode(reader, reader.uint32());
                     continue;
                 }
             }
@@ -182,9 +182,7 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
                 : [],
             active: isSet(object.active) ? globalThis.Boolean(object.active) : false,
             blockedUntil: isSet(object.blockedUntil) ? globalThis.String(object.blockedUntil) : "0",
-            eventMetadata: isSet(object.eventMetadata)
-                ? EventMetadata.fromJSON(object.eventMetadata)
-                : undefined,
+            metadata: isSet(object.metadata) ? Metadata.fromJSON(object.metadata) : undefined,
         };
     },
 
@@ -217,8 +215,8 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
         if (message.blockedUntil !== "0") {
             obj.blockedUntil = message.blockedUntil;
         }
-        if (message.eventMetadata !== undefined) {
-            obj.eventMetadata = EventMetadata.toJSON(message.eventMetadata);
+        if (message.metadata !== undefined) {
+            obj.metadata = Metadata.toJSON(message.metadata);
         }
         return obj;
     },
@@ -237,9 +235,9 @@ export const UpdateUserRequest: MessageFns<UpdateUserRequest> = {
         message.assignedRoleIds = object.assignedRoleIds?.map(e => e) || [];
         message.active = object.active ?? false;
         message.blockedUntil = object.blockedUntil ?? "0";
-        message.eventMetadata =
-            object.eventMetadata !== undefined && object.eventMetadata !== null
-                ? EventMetadata.fromPartial(object.eventMetadata)
+        message.metadata =
+            object.metadata !== undefined && object.metadata !== null
+                ? Metadata.fromPartial(object.metadata)
                 : undefined;
         return message;
     },

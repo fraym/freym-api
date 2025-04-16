@@ -62,9 +62,9 @@ export function deploymentTargetToNumber(object: DeploymentTarget): number {
 
 export interface AuthData {
     tenantId: string;
+    userId: string;
     scopes: string[];
     data: { [key: string]: string };
-    userId: string;
 }
 
 export interface AuthData_DataEntry {
@@ -92,12 +92,11 @@ export interface DataFieldFilter {
 export interface EventMetadata {
     causationId: string;
     correlationId: string;
-    userId: string;
     target: DeploymentTarget;
 }
 
 function createBaseAuthData(): AuthData {
-    return { tenantId: "", scopes: [], data: {}, userId: "" };
+    return { tenantId: "", userId: "", scopes: [], data: {} };
 }
 
 export const AuthData: MessageFns<AuthData> = {
@@ -105,15 +104,15 @@ export const AuthData: MessageFns<AuthData> = {
         if (message.tenantId !== "") {
             writer.uint32(10).string(message.tenantId);
         }
+        if (message.userId !== "") {
+            writer.uint32(18).string(message.userId);
+        }
         for (const v of message.scopes) {
-            writer.uint32(18).string(v!);
+            writer.uint32(26).string(v!);
         }
         Object.entries(message.data).forEach(([key, value]) => {
-            AuthData_DataEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
+            AuthData_DataEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
         });
-        if (message.userId !== "") {
-            writer.uint32(34).string(message.userId);
-        }
         return writer;
     },
 
@@ -137,7 +136,7 @@ export const AuthData: MessageFns<AuthData> = {
                         break;
                     }
 
-                    message.scopes.push(reader.string());
+                    message.userId = reader.string();
                     continue;
                 }
                 case 3: {
@@ -145,10 +144,7 @@ export const AuthData: MessageFns<AuthData> = {
                         break;
                     }
 
-                    const entry3 = AuthData_DataEntry.decode(reader, reader.uint32());
-                    if (entry3.value !== undefined) {
-                        message.data[entry3.key] = entry3.value;
-                    }
+                    message.scopes.push(reader.string());
                     continue;
                 }
                 case 4: {
@@ -156,7 +152,10 @@ export const AuthData: MessageFns<AuthData> = {
                         break;
                     }
 
-                    message.userId = reader.string();
+                    const entry4 = AuthData_DataEntry.decode(reader, reader.uint32());
+                    if (entry4.value !== undefined) {
+                        message.data[entry4.key] = entry4.value;
+                    }
                     continue;
                 }
             }
@@ -171,6 +170,7 @@ export const AuthData: MessageFns<AuthData> = {
     fromJSON(object: any): AuthData {
         return {
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
             scopes: globalThis.Array.isArray(object?.scopes)
                 ? object.scopes.map((e: any) => globalThis.String(e))
                 : [],
@@ -183,7 +183,6 @@ export const AuthData: MessageFns<AuthData> = {
                       {}
                   )
                 : {},
-            userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
         };
     },
 
@@ -191,6 +190,9 @@ export const AuthData: MessageFns<AuthData> = {
         const obj: any = {};
         if (message.tenantId !== "") {
             obj.tenantId = message.tenantId;
+        }
+        if (message.userId !== "") {
+            obj.userId = message.userId;
         }
         if (message.scopes?.length) {
             obj.scopes = message.scopes;
@@ -204,9 +206,6 @@ export const AuthData: MessageFns<AuthData> = {
                 });
             }
         }
-        if (message.userId !== "") {
-            obj.userId = message.userId;
-        }
         return obj;
     },
 
@@ -216,6 +215,7 @@ export const AuthData: MessageFns<AuthData> = {
     fromPartial(object: DeepPartial<AuthData>): AuthData {
         const message = createBaseAuthData();
         message.tenantId = object.tenantId ?? "";
+        message.userId = object.userId ?? "";
         message.scopes = object.scopes?.map(e => e) || [];
         message.data = Object.entries(object.data ?? {}).reduce<{ [key: string]: string }>(
             (acc, [key, value]) => {
@@ -226,7 +226,6 @@ export const AuthData: MessageFns<AuthData> = {
             },
             {}
         );
-        message.userId = object.userId ?? "";
         return message;
     },
 };
@@ -605,12 +604,7 @@ export const DataFieldFilter: MessageFns<DataFieldFilter> = {
 };
 
 function createBaseEventMetadata(): EventMetadata {
-    return {
-        causationId: "",
-        correlationId: "",
-        userId: "",
-        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
-    };
+    return { causationId: "", correlationId: "", target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE };
 }
 
 export const EventMetadata: MessageFns<EventMetadata> = {
@@ -621,11 +615,8 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.correlationId !== "") {
             writer.uint32(18).string(message.correlationId);
         }
-        if (message.userId !== "") {
-            writer.uint32(26).string(message.userId);
-        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
-            writer.uint32(32).int32(deploymentTargetToNumber(message.target));
+            writer.uint32(24).int32(deploymentTargetToNumber(message.target));
         }
         return writer;
     },
@@ -654,15 +645,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
                     continue;
                 }
                 case 3: {
-                    if (tag !== 26) {
-                        break;
-                    }
-
-                    message.userId = reader.string();
-                    continue;
-                }
-                case 4: {
-                    if (tag !== 32) {
+                    if (tag !== 24) {
                         break;
                     }
 
@@ -684,7 +667,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
             correlationId: isSet(object.correlationId)
                 ? globalThis.String(object.correlationId)
                 : "",
-            userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
@@ -699,9 +681,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.correlationId !== "") {
             obj.correlationId = message.correlationId;
         }
-        if (message.userId !== "") {
-            obj.userId = message.userId;
-        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
@@ -715,7 +694,6 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         const message = createBaseEventMetadata();
         message.causationId = object.causationId ?? "";
         message.correlationId = object.correlationId ?? "";
-        message.userId = object.userId ?? "";
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         return message;
     },

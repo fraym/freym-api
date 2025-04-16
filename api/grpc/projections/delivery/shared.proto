@@ -3,9 +3,9 @@ package freym.projections.delivery;
 
 message AuthData {
 	string tenant_id = 1;
-	repeated string scopes = 2;
-	map<string, string> data = 3;
-	string user_id = 4;
+	string user_id = 2;
+	repeated string scopes = 3;
+	map<string, string> data = 4;
 }
 
 message DataFilter {
@@ -23,8 +23,7 @@ message DataFieldFilter {
 message EventMetadata {
 	string causation_id = 1;
 	string correlation_id = 2;
-	string user_id = 3;
-	DeploymentTarget target = 4;
+	DeploymentTarget target = 3;
 }
 
 enum DeploymentTarget {

@@ -6,13 +6,13 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { EventMetadata, RoleScope } from "./shared";
+import { Metadata, RoleScope } from "./shared";
 
 export interface UpsertRoleRequest {
     tenantId: string;
     id: string;
     allowedScopes: RoleScope[];
-    eventMetadata: EventMetadata | undefined;
+    metadata: Metadata | undefined;
 }
 
 export interface UpsertRoleResponse {
@@ -20,7 +20,7 @@ export interface UpsertRoleResponse {
 }
 
 function createBaseUpsertRoleRequest(): UpsertRoleRequest {
-    return { tenantId: "", id: "", allowedScopes: [], eventMetadata: undefined };
+    return { tenantId: "", id: "", allowedScopes: [], metadata: undefined };
 }
 
 export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
@@ -34,8 +34,8 @@ export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
         for (const v of message.allowedScopes) {
             RoleScope.encode(v!, writer.uint32(26).fork()).join();
         }
-        if (message.eventMetadata !== undefined) {
-            EventMetadata.encode(message.eventMetadata, writer.uint32(34).fork()).join();
+        if (message.metadata !== undefined) {
+            Metadata.encode(message.metadata, writer.uint32(34).fork()).join();
         }
         return writer;
     },
@@ -76,7 +76,7 @@ export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
                         break;
                     }
 
-                    message.eventMetadata = EventMetadata.decode(reader, reader.uint32());
+                    message.metadata = Metadata.decode(reader, reader.uint32());
                     continue;
                 }
             }
@@ -95,9 +95,7 @@ export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
             allowedScopes: globalThis.Array.isArray(object?.allowedScopes)
                 ? object.allowedScopes.map((e: any) => RoleScope.fromJSON(e))
                 : [],
-            eventMetadata: isSet(object.eventMetadata)
-                ? EventMetadata.fromJSON(object.eventMetadata)
-                : undefined,
+            metadata: isSet(object.metadata) ? Metadata.fromJSON(object.metadata) : undefined,
         };
     },
 
@@ -112,8 +110,8 @@ export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
         if (message.allowedScopes?.length) {
             obj.allowedScopes = message.allowedScopes.map(e => RoleScope.toJSON(e));
         }
-        if (message.eventMetadata !== undefined) {
-            obj.eventMetadata = EventMetadata.toJSON(message.eventMetadata);
+        if (message.metadata !== undefined) {
+            obj.metadata = Metadata.toJSON(message.metadata);
         }
         return obj;
     },
@@ -126,9 +124,9 @@ export const UpsertRoleRequest: MessageFns<UpsertRoleRequest> = {
         message.tenantId = object.tenantId ?? "";
         message.id = object.id ?? "";
         message.allowedScopes = object.allowedScopes?.map(e => RoleScope.fromPartial(e)) || [];
-        message.eventMetadata =
-            object.eventMetadata !== undefined && object.eventMetadata !== null
-                ? EventMetadata.fromPartial(object.eventMetadata)
+        message.metadata =
+            object.metadata !== undefined && object.metadata !== null
+                ? Metadata.fromPartial(object.metadata)
                 : undefined;
         return message;
     },

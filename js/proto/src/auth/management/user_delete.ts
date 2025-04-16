@@ -6,18 +6,18 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { EventMetadata } from "./shared";
+import { Metadata } from "./shared";
 
 export interface DeleteUserRequest {
     tenantId: string;
     id: string;
-    eventMetadata: EventMetadata | undefined;
+    metadata: Metadata | undefined;
 }
 
 export interface DeleteUserResponse {}
 
 function createBaseDeleteUserRequest(): DeleteUserRequest {
-    return { tenantId: "", id: "", eventMetadata: undefined };
+    return { tenantId: "", id: "", metadata: undefined };
 }
 
 export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
@@ -28,8 +28,8 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
         if (message.id !== "") {
             writer.uint32(18).string(message.id);
         }
-        if (message.eventMetadata !== undefined) {
-            EventMetadata.encode(message.eventMetadata, writer.uint32(26).fork()).join();
+        if (message.metadata !== undefined) {
+            Metadata.encode(message.metadata, writer.uint32(26).fork()).join();
         }
         return writer;
     },
@@ -62,7 +62,7 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
                         break;
                     }
 
-                    message.eventMetadata = EventMetadata.decode(reader, reader.uint32());
+                    message.metadata = Metadata.decode(reader, reader.uint32());
                     continue;
                 }
             }
@@ -78,9 +78,7 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
         return {
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
             id: isSet(object.id) ? globalThis.String(object.id) : "",
-            eventMetadata: isSet(object.eventMetadata)
-                ? EventMetadata.fromJSON(object.eventMetadata)
-                : undefined,
+            metadata: isSet(object.metadata) ? Metadata.fromJSON(object.metadata) : undefined,
         };
     },
 
@@ -92,8 +90,8 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
         if (message.id !== "") {
             obj.id = message.id;
         }
-        if (message.eventMetadata !== undefined) {
-            obj.eventMetadata = EventMetadata.toJSON(message.eventMetadata);
+        if (message.metadata !== undefined) {
+            obj.metadata = Metadata.toJSON(message.metadata);
         }
         return obj;
     },
@@ -105,9 +103,9 @@ export const DeleteUserRequest: MessageFns<DeleteUserRequest> = {
         const message = createBaseDeleteUserRequest();
         message.tenantId = object.tenantId ?? "";
         message.id = object.id ?? "";
-        message.eventMetadata =
-            object.eventMetadata !== undefined && object.eventMetadata !== null
-                ? EventMetadata.fromPartial(object.eventMetadata)
+        message.metadata =
+            object.metadata !== undefined && object.metadata !== null
+                ? Metadata.fromPartial(object.metadata)
                 : undefined;
         return message;
     },

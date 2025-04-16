@@ -1,10 +1,10 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.auth.management";
-import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
+import { Metadata, fillMetadataWithDefaults } from "./metadata";
 
 export const deleteExistingUser = async (
     tenantId: string,
     id: string,
-    eventMetadata: Partial<EventMetadata> | null,
+    metadata: Partial<Metadata> | null,
     serviceClient: ServiceClient
 ): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
@@ -12,7 +12,7 @@ export const deleteExistingUser = async (
             {
                 tenantId,
                 id,
-                eventMetadata: fillMetadataWithDefaults(eventMetadata),
+                metadata: fillMetadataWithDefaults(metadata),
             },
             error => {
                 if (error) {

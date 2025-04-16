@@ -6,7 +6,7 @@ message UpsertRoleRequest {
 	string tenant_id = 1;
 	string id = 2;
 	repeated RoleScope allowed_scopes = 3;
-	EventMetadata event_metadata = 4;
+	Metadata metadata = 4;
 }
 
 message UpsertRoleResponse {

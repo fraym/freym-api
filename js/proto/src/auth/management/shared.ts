@@ -12,7 +12,7 @@ export interface RoleScope {
     scopeName: string;
 }
 
-export interface EventMetadata {
+export interface Metadata {
     causationId: string;
     correlationId: string;
     userId: string;
@@ -94,12 +94,12 @@ export const RoleScope: MessageFns<RoleScope> = {
     },
 };
 
-function createBaseEventMetadata(): EventMetadata {
+function createBaseMetadata(): Metadata {
     return { causationId: "", correlationId: "", userId: "" };
 }
 
-export const EventMetadata: MessageFns<EventMetadata> = {
-    encode(message: EventMetadata, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const Metadata: MessageFns<Metadata> = {
+    encode(message: Metadata, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         if (message.causationId !== "") {
             writer.uint32(10).string(message.causationId);
         }
@@ -112,10 +112,10 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): EventMetadata {
+    decode(input: BinaryReader | Uint8Array, length?: number): Metadata {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseEventMetadata();
+        const message = createBaseMetadata();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -152,7 +152,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         return message;
     },
 
-    fromJSON(object: any): EventMetadata {
+    fromJSON(object: any): Metadata {
         return {
             causationId: isSet(object.causationId) ? globalThis.String(object.causationId) : "",
             correlationId: isSet(object.correlationId)
@@ -162,7 +162,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         };
     },
 
-    toJSON(message: EventMetadata): unknown {
+    toJSON(message: Metadata): unknown {
         const obj: any = {};
         if (message.causationId !== "") {
             obj.causationId = message.causationId;
@@ -176,11 +176,11 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         return obj;
     },
 
-    create(base?: DeepPartial<EventMetadata>): EventMetadata {
-        return EventMetadata.fromPartial(base ?? {});
+    create(base?: DeepPartial<Metadata>): Metadata {
+        return Metadata.fromPartial(base ?? {});
     },
-    fromPartial(object: DeepPartial<EventMetadata>): EventMetadata {
-        const message = createBaseEventMetadata();
+    fromPartial(object: DeepPartial<Metadata>): Metadata {
+        const message = createBaseMetadata();
         message.causationId = object.causationId ?? "";
         message.correlationId = object.correlationId ?? "";
         message.userId = object.userId ?? "";

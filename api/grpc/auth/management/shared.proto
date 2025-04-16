@@ -7,7 +7,7 @@ message RoleScope {
 }
 
 
-message EventMetadata {
+message Metadata {
 	string causation_id = 1;
 	string correlation_id = 2;
 	string user_id = 3;

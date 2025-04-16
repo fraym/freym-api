@@ -7,7 +7,6 @@ import (
 type EventMetadata struct {
 	CorrelationId string
 	CausationId   string
-	UserId        string
 	Target        deliverypb.DeploymentTarget
 }
 
@@ -19,7 +18,6 @@ func (m *EventMetadata) getProtobufEventMetadata() *deliverypb.EventMetadata {
 	return deliverypb.EventMetadata_builder{
 		CorrelationId: m.CorrelationId,
 		CausationId:   m.CausationId,
-		UserId:        m.UserId,
 		Target:        m.Target,
 	}.Build()
 }

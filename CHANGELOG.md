@@ -1,5 +1,9 @@
 # vNext
 
+# v0.34.2
+
+- (bug) Remove `user_id` from `EventMetadata` in favor of `AuthData`
+
 # v0.34.1
 
 - (improvement) Add user ID to auth data

@@ -1,20 +1,21 @@
-import { DeploymentTarget } from "@fraym/proto/dist/index.freym.crud.delivery";
+import {
+    EventMetadata as CrudEventMetadata,
+    DeploymentTarget,
+} from "@fraym/proto/dist/index.freym.crud.delivery";
 
 export interface EventMetadata {
     correlationId: string;
     causationId: string;
-    userId: string;
     target: DeploymentTarget;
 }
 
 export const fillMetadataWithDefaults = (
     metadata: Partial<EventMetadata> | null
-): EventMetadata => {
+): CrudEventMetadata => {
     if (!metadata) {
         return {
             causationId: "",
             correlationId: "",
-            userId: "",
             target: "DEPLOYMENT_TARGET_BLUE",
         };
     }
@@ -22,7 +23,6 @@ export const fillMetadataWithDefaults = (
     return {
         causationId: metadata.causationId || "",
         correlationId: metadata.correlationId || "",
-        userId: metadata.userId || "",
         target: metadata.target || "DEPLOYMENT_TARGET_BLUE",
     };
 };

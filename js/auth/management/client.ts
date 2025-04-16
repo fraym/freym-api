@@ -4,9 +4,9 @@ import { credentials } from "@grpc/grpc-js";
 import { CreateUserResponse, createNewUser } from "./createUser";
 import { deleteExistingRole } from "./deleteRole";
 import { deleteExistingUser } from "./deleteUser";
-import { EventMetadata } from "./eventMetadata";
 import { Role, getAllRoles } from "./getRoles";
 import { User, getAllUsers } from "./getUsers";
+import { Metadata } from "./metadata";
 import { PaginatedResponse } from "./paginatedResponse";
 import { updateExistingUser } from "./updateUser";
 import { UpsertRoleScope, createOrUpdateRole } from "./upsertRole";
@@ -16,13 +16,9 @@ export interface ManagementClient {
         tenantId: string,
         allowedScopes: UpsertRoleScope[],
         id?: string,
-        eventMetadata?: Partial<EventMetadata>
+        eventMetadata?: Partial<Metadata>
     ) => Promise<string>;
-    deleteRole: (
-        tenantId: string,
-        id: string,
-        eventMetadata?: Partial<EventMetadata>
-    ) => Promise<void>;
+    deleteRole: (tenantId: string, id: string, eventMetadata?: Partial<Metadata>) => Promise<void>;
     getRoles: (tenantId: string, limit?: number, page?: number) => Promise<PaginatedResponse<Role>>;
     createUser: (
         tenantId: string,
@@ -33,7 +29,7 @@ export interface ManagementClient {
         password?: string,
         active?: boolean,
         blockedUntil?: Date,
-        eventMetadata?: Partial<EventMetadata>
+        eventMetadata?: Partial<Metadata>
     ) => Promise<CreateUserResponse>;
     updateUser: (
         tenantId: string,
@@ -45,13 +41,9 @@ export interface ManagementClient {
         password?: string,
         active?: boolean,
         blockedUntil?: Date,
-        eventMetadata?: Partial<EventMetadata>
+        eventMetadata?: Partial<Metadata>
     ) => Promise<void>;
-    deleteUser: (
-        tenantId: string,
-        id: string,
-        eventMetadata?: Partial<EventMetadata>
-    ) => Promise<void>;
+    deleteUser: (tenantId: string, id: string, eventMetadata?: Partial<Metadata>) => Promise<void>;
     getUsers: (tenantId: string, limit?: number, page?: number) => Promise<PaginatedResponse<User>>;
     close: () => Promise<void>;
 }
@@ -72,7 +64,7 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
         tenantId: string,
         allowedScopes: UpsertRoleScope[],
         id: string = "",
-        eventMetadata: Partial<EventMetadata> | null = null
+        eventMetadata: Partial<Metadata> | null = null
     ) => {
         return await createOrUpdateRole(tenantId, id, allowedScopes, eventMetadata, serviceClient);
     };
@@ -80,7 +72,7 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
     const deleteRole = async (
         tenantId: string,
         id: string,
-        eventMetadata: Partial<EventMetadata> | null = null
+        eventMetadata: Partial<Metadata> | null = null
     ) => {
         return await deleteExistingRole(tenantId, id, eventMetadata, serviceClient);
     };
@@ -98,7 +90,7 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
         password: string = "",
         active: boolean = false,
         blockedUntil: Date = new Date(0),
-        eventMetadata: Partial<EventMetadata> | null = null
+        eventMetadata: Partial<Metadata> | null = null
     ) => {
         return await createNewUser(
             tenantId,
@@ -124,7 +116,7 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
         password: string = "",
         active: boolean = false,
         blockedUntil: Date = new Date(0),
-        eventMetadata: Partial<EventMetadata> | null = null
+        eventMetadata: Partial<Metadata> | null = null
     ) => {
         return await updateExistingUser(
             tenantId,
@@ -144,7 +136,7 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
     const deleteUser = async (
         tenantId: string,
         id: string,
-        eventMetadata: Partial<EventMetadata> | null = null
+        eventMetadata: Partial<Metadata> | null = null
     ) => {
         return await deleteExistingUser(tenantId, id, eventMetadata, serviceClient);
     };

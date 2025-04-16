@@ -1,5 +1,5 @@
-# v0.34.1
+# v0.34.2
 
-## :sparkles: Improvements
+## :bug: Bug Fixes
 
-- Add user ID to auth data
+- Remove `user_id` from `EventMetadata` in favor of `AuthData`

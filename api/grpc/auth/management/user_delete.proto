@@ -5,7 +5,7 @@ import "auth/management/shared.proto";
 message DeleteUserRequest {
 	string tenant_id = 1;
 	string id = 2;
-	EventMetadata event_metadata = 3;
+	Metadata metadata = 3;
 }
 
 message DeleteUserResponse {}

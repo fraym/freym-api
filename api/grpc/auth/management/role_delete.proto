@@ -5,7 +5,7 @@ import "auth/management/shared.proto";
 message DeleteRoleRequest {
 	 string id = 1;
 	 string tenant_id = 2;
-	 EventMetadata event_metadata = 3;
+	 Metadata metadata = 3;
 }
 
 message DeleteRoleResponse {}

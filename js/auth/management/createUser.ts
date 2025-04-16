@@ -1,5 +1,5 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.auth.management";
-import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
+import { Metadata, fillMetadataWithDefaults } from "./metadata";
 
 export interface CreateUserResponse {
     id: string;
@@ -15,7 +15,7 @@ export const createNewUser = async (
     assignedRoleIds: string[],
     active: boolean,
     blockedUntil: Date,
-    eventMetadata: Partial<EventMetadata> | null,
+    metadata: Partial<Metadata> | null,
     serviceClient: ServiceClient
 ): Promise<CreateUserResponse> => {
     return new Promise<CreateUserResponse>((resolve, reject) => {
@@ -29,7 +29,7 @@ export const createNewUser = async (
                 active,
                 assignedRoleIds,
                 blockedUntil: blockedUntil.getTime().toString(),
-                eventMetadata: fillMetadataWithDefaults(eventMetadata),
+                metadata: fillMetadataWithDefaults(metadata),
             },
             (error, response) => {
                 if (error) {

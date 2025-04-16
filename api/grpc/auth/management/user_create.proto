@@ -11,7 +11,7 @@ message CreateUserRequest {
 	repeated string assigned_role_ids = 6;
 	bool active = 7;
 	int64 blocked_until = 8;
-	EventMetadata event_metadata = 9;
+	Metadata metadata = 9;
 }
 
 message CreateUserResponse {
