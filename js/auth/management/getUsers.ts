@@ -1,4 +1,5 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.auth.management";
+import { PaginatedResponse } from "./paginatedResponse";
 
 export interface User {
     id: string;
@@ -14,12 +15,16 @@ export interface User {
 
 export const getAllUsers = async (
     tenantId: string,
+    limit: number,
+    page: number,
     serviceClient: ServiceClient
-): Promise<User[]> => {
-    return new Promise<User[]>((resolve, reject) => {
+): Promise<PaginatedResponse<User>> => {
+    return new Promise<PaginatedResponse<User>>((resolve, reject) => {
         serviceClient.getUsers(
             {
                 tenantId,
+                limit: limit.toString(),
+                page: page.toString(),
             },
             (error, response) => {
                 if (error) {
@@ -27,9 +32,12 @@ export const getAllUsers = async (
                     return;
                 }
 
-                resolve(
-                    response.users.map(user => {
-                        const newUser: User = {
+                resolve({
+                    limit: parseInt(response.limit, 10),
+                    page: parseInt(response.page, 10),
+                    total: parseInt(response.total, 10),
+                    data: response.users.map(user => {
+                        return {
                             active: user.active,
                             assignedRoleIds: user.assignedRoleIds,
                             blockedUntil: parseInt(user.blockedUntil),
@@ -40,10 +48,8 @@ export const getAllUsers = async (
                             lastAttempt: parseInt(user.lastAttempt),
                             login: user.login,
                         };
-
-                        return newUser;
-                    })
-                );
+                    }),
+                });
             }
         );
     });

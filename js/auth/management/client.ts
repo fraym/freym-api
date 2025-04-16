@@ -7,6 +7,7 @@ import { deleteExistingUser } from "./deleteUser";
 import { EventMetadata } from "./eventMetadata";
 import { Role, getAllRoles } from "./getRoles";
 import { User, getAllUsers } from "./getUsers";
+import { PaginatedResponse } from "./paginatedResponse";
 import { updateExistingUser } from "./updateUser";
 import { UpsertRoleScope, createOrUpdateRole } from "./upsertRole";
 
@@ -22,7 +23,7 @@ export interface ManagementClient {
         id: string,
         eventMetadata?: Partial<EventMetadata>
     ) => Promise<void>;
-    getRoles: (tenantId: string) => Promise<Role[]>;
+    getRoles: (tenantId: string, limit?: number, page?: number) => Promise<PaginatedResponse<Role>>;
     createUser: (
         tenantId: string,
         email: string,
@@ -51,7 +52,7 @@ export interface ManagementClient {
         id: string,
         eventMetadata?: Partial<EventMetadata>
     ) => Promise<void>;
-    getUsers: (tenantId: string) => Promise<User[]>;
+    getUsers: (tenantId: string, limit?: number, page?: number) => Promise<PaginatedResponse<User>>;
     close: () => Promise<void>;
 }
 
@@ -84,8 +85,8 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
         return await deleteExistingRole(tenantId, id, eventMetadata, serviceClient);
     };
 
-    const getRoles = async (tenantId: string) => {
-        return await getAllRoles(tenantId, serviceClient);
+    const getRoles = async (tenantId: string, limit: number = 0, page: number = 1) => {
+        return await getAllRoles(tenantId, limit, page, serviceClient);
     };
 
     const createUser = async (
@@ -148,8 +149,8 @@ export const newManagementClient = async (config?: ClientConfig): Promise<Manage
         return await deleteExistingUser(tenantId, id, eventMetadata, serviceClient);
     };
 
-    const getUsers = async (tenantId: string) => {
-        return await getAllUsers(tenantId, serviceClient);
+    const getUsers = async (tenantId: string, limit: number = 0, page: number = 1) => {
+        return await getAllUsers(tenantId, limit, page, serviceClient);
     };
 
     const close = async () => {

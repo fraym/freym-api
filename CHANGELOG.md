@@ -1,5 +1,9 @@
 # vNext
 
+# v0.34.0
+
+- (feature) Add pagination to auth users
+
 # v0.33.0
 
 - (improvement) Allow all supported types in js auth packages `generateJwt` for `expirationTime`
