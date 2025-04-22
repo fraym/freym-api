@@ -1,5 +1,5 @@
-# v0.34.2
+# v0.34.3
 
-## :bug: Bug Fixes
+## :gift: New Features
 
-- Remove `user_id` from `EventMetadata` in favor of `AuthData`
+- Add `--force` flag to create deployment command

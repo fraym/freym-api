@@ -1,5 +1,9 @@
 # vNext
 
+# v0.34.3
+
+- (feature) Add `--force` flag to create deployment command
+
 # v0.34.2
 
 - (bug) Remove `user_id` from `EventMetadata` in favor of `AuthData`

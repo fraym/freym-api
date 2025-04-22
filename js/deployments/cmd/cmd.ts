@@ -41,12 +41,21 @@ const getTargetFromArgs = (): DeploymentTarget => {
     return targetString;
 };
 
+const isForced = (): boolean => {
+    for (const arg of process.argv) {
+        if (arg === "--force") {
+            return true;
+        }
+    }
+    return false;
+};
+
 switch (arg) {
     case COMMAND_STATUS:
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment(getTargetFromArgs());
+        runCreateDeployment(getTargetFromArgs(), isForced());
         break;
     case COMMAND_ACTIVATE:
         runActivateDeployment(getIdFromArgs());
