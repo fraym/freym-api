@@ -43,7 +43,8 @@ const getFieldTypeFromNamedTypeNode = (t: NamedTypeNode, namespace: string): str
         name === "Int" ||
         name === "DateTime" ||
         name === "EventEnvelope" ||
-        name === "File"
+        name === "File" ||
+        name === "FraymAuthUser"
     ) {
         return ["Named", name];
     }

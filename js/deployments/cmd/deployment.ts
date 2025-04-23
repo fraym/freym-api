@@ -74,7 +74,7 @@ export const runRollbackNamespaceDeployment = async (target: DeploymentTarget) =
 };
 
 export const runWait = async (id: number) => {
-    console.log("waiting for deployment to be done...");
+    console.log("waiting for deployment to be ready...");
     const config = await useConfig();
 
     const isReady = false;
@@ -86,7 +86,6 @@ export const runWait = async (id: number) => {
         const newPercentage = getPercentage(status);
 
         if (newPercentage === 100) {
-            console.log("deployment is ready");
             break;
         }
 
@@ -99,7 +98,7 @@ export const runWait = async (id: number) => {
         await sleep(1000);
     }
 
-    console.log("deployment is done");
+    console.log("deployment is ready");
 };
 
 const sleep = async (time: number): Promise<void> => {

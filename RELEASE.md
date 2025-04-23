@@ -1,5 +1,5 @@
-# v0.34.3
+# v0.34.4
 
-## :gift: New Features
+## :bug: Bug Fixes
 
-- Add `--force` flag to create deployment command
+- Fix `jose` version

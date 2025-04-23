@@ -1,5 +1,9 @@
 # vNext
 
+# v0.34.4
+
+- (bug) Fix `jose` version
+
 # v0.34.3
 
 - (feature) Add `--force` flag to create deployment command
