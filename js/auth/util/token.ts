@@ -8,7 +8,7 @@ export const generateJwt = async (
     scopes: string[] = [],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: Record<string, any> = {},
-    expirationTime: string | number | Date = "5m"
+    expirationTime: string | number = "5m"
 ) => {
     const secret = new TextEncoder().encode(appSecret);
 
