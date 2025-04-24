@@ -33,6 +33,7 @@ const (
 	Service_InvalidateGdpr_FullMethodName             = "/freym.streams.management.Service/InvalidateGdpr"
 	Service_BackchannelEvent_FullMethodName           = "/freym.streams.management.Service/BackchannelEvent"
 	Service_CreateStreamSnapshot_FullMethodName       = "/freym.streams.management.Service/CreateStreamSnapshot"
+	Service_RenameEventType_FullMethodName            = "/freym.streams.management.Service/RenameEventType"
 )
 
 // ServiceClient is the client API for Service service.
@@ -53,6 +54,7 @@ type ServiceClient interface {
 	InvalidateGdpr(ctx context.Context, in *InvalidateGdprRequest, opts ...grpc.CallOption) (*InvalidateGdprResponse, error)
 	BackchannelEvent(ctx context.Context, in *BackchannelEventRequest, opts ...grpc.CallOption) (*BackchannelEventResponse, error)
 	CreateStreamSnapshot(ctx context.Context, in *CreateStreamSnapshotRequest, opts ...grpc.CallOption) (*CreateStreamSnapshotResponse, error)
+	RenameEventType(ctx context.Context, in *RenameEventTypeRequest, opts ...grpc.CallOption) (*RenameEventTypeResponse, error)
 }
 
 type serviceClient struct {
@@ -211,6 +213,15 @@ func (c *serviceClient) CreateStreamSnapshot(ctx context.Context, in *CreateStre
 	return out, nil
 }
 
+func (c *serviceClient) RenameEventType(ctx context.Context, in *RenameEventTypeRequest, opts ...grpc.CallOption) (*RenameEventTypeResponse, error) {
+	out := new(RenameEventTypeResponse)
+	err := c.cc.Invoke(ctx, Service_RenameEventType_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -229,6 +240,7 @@ type ServiceServer interface {
 	InvalidateGdpr(context.Context, *InvalidateGdprRequest) (*InvalidateGdprResponse, error)
 	BackchannelEvent(context.Context, *BackchannelEventRequest) (*BackchannelEventResponse, error)
 	CreateStreamSnapshot(context.Context, *CreateStreamSnapshotRequest) (*CreateStreamSnapshotResponse, error)
+	RenameEventType(context.Context, *RenameEventTypeRequest) (*RenameEventTypeResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -277,6 +289,9 @@ func (UnimplementedServiceServer) BackchannelEvent(context.Context, *Backchannel
 }
 func (UnimplementedServiceServer) CreateStreamSnapshot(context.Context, *CreateStreamSnapshotRequest) (*CreateStreamSnapshotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStreamSnapshot not implemented")
+}
+func (UnimplementedServiceServer) RenameEventType(context.Context, *RenameEventTypeRequest) (*RenameEventTypeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RenameEventType not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -551,6 +566,24 @@ func _Service_CreateStreamSnapshot_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_RenameEventType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RenameEventTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RenameEventType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RenameEventType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RenameEventType(ctx, req.(*RenameEventTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -609,6 +642,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateStreamSnapshot",
 			Handler:    _Service_CreateStreamSnapshot_Handler,
+		},
+		{
+			MethodName: "RenameEventType",
+			Handler:    _Service_RenameEventType_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

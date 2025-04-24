@@ -1,5 +1,7 @@
 # vNext
 
+- (feature) Add `RenameEventType` rpc to streams
+
 # v0.34.4
 
 - (bug) Fix `jose` version

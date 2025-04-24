@@ -8,6 +8,7 @@ import "streams/management/paginate.proto";
 import "streams/management/backchannel.proto";
 import "streams/management/stream.proto";
 import "streams/management/snapshot.proto";
+import "streams/management/rename.proto";
 
 service Service {
 	rpc Publish (PublishRequest) returns (PublishResponse);
@@ -24,4 +25,5 @@ service Service {
 	rpc InvalidateGdpr(InvalidateGdprRequest) returns (InvalidateGdprResponse);
 	rpc BackchannelEvent(BackchannelEventRequest) returns (BackchannelEventResponse);
 	rpc CreateStreamSnapshot(CreateStreamSnapshotRequest) returns (CreateStreamSnapshotResponse);
+	rpc RenameEventType(RenameEventTypeRequest) returns (RenameEventTypeResponse);
 }

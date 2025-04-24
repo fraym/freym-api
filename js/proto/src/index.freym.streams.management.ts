@@ -8,6 +8,7 @@ export * from "./streams/management/backchannel";
 export * from "./streams/management/gdpr";
 export * from "./streams/management/paginate";
 export * from "./streams/management/publish";
+export * from "./streams/management/rename";
 export * from "./streams/management/subscribe";
 export * from "./streams/management/stream";
 export * from "./streams/management/snapshot";

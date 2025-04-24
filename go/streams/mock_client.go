@@ -81,6 +81,10 @@ func (c *MockClient) CreateStreamSnapshot(ctx context.Context, tenantId string, 
 	return c.Called(ctx, tenantId, topic, stream, lastSnapshottedEventId, snapshotEvent).Error(0)
 }
 
+func (c *MockClient) RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error {
+	return c.Called(ctx, topic, oldEventType, newEventType).Error(0)
+}
+
 func (c *MockClient) Close() {
 	c.Called()
 }

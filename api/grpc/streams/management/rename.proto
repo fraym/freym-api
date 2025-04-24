@@ -1,0 +1,10 @@
+syntax = "proto3";
+package freym.streams.management;
+
+message RenameEventTypeRequest {
+	string topic = 1;
+	string old_type = 2;
+	string new_type = 3;
+}
+
+message RenameEventTypeResponse {}

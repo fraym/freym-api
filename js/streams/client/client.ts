@@ -9,6 +9,7 @@ import { getLastEventByTypes } from "./getLastEventByTypes";
 import { introduceGdprOnEventField } from "./introduceGdpr";
 import { sendInvalidateGdpr } from "./invalidateGdpr";
 import { sendPublish } from "./publish";
+import { renameEventType } from "./rename";
 import { createStreamSnapshot, getStream, getStreamAfterEvent, isStreamEmpty } from "./stream";
 import { Subscription, newSubscription } from "./subscribe";
 
@@ -74,6 +75,7 @@ export interface Client {
         lastSnapshottedEventId: string,
         snapshotEvent: PublishEvent
     ) => Promise<void>;
+    renameEventType: (topic: string, oldEventType: string, newEventType: string) => Promise<void>;
     close: () => void;
 }
 
@@ -270,6 +272,9 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                 snapshotEvent,
                 serviceClient
             );
+        },
+        renameEventType: async (topic, oldEventType, newEventType) => {
+            return await renameEventType(topic, oldEventType, newEventType, serviceClient);
         },
         close: () => {
             closeFunctions.forEach(close => close());

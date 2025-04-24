@@ -333,6 +333,17 @@ func (s *Service) CreateStreamSnapshot(ctx context.Context, tenantId string, top
 	}, s.retryPause, 50)
 }
 
+func (s *Service) RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error {
+	return util.Retry(func() error {
+		_, err := s.client.RenameEventType(ctx, managementpb.RenameEventTypeRequest_builder{
+			Topic:   topic,
+			OldType: oldEventType,
+			NewType: newEventType,
+		}.Build())
+		return err
+	}, s.retryPause, 50)
+}
+
 type LastEventCheckFunc func(ctx context.Context, lastEvent *dto.SubscriptionEvent) bool
 
 func isLastEventNotFoundError(err error) bool {

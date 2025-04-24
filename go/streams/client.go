@@ -24,6 +24,7 @@ type Client interface {
 	InvalidateGdprData(ctx context.Context, tenantId string, topic string, gdprId string) error
 	IntroduceGdprOnEventField(ctx context.Context, tenantId string, topic string, eventId string, fieldName string, defaultValue string) error
 	CreateStreamSnapshot(ctx context.Context, tenantId string, topic string, stream string, lastSnapshottedEventId string, snapshotEvent *dto.PublishEvent) error
+	RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error
 	Close()
 }
 
@@ -112,6 +113,10 @@ func (c *streamsClient) IntroduceGdprOnEventField(ctx context.Context, tenantId 
 
 func (c *streamsClient) CreateStreamSnapshot(ctx context.Context, tenantId string, topic string, stream string, lastSnapshottedEventId string, snapshotEvent *dto.PublishEvent) error {
 	return c.service.CreateStreamSnapshot(ctx, tenantId, topic, stream, lastSnapshottedEventId, snapshotEvent)
+}
+
+func (c *streamsClient) RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error {
+	return c.service.RenameEventType(ctx, topic, oldEventType, newEventType)
 }
 
 func (c *streamsClient) Close() {

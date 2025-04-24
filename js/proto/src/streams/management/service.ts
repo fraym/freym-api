@@ -36,6 +36,7 @@ import {
     PaginateStreamResponse,
 } from "./paginate";
 import { PublishRequest, PublishResponse } from "./publish";
+import { RenameEventTypeRequest, RenameEventTypeResponse } from "./rename";
 import { CreateStreamSnapshotRequest, CreateStreamSnapshotResponse } from "./snapshot";
 import { IsStreamEmptyRequest, IsStreamEmptyResponse } from "./stream";
 import { SubscribeRequest, SubscribeResponse } from "./subscribe";
@@ -193,6 +194,17 @@ export const ServiceService = {
             Buffer.from(CreateStreamSnapshotResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => CreateStreamSnapshotResponse.decode(value),
     },
+    renameEventType: {
+        path: "/freym.streams.management.Service/RenameEventType",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: RenameEventTypeRequest) =>
+            Buffer.from(RenameEventTypeRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => RenameEventTypeRequest.decode(value),
+        responseSerialize: (value: RenameEventTypeResponse) =>
+            Buffer.from(RenameEventTypeResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => RenameEventTypeResponse.decode(value),
+    },
 } as const;
 
 export interface ServiceServer extends UntypedServiceImplementation {
@@ -222,6 +234,7 @@ export interface ServiceServer extends UntypedServiceImplementation {
         CreateStreamSnapshotRequest,
         CreateStreamSnapshotResponse
     >;
+    renameEventType: handleUnaryCall<RenameEventTypeRequest, RenameEventTypeResponse>;
 }
 
 export interface ServiceClient extends Client {
@@ -427,6 +440,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: CreateStreamSnapshotResponse) => void
+    ): ClientUnaryCall;
+    renameEventType(
+        request: RenameEventTypeRequest,
+        callback: (error: ServiceError | null, response: RenameEventTypeResponse) => void
+    ): ClientUnaryCall;
+    renameEventType(
+        request: RenameEventTypeRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: RenameEventTypeResponse) => void
+    ): ClientUnaryCall;
+    renameEventType(
+        request: RenameEventTypeRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: RenameEventTypeResponse) => void
     ): ClientUnaryCall;
 }
 
