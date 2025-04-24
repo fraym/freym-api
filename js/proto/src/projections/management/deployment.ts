@@ -105,7 +105,6 @@ export interface GetSchemaDeploymentResponse {
 }
 
 export interface DeploymentOptions {
-    dangerouslyRemoveGdprFields: boolean;
     target: DeploymentTarget;
     force: boolean;
 }
@@ -906,23 +905,16 @@ export const GetSchemaDeploymentResponse: MessageFns<GetSchemaDeploymentResponse
 };
 
 function createBaseDeploymentOptions(): DeploymentOptions {
-    return {
-        dangerouslyRemoveGdprFields: false,
-        target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
-        force: false,
-    };
+    return { target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE, force: false };
 }
 
 export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     encode(message: DeploymentOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.dangerouslyRemoveGdprFields !== false) {
-            writer.uint32(8).bool(message.dangerouslyRemoveGdprFields);
-        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
-            writer.uint32(16).int32(deploymentTargetToNumber(message.target));
+            writer.uint32(8).int32(deploymentTargetToNumber(message.target));
         }
         if (message.force !== false) {
-            writer.uint32(24).bool(message.force);
+            writer.uint32(16).bool(message.force);
         }
         return writer;
     },
@@ -939,19 +931,11 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
                         break;
                     }
 
-                    message.dangerouslyRemoveGdprFields = reader.bool();
+                    message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
                 case 2: {
                     if (tag !== 16) {
-                        break;
-                    }
-
-                    message.target = deploymentTargetFromJSON(reader.int32());
-                    continue;
-                }
-                case 3: {
-                    if (tag !== 24) {
                         break;
                     }
 
@@ -969,9 +953,6 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
 
     fromJSON(object: any): DeploymentOptions {
         return {
-            dangerouslyRemoveGdprFields: isSet(object.dangerouslyRemoveGdprFields)
-                ? globalThis.Boolean(object.dangerouslyRemoveGdprFields)
-                : false,
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
@@ -981,9 +962,6 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
 
     toJSON(message: DeploymentOptions): unknown {
         const obj: any = {};
-        if (message.dangerouslyRemoveGdprFields !== false) {
-            obj.dangerouslyRemoveGdprFields = message.dangerouslyRemoveGdprFields;
-        }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
@@ -998,7 +976,6 @@ export const DeploymentOptions: MessageFns<DeploymentOptions> = {
     },
     fromPartial(object: DeepPartial<DeploymentOptions>): DeploymentOptions {
         const message = createBaseDeploymentOptions();
-        message.dangerouslyRemoveGdprFields = object.dangerouslyRemoveGdprFields ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
         message.force = object.force ?? false;
         return message;

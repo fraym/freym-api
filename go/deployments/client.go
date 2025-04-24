@@ -18,10 +18,9 @@ import (
 var ErrAlreadyClosed = fmt.Errorf("client already closed")
 
 type DeploymentOptions struct {
-	DangerouslyRemoveGdprFields bool
-	SkipServices                []string
-	Force                       bool
-	Target                      managementpb.DeploymentTarget
+	SkipServices []string
+	Force        bool
+	Target       managementpb.DeploymentTarget
 }
 
 type Client interface {
@@ -83,10 +82,9 @@ func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString strin
 	c.mx.Unlock()
 
 	requestData.SetOptions(managementpb.DeploymentOptions_builder{
-		DangerouslyRemoveGdprFields: options.DangerouslyRemoveGdprFields,
-		SkipServices:                options.SkipServices,
-		Force:                       options.Force,
-		Target:                      options.Target,
+		SkipServices: options.SkipServices,
+		Force:        options.Force,
+		Target:       options.Target,
 	}.Build())
 
 	response, err := c.client.CreateDeployment(ctx, requestData)

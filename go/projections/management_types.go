@@ -6,9 +6,8 @@ import (
 )
 
 type DeploymentOptions struct {
-	DangerouslyRemoveGdprFields bool
-	Target                      managementpb.DeploymentTarget
-	Force                       bool
+	Target managementpb.DeploymentTarget
+	Force  bool
 }
 
 func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
@@ -17,9 +16,8 @@ func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
 	}
 
 	return managementpb.DeploymentOptions_builder{
-		DangerouslyRemoveGdprFields: o.DangerouslyRemoveGdprFields,
-		Target:                      o.Target,
-		Force:                       o.Force,
+		Target: o.Target,
+		Force:  o.Force,
 	}.Build()
 }
 

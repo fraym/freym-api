@@ -24,7 +24,6 @@ export const runPrintDeploymentStatus = async (id: number) => {
 export const runCreateDeployment = async (
     target: DeploymentTarget,
     force: boolean,
-    dangerouslyRemoveGdpr: boolean,
     skipServices: string[]
 ) => {
     console.log("creating deployment ...");
@@ -35,10 +34,9 @@ export const runCreateDeployment = async (
     });
 
     const deployment = await getMigrationFromSchema(schema, config.namespace, {
-        dangerouslyRemoveGdprFields: dangerouslyRemoveGdpr,
-        skipServices,
-        force,
         target,
+        force,
+        skipServices,
     });
 
     const response = await createDeployment({ ...deployment }, config);

@@ -50,15 +50,6 @@ const isForced = (): boolean => {
     return false;
 };
 
-const dangerouslyRemoveGdpr = (): boolean => {
-    for (const arg of process.argv) {
-        if (arg === "dangerously-remove-gdpr") {
-            return true;
-        }
-    }
-    return false;
-};
-
 const skipServices = (): string[] => {
     for (const arg of process.argv) {
         if (arg.startsWith("skip=")) {
@@ -80,12 +71,7 @@ switch (arg) {
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment(
-            getTargetFromArgs(),
-            isForced(),
-            dangerouslyRemoveGdpr(),
-            skipServices()
-        );
+        runCreateDeployment(getTargetFromArgs(), isForced(), skipServices());
         break;
     case COMMAND_ACTIVATE:
         runActivateDeployment(getIdFromArgs());
