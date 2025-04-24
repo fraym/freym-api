@@ -6,6 +6,7 @@
 - (feature) Add `dangerously-remove-gdpr` flag to deployment command
 - (feature) Add `skip=##` flag to deployment command
 - (bug) Fix `force` deployment command flag
+- (feature) Add `@renamed` to crud
 
 # v0.34.4
 

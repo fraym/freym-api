@@ -114,6 +114,7 @@ directive @global on OBJECT
 directive @crudType on OBJECT
 directive @readonly on FIELD_DEFINITION
 directive @cloneField(field: String!) on FIELD_DEFINITION
+directive @renamed(prev: [String!]!) on Object | FIELD_DEFINITION
 
 ## view only
 directive @view(sqlFile: String!, revalidate: Int) on OBJECT
