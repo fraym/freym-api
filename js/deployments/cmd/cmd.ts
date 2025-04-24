@@ -43,11 +43,36 @@ const getTargetFromArgs = (): DeploymentTarget => {
 
 const isForced = (): boolean => {
     for (const arg of process.argv) {
-        if (arg === "--force") {
+        if (arg === "force") {
             return true;
         }
     }
     return false;
+};
+
+const dangerouslyRemoveGdpr = (): boolean => {
+    for (const arg of process.argv) {
+        if (arg === "dangerously-remove-gdpr") {
+            return true;
+        }
+    }
+    return false;
+};
+
+const skipServices = (): string[] => {
+    for (const arg of process.argv) {
+        if (arg.startsWith("skip=")) {
+            const skipArg = arg.split("=")[1];
+
+            if (!skipArg) {
+                throw new Error("invalid skip argument");
+            }
+
+            return skipArg.split(",");
+        }
+    }
+
+    return [];
 };
 
 switch (arg) {
@@ -55,7 +80,12 @@ switch (arg) {
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment(getTargetFromArgs(), isForced());
+        runCreateDeployment(
+            getTargetFromArgs(),
+            isForced(),
+            dangerouslyRemoveGdpr(),
+            skipServices()
+        );
         break;
     case COMMAND_ACTIVATE:
         runActivateDeployment(getIdFromArgs());

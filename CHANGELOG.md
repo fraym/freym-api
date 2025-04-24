@@ -3,6 +3,9 @@
 - (feature) Add `RenameEventType` rpc to streams
 - (feature) Allow multi field indices by allowing `@index` on object level
 - (feature) Add `revalidate` param to `@view`
+- (feature) Add `dangerously-remove-gdpr` flag to deployment command
+- (feature) Add `skip=##` flag to deployment command
+- (bug) Fix `force` deployment command flag
 
 # v0.34.4
 

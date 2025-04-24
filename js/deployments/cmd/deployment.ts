@@ -21,7 +21,12 @@ export const runPrintDeploymentStatus = async (id: number) => {
     console.log(status);
 };
 
-export const runCreateDeployment = async (target: DeploymentTarget, force: boolean) => {
+export const runCreateDeployment = async (
+    target: DeploymentTarget,
+    force: boolean,
+    dangerouslyRemoveGdpr: boolean,
+    skipServices: string[]
+) => {
     console.log("creating deployment ...");
     const config = await useConfig();
 
@@ -29,10 +34,9 @@ export const runCreateDeployment = async (target: DeploymentTarget, force: boole
         loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
 
-    // @todo: make options configurable
     const deployment = await getMigrationFromSchema(schema, config.namespace, {
-        dangerouslyRemoveGdprFields: false,
-        skipServices: [],
+        dangerouslyRemoveGdprFields: dangerouslyRemoveGdpr,
+        skipServices,
         force,
         target,
     });
