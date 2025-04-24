@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Service_GetData_FullMethodName     = "/freym.crud.delivery.Service/GetData"
-	Service_GetDataList_FullMethodName = "/freym.crud.delivery.Service/GetDataList"
-	Service_Create_FullMethodName      = "/freym.crud.delivery.Service/Create"
-	Service_Update_FullMethodName      = "/freym.crud.delivery.Service/Update"
-	Service_Delete_FullMethodName      = "/freym.crud.delivery.Service/Delete"
-	Service_Clone_FullMethodName       = "/freym.crud.delivery.Service/Clone"
+	Service_GetData_FullMethodName        = "/freym.crud.delivery.Service/GetData"
+	Service_GetDataList_FullMethodName    = "/freym.crud.delivery.Service/GetDataList"
+	Service_Create_FullMethodName         = "/freym.crud.delivery.Service/Create"
+	Service_Update_FullMethodName         = "/freym.crud.delivery.Service/Update"
+	Service_UpdateByFilter_FullMethodName = "/freym.crud.delivery.Service/UpdateByFilter"
+	Service_Delete_FullMethodName         = "/freym.crud.delivery.Service/Delete"
+	Service_Clone_FullMethodName          = "/freym.crud.delivery.Service/Clone"
 )
 
 // ServiceClient is the client API for Service service.
@@ -35,6 +36,7 @@ type ServiceClient interface {
 	GetDataList(ctx context.Context, in *GetDataListRequest, opts ...grpc.CallOption) (*GetDataListResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
+	UpdateByFilter(ctx context.Context, in *UpdateByFilterRequest, opts ...grpc.CallOption) (*UpdateByFilterResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	Clone(ctx context.Context, in *CloneRequest, opts ...grpc.CallOption) (*CloneResponse, error)
 }
@@ -83,6 +85,15 @@ func (c *serviceClient) Update(ctx context.Context, in *UpdateRequest, opts ...g
 	return out, nil
 }
 
+func (c *serviceClient) UpdateByFilter(ctx context.Context, in *UpdateByFilterRequest, opts ...grpc.CallOption) (*UpdateByFilterResponse, error) {
+	out := new(UpdateByFilterResponse)
+	err := c.cc.Invoke(ctx, Service_UpdateByFilter_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
 	err := c.cc.Invoke(ctx, Service_Delete_FullMethodName, in, out, opts...)
@@ -109,6 +120,7 @@ type ServiceServer interface {
 	GetDataList(context.Context, *GetDataListRequest) (*GetDataListResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
+	UpdateByFilter(context.Context, *UpdateByFilterRequest) (*UpdateByFilterResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	Clone(context.Context, *CloneRequest) (*CloneResponse, error)
 	mustEmbedUnimplementedServiceServer()
@@ -129,6 +141,9 @@ func (UnimplementedServiceServer) Create(context.Context, *CreateRequest) (*Crea
 }
 func (UnimplementedServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedServiceServer) UpdateByFilter(context.Context, *UpdateByFilterRequest) (*UpdateByFilterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateByFilter not implemented")
 }
 func (UnimplementedServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
@@ -221,6 +236,24 @@ func _Service_Update_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_UpdateByFilter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateByFilterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateByFilter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateByFilter_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateByFilter(ctx, req.(*UpdateByFilterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
@@ -279,6 +312,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Update",
 			Handler:    _Service_Update_Handler,
+		},
+		{
+			MethodName: "UpdateByFilter",
+			Handler:    _Service_UpdateByFilter_Handler,
 		},
 		{
 			MethodName: "Delete",

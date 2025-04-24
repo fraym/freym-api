@@ -9,7 +9,7 @@
     },
     "description": "JS generated protobuf api code of all Freym services",
     "scripts": {
-        "generate": "./proto.sh && npm run fix",
+        "generate": "./proto.sh && npm run fix && npm run build",
         "build": "rm -rf dist && tsc && npx swc src -d dist --strip-leading-paths",
         "lint": "eslint && prettier --check \"**/*.{ts,tsx,json,scss,css}\"",
         "fix": "eslint --fix && prettier --write \"**/*.{ts,tsx,json,scss,css}\""

@@ -11,6 +11,7 @@ service Service {
 	rpc GetDataList(GetDataListRequest) returns (GetDataListResponse);
 	rpc Create(CreateRequest) returns (CreateResponse);
 	rpc Update(UpdateRequest) returns (UpdateResponse);
+	rpc UpdateByFilter(UpdateByFilterRequest) returns (UpdateByFilterResponse);
 	rpc Delete(DeleteRequest) returns (DeleteResponse);
 	rpc Clone(CloneRequest) returns (CloneResponse);
 }

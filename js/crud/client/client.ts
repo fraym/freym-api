@@ -12,6 +12,7 @@ import { getCrudData } from "./getData";
 import { GetCrudDataList, getCrudDataList } from "./getDataList";
 import { Order } from "./order";
 import { UpdateResponse, updateCrudData } from "./update";
+import { UpdateByFilterResponse, updateCrudDataByFilter } from "./updateByFilter";
 import { Wait } from "./wait";
 
 export interface DeliveryClient {
@@ -49,6 +50,13 @@ export interface DeliveryClient {
         data: Partial<T>,
         eventMetadata?: Partial<EventMetadata>
     ) => Promise<UpdateResponse<T>>;
+    updateByFilter: <T extends CrudData>(
+        type: string,
+        authData: AuthData,
+        filter: Filter,
+        data: Partial<T>,
+        eventMetadata?: Partial<EventMetadata>
+    ) => Promise<UpdateByFilterResponse>;
     clone: <T extends CrudData>(
         type: string,
         authData: AuthData,
@@ -160,6 +168,23 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         );
     };
 
+    const updateByFilter = async <T extends CrudData>(
+        type: string,
+        authData: AuthData,
+        filter: Filter,
+        data: Partial<T>,
+        eventMetadata: Partial<EventMetadata> | null = null
+    ) => {
+        return await updateCrudDataByFilter<T>(
+            type,
+            authData,
+            filter,
+            data,
+            fillMetadataWithDefaults(eventMetadata),
+            serviceClient
+        );
+    };
+
     const clone = async <T extends CrudData>(
         type: string,
         authData: AuthData,
@@ -220,6 +245,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         getDataList,
         create,
         update,
+        updateByFilter,
         clone,
         deleteDataById,
         deleteDataByFilter,

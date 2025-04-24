@@ -76,6 +76,21 @@ func (c *MockDeliveryClient) UpdateEntry(
 	return args.Get(0).(*UpdateResponse), args.Error(1)
 }
 
+func (c *MockDeliveryClient) UpdateEntryByFilter(
+	ctx context.Context,
+	typeName string,
+	authData *AuthData,
+	filter *Filter,
+	data Entry,
+	eventMetadata *EventMetadata,
+) (*UpdateByFilterResponse, error) {
+	args := c.Called(ctx, typeName, authData, filter, data, eventMetadata)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*UpdateByFilterResponse), args.Error(1)
+}
+
 func (c *MockDeliveryClient) CloneEntry(
 	ctx context.Context,
 	typeName string,

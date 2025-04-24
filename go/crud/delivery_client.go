@@ -32,6 +32,16 @@ type UpdateResponse struct {
 	Entry                 Entry
 }
 
+type UpdateByFilterResponse struct {
+	NumberOfUpdatedEntries int64
+	ValidationErrors       map[string]UpdateByFilterDataValidationErrorResponse
+}
+
+type UpdateByFilterDataValidationErrorResponse struct {
+	ValidationErrors      []string
+	FieldValidationErrors map[string]string
+}
+
 type CloneResponse struct {
 	ValidationErrors      []string
 	FieldValidationErrors map[string]string
@@ -92,6 +102,14 @@ type DeliveryClient interface {
 		data Entry,
 		eventMetadata *EventMetadata,
 	) (*UpdateResponse, error)
+	UpdateEntryByFilter(
+		ctx context.Context,
+		typeName string,
+		authData *AuthData,
+		filter *Filter,
+		data Entry,
+		eventMetadata *EventMetadata,
+	) (*UpdateByFilterResponse, error)
 	CloneEntry(
 		ctx context.Context,
 		typeName string,
@@ -348,6 +366,54 @@ func (c *crudDeliveryClient) UpdateEntry(
 		ValidationErrors:      response.GetValidationErrors(),
 		FieldValidationErrors: response.GetFieldValidationErrors(),
 		Entry:                 *entry,
+	}, nil
+}
+
+func (c *crudDeliveryClient) UpdateEntryByFilter(
+	ctx context.Context,
+	typeName string,
+	authData *AuthData,
+	filter *Filter,
+	data Entry,
+	eventMetadata *EventMetadata,
+) (*UpdateByFilterResponse, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	entryMap, err := getEntryStringMap(data)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.UpdateByFilter(ctx, deliverypb.UpdateByFilterRequest_builder{
+		Type:          typeName,
+		Auth:          pbAuthData,
+		Filter:        filter.toProtobufFilter(),
+		Data:          entryMap,
+		EventMetadata: eventMetadata.getProtobufEventMetadata(),
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	var validationErrors map[string]UpdateByFilterDataValidationErrorResponse
+
+	if response.GetValidationErrors() != nil {
+		validationErrors = map[string]UpdateByFilterDataValidationErrorResponse{}
+
+		for key, value := range response.GetValidationErrors() {
+			validationErrors[key] = UpdateByFilterDataValidationErrorResponse{
+				ValidationErrors:      value.GetValidationErrors(),
+				FieldValidationErrors: value.GetFieldValidationErrors(),
+			}
+		}
+	}
+
+	return &UpdateByFilterResponse{
+		NumberOfUpdatedEntries: response.GetNumberOfUpdatedEntries(),
+		ValidationErrors:       validationErrors,
 	}, nil
 }
 

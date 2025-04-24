@@ -7,6 +7,7 @@
 - (bug) Fix `force` deployment command flag
 - (feature) Add `@renamed` to crud
 - (internal) Remove unused dangerously remove gdpr check flag
+- (feature) Update crud data by filter
 
 # v0.34.4
 

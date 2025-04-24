@@ -24,7 +24,12 @@ import {
     GetDataRequest,
     GetDataResponse,
 } from "./get_data";
-import { UpdateRequest, UpdateResponse } from "./update";
+import {
+    UpdateByFilterRequest,
+    UpdateByFilterResponse,
+    UpdateRequest,
+    UpdateResponse,
+} from "./update";
 
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {
@@ -72,6 +77,17 @@ export const ServiceService = {
             Buffer.from(UpdateResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => UpdateResponse.decode(value),
     },
+    updateByFilter: {
+        path: "/freym.crud.delivery.Service/UpdateByFilter",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: UpdateByFilterRequest) =>
+            Buffer.from(UpdateByFilterRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => UpdateByFilterRequest.decode(value),
+        responseSerialize: (value: UpdateByFilterResponse) =>
+            Buffer.from(UpdateByFilterResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => UpdateByFilterResponse.decode(value),
+    },
     delete: {
         path: "/freym.crud.delivery.Service/Delete",
         requestStream: false,
@@ -100,6 +116,7 @@ export interface ServiceServer extends UntypedServiceImplementation {
     getDataList: handleUnaryCall<GetDataListRequest, GetDataListResponse>;
     create: handleUnaryCall<CreateRequest, CreateResponse>;
     update: handleUnaryCall<UpdateRequest, UpdateResponse>;
+    updateByFilter: handleUnaryCall<UpdateByFilterRequest, UpdateByFilterResponse>;
     delete: handleUnaryCall<DeleteRequest, DeleteResponse>;
     clone: handleUnaryCall<CloneRequest, CloneResponse>;
 }
@@ -164,6 +181,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: UpdateResponse) => void
+    ): ClientUnaryCall;
+    updateByFilter(
+        request: UpdateByFilterRequest,
+        callback: (error: ServiceError | null, response: UpdateByFilterResponse) => void
+    ): ClientUnaryCall;
+    updateByFilter(
+        request: UpdateByFilterRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: UpdateByFilterResponse) => void
+    ): ClientUnaryCall;
+    updateByFilter(
+        request: UpdateByFilterRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: UpdateByFilterResponse) => void
     ): ClientUnaryCall;
     delete(
         request: DeleteRequest,

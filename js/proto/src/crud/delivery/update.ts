@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { AuthData, EventMetadata } from "./shared";
+import { AuthData, DataFilter, EventMetadata } from "./shared";
 
 export interface UpdateRequest {
     type: string;
@@ -33,6 +33,39 @@ export interface UpdateResponse_NewDataEntry {
 }
 
 export interface UpdateResponse_FieldValidationErrorsEntry {
+    key: string;
+    value: string;
+}
+
+export interface UpdateByFilterRequest {
+    type: string;
+    auth: AuthData | undefined;
+    filter: DataFilter | undefined;
+    data: { [key: string]: string };
+    eventMetadata: EventMetadata | undefined;
+}
+
+export interface UpdateByFilterRequest_DataEntry {
+    key: string;
+    value: string;
+}
+
+export interface UpdateByFilterResponse {
+    numberOfUpdatedEntries: string;
+    validationErrors: { [key: string]: UpdateByFilterValidationResponse };
+}
+
+export interface UpdateByFilterResponse_ValidationErrorsEntry {
+    key: string;
+    value: UpdateByFilterValidationResponse | undefined;
+}
+
+export interface UpdateByFilterValidationResponse {
+    validationErrors: string[];
+    fieldValidationErrors: { [key: string]: string };
+}
+
+export interface UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
     key: string;
     value: string;
 }
@@ -588,6 +621,664 @@ export const UpdateResponse_FieldValidationErrorsEntry: MessageFns<UpdateRespons
             object: DeepPartial<UpdateResponse_FieldValidationErrorsEntry>
         ): UpdateResponse_FieldValidationErrorsEntry {
             const message = createBaseUpdateResponse_FieldValidationErrorsEntry();
+            message.key = object.key ?? "";
+            message.value = object.value ?? "";
+            return message;
+        },
+    };
+
+function createBaseUpdateByFilterRequest(): UpdateByFilterRequest {
+    return { type: "", auth: undefined, filter: undefined, data: {}, eventMetadata: undefined };
+}
+
+export const UpdateByFilterRequest: MessageFns<UpdateByFilterRequest> = {
+    encode(
+        message: UpdateByFilterRequest,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.type !== "") {
+            writer.uint32(10).string(message.type);
+        }
+        if (message.auth !== undefined) {
+            AuthData.encode(message.auth, writer.uint32(18).fork()).join();
+        }
+        if (message.filter !== undefined) {
+            DataFilter.encode(message.filter, writer.uint32(26).fork()).join();
+        }
+        Object.entries(message.data).forEach(([key, value]) => {
+            UpdateByFilterRequest_DataEntry.encode(
+                { key: key as any, value },
+                writer.uint32(34).fork()
+            ).join();
+        });
+        if (message.eventMetadata !== undefined) {
+            EventMetadata.encode(message.eventMetadata, writer.uint32(42).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): UpdateByFilterRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseUpdateByFilterRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.type = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.auth = AuthData.decode(reader, reader.uint32());
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.filter = DataFilter.decode(reader, reader.uint32());
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    const entry4 = UpdateByFilterRequest_DataEntry.decode(reader, reader.uint32());
+                    if (entry4.value !== undefined) {
+                        message.data[entry4.key] = entry4.value;
+                    }
+                    continue;
+                }
+                case 5: {
+                    if (tag !== 42) {
+                        break;
+                    }
+
+                    message.eventMetadata = EventMetadata.decode(reader, reader.uint32());
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): UpdateByFilterRequest {
+        return {
+            type: isSet(object.type) ? globalThis.String(object.type) : "",
+            auth: isSet(object.auth) ? AuthData.fromJSON(object.auth) : undefined,
+            filter: isSet(object.filter) ? DataFilter.fromJSON(object.filter) : undefined,
+            data: isObject(object.data)
+                ? Object.entries(object.data).reduce<{ [key: string]: string }>(
+                      (acc, [key, value]) => {
+                          acc[key] = String(value);
+                          return acc;
+                      },
+                      {}
+                  )
+                : {},
+            eventMetadata: isSet(object.eventMetadata)
+                ? EventMetadata.fromJSON(object.eventMetadata)
+                : undefined,
+        };
+    },
+
+    toJSON(message: UpdateByFilterRequest): unknown {
+        const obj: any = {};
+        if (message.type !== "") {
+            obj.type = message.type;
+        }
+        if (message.auth !== undefined) {
+            obj.auth = AuthData.toJSON(message.auth);
+        }
+        if (message.filter !== undefined) {
+            obj.filter = DataFilter.toJSON(message.filter);
+        }
+        if (message.data) {
+            const entries = Object.entries(message.data);
+            if (entries.length > 0) {
+                obj.data = {};
+                entries.forEach(([k, v]) => {
+                    obj.data[k] = v;
+                });
+            }
+        }
+        if (message.eventMetadata !== undefined) {
+            obj.eventMetadata = EventMetadata.toJSON(message.eventMetadata);
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<UpdateByFilterRequest>): UpdateByFilterRequest {
+        return UpdateByFilterRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<UpdateByFilterRequest>): UpdateByFilterRequest {
+        const message = createBaseUpdateByFilterRequest();
+        message.type = object.type ?? "";
+        message.auth =
+            object.auth !== undefined && object.auth !== null
+                ? AuthData.fromPartial(object.auth)
+                : undefined;
+        message.filter =
+            object.filter !== undefined && object.filter !== null
+                ? DataFilter.fromPartial(object.filter)
+                : undefined;
+        message.data = Object.entries(object.data ?? {}).reduce<{ [key: string]: string }>(
+            (acc, [key, value]) => {
+                if (value !== undefined) {
+                    acc[key] = globalThis.String(value);
+                }
+                return acc;
+            },
+            {}
+        );
+        message.eventMetadata =
+            object.eventMetadata !== undefined && object.eventMetadata !== null
+                ? EventMetadata.fromPartial(object.eventMetadata)
+                : undefined;
+        return message;
+    },
+};
+
+function createBaseUpdateByFilterRequest_DataEntry(): UpdateByFilterRequest_DataEntry {
+    return { key: "", value: "" };
+}
+
+export const UpdateByFilterRequest_DataEntry: MessageFns<UpdateByFilterRequest_DataEntry> = {
+    encode(
+        message: UpdateByFilterRequest_DataEntry,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.key !== "") {
+            writer.uint32(10).string(message.key);
+        }
+        if (message.value !== "") {
+            writer.uint32(18).string(message.value);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): UpdateByFilterRequest_DataEntry {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseUpdateByFilterRequest_DataEntry();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.key = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.value = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): UpdateByFilterRequest_DataEntry {
+        return {
+            key: isSet(object.key) ? globalThis.String(object.key) : "",
+            value: isSet(object.value) ? globalThis.String(object.value) : "",
+        };
+    },
+
+    toJSON(message: UpdateByFilterRequest_DataEntry): unknown {
+        const obj: any = {};
+        if (message.key !== "") {
+            obj.key = message.key;
+        }
+        if (message.value !== "") {
+            obj.value = message.value;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<UpdateByFilterRequest_DataEntry>): UpdateByFilterRequest_DataEntry {
+        return UpdateByFilterRequest_DataEntry.fromPartial(base ?? {});
+    },
+    fromPartial(
+        object: DeepPartial<UpdateByFilterRequest_DataEntry>
+    ): UpdateByFilterRequest_DataEntry {
+        const message = createBaseUpdateByFilterRequest_DataEntry();
+        message.key = object.key ?? "";
+        message.value = object.value ?? "";
+        return message;
+    },
+};
+
+function createBaseUpdateByFilterResponse(): UpdateByFilterResponse {
+    return { numberOfUpdatedEntries: "0", validationErrors: {} };
+}
+
+export const UpdateByFilterResponse: MessageFns<UpdateByFilterResponse> = {
+    encode(
+        message: UpdateByFilterResponse,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.numberOfUpdatedEntries !== "0") {
+            writer.uint32(8).int64(message.numberOfUpdatedEntries);
+        }
+        Object.entries(message.validationErrors).forEach(([key, value]) => {
+            UpdateByFilterResponse_ValidationErrorsEntry.encode(
+                { key: key as any, value },
+                writer.uint32(18).fork()
+            ).join();
+        });
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): UpdateByFilterResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseUpdateByFilterResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 8) {
+                        break;
+                    }
+
+                    message.numberOfUpdatedEntries = reader.int64().toString();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    const entry2 = UpdateByFilterResponse_ValidationErrorsEntry.decode(
+                        reader,
+                        reader.uint32()
+                    );
+                    if (entry2.value !== undefined) {
+                        message.validationErrors[entry2.key] = entry2.value;
+                    }
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): UpdateByFilterResponse {
+        return {
+            numberOfUpdatedEntries: isSet(object.numberOfUpdatedEntries)
+                ? globalThis.String(object.numberOfUpdatedEntries)
+                : "0",
+            validationErrors: isObject(object.validationErrors)
+                ? Object.entries(object.validationErrors).reduce<{
+                      [key: string]: UpdateByFilterValidationResponse;
+                  }>((acc, [key, value]) => {
+                      acc[key] = UpdateByFilterValidationResponse.fromJSON(value);
+                      return acc;
+                  }, {})
+                : {},
+        };
+    },
+
+    toJSON(message: UpdateByFilterResponse): unknown {
+        const obj: any = {};
+        if (message.numberOfUpdatedEntries !== "0") {
+            obj.numberOfUpdatedEntries = message.numberOfUpdatedEntries;
+        }
+        if (message.validationErrors) {
+            const entries = Object.entries(message.validationErrors);
+            if (entries.length > 0) {
+                obj.validationErrors = {};
+                entries.forEach(([k, v]) => {
+                    obj.validationErrors[k] = UpdateByFilterValidationResponse.toJSON(v);
+                });
+            }
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<UpdateByFilterResponse>): UpdateByFilterResponse {
+        return UpdateByFilterResponse.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<UpdateByFilterResponse>): UpdateByFilterResponse {
+        const message = createBaseUpdateByFilterResponse();
+        message.numberOfUpdatedEntries = object.numberOfUpdatedEntries ?? "0";
+        message.validationErrors = Object.entries(object.validationErrors ?? {}).reduce<{
+            [key: string]: UpdateByFilterValidationResponse;
+        }>((acc, [key, value]) => {
+            if (value !== undefined) {
+                acc[key] = UpdateByFilterValidationResponse.fromPartial(value);
+            }
+            return acc;
+        }, {});
+        return message;
+    },
+};
+
+function createBaseUpdateByFilterResponse_ValidationErrorsEntry(): UpdateByFilterResponse_ValidationErrorsEntry {
+    return { key: "", value: undefined };
+}
+
+export const UpdateByFilterResponse_ValidationErrorsEntry: MessageFns<UpdateByFilterResponse_ValidationErrorsEntry> =
+    {
+        encode(
+            message: UpdateByFilterResponse_ValidationErrorsEntry,
+            writer: BinaryWriter = new BinaryWriter()
+        ): BinaryWriter {
+            if (message.key !== "") {
+                writer.uint32(10).string(message.key);
+            }
+            if (message.value !== undefined) {
+                UpdateByFilterValidationResponse.encode(
+                    message.value,
+                    writer.uint32(18).fork()
+                ).join();
+            }
+            return writer;
+        },
+
+        decode(
+            input: BinaryReader | Uint8Array,
+            length?: number
+        ): UpdateByFilterResponse_ValidationErrorsEntry {
+            const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+            let end = length === undefined ? reader.len : reader.pos + length;
+            const message = createBaseUpdateByFilterResponse_ValidationErrorsEntry();
+            while (reader.pos < end) {
+                const tag = reader.uint32();
+                switch (tag >>> 3) {
+                    case 1: {
+                        if (tag !== 10) {
+                            break;
+                        }
+
+                        message.key = reader.string();
+                        continue;
+                    }
+                    case 2: {
+                        if (tag !== 18) {
+                            break;
+                        }
+
+                        message.value = UpdateByFilterValidationResponse.decode(
+                            reader,
+                            reader.uint32()
+                        );
+                        continue;
+                    }
+                }
+                if ((tag & 7) === 4 || tag === 0) {
+                    break;
+                }
+                reader.skip(tag & 7);
+            }
+            return message;
+        },
+
+        fromJSON(object: any): UpdateByFilterResponse_ValidationErrorsEntry {
+            return {
+                key: isSet(object.key) ? globalThis.String(object.key) : "",
+                value: isSet(object.value)
+                    ? UpdateByFilterValidationResponse.fromJSON(object.value)
+                    : undefined,
+            };
+        },
+
+        toJSON(message: UpdateByFilterResponse_ValidationErrorsEntry): unknown {
+            const obj: any = {};
+            if (message.key !== "") {
+                obj.key = message.key;
+            }
+            if (message.value !== undefined) {
+                obj.value = UpdateByFilterValidationResponse.toJSON(message.value);
+            }
+            return obj;
+        },
+
+        create(
+            base?: DeepPartial<UpdateByFilterResponse_ValidationErrorsEntry>
+        ): UpdateByFilterResponse_ValidationErrorsEntry {
+            return UpdateByFilterResponse_ValidationErrorsEntry.fromPartial(base ?? {});
+        },
+        fromPartial(
+            object: DeepPartial<UpdateByFilterResponse_ValidationErrorsEntry>
+        ): UpdateByFilterResponse_ValidationErrorsEntry {
+            const message = createBaseUpdateByFilterResponse_ValidationErrorsEntry();
+            message.key = object.key ?? "";
+            message.value =
+                object.value !== undefined && object.value !== null
+                    ? UpdateByFilterValidationResponse.fromPartial(object.value)
+                    : undefined;
+            return message;
+        },
+    };
+
+function createBaseUpdateByFilterValidationResponse(): UpdateByFilterValidationResponse {
+    return { validationErrors: [], fieldValidationErrors: {} };
+}
+
+export const UpdateByFilterValidationResponse: MessageFns<UpdateByFilterValidationResponse> = {
+    encode(
+        message: UpdateByFilterValidationResponse,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        for (const v of message.validationErrors) {
+            writer.uint32(10).string(v!);
+        }
+        Object.entries(message.fieldValidationErrors).forEach(([key, value]) => {
+            UpdateByFilterValidationResponse_FieldValidationErrorsEntry.encode(
+                { key: key as any, value },
+                writer.uint32(18).fork()
+            ).join();
+        });
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): UpdateByFilterValidationResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseUpdateByFilterValidationResponse();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.validationErrors.push(reader.string());
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    const entry2 =
+                        UpdateByFilterValidationResponse_FieldValidationErrorsEntry.decode(
+                            reader,
+                            reader.uint32()
+                        );
+                    if (entry2.value !== undefined) {
+                        message.fieldValidationErrors[entry2.key] = entry2.value;
+                    }
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): UpdateByFilterValidationResponse {
+        return {
+            validationErrors: globalThis.Array.isArray(object?.validationErrors)
+                ? object.validationErrors.map((e: any) => globalThis.String(e))
+                : [],
+            fieldValidationErrors: isObject(object.fieldValidationErrors)
+                ? Object.entries(object.fieldValidationErrors).reduce<{ [key: string]: string }>(
+                      (acc, [key, value]) => {
+                          acc[key] = String(value);
+                          return acc;
+                      },
+                      {}
+                  )
+                : {},
+        };
+    },
+
+    toJSON(message: UpdateByFilterValidationResponse): unknown {
+        const obj: any = {};
+        if (message.validationErrors?.length) {
+            obj.validationErrors = message.validationErrors;
+        }
+        if (message.fieldValidationErrors) {
+            const entries = Object.entries(message.fieldValidationErrors);
+            if (entries.length > 0) {
+                obj.fieldValidationErrors = {};
+                entries.forEach(([k, v]) => {
+                    obj.fieldValidationErrors[k] = v;
+                });
+            }
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<UpdateByFilterValidationResponse>): UpdateByFilterValidationResponse {
+        return UpdateByFilterValidationResponse.fromPartial(base ?? {});
+    },
+    fromPartial(
+        object: DeepPartial<UpdateByFilterValidationResponse>
+    ): UpdateByFilterValidationResponse {
+        const message = createBaseUpdateByFilterValidationResponse();
+        message.validationErrors = object.validationErrors?.map(e => e) || [];
+        message.fieldValidationErrors = Object.entries(object.fieldValidationErrors ?? {}).reduce<{
+            [key: string]: string;
+        }>((acc, [key, value]) => {
+            if (value !== undefined) {
+                acc[key] = globalThis.String(value);
+            }
+            return acc;
+        }, {});
+        return message;
+    },
+};
+
+function createBaseUpdateByFilterValidationResponse_FieldValidationErrorsEntry(): UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
+    return { key: "", value: "" };
+}
+
+export const UpdateByFilterValidationResponse_FieldValidationErrorsEntry: MessageFns<UpdateByFilterValidationResponse_FieldValidationErrorsEntry> =
+    {
+        encode(
+            message: UpdateByFilterValidationResponse_FieldValidationErrorsEntry,
+            writer: BinaryWriter = new BinaryWriter()
+        ): BinaryWriter {
+            if (message.key !== "") {
+                writer.uint32(10).string(message.key);
+            }
+            if (message.value !== "") {
+                writer.uint32(18).string(message.value);
+            }
+            return writer;
+        },
+
+        decode(
+            input: BinaryReader | Uint8Array,
+            length?: number
+        ): UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
+            const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+            let end = length === undefined ? reader.len : reader.pos + length;
+            const message = createBaseUpdateByFilterValidationResponse_FieldValidationErrorsEntry();
+            while (reader.pos < end) {
+                const tag = reader.uint32();
+                switch (tag >>> 3) {
+                    case 1: {
+                        if (tag !== 10) {
+                            break;
+                        }
+
+                        message.key = reader.string();
+                        continue;
+                    }
+                    case 2: {
+                        if (tag !== 18) {
+                            break;
+                        }
+
+                        message.value = reader.string();
+                        continue;
+                    }
+                }
+                if ((tag & 7) === 4 || tag === 0) {
+                    break;
+                }
+                reader.skip(tag & 7);
+            }
+            return message;
+        },
+
+        fromJSON(object: any): UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
+            return {
+                key: isSet(object.key) ? globalThis.String(object.key) : "",
+                value: isSet(object.value) ? globalThis.String(object.value) : "",
+            };
+        },
+
+        toJSON(message: UpdateByFilterValidationResponse_FieldValidationErrorsEntry): unknown {
+            const obj: any = {};
+            if (message.key !== "") {
+                obj.key = message.key;
+            }
+            if (message.value !== "") {
+                obj.value = message.value;
+            }
+            return obj;
+        },
+
+        create(
+            base?: DeepPartial<UpdateByFilterValidationResponse_FieldValidationErrorsEntry>
+        ): UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
+            return UpdateByFilterValidationResponse_FieldValidationErrorsEntry.fromPartial(
+                base ?? {}
+            );
+        },
+        fromPartial(
+            object: DeepPartial<UpdateByFilterValidationResponse_FieldValidationErrorsEntry>
+        ): UpdateByFilterValidationResponse_FieldValidationErrorsEntry {
+            const message = createBaseUpdateByFilterValidationResponse_FieldValidationErrorsEntry();
             message.key = object.key ?? "";
             message.value = object.value ?? "";
             return message;

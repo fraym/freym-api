@@ -15,3 +15,21 @@ message UpdateResponse {
 	repeated string validation_errors = 2;
 	map<string, string> field_validation_errors = 3;
 }
+
+message UpdateByFilterRequest {
+	string type = 1;
+	AuthData auth = 2;
+	DataFilter filter = 3;
+	map<string, string> data = 4;
+	EventMetadata event_metadata = 5;
+} 
+
+message UpdateByFilterResponse {
+	int64 number_of_updated_entries = 1;
+	map<string, UpdateByFilterValidationResponse> validation_errors = 2;
+}
+
+message UpdateByFilterValidationResponse {
+	repeated string validation_errors = 1;
+	map<string, string> field_validation_errors = 2;
+}
