@@ -1,5 +1,7 @@
 # vNext
 
+# v0.35.0
+
 - (feature) Add `RenameEventType` rpc to streams
 - (feature) Allow multi field indices by allowing `@index` on object level
 - (feature) Add `revalidate` param to `@view`
