@@ -1,6 +1,7 @@
 # vNext
 
 - (feature) Add `RenameEventType` rpc to streams
+- (feature) Allow multi field indices by allowing `@index` on object level
 
 # v0.34.4
 
