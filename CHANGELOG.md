@@ -8,6 +8,7 @@
 - (feature) Add `@renamed` to crud
 - (internal) Remove unused dangerously remove gdpr check flag
 - (feature) Update crud data by filter
+- (feature) Add `@projectedAt`
 
 # v0.34.4
 
