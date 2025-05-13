@@ -4,7 +4,7 @@ help: ## Show this help.
 lint: ## Run linters
 	golangci-lint run
 
-format: ## Run linters
+format: ## Run formatters
 	golangci-lint fmt
 
 test: ## Run tests

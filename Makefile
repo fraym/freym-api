@@ -10,6 +10,10 @@ lint: ## Run linters
 	cd ./go && golangci-lint run
 	cd ./js && npm run lint
 
+format: ## Run formatters
+	cd ./go && golangci-lint fmt
+	cd ./js && npm run fix
+
 test: ## Run tests
 	cd ./go && go test -short ./...
 
