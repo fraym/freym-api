@@ -65,7 +65,11 @@ func (v *ObjectValidator) validateDirectives(object *schema.Object) error {
 	return nil
 }
 
-func (v *ObjectValidator) validateFields(object *schema.Object, schema *schema.Schema, customScalarTypes []string) error {
+func (v *ObjectValidator) validateFields(
+	object *schema.Object,
+	schema *schema.Schema,
+	customScalarTypes []string,
+) error {
 	if len(object.Fields) == 0 {
 		return fmt.Errorf("object `%s` does not contain any fields", object.Name)
 	}

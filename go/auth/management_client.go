@@ -94,7 +94,11 @@ func (c *authManagementClient) ConfirmSchema(ctx context.Context, deploymentId i
 	return err
 }
 
-func (c *authManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
+func (c *authManagementClient) RollbackSchema(
+	ctx context.Context,
+	namespace string,
+	target managementpb.DeploymentTarget,
+) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
 		Namespace: namespace,
 		Target:    target,

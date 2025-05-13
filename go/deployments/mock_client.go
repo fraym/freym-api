@@ -11,7 +11,11 @@ type MockClient struct {
 	mock.Mock
 }
 
-func (c *MockClient) DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error) {
+func (c *MockClient) DeploySchema(
+	ctx context.Context,
+	schemaString string,
+	options *DeploymentOptions,
+) (*int64, error) {
 	args := c.Called(ctx, schemaString, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)

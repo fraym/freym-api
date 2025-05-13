@@ -7,7 +7,7 @@ proto: ## Generates api code from .proto files
 	cd ./js && npm install && npm run generate
 
 lint: ## Run linters
-	cd ./go && golangci-lint run --enable gofumpt
+	cd ./go && golangci-lint run
 	cd ./js && npm run lint
 
 test: ## Run tests

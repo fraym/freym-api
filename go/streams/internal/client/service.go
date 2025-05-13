@@ -37,7 +37,15 @@ func NewService(
 	}, nil
 }
 
-func (s *Service) IterateAllEvents(ctx context.Context, tenant string, topic string, types []string, perPage int, queueSize int, handler dto.HandlerFunc) error {
+func (s *Service) IterateAllEvents(
+	ctx context.Context,
+	tenant string,
+	topic string,
+	types []string,
+	perPage int,
+	queueSize int,
+	handler dto.HandlerFunc,
+) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
 		return err
@@ -92,7 +100,16 @@ func (s *Service) IterateAllEvents(ctx context.Context, tenant string, topic str
 	}, lastEventCheck, perPage, queueSize)
 }
 
-func (s *Service) IterateAllEventsAfterEvent(ctx context.Context, tenant string, topic string, types []string, eventId string, perPage int, queueSize int, handler dto.HandlerFunc) error {
+func (s *Service) IterateAllEventsAfterEvent(
+	ctx context.Context,
+	tenant string,
+	topic string,
+	types []string,
+	eventId string,
+	perPage int,
+	queueSize int,
+	handler dto.HandlerFunc,
+) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
 		return err
@@ -120,7 +137,16 @@ func (s *Service) IterateAllEventsAfterEvent(ctx context.Context, tenant string,
 	}, lastEventCheck, perPage, queueSize)
 }
 
-func (s *Service) IterateStream(ctx context.Context, tenant string, topic string, stream string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+func (s *Service) IterateStream(
+	ctx context.Context,
+	tenant string,
+	topic string,
+	stream string,
+	deploymentId int64,
+	perPage int,
+	queueSize int,
+	handler dto.HandlerFunc,
+) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
 		return err
@@ -153,7 +179,17 @@ func (s *Service) IterateStream(ctx context.Context, tenant string, topic string
 	}, lastEventCheck, perPage, queueSize)
 }
 
-func (s *Service) IterateStreamAfterEvent(ctx context.Context, tenant string, topic string, stream string, eventId string, deploymentId int64, perPage int, queueSize int, handler dto.HandlerFunc) error {
+func (s *Service) IterateStreamAfterEvent(
+	ctx context.Context,
+	tenant string,
+	topic string,
+	stream string,
+	eventId string,
+	deploymentId int64,
+	perPage int,
+	queueSize int,
+	handler dto.HandlerFunc,
+) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
 		return err
@@ -202,7 +238,12 @@ func (s *Service) IsStreamEmpty(ctx context.Context, tenant string, topic string
 	return response.GetIsEmpty(), nil
 }
 
-func (s *Service) GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error) {
+func (s *Service) GetEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	eventId string,
+) (*dto.SubscriptionEvent, error) {
 	response, err := util.RetryWithResult(func() (*managementpb.Event, error) {
 		return s.client.GetEvent(ctx, managementpb.GetEventRequest_builder{
 			TenantId: tenantId,
@@ -241,7 +282,12 @@ func (s *Service) GetLastEvent(ctx context.Context, tenantId string, topic strin
 	return util.SubscriptionEventFromPb(response)
 }
 
-func (s *Service) GetLastEventByTypes(ctx context.Context, tenantId string, topic string, types []string) (*dto.SubscriptionEvent, error) {
+func (s *Service) GetLastEventByTypes(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	types []string,
+) (*dto.SubscriptionEvent, error) {
 	response, err := util.RetryWithResult(func() (*managementpb.Event, error) {
 		res, err := s.client.GetLastEventByTypes(ctx, managementpb.GetLastEventByTypesRequest_builder{
 			TenantId: tenantId,
@@ -302,7 +348,14 @@ func (s *Service) InvalidateGdprData(ctx context.Context, tenantId string, topic
 	}, s.retryPause, 50)
 }
 
-func (s *Service) IntroduceGdprOnEventField(ctx context.Context, tenantId string, topic string, eventId string, fieldName string, defaultValue string) error {
+func (s *Service) IntroduceGdprOnEventField(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	eventId string,
+	fieldName string,
+	defaultValue string,
+) error {
 	return util.Retry(func() error {
 		_, err := s.client.IntroduceGdprOnEventField(ctx, managementpb.IntroduceGdprOnEventFieldRequest_builder{
 			TenantId:     tenantId,
@@ -315,7 +368,14 @@ func (s *Service) IntroduceGdprOnEventField(ctx context.Context, tenantId string
 	}, s.retryPause, 50)
 }
 
-func (s *Service) CreateStreamSnapshot(ctx context.Context, tenantId string, topic string, stream string, lastSnapshottedEventId string, snapshotEvent *dto.PublishEvent) error {
+func (s *Service) CreateStreamSnapshot(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	stream string,
+	lastSnapshottedEventId string,
+	snapshotEvent *dto.PublishEvent,
+) error {
 	publishEvent, err := snapshotEvent.ToProtobufPublishEvent()
 	if err != nil {
 		return err

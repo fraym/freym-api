@@ -16,7 +16,12 @@ type typeValidator struct {
 	mock.Mock
 }
 
-func (v *typeValidator) validate(field *schema.Field, object *schema.Object, schema *schema.Schema, customScalarTypes []string) error {
+func (v *typeValidator) validate(
+	field *schema.Field,
+	object *schema.Object,
+	schema *schema.Schema,
+	customScalarTypes []string,
+) error {
 	return v.Called(field, object, schema, customScalarTypes).Error(0)
 }
 
@@ -44,7 +49,9 @@ func TestFieldValidator_Validate_InvalidType(t *testing.T) {
 	expectedSchema := &schema.Schema{}
 	expectedCustomScalarTypes := []string{}
 
-	typeValidator.On("validate", expectedField, expectedObject, expectedSchema, expectedCustomScalarTypes).Return(expectedErr).Once()
+	typeValidator.On("validate", expectedField, expectedObject, expectedSchema, expectedCustomScalarTypes).
+		Return(expectedErr).
+		Once()
 
 	err := v.Validate(expectedField, expectedObject, expectedSchema, expectedCustomScalarTypes)
 	assert.ErrorIs(t, err, expectedErr)
@@ -85,7 +92,8 @@ func TestFieldValidator_Validate_InvalidDirective(t *testing.T) {
 	expectedCustomScalarTypes := []string{}
 	expectedErr := errors.New("test")
 
-	directiveValidator.On("ValidateFieldDirective", expectedDirective, expectedObjectDirectives, expectedComparable).Return(expectedErr)
+	directiveValidator.On("ValidateFieldDirective", expectedDirective, expectedObjectDirectives, expectedComparable).
+		Return(expectedErr)
 
 	field := &schema.Field{
 		Name: "field",

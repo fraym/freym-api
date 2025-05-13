@@ -21,7 +21,11 @@ type Publisher[T peer.ServiceClient, RequestData any] struct {
 	send     SendFn[T, RequestData]
 }
 
-func NewPublisher[T peer.ServiceClient, RequestData any](logger golog.Logger, peerPool peer.PeerPool[T], send SendFn[T, RequestData]) *Publisher[T, RequestData] {
+func NewPublisher[T peer.ServiceClient, RequestData any](
+	logger golog.Logger,
+	peerPool peer.PeerPool[T],
+	send SendFn[T, RequestData],
+) *Publisher[T, RequestData] {
 	return &Publisher[T, RequestData]{
 		logger:   logger,
 		peerPool: peerPool,
@@ -39,7 +43,12 @@ func (p *Publisher[T, RequestData]) waitForRetryPause(numberOfRetry int) {
 }
 
 // trySendToClient returns true if the client acknowledged the request
-func (p *Publisher[T, RequestData]) TrySendToClient(data RequestData, address string, client T, numberOfRetry int) *Response {
+func (p *Publisher[T, RequestData]) TrySendToClient(
+	data RequestData,
+	address string,
+	client T,
+	numberOfRetry int,
+) *Response {
 	p.waitForRetryPause(numberOfRetry)
 
 	if numberOfRetry == 3 {

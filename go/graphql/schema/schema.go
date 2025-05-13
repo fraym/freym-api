@@ -81,7 +81,8 @@ func (s *Schema) GetString() (string, error) {
 }
 
 func (s *Schema) Equals(other *Schema) bool {
-	if len(s.Objects) != len(other.Objects) || len(s.Enums) != len(other.Enums) || len(s.Scalars) != len(other.Scalars) {
+	if len(s.Objects) != len(other.Objects) || len(s.Enums) != len(other.Enums) ||
+		len(s.Scalars) != len(other.Scalars) {
 		return false
 	}
 

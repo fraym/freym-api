@@ -606,22 +606,11 @@ func (c *projectionsDeliveryClient) UpsertJsonData(
 		return nil, err
 	}
 
-	pbPayload := map[string]string{}
-
-	for key, value := range payload {
-		byteValue, err := json.Marshal(value)
-		if err != nil {
-			return nil, err
-		}
-
-		pbPayload[key] = string(byteValue)
-	}
-
 	response, err := c.client.Upsert(ctx, deliverypb.UpsertRequest_builder{
 		Projection:    projection,
 		Auth:          pbAuthData,
 		DataId:        id,
-		Payload:       pbPayload,
+		Payload:       payload,
 		EventMetadata: eventMetadata.getProtobufEventMetadata(),
 	}.Build())
 	if err != nil {

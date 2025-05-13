@@ -14,14 +14,23 @@ type ParallelPublisher[T peer.ServiceClient, RequestData any] struct {
 	peerPool peer.PeerPool[T]
 }
 
-func NewParallelPublisher[T peer.ServiceClient, RequestData any](logger golog.Logger, peerPool peer.PeerPool[T], sendFn publisher.SendFn[T, RequestData]) ParallelPublisher[T, RequestData] {
+func NewParallelPublisher[T peer.ServiceClient, RequestData any](
+	logger golog.Logger,
+	peerPool peer.PeerPool[T],
+	sendFn publisher.SendFn[T, RequestData],
+) ParallelPublisher[T, RequestData] {
 	return ParallelPublisher[T, RequestData]{
 		Publisher: *publisher.NewPublisher(logger, peerPool, sendFn),
 		peerPool:  peerPool,
 	}
 }
 
-func (p *ParallelPublisher[T, RequestData]) Send(ctx context.Context, data RequestData, filter publisher.AddressFilter, callback publisher.SendCallback) error {
+func (p *ParallelPublisher[T, RequestData]) Send(
+	ctx context.Context,
+	data RequestData,
+	filter publisher.AddressFilter,
+	callback publisher.SendCallback,
+) error {
 	wg := sync.WaitGroup{}
 	err := p.peerPool.Iterate(ctx, func(address string, client T) bool {
 		if filter != nil && !filter(address) {

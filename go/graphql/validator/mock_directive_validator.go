@@ -14,6 +14,10 @@ func (v *MockDirectiveValidator) ValidateObjectDirective(directive *schema.Direc
 	return v.Called(directive).Error(0)
 }
 
-func (v *MockDirectiveValidator) ValidateFieldDirective(directive *schema.Directive, objectDirectiveNames []string, fieldType types.Comparable) error {
+func (v *MockDirectiveValidator) ValidateFieldDirective(
+	directive *schema.Directive,
+	objectDirectiveNames []string,
+	fieldType types.Comparable,
+) error {
 	return v.Called(directive, objectDirectiveNames, fieldType).Error(0)
 }

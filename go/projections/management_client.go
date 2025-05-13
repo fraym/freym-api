@@ -114,7 +114,11 @@ func (c *projectionsManagementClient) ConfirmSchema(ctx context.Context, deploym
 	return err
 }
 
-func (c *projectionsManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
+func (c *projectionsManagementClient) RollbackSchema(
+	ctx context.Context,
+	namespace string,
+	target managementpb.DeploymentTarget,
+) error {
 	_, err := c.client.RollbackSchema(ctx, managementpb.RollbackSchemaRequest_builder{
 		Target:    target,
 		Namespace: namespace,

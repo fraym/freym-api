@@ -21,7 +21,10 @@ type mockBackchannelServiceClient struct {
 	mock.Mock
 }
 
-func handleParallel(connections peer.PeerPool[peer.ServiceClient], onSendToClient onSendToClientFn) appSync.ParallelPublisher[peer.ServiceClient, any] {
+func handleParallel(
+	connections peer.PeerPool[peer.ServiceClient],
+	onSendToClient onSendToClientFn,
+) appSync.ParallelPublisher[peer.ServiceClient, any] {
 	logger := golog.NewZerologLogger()
 
 	sendFn := func(ctx context.Context, data any, client peer.ServiceClient) (*publisher.SendResponse, error) {

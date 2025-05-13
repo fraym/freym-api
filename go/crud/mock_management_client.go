@@ -32,7 +32,11 @@ func (c *MockManagementClient) ConfirmSchema(ctx context.Context, deploymentId i
 	return c.Called(ctx, deploymentId).Error(0)
 }
 
-func (c *MockManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
+func (c *MockManagementClient) RollbackSchema(
+	ctx context.Context,
+	namespace string,
+	target managementpb.DeploymentTarget,
+) error {
 	return c.Called(ctx, namespace, target).Error(0)
 }
 

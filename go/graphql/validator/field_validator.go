@@ -35,7 +35,12 @@ func NewFieldValidator(
 	}
 }
 
-func (v *FieldValidator) Validate(field *schema.Field, object *schema.Object, schema *schema.Schema, customScalarTypes []string) error {
+func (v *FieldValidator) Validate(
+	field *schema.Field,
+	object *schema.Object,
+	schema *schema.Schema,
+	customScalarTypes []string,
+) error {
 	if err := v.validateType(field, object, schema, customScalarTypes); err != nil {
 		return err
 	}
@@ -55,7 +60,12 @@ func (v *FieldValidator) Validate(field *schema.Field, object *schema.Object, sc
 	return nil
 }
 
-func (v *FieldValidator) validateType(field *schema.Field, object *schema.Object, schema *schema.Schema, customScalarTypes []string) error {
+func (v *FieldValidator) validateType(
+	field *schema.Field,
+	object *schema.Object,
+	schema *schema.Schema,
+	customScalarTypes []string,
+) error {
 	isValidType := false
 
 	for _, allowedType := range v.config.AllowedTypes {

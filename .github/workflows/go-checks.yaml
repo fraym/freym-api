@@ -23,11 +23,10 @@ jobs:
           go-version: 1.23
 
       - name: Run linters
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           working-directory: go
           version: latest
-          args: --enable gofumpt --timeout=3m
 
       - name: Run tests
         working-directory: go

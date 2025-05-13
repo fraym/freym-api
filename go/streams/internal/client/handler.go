@@ -56,7 +56,11 @@ func (h *handler) Handle(ctx context.Context, event *dto.SubscriptionEvent) erro
 				return nil
 			}
 
-			return fmt.Errorf("there is no event handler for the event of type '%s', topic '%s'", event.Type, event.Topic)
+			return fmt.Errorf(
+				"there is no event handler for the event of type '%s', topic '%s'",
+				event.Type,
+				event.Topic,
+			)
 		}
 
 		wg := sync.WaitGroup{}

@@ -1,5 +1,9 @@
 # vNext
 
+# v0.35.1
+
+- (bug) Fix projections go client
+
 # v0.35.0
 
 - (feature) Add `RenameEventType` rpc to streams

@@ -22,7 +22,17 @@ func (c *MockDeliveryClient) GetData(
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*Data, error) {
-	args := c.Called(ctx, projection, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
+	args := c.Called(
+		ctx,
+		projection,
+		authData,
+		id,
+		filter,
+		returnEmptyDataIfNotFound,
+		wait,
+		useStrongConsistency,
+		target,
+	)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -40,7 +50,17 @@ func (c *MockDeliveryClient) GetJsonData(
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*JsonData, error) {
-	args := c.Called(ctx, projection, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
+	args := c.Called(
+		ctx,
+		projection,
+		authData,
+		id,
+		filter,
+		returnEmptyDataIfNotFound,
+		wait,
+		useStrongConsistency,
+		target,
+	)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

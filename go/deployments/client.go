@@ -67,7 +67,11 @@ func NewClient(
 	}, nil
 }
 
-func (c *deploymentsClient) DeploySchema(ctx context.Context, schemaString string, options *DeploymentOptions) (*int64, error) {
+func (c *deploymentsClient) DeploySchema(
+	ctx context.Context,
+	schemaString string,
+	options *DeploymentOptions,
+) (*int64, error) {
 	requestData, err := c.getDataFromString(schemaString)
 	if err != nil {
 		return nil, err

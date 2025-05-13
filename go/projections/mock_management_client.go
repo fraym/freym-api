@@ -22,7 +22,8 @@ func (c *MockManagementClient) DeploySchema(
 	views []View,
 	options *DeploymentOptions,
 ) error {
-	return c.Called(ctx, deploymentId, namespace, projectionTypes, crudTypes, nestedTypes, enums, views, options).Error(0)
+	return c.Called(ctx, deploymentId, namespace, projectionTypes, crudTypes, nestedTypes, enums, views, options).
+		Error(0)
 }
 
 func (c *MockManagementClient) ActivateSchema(ctx context.Context, deploymentId int64) error {
@@ -33,7 +34,11 @@ func (c *MockManagementClient) ConfirmSchema(ctx context.Context, deploymentId i
 	return c.Called(ctx, deploymentId).Error(0)
 }
 
-func (c *MockManagementClient) RollbackSchema(ctx context.Context, namespace string, target managementpb.DeploymentTarget) error {
+func (c *MockManagementClient) RollbackSchema(
+	ctx context.Context,
+	namespace string,
+	target managementpb.DeploymentTarget,
+) error {
 	return c.Called(ctx, namespace, target).Error(0)
 }
 

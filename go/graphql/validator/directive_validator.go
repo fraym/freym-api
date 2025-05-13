@@ -58,7 +58,11 @@ func (v *DirectiveValidator) ValidateObjectDirective(directive *schema.Directive
 	return validateDirectiveArguments(directive, options.RequiredArgumentKinds, options.OptionalArgumentKinds)
 }
 
-func (v *DirectiveValidator) ValidateFieldDirective(directive *schema.Directive, objectDirectives []string, fieldType types.Comparable) error {
+func (v *DirectiveValidator) ValidateFieldDirective(
+	directive *schema.Directive,
+	objectDirectives []string,
+	fieldType types.Comparable,
+) error {
 	name := directive.Name
 	options, ok := v.config.AllowedFieldDirectives[directive.Name]
 	if !ok {
@@ -77,24 +81,45 @@ func (v *DirectiveValidator) ValidateFieldDirective(directive *schema.Directive,
 	}
 
 	if !validFieldType {
-		return fmt.Errorf("invalid field type `%s` for field with directive `%s`, expected one of: %s", fieldType, name, options.AllowedFieldType)
+		return fmt.Errorf(
+			"invalid field type `%s` for field with directive `%s`, expected one of: %s",
+			fieldType,
+			name,
+			options.AllowedFieldType,
+		)
 	}
 
 	if len(options.RequireOneObjectDirectiveOf) > 0 && !lo.Some(objectDirectives, options.RequireOneObjectDirectiveOf) {
-		return fmt.Errorf("cannot use field directive `%s` without one object directive of: %s", name, options.RequireOneObjectDirectiveOf)
+		return fmt.Errorf(
+			"cannot use field directive `%s` without one object directive of: %s",
+			name,
+			options.RequireOneObjectDirectiveOf,
+		)
 	}
 
 	if !lo.Every(objectDirectives, options.RequireAllObjectDirectivesOf) {
-		return fmt.Errorf("cannot use field directive `%s` without all object directives of: %s", name, options.RequireAllObjectDirectivesOf)
+		return fmt.Errorf(
+			"cannot use field directive `%s` without all object directives of: %s",
+			name,
+			options.RequireAllObjectDirectivesOf,
+		)
 	}
 
 	return validateDirectiveArguments(directive, options.RequiredArgumentKinds, options.OptionalArgumentKinds)
 }
 
-func validateDirectiveArguments(directive *schema.Directive, requiredArgumentKinds map[string]string, optionalArgumentKinds map[string]string) error {
+func validateDirectiveArguments(
+	directive *schema.Directive,
+	requiredArgumentKinds map[string]string,
+	optionalArgumentKinds map[string]string,
+) error {
 	if len(directive.Arguments) < len(requiredArgumentKinds) {
 		requiredArgs := lo.Keys(requiredArgumentKinds)
-		return fmt.Errorf("directive `%s` does not have all required arguments specified: %s", directive.Name, requiredArgs)
+		return fmt.Errorf(
+			"directive `%s` does not have all required arguments specified: %s",
+			directive.Name,
+			requiredArgs,
+		)
 	}
 
 requirementsLoop:
@@ -117,11 +142,22 @@ requirementsLoop:
 		requiredKind, ok := optionalArgumentKinds[name]
 		if !ok {
 			allowedKinds := lo.Values(optionalArgumentKinds)
-			return fmt.Errorf("invalid argument `%s` on directive `%s`, expected one of: %s", name, directive.Name, allowedKinds)
+			return fmt.Errorf(
+				"invalid argument `%s` on directive `%s`, expected one of: %s",
+				name,
+				directive.Name,
+				allowedKinds,
+			)
 		}
 
 		if arg.Kind != requiredKind && requiredKind != "*" {
-			return fmt.Errorf("invalid kind `%s` for argument `%s` on directive `%s`, `%s` expected", arg.Kind, name, directive.Name, requiredKind)
+			return fmt.Errorf(
+				"invalid kind `%s` for argument `%s` on directive `%s`, `%s` expected",
+				arg.Kind,
+				name,
+				directive.Name,
+				requiredKind,
+			)
 		}
 	}
 
