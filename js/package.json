@@ -5,7 +5,8 @@
         "dev": "turbo dev",
         "lint": "turbo lint",
         "fix": "turbo fix",
-        "generate": "npm run generate --prefix proto"
+        "generate": "npm run generate --prefix proto",
+        "bump": "ts-node bump.ts"
     },
     "engines": {
         "node": ">=20"
@@ -14,13 +15,15 @@
         "*"
     ],
     "devDependencies": {
-        "@becklyn/eslint": "^1.1.1",
-        "@becklyn/prettier": "^2.1.1",
+        "@becklyn/eslint": "^1.1.2",
+        "@becklyn/prettier": "^2.1.2",
         "@becklyn/tsconfig": "^1.0.0",
-        "@swc/cli": "^0.6.0",
-        "@swc/core": "^1.11.18",
+        "@swc/cli": "^0.7.7",
+        "@swc/core": "^1.11.24",
+        "@types/node": "^22.15.21",
         "np": "^10.2.0",
-        "turbo": "^2.5.0",
+        "replace-in-file": "^8.3.0",
+        "turbo": "^2.5.3",
         "typescript": "^5.8.3"
     },
     "prettier": "@becklyn/prettier",

@@ -1,0 +1,14 @@
+{
+    "extends": "@becklyn/tsconfig/react-library.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"]
+        },
+        "emitDeclarationOnly": true,
+        "declarationMap": false
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["node_modules", "dist", ".turbo"]
+}

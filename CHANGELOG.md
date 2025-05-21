@@ -1,5 +1,9 @@
 # vNext
 
+# v0.36.0
+
+- (feature) Add `@fraym/react`
+
 # v0.35.1
 
 - (bug) Fix projections go client

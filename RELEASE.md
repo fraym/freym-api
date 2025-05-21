@@ -1,5 +1,6 @@
-# v0.35.1
+# v0.36.0
 
-## :bug: Bug Fixes
+## :gift: New Features
 
-- Fix projections go client
+- Add `@fraym/react`
+- Add `@fraym/graphql`

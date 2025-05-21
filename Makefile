@@ -1,3 +1,5 @@
+version := $(shell cat ./js/version)
+
 help: ## Show this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"; printf "\Targets:\n"} /^[$$()% a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m	 %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
@@ -5,6 +7,14 @@ help: ## Show this help.
 proto: ## Generates api code from .proto files
 	cd ./go && ./proto.sh
 	cd ./js && npm install && npm run generate
+
+bump: ## Bumps the version of the js packages
+	@echo "Bumping js package version..."
+	@echo Enter new version:
+	@read new_version; \
+	cd ./js && node bump.js $(version) $$new_version; \
+	echo $$new_version > ./version; \
+	npm i
 
 lint: ## Run linters
 	cd ./go && golangci-lint run
