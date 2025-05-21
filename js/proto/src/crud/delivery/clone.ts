@@ -3,7 +3,6 @@
 //   protoc-gen-ts_proto  v2.7.0
 //   protoc               v5.29.3
 // source: crud/delivery/clone.proto
-
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { AuthData, EventMetadata } from "./shared";
