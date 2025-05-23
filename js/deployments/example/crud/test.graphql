@@ -1,5 +1,6 @@
 type CrudTestType @crudType @renamed(prev: ["OldCrudType"]) {
-    name: String
+    name: String @index
+    seq: Int! @readonly @sequence(offset: 20, group: ["name"])
 }
 
 type NestedCrudType {

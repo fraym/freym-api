@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { getErrorFromResult } from "@/error";
-import { UseSubscriptionOptions, defaultOnSubscriptionUpdate } from "@/types";
+import { getErrorFromResult } from "@fraym/graphql/error";
+import { UseSubscriptionOptions, defaultOnSubscriptionUpdate } from "@fraym/graphql/types";
 import { AnyVariables, CombinedError, DocumentInput } from "@urql/core";
 import { useClient } from "./useClient";
 import { useUpdatingRef } from "./useUpdatingRef";
 
 export const useListSubscription = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Element extends { id: string } = any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Data = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     SubscriptionData = any,
     Variables extends AnyVariables = AnyVariables,
     SubscriptionVariables extends AnyVariables = AnyVariables,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Element extends { id: string } = any,
 >(
     query: DocumentInput<Data, Variables>,
     subscription: DocumentInput<SubscriptionData, SubscriptionVariables>,

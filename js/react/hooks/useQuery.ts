@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getErrorFromResult } from "@/error";
-import { UseQueryOptions } from "@/types";
+import { getErrorFromResult } from "@fraym/graphql/error";
+import { UseQueryOptions } from "@fraym/graphql/types";
 import { AnyVariables, CombinedError, DocumentInput } from "@urql/core";
 import { useClient } from "./useClient";
 import { useUpdatingRef } from "./useUpdatingRef";

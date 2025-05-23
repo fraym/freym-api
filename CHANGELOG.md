@@ -1,5 +1,9 @@
 # vNext
 
+# v0.37.0
+
+- (feature) Add `@fraym/graphql`
+
 # v0.36.0
 
 - (feature) Add `@fraym/react`
