@@ -1,5 +1,7 @@
 # vNext
 
+- (improvement) Read `deploymentId` from `STREAMS_CLIENT_DEPLOYMENT_ID` env var if not provided in config
+
 # v0.37.0
 
 - (feature) Add `@fraym/graphql`

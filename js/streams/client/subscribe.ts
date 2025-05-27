@@ -21,8 +21,7 @@ export type Stream = ClientDuplexStream<SubscribeRequest, SubscribeResponse>;
 export const newSubscription = (
     topics: string[],
     ignoreUnhandledEvents: boolean,
-    config: ClientConfig,
-    deploymentId: number | null,
+    config: Required<ClientConfig>,
     serviceClient: ServiceClient
 ): Subscription => {
     let stream: Stream | null = null;
@@ -111,7 +110,7 @@ export const newSubscription = (
         };
         stream = newStream;
 
-        await initStream(topics, config, deploymentId, newStream);
+        await initStream(topics, config, newStream);
 
         retries = 50;
         newStream.on("data", dataFn);
@@ -144,8 +143,7 @@ export const newSubscription = (
 
 export const initStream = async (
     topics: string[],
-    config: ClientConfig,
-    deploymentId: number | null,
+    config: Required<ClientConfig>,
     stream: Stream
 ): Promise<Stream> => {
     return new Promise<Stream>((resolve, reject) => {
@@ -156,7 +154,7 @@ export const initStream = async (
                     metadata: {
                         group: config.groupId,
                         subscriberId: uuid(),
-                        deploymentId: deploymentId?.toString() ?? "",
+                        deploymentId: config.deploymentId.toString(),
                     },
                     topics,
                 },

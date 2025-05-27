@@ -10,7 +10,7 @@ export const getStream = async (
     perPage: number,
     handler: HandlerFunc,
     stopLoadingMore: StopLoadingMoreFunc,
-    deploymentId: number | null,
+    deploymentId: number,
     serviceClient: ServiceClient
 ): Promise<void> => {
     let page = 0;
@@ -59,7 +59,7 @@ const getStreamPage = async (
     stream: string,
     perPage: number,
     page: number,
-    deploymentId: number | null,
+    deploymentId: number,
     snapshotEventId: string | null,
     serviceClient: ServiceClient
 ) => {
@@ -73,7 +73,7 @@ const getStreamPage = async (
                         topic,
                         page: page.toString(),
                         perPage: perPage.toString(),
-                        deploymentId: deploymentId?.toString() ?? "",
+                        deploymentId: deploymentId.toString(),
                         snapshotEventId: snapshotEventId ?? "",
                     },
                     async (error, data) => {
@@ -97,7 +97,7 @@ export const getStreamAfterEvent = async (
     perPage: number,
     handler: HandlerFunc,
     stopLoadingMore: StopLoadingMoreFunc,
-    deploymentId: number | null,
+    deploymentId: number,
     serviceClient: ServiceClient
 ): Promise<void> => {
     let page = 0;
@@ -143,7 +143,7 @@ const getStreamPageAfterEvent = async (
     eventId: string,
     perPage: number,
     page: number,
-    deploymentId: number | null,
+    deploymentId: number,
     snapshotEventId: string | null,
     serviceClient: ServiceClient
 ) => {
@@ -158,7 +158,7 @@ const getStreamPageAfterEvent = async (
                         eventId,
                         page: page.toString(),
                         perPage: perPage.toString(),
-                        deploymentId: deploymentId?.toString() ?? "",
+                        deploymentId: deploymentId.toString(),
                         snapshotEventId: snapshotEventId ?? "",
                     },
                     async (error, data) => {
@@ -205,6 +205,7 @@ export const createStreamSnapshot = async (
     stream: string,
     lastSnapshottedEventId: string,
     snapshotEvent: PublishEvent,
+    deploymentId: number,
     serviceClient: ServiceClient
 ): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
@@ -214,7 +215,10 @@ export const createStreamSnapshot = async (
                 stream,
                 tenantId,
                 lastSnapshottedEventId,
-                snapshotEvent: getProtobufPublishEventFromPublishedEvent(snapshotEvent),
+                snapshotEvent: getProtobufPublishEventFromPublishedEvent(
+                    snapshotEvent,
+                    deploymentId
+                ),
             },
             error => {
                 if (error) {

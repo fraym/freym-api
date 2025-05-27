@@ -52,14 +52,9 @@ export interface Client {
         topic: string,
         tenantId: string,
         stream: string,
-        perPage: number,
-        deploymentId?: number | null
+        perPage: number
     ) => StreamIterator;
-    subscribe: (
-        topics?: string[],
-        ignoreUnhandledEvents?: boolean,
-        deploymentId?: number
-    ) => Subscription;
+    subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
     invalidateGdprData: (tenantId: string, topic: string, gdprId: string) => Promise<void>;
     introduceGdprOnEventField: (
         tenantId: string,
@@ -79,8 +74,8 @@ export interface Client {
     close: () => void;
 }
 
-export const newClient = async (config: ClientConfig): Promise<Client> => {
-    config = useConfigDefaults(config);
+export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
+    const config = useConfigDefaults(inputConfig);
     const serviceClient = new ServiceClient(config.serverAddress, credentials.createInsecure(), {
         "grpc.keepalive_time_ms": config.keepaliveInterval,
         "grpc.keepalive_timeout_ms": config.keepaliveTimeout,
@@ -171,9 +166,9 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
             );
         },
         publish: async (topic, events) => {
-            return await sendPublish(topic, events, serviceClient);
+            return await sendPublish(topic, events, config.deploymentId, serviceClient);
         },
-        getStreamIterator: (topic, tenantId, stream, perPage, deploymentId = null) => {
+        getStreamIterator: (topic, tenantId, stream, perPage) => {
             return {
                 forEach: async callback => {
                     const lastEventCheck = await getLastEventCheck(tenantId, topic);
@@ -191,7 +186,7 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                             callback(event);
                         },
                         lastEventCheck,
-                        deploymentId,
+                        config.deploymentId,
                         serviceClient
                     );
                 },
@@ -212,7 +207,7 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                             callback(event);
                         },
                         lastEventCheck,
-                        deploymentId,
+                        config.deploymentId,
                         serviceClient
                     );
                 },
@@ -221,16 +216,11 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                 },
             };
         },
-        subscribe: (
-            topics: string[] = [],
-            ignoreUnhandledEvents: boolean = false,
-            deploymentId: number | null = null
-        ) => {
+        subscribe: (topics: string[] = [], ignoreUnhandledEvents: boolean = false) => {
             const subscription = newSubscription(
                 topics,
                 ignoreUnhandledEvents,
                 config,
-                deploymentId,
                 serviceClient
             );
 
@@ -270,6 +260,7 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
                 stream,
                 idOfLastEventThatGotSnapshotted,
                 snapshotEvent,
+                config.deploymentId,
                 serviceClient
             );
         },
