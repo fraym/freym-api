@@ -1,7 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
+import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
-import { EventMetadata } from "./eventMetadata";
+import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
 
 export type CloneResponse<T extends CrudData> = CloneSuccessResponse<T> | CloneValidationResponse;
 
@@ -32,7 +32,8 @@ export const cloneCrudData = async <T extends CrudData>(
     id: string,
     newId: string,
     data: Partial<T>,
-    eventMetadata: EventMetadata,
+    eventMetadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<CloneResponse<T>> => {
     const requestData: Record<string, string> = {};
@@ -48,7 +49,7 @@ export const cloneCrudData = async <T extends CrudData>(
                 auth: getProtobufAuthData(authData),
                 id,
                 newId,
-                eventMetadata,
+                eventMetadata: fillMetadataWithDefaults(eventMetadata, target),
                 data: requestData,
             },
             (error, response) => {

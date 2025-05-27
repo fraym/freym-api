@@ -1,7 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
+import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
-import { EventMetadata } from "./eventMetadata";
+import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
 import { Filter, getProtobufDataFilter } from "./filter";
 
 export type UpdateByFilterResponse =
@@ -38,7 +38,8 @@ export const updateCrudDataByFilter = async <T extends CrudData>(
     authData: AuthData,
     filter: Filter,
     data: Partial<T>,
-    eventMetadata: EventMetadata,
+    eventMetadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<UpdateByFilterResponse> => {
     const requestData: Record<string, string> = {};
@@ -54,7 +55,7 @@ export const updateCrudDataByFilter = async <T extends CrudData>(
                 auth: getProtobufAuthData(authData),
                 data: requestData,
                 filter: getProtobufDataFilter(filter),
-                eventMetadata,
+                eventMetadata: fillMetadataWithDefaults(eventMetadata, target),
             },
             (error, response) => {
                 if (error) {

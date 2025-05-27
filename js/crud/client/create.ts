@@ -1,7 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
+import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
-import { EventMetadata } from "./eventMetadata";
+import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
 
 export type CreateResponse<T extends CrudData> =
     | CreateSuccessResponse<T>
@@ -33,7 +33,8 @@ export const createCrudData = async <T extends CrudData>(
     authData: AuthData,
     data: T,
     id: string,
-    eventMetadata: EventMetadata,
+    eventMetadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<CreateResponse<T>> => {
     const requestData: Record<string, string> = {};
@@ -49,7 +50,7 @@ export const createCrudData = async <T extends CrudData>(
                 auth: getProtobufAuthData(authData),
                 data: requestData,
                 id,
-                eventMetadata,
+                eventMetadata: fillMetadataWithDefaults(eventMetadata, target),
             },
             (error, response) => {
                 if (error) {

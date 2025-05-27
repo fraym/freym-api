@@ -6,7 +6,7 @@ import { DeliveryClientConfig, useDeliveryConfigDefaults } from "./config";
 import { CreateResponse, createCrudData } from "./create";
 import { CrudData } from "./data";
 import { deleteCrudData } from "./delete";
-import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
+import { EventMetadata } from "./eventMetadata";
 import { Filter } from "./filter";
 import { getCrudData } from "./getData";
 import { GetCrudDataList, getCrudDataList } from "./getDataList";
@@ -80,8 +80,10 @@ export interface DeliveryClient {
     close: () => Promise<void>;
 }
 
-export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<DeliveryClient> => {
-    config = useDeliveryConfigDefaults(config);
+export const newDeliveryClient = async (
+    inputConfig?: DeliveryClientConfig
+): Promise<DeliveryClient> => {
+    const config = useDeliveryConfigDefaults(inputConfig);
     const serviceClient = new ServiceClient(config.serverAddress, credentials.createInsecure(), {
         "grpc.keepalive_time_ms": config.keepaliveInterval,
         "grpc.keepalive_timeout_ms": config.keepaliveTimeout,
@@ -146,7 +148,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             authData,
             data,
             id,
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -163,7 +166,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             authData,
             id,
             data,
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -180,7 +184,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             authData,
             filter,
             data,
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -199,7 +204,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             id,
             newId,
             data,
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -215,7 +221,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             authData,
             id,
             { fields: {}, and: [], or: [] },
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -231,7 +238,8 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             authData,
             "",
             filter,
-            fillMetadataWithDefaults(eventMetadata),
+            eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };

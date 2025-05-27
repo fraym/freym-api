@@ -6,23 +6,23 @@ import {
 export interface EventMetadata {
     correlationId: string;
     causationId: string;
-    target: DeploymentTarget;
 }
 
 export const fillMetadataWithDefaults = (
-    metadata: Partial<EventMetadata> | null
+    metadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget
 ): CrudEventMetadata => {
     if (!metadata) {
         return {
             causationId: "",
             correlationId: "",
-            target: "DEPLOYMENT_TARGET_BLUE",
+            target,
         };
     }
 
     return {
         causationId: metadata.causationId || "",
         correlationId: metadata.correlationId || "",
-        target: metadata.target || "DEPLOYMENT_TARGET_BLUE",
+        target,
     };
 };
