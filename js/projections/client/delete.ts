@@ -1,4 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
+import {
+    DeploymentTarget,
+    ServiceClient,
+} from "@fraym/proto/dist/index.freym.projections.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
 import { Filter, getProtobufDataFilter } from "./filter";
@@ -9,6 +12,7 @@ export const deleteProjectionData = async (
     dataId: string,
     filter: Filter,
     eventMetadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
@@ -18,7 +22,7 @@ export const deleteProjectionData = async (
                 auth: getProtobufAuthData(auth),
                 dataId,
                 filter: getProtobufDataFilter(filter),
-                eventMetadata: fillMetadataWithDefaults(eventMetadata),
+                eventMetadata: fillMetadataWithDefaults(eventMetadata, target),
             },
             (error, response) => {
                 if (error) {

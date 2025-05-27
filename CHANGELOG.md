@@ -1,5 +1,6 @@
 # vNext
 
+- (improvement) Read `deploymentTarget` from `PROJECTIONS_CLIENT_DEPLOYMENT_TARGET` env var if not provided in config
 - (improvement) Read `deploymentId` from `STREAMS_CLIENT_DEPLOYMENT_ID` env var if not provided in config
 
 # v0.37.0

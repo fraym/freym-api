@@ -1,7 +1,4 @@
-import {
-    DeploymentTarget,
-    ServiceClient,
-} from "@fraym/proto/dist/index.freym.projections.delivery";
+import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
 import { credentials } from "@grpc/grpc-js";
 import { AuthData } from "./auth";
 import { DeliveryClientConfig, useDeliveryConfigDefaults } from "./config";
@@ -25,15 +22,13 @@ export interface DeliveryClient {
         filter?: Filter,
         returnEmptyDataIfNotFound?: boolean,
         useStrongConsistency?: boolean,
-        target?: DeploymentTarget,
         wait?: Wait
     ) => Promise<T | null>;
     getViewData: <T extends ProjectionData>(
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean,
-        target?: DeploymentTarget
+        useStrongConsistency?: boolean
     ) => Promise<T | null>;
     getDataList: <T extends ProjectionData>(
         projection: string,
@@ -42,8 +37,7 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        target?: DeploymentTarget
+        useStrongConsistency?: boolean
     ) => Promise<GetProjectionDataList<T> | null>;
     getViewDataList: <T extends ProjectionData>(
         view: string,
@@ -52,8 +46,7 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        target?: DeploymentTarget
+        useStrongConsistency?: boolean
     ) => Promise<GetProjectionDataList<T> | null>;
     upsertData: <T extends ProjectionData>(
         projection: string,
@@ -77,8 +70,10 @@ export interface DeliveryClient {
     close: () => Promise<void>;
 }
 
-export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<DeliveryClient> => {
-    config = useDeliveryConfigDefaults(config);
+export const newDeliveryClient = async (
+    inputConfig?: DeliveryClientConfig
+): Promise<DeliveryClient> => {
+    const config = useDeliveryConfigDefaults(inputConfig);
     const serviceClient = new ServiceClient(config.serverAddress, credentials.createInsecure(), {
         "grpc.keepalive_time_ms": config.keepaliveInterval,
         "grpc.keepalive_timeout_ms": config.keepaliveTimeout,
@@ -92,7 +87,6 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         filter: Filter = { fields: {}, and: [], or: [] },
         returnEmptyDataIfNotFound: boolean = false,
         useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE",
         wait?: Wait
     ): Promise<T | null> => {
         return await getProjectionData<T>(
@@ -102,7 +96,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             returnEmptyDataIfNotFound,
             !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient,
             wait
         );
@@ -112,15 +106,14 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE"
+        useStrongConsistency: boolean = false
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,
             auth,
             filter,
             !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -132,8 +125,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE"
+        useStrongConsistency: boolean = false
     ): Promise<GetProjectionDataList<T> | null> => {
         return await getProjectionDataList<T>(
             projection,
@@ -143,7 +135,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             order,
             !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -155,8 +147,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE"
+        useStrongConsistency: boolean = false
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -166,7 +157,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             filter,
             order,
             !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -184,6 +175,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             dataId,
             payload,
             eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -200,6 +192,7 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
             dataId,
             { fields: {}, and: [], or: [] },
             eventMetadata,
+            config.deploymentTarget,
             serviceClient
         );
     };
@@ -210,7 +203,15 @@ export const newDeliveryClient = async (config?: DeliveryClientConfig): Promise<
         filter: Filter = { fields: {}, and: [], or: [] },
         eventMetadata: Partial<EventMetadata> | null = null
     ): Promise<number> => {
-        return deleteProjectionData(projection, authData, "", filter, eventMetadata, serviceClient);
+        return deleteProjectionData(
+            projection,
+            authData,
+            "",
+            filter,
+            eventMetadata,
+            config.deploymentTarget,
+            serviceClient
+        );
     };
 
     const close = async () => {

@@ -1,4 +1,7 @@
-import { ServiceClient } from "@fraym/proto/dist/index.freym.projections.delivery";
+import {
+    DeploymentTarget,
+    ServiceClient,
+} from "@fraym/proto/dist/index.freym.projections.delivery";
 import { AuthData, getProtobufAuthData } from "./auth";
 import { ProjectionData } from "./data";
 import { EventMetadata, fillMetadataWithDefaults } from "./eventMetadata";
@@ -35,6 +38,7 @@ export const upsertProjectionData = async <T extends ProjectionData>(
     dataId: string,
     payload: Partial<T>,
     eventMetadata: Partial<EventMetadata> | null,
+    target: DeploymentTarget,
     serviceClient: ServiceClient
 ): Promise<UpsertResponse<T>> => {
     const usedPayload: Record<string, string> = {};
@@ -50,7 +54,7 @@ export const upsertProjectionData = async <T extends ProjectionData>(
                 auth: getProtobufAuthData(auth),
                 dataId,
                 payload: usedPayload,
-                eventMetadata: fillMetadataWithDefaults(eventMetadata),
+                eventMetadata: fillMetadataWithDefaults(eventMetadata, target),
             },
             (error, response) => {
                 if (error) {
