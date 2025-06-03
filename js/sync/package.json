@@ -1,6 +1,6 @@
 {
     "name": "@fraym/sync",
-    "version": "0.37.0",
+    "version": "0.37.1",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -22,7 +22,7 @@
         "node": ">=20"
     },
     "dependencies": {
-        "@fraym/proto": "^0.37.0",
+        "@fraym/proto": "^0.37.1",
         "@grpc/grpc-js": "^1.13.4",
         "async-mutex": "^0.5.0",
         "dotenv": "^16.5.0"

@@ -1,5 +1,5 @@
-import { Config } from "@/cmd/config";
-import { Deployment, DeploymentResponse, DeploymentTarget } from "@/schema/data";
+import { Config } from "../cmd/config";
+import { Deployment, DeploymentResponse, DeploymentTarget } from "../schema/data";
 
 export const createDeployment = async (
     deployment: Deployment,

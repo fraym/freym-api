@@ -1,2 +1,2 @@
 export * from "./client/client";
-export type { ClientConfig } from "./client/config";
+export * from "./client/config";

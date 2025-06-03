@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { DeploymentTarget } from "@/schema/data";
+import { DeploymentTarget } from "../schema/data";
 import {
     runActivateDeployment,
     runConfirmDeployment,

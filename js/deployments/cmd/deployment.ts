@@ -1,3 +1,4 @@
+import { loadSchema } from "@graphql-tools/load";
 import {
     DeploymentStatus,
     activateDeployment,
@@ -6,10 +7,9 @@ import {
     getDeploymentStatus,
     rollbackDeployment,
     rollbackDeploymentByNamespace,
-} from "@/api/deployment";
-import { getMigrationFromSchema } from "@/schema";
-import { DeploymentTarget } from "@/schema/data";
-import { loadSchema } from "@graphql-tools/load";
+} from "../api/deployment";
+import { getMigrationFromSchema } from "../schema";
+import { DeploymentTarget } from "../schema/data";
 import { useConfig } from "./config";
 import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
 

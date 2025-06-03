@@ -1,6 +1,6 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.auth.management";
-import { ClientConfig, useConfigDefaults } from "@/config/config";
 import { credentials } from "@grpc/grpc-js";
+import { ClientConfig, useConfigDefaults } from "../config/config";
 import { CreateUserResponse, createNewUser } from "./createUser";
 import { deleteExistingRole } from "./deleteRole";
 import { deleteExistingUser } from "./deleteUser";

@@ -7,4 +7,4 @@ export type {
     EventData,
     GdprEventData,
 } from "./client/event";
-export type { ClientConfig } from "./client/config";
+export * from "./client/config";
