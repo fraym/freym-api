@@ -1,5 +1,9 @@
 # vNext
 
+# v0.37.2
+
+- (bug) Fix output dir of `@fraym/react` package
+
 # v0.37.1
 
 - (bug) Fix paths
