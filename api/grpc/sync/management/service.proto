@@ -1,13 +1,13 @@
 syntax = "proto3";
 package freym.sync.management;
-import "sync/management/lease.proto";
+// import "sync/management/lease.proto";
 import "sync/management/peer_nodes.proto";
 import "sync/management/lock.proto";
 
 service Service {
-	rpc CreateLease(CreateLeaseRequest) returns (CreateLeaseResponse);
-	rpc KeepLease(KeepLeaseRequest) returns (KeepLeaseResponse);
-	rpc DropLease(DropLeaseRequest) returns (DropLeaseResponse);
+	// rpc CreateLease(CreateLeaseRequest) returns (CreateLeaseResponse);
+	// rpc KeepLease(KeepLeaseRequest) returns (KeepLeaseResponse);
+	// rpc DropLease(DropLeaseRequest) returns (DropLeaseResponse);
 
 	rpc GetPeerNodes(GetPeerNodesRequest) returns (stream GetPeerNodesResponse);
 
@@ -15,4 +15,5 @@ service Service {
 	rpc Unlock(UnlockRequest) returns (UnlockResponse);
 	rpc RLock(RLockRequest) returns (RLockResponse);
 	rpc RUnlock(RUnlockRequest) returns (RUnlockResponse);
+	rpc ExtendTTL(ExtendTTLRequest) returns (ExtendTTLResponse);
 }

@@ -19,28 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Service_CreateLease_FullMethodName  = "/freym.sync.management.Service/CreateLease"
-	Service_KeepLease_FullMethodName    = "/freym.sync.management.Service/KeepLease"
-	Service_DropLease_FullMethodName    = "/freym.sync.management.Service/DropLease"
 	Service_GetPeerNodes_FullMethodName = "/freym.sync.management.Service/GetPeerNodes"
 	Service_Lock_FullMethodName         = "/freym.sync.management.Service/Lock"
 	Service_Unlock_FullMethodName       = "/freym.sync.management.Service/Unlock"
 	Service_RLock_FullMethodName        = "/freym.sync.management.Service/RLock"
 	Service_RUnlock_FullMethodName      = "/freym.sync.management.Service/RUnlock"
+	Service_ExtendTTL_FullMethodName    = "/freym.sync.management.Service/ExtendTTL"
 )
 
 // ServiceClient is the client API for Service service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
-	CreateLease(ctx context.Context, in *CreateLeaseRequest, opts ...grpc.CallOption) (*CreateLeaseResponse, error)
-	KeepLease(ctx context.Context, in *KeepLeaseRequest, opts ...grpc.CallOption) (*KeepLeaseResponse, error)
-	DropLease(ctx context.Context, in *DropLeaseRequest, opts ...grpc.CallOption) (*DropLeaseResponse, error)
 	GetPeerNodes(ctx context.Context, in *GetPeerNodesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetPeerNodesResponse], error)
 	Lock(ctx context.Context, in *LockRequest, opts ...grpc.CallOption) (*LockResponse, error)
 	Unlock(ctx context.Context, in *UnlockRequest, opts ...grpc.CallOption) (*UnlockResponse, error)
 	RLock(ctx context.Context, in *RLockRequest, opts ...grpc.CallOption) (*RLockResponse, error)
 	RUnlock(ctx context.Context, in *RUnlockRequest, opts ...grpc.CallOption) (*RUnlockResponse, error)
+	ExtendTTL(ctx context.Context, in *ExtendTTLRequest, opts ...grpc.CallOption) (*ExtendTTLResponse, error)
 }
 
 type serviceClient struct {
@@ -49,36 +45,6 @@ type serviceClient struct {
 
 func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
-}
-
-func (c *serviceClient) CreateLease(ctx context.Context, in *CreateLeaseRequest, opts ...grpc.CallOption) (*CreateLeaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateLeaseResponse)
-	err := c.cc.Invoke(ctx, Service_CreateLease_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) KeepLease(ctx context.Context, in *KeepLeaseRequest, opts ...grpc.CallOption) (*KeepLeaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(KeepLeaseResponse)
-	err := c.cc.Invoke(ctx, Service_KeepLease_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) DropLease(ctx context.Context, in *DropLeaseRequest, opts ...grpc.CallOption) (*DropLeaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DropLeaseResponse)
-	err := c.cc.Invoke(ctx, Service_DropLease_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *serviceClient) GetPeerNodes(ctx context.Context, in *GetPeerNodesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetPeerNodesResponse], error) {
@@ -140,18 +106,26 @@ func (c *serviceClient) RUnlock(ctx context.Context, in *RUnlockRequest, opts ..
 	return out, nil
 }
 
+func (c *serviceClient) ExtendTTL(ctx context.Context, in *ExtendTTLRequest, opts ...grpc.CallOption) (*ExtendTTLResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ExtendTTLResponse)
+	err := c.cc.Invoke(ctx, Service_ExtendTTL_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility.
 type ServiceServer interface {
-	CreateLease(context.Context, *CreateLeaseRequest) (*CreateLeaseResponse, error)
-	KeepLease(context.Context, *KeepLeaseRequest) (*KeepLeaseResponse, error)
-	DropLease(context.Context, *DropLeaseRequest) (*DropLeaseResponse, error)
 	GetPeerNodes(*GetPeerNodesRequest, grpc.ServerStreamingServer[GetPeerNodesResponse]) error
 	Lock(context.Context, *LockRequest) (*LockResponse, error)
 	Unlock(context.Context, *UnlockRequest) (*UnlockResponse, error)
 	RLock(context.Context, *RLockRequest) (*RLockResponse, error)
 	RUnlock(context.Context, *RUnlockRequest) (*RUnlockResponse, error)
+	ExtendTTL(context.Context, *ExtendTTLRequest) (*ExtendTTLResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -162,15 +136,6 @@ type ServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedServiceServer struct{}
 
-func (UnimplementedServiceServer) CreateLease(context.Context, *CreateLeaseRequest) (*CreateLeaseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateLease not implemented")
-}
-func (UnimplementedServiceServer) KeepLease(context.Context, *KeepLeaseRequest) (*KeepLeaseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method KeepLease not implemented")
-}
-func (UnimplementedServiceServer) DropLease(context.Context, *DropLeaseRequest) (*DropLeaseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DropLease not implemented")
-}
 func (UnimplementedServiceServer) GetPeerNodes(*GetPeerNodesRequest, grpc.ServerStreamingServer[GetPeerNodesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method GetPeerNodes not implemented")
 }
@@ -185,6 +150,9 @@ func (UnimplementedServiceServer) RLock(context.Context, *RLockRequest) (*RLockR
 }
 func (UnimplementedServiceServer) RUnlock(context.Context, *RUnlockRequest) (*RUnlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RUnlock not implemented")
+}
+func (UnimplementedServiceServer) ExtendTTL(context.Context, *ExtendTTLRequest) (*ExtendTTLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExtendTTL not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 func (UnimplementedServiceServer) testEmbeddedByValue()                 {}
@@ -205,60 +173,6 @@ func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Service_ServiceDesc, srv)
-}
-
-func _Service_CreateLease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateLeaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).CreateLease(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_CreateLease_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).CreateLease(ctx, req.(*CreateLeaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_KeepLease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(KeepLeaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).KeepLease(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_KeepLease_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).KeepLease(ctx, req.(*KeepLeaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_DropLease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DropLeaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).DropLease(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_DropLease_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).DropLease(ctx, req.(*DropLeaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Service_GetPeerNodes_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -344,6 +258,24 @@ func _Service_RUnlock_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_ExtendTTL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExtendTTLRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ExtendTTL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ExtendTTL_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ExtendTTL(ctx, req.(*ExtendTTLRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -351,18 +283,6 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "freym.sync.management.Service",
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateLease",
-			Handler:    _Service_CreateLease_Handler,
-		},
-		{
-			MethodName: "KeepLease",
-			Handler:    _Service_KeepLease_Handler,
-		},
-		{
-			MethodName: "DropLease",
-			Handler:    _Service_DropLease_Handler,
-		},
 		{
 			MethodName: "Lock",
 			Handler:    _Service_Lock_Handler,
@@ -378,6 +298,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RUnlock",
 			Handler:    _Service_RUnlock_Handler,
+		},
+		{
+			MethodName: "ExtendTTL",
+			Handler:    _Service_ExtendTTL_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -2,33 +2,55 @@ syntax = "proto3";
 package freym.sync.management;
 
 message LockRequest {
-	string lease_id = 1;
-	string tenant_id = 2;
-	repeated string resource = 3;
+	string app = 1;
+	string tenant = 2;
+	string ip = 3;
+	int32 ttl = 4;
+	repeated string resource = 5;
+	string lock_id = 6;
 }
 
-message LockResponse {}
+message LockResponse {
+	string lock_id = 1;
+}
 
 message RLockRequest {
-	string lease_id = 1;
-	string tenant_id = 2;
-	repeated string resource = 3;
+	string app = 1;
+	string tenant = 2;
+	string ip = 3;
+	int32 ttl = 4;
+	repeated string resource = 5;
+	string lock_id = 6;
 }
 
-message RLockResponse {}
+message RLockResponse {
+	string lock_id = 1;
+}
 
 message UnlockRequest {
-	string lease_id = 1;
-	string tenant_id = 2;
+	string app = 1;
+	string tenant = 2;
 	repeated string resource = 3;
+	string lock_id = 4;
 }
 
 message UnlockResponse {}
 
 message RUnlockRequest {
-	string lease_id = 1;
-	string tenant_id = 2;
+	string app = 1;
+	string tenant = 2;
 	repeated string resource = 3;
+	string lock_id = 4;
 }
 
 message RUnlockResponse {}
+
+message ExtendTTLRequest {
+	string app = 1;
+	string tenant = 2;
+	repeated string resource = 3;
+	string lock_id = 4;
+	int32 ttl = 5;
+}
+
+message ExtendTTLResponse {}

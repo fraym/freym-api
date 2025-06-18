@@ -18,14 +18,8 @@ import {
     makeGenericClientConstructor,
 } from "@grpc/grpc-js";
 import {
-    CreateLeaseRequest,
-    CreateLeaseResponse,
-    DropLeaseRequest,
-    DropLeaseResponse,
-    KeepLeaseRequest,
-    KeepLeaseResponse,
-} from "./lease";
-import {
+    ExtendTTLRequest,
+    ExtendTTLResponse,
     LockRequest,
     LockResponse,
     RLockRequest,
@@ -37,41 +31,13 @@ import {
 } from "./lock";
 import { GetPeerNodesRequest, GetPeerNodesResponse } from "./peer_nodes";
 
+/**
+ * rpc CreateLease(CreateLeaseRequest) returns (CreateLeaseResponse);
+ * rpc KeepLease(KeepLeaseRequest) returns (KeepLeaseResponse);
+ * rpc DropLease(DropLeaseRequest) returns (DropLeaseResponse);
+ */
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {
-    createLease: {
-        path: "/freym.sync.management.Service/CreateLease",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: CreateLeaseRequest) =>
-            Buffer.from(CreateLeaseRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => CreateLeaseRequest.decode(value),
-        responseSerialize: (value: CreateLeaseResponse) =>
-            Buffer.from(CreateLeaseResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => CreateLeaseResponse.decode(value),
-    },
-    keepLease: {
-        path: "/freym.sync.management.Service/KeepLease",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: KeepLeaseRequest) =>
-            Buffer.from(KeepLeaseRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => KeepLeaseRequest.decode(value),
-        responseSerialize: (value: KeepLeaseResponse) =>
-            Buffer.from(KeepLeaseResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => KeepLeaseResponse.decode(value),
-    },
-    dropLease: {
-        path: "/freym.sync.management.Service/DropLease",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: DropLeaseRequest) =>
-            Buffer.from(DropLeaseRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => DropLeaseRequest.decode(value),
-        responseSerialize: (value: DropLeaseResponse) =>
-            Buffer.from(DropLeaseResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => DropLeaseResponse.decode(value),
-    },
     getPeerNodes: {
         path: "/freym.sync.management.Service/GetPeerNodes",
         requestStream: false,
@@ -125,65 +91,29 @@ export const ServiceService = {
             Buffer.from(RUnlockResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => RUnlockResponse.decode(value),
     },
+    extendTtl: {
+        path: "/freym.sync.management.Service/ExtendTTL",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: ExtendTTLRequest) =>
+            Buffer.from(ExtendTTLRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => ExtendTTLRequest.decode(value),
+        responseSerialize: (value: ExtendTTLResponse) =>
+            Buffer.from(ExtendTTLResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => ExtendTTLResponse.decode(value),
+    },
 } as const;
 
 export interface ServiceServer extends UntypedServiceImplementation {
-    createLease: handleUnaryCall<CreateLeaseRequest, CreateLeaseResponse>;
-    keepLease: handleUnaryCall<KeepLeaseRequest, KeepLeaseResponse>;
-    dropLease: handleUnaryCall<DropLeaseRequest, DropLeaseResponse>;
     getPeerNodes: handleServerStreamingCall<GetPeerNodesRequest, GetPeerNodesResponse>;
     lock: handleUnaryCall<LockRequest, LockResponse>;
     unlock: handleUnaryCall<UnlockRequest, UnlockResponse>;
     rLock: handleUnaryCall<RLockRequest, RLockResponse>;
     rUnlock: handleUnaryCall<RUnlockRequest, RUnlockResponse>;
+    extendTtl: handleUnaryCall<ExtendTTLRequest, ExtendTTLResponse>;
 }
 
 export interface ServiceClient extends Client {
-    createLease(
-        request: CreateLeaseRequest,
-        callback: (error: ServiceError | null, response: CreateLeaseResponse) => void
-    ): ClientUnaryCall;
-    createLease(
-        request: CreateLeaseRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: CreateLeaseResponse) => void
-    ): ClientUnaryCall;
-    createLease(
-        request: CreateLeaseRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: CreateLeaseResponse) => void
-    ): ClientUnaryCall;
-    keepLease(
-        request: KeepLeaseRequest,
-        callback: (error: ServiceError | null, response: KeepLeaseResponse) => void
-    ): ClientUnaryCall;
-    keepLease(
-        request: KeepLeaseRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: KeepLeaseResponse) => void
-    ): ClientUnaryCall;
-    keepLease(
-        request: KeepLeaseRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: KeepLeaseResponse) => void
-    ): ClientUnaryCall;
-    dropLease(
-        request: DropLeaseRequest,
-        callback: (error: ServiceError | null, response: DropLeaseResponse) => void
-    ): ClientUnaryCall;
-    dropLease(
-        request: DropLeaseRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: DropLeaseResponse) => void
-    ): ClientUnaryCall;
-    dropLease(
-        request: DropLeaseRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: DropLeaseResponse) => void
-    ): ClientUnaryCall;
     getPeerNodes(
         request: GetPeerNodesRequest,
         options?: Partial<CallOptions>
@@ -252,6 +182,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: RUnlockResponse) => void
+    ): ClientUnaryCall;
+    extendTtl(
+        request: ExtendTTLRequest,
+        callback: (error: ServiceError | null, response: ExtendTTLResponse) => void
+    ): ClientUnaryCall;
+    extendTtl(
+        request: ExtendTTLRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: ExtendTTLResponse) => void
+    ): ClientUnaryCall;
+    extendTtl(
+        request: ExtendTTLRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: ExtendTTLResponse) => void
     ): ClientUnaryCall;
 }
 

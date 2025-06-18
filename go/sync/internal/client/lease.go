@@ -8,22 +8,16 @@ import (
 	"github.com/fraym/freym-api/go/proto/sync/managementpb"
 	"github.com/fraym/freym-api/go/sync/internal/util"
 	"github.com/fraym/golog"
-	"github.com/samber/lo"
 )
 
 type lock struct {
-	tenant   string
-	resource []string
-}
-
-type lease struct {
-	ctx         context.Context
-	stopWg      *sync.WaitGroup
-	mx          *sync.RWMutex
-	cancelLease context.CancelFunc
-	leaseId     string
-	locks       []lock
-	rLocks      []lock
+	lockId     string
+	ctx        context.Context
+	stopWg     *sync.WaitGroup
+	mx         *sync.RWMutex
+	cancelLock context.CancelFunc
+	tenant     string
+	resource   []string
 
 	appPrefix string
 	ttl       int32
@@ -33,144 +27,171 @@ type lease struct {
 	onRenew   func()
 }
 
-func NewLease(
+// type lease struct {
+// 	ctx         context.Context
+// 	stopWg      *sync.WaitGroup
+// 	mx          *sync.RWMutex
+// 	cancelLease context.CancelFunc
+// 	leaseId     string
+// 	locks       []lock
+// 	rLocks      []lock
+
+// 	appPrefix string
+// 	ttl       int32
+// 	ownIp     string
+// 	client    managementpb.ServiceClient
+// 	logger    golog.Logger
+// 	onRenew   func()
+// }
+
+func NewLock(
 	ctx context.Context,
 	appPrefix string,
 	ownIp string,
 	client managementpb.ServiceClient,
 	logger golog.Logger,
-) *lease {
+) *lock {
 	stopWg := &sync.WaitGroup{}
 	stopWg.Add(1)
 
-	return &lease{
-		ctx:         ctx,
-		stopWg:      stopWg,
-		mx:          &sync.RWMutex{},
-		cancelLease: nil,
-		leaseId:     "",
-		locks:       nil,
-		rLocks:      nil,
-		appPrefix:   appPrefix,
-		ttl:         20,
-		ownIp:       ownIp,
-		client:      client,
-		logger:      logger,
-		onRenew:     nil,
+	return &lock{
+		lockId:     "",
+		ctx:        ctx,
+		stopWg:     stopWg,
+		mx:         &sync.RWMutex{},
+		cancelLock: nil,
+		// locks:      nil,
+		// rLocks:     nil,
+		appPrefix: appPrefix,
+		ttl:       20,
+		ownIp:     ownIp,
+		client:    client,
+		logger:    logger,
+		onRenew:   nil,
 	}
 }
 
-func (l *lease) OnRenew(fn func()) {
+func (l *lock) OnRenew(fn func()) {
 	l.mx.Lock()
 	defer l.mx.Unlock()
 
 	l.onRenew = fn
 }
 
-func (l *lease) LeaseId() string {
+func (l *lock) LockId() string {
 	l.mx.RLock()
 	defer l.mx.RUnlock()
 
-	return l.leaseId
+	return l.lockId
 }
 
-func (l *lease) WaitForStop() {
+func (l *lock) WaitForStop() {
 	l.stopWg.Wait()
 }
 
-func (l *lease) getRegisteredLocksForPb() []*managementpb.Lock {
-	if len(l.locks) == 0 {
-		return nil
-	}
+// func (l *lock) getRegisteredLocksForPb() []*managementpb.Lock {
+// 	if len(l.locks) == 0 {
+// 		return nil
+// 	}
 
-	return lo.Map(l.locks, func(lock lock, _ int) *managementpb.Lock {
-		return managementpb.Lock_builder{
-			LeaseId:  l.leaseId,
-			TenantId: lock.tenant,
-			Resource: lock.resource,
-		}.Build()
-	})
-}
+// 	return lo.Map(l.locks, func(lock lock, _ int) *managementpb.Lock {
+// 		return managementpb.Lock_builder{
+// 			AppId:    lock.app,
+// 			TenantId: lock.tenant,
+// 			Resource: lock.resource,
+// 			LockId:   l.lockId,
+// 		}.Build()
+// 	})
+// }
 
-func (l *lease) getRegisteredRLocksForPb() []*managementpb.Lock {
-	if len(l.rLocks) == 0 {
-		return nil
-	}
+// func (l *lock) getRegisteredRLocksForPb() []*managementpb.Lock {
+// 	if len(l.rLocks) == 0 {
+// 		return nil
+// 	}
 
-	return lo.Map(l.rLocks, func(lock lock, _ int) *managementpb.Lock {
-		return managementpb.Lock_builder{
-			LeaseId:  l.leaseId,
-			TenantId: lock.tenant,
-			Resource: lock.resource,
-		}.Build()
-	})
-}
+// 	return lo.Map(l.rLocks, func(lock lock, _ int) *managementpb.Lock {
+// 		return managementpb.Lock_builder{
+// 			AppId:    lock.app,
+// 			TenantId: lock.tenant,
+// 			Resource: lock.resource,
+// 			LockId:   l.lockId,
+// 		}.Build()
+// 	})
+// }
 
-func (l *lease) Renew() error {
+func (l *lock) Renew() error {
 	l.mx.Lock()
 	defer l.mx.Unlock()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	l.cancelLease = cancel
+	l.cancelLock = cancel
 
-	leaseResponse, err := l.client.CreateLease(l.ctx, managementpb.CreateLeaseRequest_builder{
-		Ip:                      l.ownIp,
-		App:                     l.appPrefix,
-		Ttl:                     l.ttl,
-		LeaseId:                 l.leaseId,
-		AlreadyRegisteredLocks:  l.getRegisteredLocksForPb(),
-		AlreadyRegisteredRlocks: l.getRegisteredRLocksForPb(),
+	lockResponse, err := l.client.Lock(l.ctx, managementpb.LockRequest_builder{
+		App:      l.appPrefix,
+		Tenant:   l.tenant,
+		Ip:       l.ownIp,
+		Ttl:      l.ttl,
+		Resource: l.resource,
+		LockId:   l.lockId,
+		// AlreadyRegisteredLocks:  l.getRegisteredLocksForPb(),
+		// AlreadyRegisteredRlocks: l.getRegisteredRLocksForPb(),
 	}.Build())
 	if err != nil {
 		return err
 	}
 
-	l.leaseId = leaseResponse.GetLeaseId()
+	l.lockId = lockResponse.GetLockId()
 
-	go l.keepLeaseAlive(ctx)
+	go l.keepLockAlive(ctx)
 
-	l.logger.Debug().Write("renewed lease")
+	l.logger.Debug().Write("renewed lock")
 	return nil
 }
 
-func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
+func (l *lock) keepLockAlive(lockCtx context.Context) {
 	ticker := time.NewTicker(time.Duration(l.ttl/2) * time.Second)
 	defer ticker.Stop()
 
 	for {
 		select {
-		case <-leaseCtx.Done():
+		case <-lockCtx.Done():
 			l.mx.Lock()
-			l.cancelLeaseIfExists()
+			l.cancelLockIfExists()
 			l.mx.Unlock()
 			return
 		case <-l.ctx.Done():
-			_, err := l.client.DropLease(context.Background(), managementpb.DropLeaseRequest_builder{
-				LeaseId: l.LeaseId(),
+			_, err := l.client.Unlock(context.Background(), managementpb.UnlockRequest_builder{
+				App:      l.appPrefix,
+				Tenant:   l.tenant,
+				Resource: l.resource,
+				LockId:   l.lockId,
 			}.Build())
 			if err != nil {
-				l.logger.Warn().WithError(err).Write("unable to drop lease")
+				l.logger.Warn().WithError(err).Write("unable to drop lock")
 			}
 			l.stopWg.Done()
 			l.mx.Lock()
-			l.cancelLeaseIfExists()
+			l.cancelLockIfExists()
 			l.mx.Unlock()
 			return
 		case <-ticker.C:
-			_, err := l.client.KeepLease(leaseCtx, managementpb.KeepLeaseRequest_builder{
-				LeaseId: l.LeaseId(),
-				Ttl:     l.ttl,
+			_, err := l.client.ExtendTTL(lockCtx, managementpb.ExtendTTLRequest_builder{
+				App:      l.appPrefix,
+				Tenant:   l.tenant,
+				Resource: l.resource,
+				LockId:   l.lockId,
+				Ttl:      l.ttl,
 			}.Build())
 			if err != nil {
-				l.logger.Warn().WithError(err).Write("unable to keep lease")
+				l.logger.Warn().WithError(err).Write("unable to keep lock")
 
 				l.mx.Lock()
 				l.onRenew()
-				l.cancelLeaseIfExists()
+				l.cancelLockIfExists()
 				l.mx.Unlock()
 
 				if err := util.Retry(l.Renew, time.Millisecond*100, 50); err != nil {
-					l.logger.Fatal().WithError(err).Write("unable to renew lease")
+					l.logger.Fatal().WithError(err).Write("unable to renew lock")
 				}
 				return
 			}
@@ -178,48 +199,48 @@ func (l *lease) keepLeaseAlive(leaseCtx context.Context) {
 	}
 }
 
-func (l *lease) cancelLeaseIfExists() {
-	if l.cancelLease != nil {
-		l.cancelLease()
-		l.cancelLease = nil
+func (l *lock) cancelLockIfExists() {
+	if l.cancelLock != nil {
+		l.cancelLock()
+		l.cancelLock = nil
 	}
 }
 
-func (l *lease) Track(tenant string, resource []string, read bool) {
-	l.mx.Lock()
-	defer l.mx.Unlock()
+// func (l *lock) Track(tenant string, resource []string, read bool) {
+// 	l.mx.Lock()
+// 	defer l.mx.Unlock()
 
-	if read {
-		l.rLocks = append(l.rLocks, lock{
-			tenant:   tenant,
-			resource: resource,
-		})
-		return
-	}
+// 	if read {
+// 		l.rLocks = append(l.rLocks, lock{
+// 			tenant:   tenant,
+// 			resource: resource,
+// 		})
+// 		return
+// 	}
 
-	l.locks = append(l.locks, lock{
-		tenant:   tenant,
-		resource: resource,
-	})
-}
+// 	l.locks = append(l.locks, lock{
+// 		tenant:   tenant,
+// 		resource: resource,
+// 	})
+// }
 
-func (l *lease) Untrack(tenant string, resource []string, read bool) {
-	l.mx.Lock()
-	defer l.mx.Unlock()
+// func (l *lock) Untrack(tenant string, resource []string, read bool) {
+// 	l.mx.Lock()
+// 	defer l.mx.Unlock()
 
-	if read {
-		_, index, found := lo.FindIndexOf(l.rLocks, func(rLock lock) bool {
-			return rLock.tenant == tenant && util.SlicesEqual(rLock.resource, resource)
-		})
+// 	if read {
+// 		_, index, found := lo.FindIndexOf(l.rLocks, func(rLock lock) bool {
+// 			return rLock.tenant == tenant && util.SlicesEqual(rLock.resource, resource)
+// 		})
 
-		if found {
-			l.rLocks[index] = l.rLocks[len(l.rLocks)-1]
-			l.rLocks = l.rLocks[:len(l.rLocks)-1]
-		}
-		return
-	}
+// 		if found {
+// 			l.rLocks[index] = l.rLocks[len(l.rLocks)-1]
+// 			l.rLocks = l.rLocks[:len(l.rLocks)-1]
+// 		}
+// 		return
+// 	}
 
-	l.locks = lo.Filter(l.locks, func(lock lock, _ int) bool {
-		return lock.tenant != tenant || !util.SlicesEqual(lock.resource, resource)
-	})
-}
+// 	l.locks = lo.Filter(l.locks, func(lock lock, _ int) bool {
+// 		return lock.tenant != tenant || !util.SlicesEqual(lock.resource, resource)
+// 	})
+// }
