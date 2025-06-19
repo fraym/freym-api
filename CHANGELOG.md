@@ -1,5 +1,7 @@
 # vNext
 
+- (feature) compatibility to distributed sync service prototype
+
 # v0.37.2
 
 - (bug) Fix output dir of `@fraym/react` package
