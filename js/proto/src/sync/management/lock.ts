@@ -7,12 +7,12 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export interface LockRequest {
+    lockId: string;
     app: string;
     tenant: string;
     ip: string;
     ttl: number;
     resource: string[];
-    lockId: string;
 }
 
 export interface LockResponse {
@@ -20,12 +20,12 @@ export interface LockResponse {
 }
 
 export interface RLockRequest {
+    lockId: string;
     app: string;
     tenant: string;
     ip: string;
     ttl: number;
     resource: string[];
-    lockId: string;
 }
 
 export interface RLockResponse {
@@ -33,56 +33,56 @@ export interface RLockResponse {
 }
 
 export interface UnlockRequest {
+    lockId: string;
     app: string;
     tenant: string;
     resource: string[];
-    lockId: string;
 }
 
 export interface UnlockResponse {}
 
 export interface RUnlockRequest {
+    lockId: string;
     app: string;
     tenant: string;
     resource: string[];
-    lockId: string;
 }
 
 export interface RUnlockResponse {}
 
 export interface ExtendTTLRequest {
+    lockId: string;
     app: string;
     tenant: string;
     resource: string[];
-    lockId: string;
     ttl: number;
 }
 
 export interface ExtendTTLResponse {}
 
 function createBaseLockRequest(): LockRequest {
-    return { app: "", tenant: "", ip: "", ttl: 0, resource: [], lockId: "" };
+    return { lockId: "", app: "", tenant: "", ip: "", ttl: 0, resource: [] };
 }
 
 export const LockRequest: MessageFns<LockRequest> = {
     encode(message: LockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.lockId !== "") {
+            writer.uint32(10).string(message.lockId);
+        }
         if (message.app !== "") {
-            writer.uint32(10).string(message.app);
+            writer.uint32(18).string(message.app);
         }
         if (message.tenant !== "") {
-            writer.uint32(18).string(message.tenant);
+            writer.uint32(26).string(message.tenant);
         }
         if (message.ip !== "") {
-            writer.uint32(26).string(message.ip);
+            writer.uint32(34).string(message.ip);
         }
         if (message.ttl !== 0) {
-            writer.uint32(32).int32(message.ttl);
+            writer.uint32(40).int32(message.ttl);
         }
         for (const v of message.resource) {
-            writer.uint32(42).string(v!);
-        }
-        if (message.lockId !== "") {
-            writer.uint32(50).string(message.lockId);
+            writer.uint32(50).string(v!);
         }
         return writer;
     },
@@ -99,7 +99,7 @@ export const LockRequest: MessageFns<LockRequest> = {
                         break;
                     }
 
-                    message.app = reader.string();
+                    message.lockId = reader.string();
                     continue;
                 }
                 case 2: {
@@ -107,7 +107,7 @@ export const LockRequest: MessageFns<LockRequest> = {
                         break;
                     }
 
-                    message.tenant = reader.string();
+                    message.app = reader.string();
                     continue;
                 }
                 case 3: {
@@ -115,23 +115,23 @@ export const LockRequest: MessageFns<LockRequest> = {
                         break;
                     }
 
-                    message.ip = reader.string();
+                    message.tenant = reader.string();
                     continue;
                 }
                 case 4: {
-                    if (tag !== 32) {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.ip = reader.string();
+                    continue;
+                }
+                case 5: {
+                    if (tag !== 40) {
                         break;
                     }
 
                     message.ttl = reader.int32();
-                    continue;
-                }
-                case 5: {
-                    if (tag !== 42) {
-                        break;
-                    }
-
-                    message.resource.push(reader.string());
                     continue;
                 }
                 case 6: {
@@ -139,7 +139,7 @@ export const LockRequest: MessageFns<LockRequest> = {
                         break;
                     }
 
-                    message.lockId = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -153,6 +153,7 @@ export const LockRequest: MessageFns<LockRequest> = {
 
     fromJSON(object: any): LockRequest {
         return {
+            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             tenant: isSet(object.tenant) ? globalThis.String(object.tenant) : "",
             ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
@@ -160,12 +161,14 @@ export const LockRequest: MessageFns<LockRequest> = {
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
-            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
         };
     },
 
     toJSON(message: LockRequest): unknown {
         const obj: any = {};
+        if (message.lockId !== "") {
+            obj.lockId = message.lockId;
+        }
         if (message.app !== "") {
             obj.app = message.app;
         }
@@ -181,9 +184,6 @@ export const LockRequest: MessageFns<LockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
-        if (message.lockId !== "") {
-            obj.lockId = message.lockId;
-        }
         return obj;
     },
 
@@ -192,12 +192,12 @@ export const LockRequest: MessageFns<LockRequest> = {
     },
     fromPartial(object: DeepPartial<LockRequest>): LockRequest {
         const message = createBaseLockRequest();
+        message.lockId = object.lockId ?? "";
         message.app = object.app ?? "";
         message.tenant = object.tenant ?? "";
         message.ip = object.ip ?? "";
         message.ttl = object.ttl ?? 0;
         message.resource = object.resource?.map(e => e) || [];
-        message.lockId = object.lockId ?? "";
         return message;
     },
 };
@@ -261,28 +261,28 @@ export const LockResponse: MessageFns<LockResponse> = {
 };
 
 function createBaseRLockRequest(): RLockRequest {
-    return { app: "", tenant: "", ip: "", ttl: 0, resource: [], lockId: "" };
+    return { lockId: "", app: "", tenant: "", ip: "", ttl: 0, resource: [] };
 }
 
 export const RLockRequest: MessageFns<RLockRequest> = {
     encode(message: RLockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.lockId !== "") {
+            writer.uint32(10).string(message.lockId);
+        }
         if (message.app !== "") {
-            writer.uint32(10).string(message.app);
+            writer.uint32(18).string(message.app);
         }
         if (message.tenant !== "") {
-            writer.uint32(18).string(message.tenant);
+            writer.uint32(26).string(message.tenant);
         }
         if (message.ip !== "") {
-            writer.uint32(26).string(message.ip);
+            writer.uint32(34).string(message.ip);
         }
         if (message.ttl !== 0) {
-            writer.uint32(32).int32(message.ttl);
+            writer.uint32(40).int32(message.ttl);
         }
         for (const v of message.resource) {
-            writer.uint32(42).string(v!);
-        }
-        if (message.lockId !== "") {
-            writer.uint32(50).string(message.lockId);
+            writer.uint32(50).string(v!);
         }
         return writer;
     },
@@ -299,7 +299,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
                         break;
                     }
 
-                    message.app = reader.string();
+                    message.lockId = reader.string();
                     continue;
                 }
                 case 2: {
@@ -307,7 +307,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
                         break;
                     }
 
-                    message.tenant = reader.string();
+                    message.app = reader.string();
                     continue;
                 }
                 case 3: {
@@ -315,23 +315,23 @@ export const RLockRequest: MessageFns<RLockRequest> = {
                         break;
                     }
 
-                    message.ip = reader.string();
+                    message.tenant = reader.string();
                     continue;
                 }
                 case 4: {
-                    if (tag !== 32) {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.ip = reader.string();
+                    continue;
+                }
+                case 5: {
+                    if (tag !== 40) {
                         break;
                     }
 
                     message.ttl = reader.int32();
-                    continue;
-                }
-                case 5: {
-                    if (tag !== 42) {
-                        break;
-                    }
-
-                    message.resource.push(reader.string());
                     continue;
                 }
                 case 6: {
@@ -339,7 +339,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
                         break;
                     }
 
-                    message.lockId = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -353,6 +353,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
 
     fromJSON(object: any): RLockRequest {
         return {
+            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             tenant: isSet(object.tenant) ? globalThis.String(object.tenant) : "",
             ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
@@ -360,12 +361,14 @@ export const RLockRequest: MessageFns<RLockRequest> = {
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
-            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
         };
     },
 
     toJSON(message: RLockRequest): unknown {
         const obj: any = {};
+        if (message.lockId !== "") {
+            obj.lockId = message.lockId;
+        }
         if (message.app !== "") {
             obj.app = message.app;
         }
@@ -381,9 +384,6 @@ export const RLockRequest: MessageFns<RLockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
-        if (message.lockId !== "") {
-            obj.lockId = message.lockId;
-        }
         return obj;
     },
 
@@ -392,12 +392,12 @@ export const RLockRequest: MessageFns<RLockRequest> = {
     },
     fromPartial(object: DeepPartial<RLockRequest>): RLockRequest {
         const message = createBaseRLockRequest();
+        message.lockId = object.lockId ?? "";
         message.app = object.app ?? "";
         message.tenant = object.tenant ?? "";
         message.ip = object.ip ?? "";
         message.ttl = object.ttl ?? 0;
         message.resource = object.resource?.map(e => e) || [];
-        message.lockId = object.lockId ?? "";
         return message;
     },
 };
@@ -461,22 +461,22 @@ export const RLockResponse: MessageFns<RLockResponse> = {
 };
 
 function createBaseUnlockRequest(): UnlockRequest {
-    return { app: "", tenant: "", resource: [], lockId: "" };
+    return { lockId: "", app: "", tenant: "", resource: [] };
 }
 
 export const UnlockRequest: MessageFns<UnlockRequest> = {
     encode(message: UnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.lockId !== "") {
+            writer.uint32(10).string(message.lockId);
+        }
         if (message.app !== "") {
-            writer.uint32(10).string(message.app);
+            writer.uint32(18).string(message.app);
         }
         if (message.tenant !== "") {
-            writer.uint32(18).string(message.tenant);
+            writer.uint32(26).string(message.tenant);
         }
         for (const v of message.resource) {
-            writer.uint32(26).string(v!);
-        }
-        if (message.lockId !== "") {
-            writer.uint32(34).string(message.lockId);
+            writer.uint32(34).string(v!);
         }
         return writer;
     },
@@ -493,7 +493,7 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
                         break;
                     }
 
-                    message.app = reader.string();
+                    message.lockId = reader.string();
                     continue;
                 }
                 case 2: {
@@ -501,7 +501,7 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
                         break;
                     }
 
-                    message.tenant = reader.string();
+                    message.app = reader.string();
                     continue;
                 }
                 case 3: {
@@ -509,7 +509,7 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
                         break;
                     }
 
-                    message.resource.push(reader.string());
+                    message.tenant = reader.string();
                     continue;
                 }
                 case 4: {
@@ -517,7 +517,7 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
                         break;
                     }
 
-                    message.lockId = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -531,17 +531,20 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
 
     fromJSON(object: any): UnlockRequest {
         return {
+            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             tenant: isSet(object.tenant) ? globalThis.String(object.tenant) : "",
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
-            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
         };
     },
 
     toJSON(message: UnlockRequest): unknown {
         const obj: any = {};
+        if (message.lockId !== "") {
+            obj.lockId = message.lockId;
+        }
         if (message.app !== "") {
             obj.app = message.app;
         }
@@ -551,9 +554,6 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
-        if (message.lockId !== "") {
-            obj.lockId = message.lockId;
-        }
         return obj;
     },
 
@@ -562,10 +562,10 @@ export const UnlockRequest: MessageFns<UnlockRequest> = {
     },
     fromPartial(object: DeepPartial<UnlockRequest>): UnlockRequest {
         const message = createBaseUnlockRequest();
+        message.lockId = object.lockId ?? "";
         message.app = object.app ?? "";
         message.tenant = object.tenant ?? "";
         message.resource = object.resource?.map(e => e) || [];
-        message.lockId = object.lockId ?? "";
         return message;
     },
 };
@@ -614,22 +614,22 @@ export const UnlockResponse: MessageFns<UnlockResponse> = {
 };
 
 function createBaseRUnlockRequest(): RUnlockRequest {
-    return { app: "", tenant: "", resource: [], lockId: "" };
+    return { lockId: "", app: "", tenant: "", resource: [] };
 }
 
 export const RUnlockRequest: MessageFns<RUnlockRequest> = {
     encode(message: RUnlockRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.lockId !== "") {
+            writer.uint32(10).string(message.lockId);
+        }
         if (message.app !== "") {
-            writer.uint32(10).string(message.app);
+            writer.uint32(18).string(message.app);
         }
         if (message.tenant !== "") {
-            writer.uint32(18).string(message.tenant);
+            writer.uint32(26).string(message.tenant);
         }
         for (const v of message.resource) {
-            writer.uint32(26).string(v!);
-        }
-        if (message.lockId !== "") {
-            writer.uint32(34).string(message.lockId);
+            writer.uint32(34).string(v!);
         }
         return writer;
     },
@@ -646,7 +646,7 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
                         break;
                     }
 
-                    message.app = reader.string();
+                    message.lockId = reader.string();
                     continue;
                 }
                 case 2: {
@@ -654,7 +654,7 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
                         break;
                     }
 
-                    message.tenant = reader.string();
+                    message.app = reader.string();
                     continue;
                 }
                 case 3: {
@@ -662,7 +662,7 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
                         break;
                     }
 
-                    message.resource.push(reader.string());
+                    message.tenant = reader.string();
                     continue;
                 }
                 case 4: {
@@ -670,7 +670,7 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
                         break;
                     }
 
-                    message.lockId = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
             }
@@ -684,17 +684,20 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
 
     fromJSON(object: any): RUnlockRequest {
         return {
+            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             tenant: isSet(object.tenant) ? globalThis.String(object.tenant) : "",
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
-            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
         };
     },
 
     toJSON(message: RUnlockRequest): unknown {
         const obj: any = {};
+        if (message.lockId !== "") {
+            obj.lockId = message.lockId;
+        }
         if (message.app !== "") {
             obj.app = message.app;
         }
@@ -704,9 +707,6 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
-        if (message.lockId !== "") {
-            obj.lockId = message.lockId;
-        }
         return obj;
     },
 
@@ -715,10 +715,10 @@ export const RUnlockRequest: MessageFns<RUnlockRequest> = {
     },
     fromPartial(object: DeepPartial<RUnlockRequest>): RUnlockRequest {
         const message = createBaseRUnlockRequest();
+        message.lockId = object.lockId ?? "";
         message.app = object.app ?? "";
         message.tenant = object.tenant ?? "";
         message.resource = object.resource?.map(e => e) || [];
-        message.lockId = object.lockId ?? "";
         return message;
     },
 };
@@ -767,22 +767,22 @@ export const RUnlockResponse: MessageFns<RUnlockResponse> = {
 };
 
 function createBaseExtendTTLRequest(): ExtendTTLRequest {
-    return { app: "", tenant: "", resource: [], lockId: "", ttl: 0 };
+    return { lockId: "", app: "", tenant: "", resource: [], ttl: 0 };
 }
 
 export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
     encode(message: ExtendTTLRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.lockId !== "") {
+            writer.uint32(10).string(message.lockId);
+        }
         if (message.app !== "") {
-            writer.uint32(10).string(message.app);
+            writer.uint32(18).string(message.app);
         }
         if (message.tenant !== "") {
-            writer.uint32(18).string(message.tenant);
+            writer.uint32(26).string(message.tenant);
         }
         for (const v of message.resource) {
-            writer.uint32(26).string(v!);
-        }
-        if (message.lockId !== "") {
-            writer.uint32(34).string(message.lockId);
+            writer.uint32(34).string(v!);
         }
         if (message.ttl !== 0) {
             writer.uint32(40).int32(message.ttl);
@@ -802,7 +802,7 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
                         break;
                     }
 
-                    message.app = reader.string();
+                    message.lockId = reader.string();
                     continue;
                 }
                 case 2: {
@@ -810,7 +810,7 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
                         break;
                     }
 
-                    message.tenant = reader.string();
+                    message.app = reader.string();
                     continue;
                 }
                 case 3: {
@@ -818,7 +818,7 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
                         break;
                     }
 
-                    message.resource.push(reader.string());
+                    message.tenant = reader.string();
                     continue;
                 }
                 case 4: {
@@ -826,7 +826,7 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
                         break;
                     }
 
-                    message.lockId = reader.string();
+                    message.resource.push(reader.string());
                     continue;
                 }
                 case 5: {
@@ -848,18 +848,21 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
 
     fromJSON(object: any): ExtendTTLRequest {
         return {
+            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             app: isSet(object.app) ? globalThis.String(object.app) : "",
             tenant: isSet(object.tenant) ? globalThis.String(object.tenant) : "",
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
-            lockId: isSet(object.lockId) ? globalThis.String(object.lockId) : "",
             ttl: isSet(object.ttl) ? globalThis.Number(object.ttl) : 0,
         };
     },
 
     toJSON(message: ExtendTTLRequest): unknown {
         const obj: any = {};
+        if (message.lockId !== "") {
+            obj.lockId = message.lockId;
+        }
         if (message.app !== "") {
             obj.app = message.app;
         }
@@ -868,9 +871,6 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
         }
         if (message.resource?.length) {
             obj.resource = message.resource;
-        }
-        if (message.lockId !== "") {
-            obj.lockId = message.lockId;
         }
         if (message.ttl !== 0) {
             obj.ttl = Math.round(message.ttl);
@@ -883,10 +883,10 @@ export const ExtendTTLRequest: MessageFns<ExtendTTLRequest> = {
     },
     fromPartial(object: DeepPartial<ExtendTTLRequest>): ExtendTTLRequest {
         const message = createBaseExtendTTLRequest();
+        message.lockId = object.lockId ?? "";
         message.app = object.app ?? "";
         message.tenant = object.tenant ?? "";
         message.resource = object.resource?.map(e => e) || [];
-        message.lockId = object.lockId ?? "";
         message.ttl = object.ttl ?? 0;
         return message;
     },

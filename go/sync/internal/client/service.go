@@ -11,7 +11,6 @@ import (
 
 type Service struct {
 	connection *connection
-	// lease      *lease
 	lock       *lock
 	peers      *peers
 	client     managementpb.ServiceClient
@@ -52,7 +51,6 @@ func NewService(
 
 	return &Service{
 		connection: connection,
-		// lease:      lease,
 		lock:       lock,
 		peers:      peers,
 		client:     client,
@@ -68,21 +66,17 @@ func (s *Service) Lock(tenant string, resource []string) error {
 
 	if err := util.Retry(func() error {
 		_, err := s.client.Lock(context.Background(), managementpb.LockRequest_builder{
-			// LeaseId:  s.lease.LeaseId(),
-			// ? geht das mit dem Bezug auf das lock?
+			LockId:   s.lock.lockId,
 			App:      s.lock.appPrefix,
 			Tenant:   tenant,
 			Ip:       s.lock.ownIp,
 			Ttl:      s.lock.ttl,
 			Resource: resource,
-			LockId:   s.lock.lockId,
 		}.Build())
 		return err
 	}, s.retryPause, 50); err != nil {
 		return err
 	}
-
-	// s.lease.Track(tenant, resource, false)
 
 	return nil
 }
@@ -99,12 +93,10 @@ func (s *Service) Unlock(tenant string, resource []string) {
 
 		if err := util.Retry(func() error {
 			_, err := s.client.Unlock(context.Background(), managementpb.UnlockRequest_builder{
-				// LeaseId:  s.lease.LeaseId(),
-				// ? geht das mit dem Bezug auf das lock?
+				LockId:   s.lock.lockId,
 				App:      s.lock.appPrefix,
 				Tenant:   tenant,
 				Resource: resource,
-				LockId:   s.lock.lockId,
 			}.Build())
 			return err
 		}, s.retryPause, 50); err != nil {
@@ -112,8 +104,6 @@ func (s *Service) Unlock(tenant string, resource []string) {
 				"tenant":   tenant,
 				"resource": resource,
 			}).WithError(err).Write("unable to unlock")
-		} else {
-			// s.lease.Untrack(tenant, resource, false)
 		}
 	}()
 }
@@ -125,21 +115,17 @@ func (s *Service) RLock(tenant string, resource []string) error {
 
 	if err := util.Retry(func() error {
 		_, err := s.client.RLock(context.Background(), managementpb.RLockRequest_builder{
-			// LeaseId:  s.lease.LeaseId(),
-			// ? geht das mit dem Bezug auf das lock?
+			LockId:   s.lock.lockId,
 			App:      s.lock.appPrefix,
 			Tenant:   tenant,
 			Ip:       s.lock.ownIp,
 			Ttl:      s.lock.ttl,
 			Resource: resource,
-			LockId:   s.lock.lockId,
 		}.Build())
 		return err
 	}, s.retryPause, 50); err != nil {
 		return err
 	}
-
-	// s.lease.Track(tenant, resource, true)
 
 	return nil
 }
@@ -156,12 +142,10 @@ func (s *Service) RUnlock(tenant string, resource []string) {
 
 		if err := util.Retry(func() error {
 			_, err := s.client.RUnlock(context.Background(), managementpb.RUnlockRequest_builder{
-				// LeaseId:  s.lease.LeaseId(),
-				// ? geht das mit dem Bezug auf das lock?
+				LockId:   s.lock.lockId,
 				App:      s.lock.appPrefix,
 				Tenant:   tenant,
 				Resource: resource,
-				LockId:   s.lock.lockId,
 			}.Build())
 			return err
 		}, s.retryPause, 50); err != nil {
@@ -169,14 +153,12 @@ func (s *Service) RUnlock(tenant string, resource []string) {
 				"tenant":   tenant,
 				"resource": resource,
 			}).WithError(err).Write("unable to runlock")
-		} else {
-			// s.lease.Untrack(tenant, resource, true)
 		}
 	}()
 }
 
 func (s *Service) WaitForStop() {
-	// s.lease.WaitForStop()
+	s.lock.WaitForStop()
 }
 
 func (s *Service) IsPeer(address string) bool {

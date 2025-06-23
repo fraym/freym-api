@@ -22,12 +22,12 @@ const (
 
 type LockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_App      string                 `protobuf:"bytes,1,opt,name=app,proto3"`
-	xxx_hidden_Tenant   string                 `protobuf:"bytes,2,opt,name=tenant,proto3"`
-	xxx_hidden_Ip       string                 `protobuf:"bytes,3,opt,name=ip,proto3"`
-	xxx_hidden_Ttl      int32                  `protobuf:"varint,4,opt,name=ttl,proto3"`
-	xxx_hidden_Resource []string               `protobuf:"bytes,5,rep,name=resource,proto3"`
-	xxx_hidden_LockId   string                 `protobuf:"bytes,6,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_LockId   string                 `protobuf:"bytes,1,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_App      string                 `protobuf:"bytes,2,opt,name=app,proto3"`
+	xxx_hidden_Tenant   string                 `protobuf:"bytes,3,opt,name=tenant,proto3"`
+	xxx_hidden_Ip       string                 `protobuf:"bytes,4,opt,name=ip,proto3"`
+	xxx_hidden_Ttl      int32                  `protobuf:"varint,5,opt,name=ttl,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,6,rep,name=resource,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -55,6 +55,13 @@ func (x *LockRequest) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
+}
+
+func (x *LockRequest) GetLockId() string {
+	if x != nil {
+		return x.xxx_hidden_LockId
+	}
+	return ""
 }
 
 func (x *LockRequest) GetApp() string {
@@ -92,11 +99,8 @@ func (x *LockRequest) GetResource() []string {
 	return nil
 }
 
-func (x *LockRequest) GetLockId() string {
-	if x != nil {
-		return x.xxx_hidden_LockId
-	}
-	return ""
+func (x *LockRequest) SetLockId(v string) {
+	x.xxx_hidden_LockId = v
 }
 
 func (x *LockRequest) SetApp(v string) {
@@ -119,31 +123,27 @@ func (x *LockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
-func (x *LockRequest) SetLockId(v string) {
-	x.xxx_hidden_LockId = v
-}
-
 type LockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
+	LockId   string
 	App      string
 	Tenant   string
 	Ip       string
 	Ttl      int32
 	Resource []string
-	LockId   string
 }
 
 func (b0 LockRequest_builder) Build() *LockRequest {
 	m0 := &LockRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
+	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_App = b.App
 	x.xxx_hidden_Tenant = b.Tenant
 	x.xxx_hidden_Ip = b.Ip
 	x.xxx_hidden_Ttl = b.Ttl
 	x.xxx_hidden_Resource = b.Resource
-	x.xxx_hidden_LockId = b.LockId
 	return m0
 }
 
@@ -206,12 +206,12 @@ func (b0 LockResponse_builder) Build() *LockResponse {
 
 type RLockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_App      string                 `protobuf:"bytes,1,opt,name=app,proto3"`
-	xxx_hidden_Tenant   string                 `protobuf:"bytes,2,opt,name=tenant,proto3"`
-	xxx_hidden_Ip       string                 `protobuf:"bytes,3,opt,name=ip,proto3"`
-	xxx_hidden_Ttl      int32                  `protobuf:"varint,4,opt,name=ttl,proto3"`
-	xxx_hidden_Resource []string               `protobuf:"bytes,5,rep,name=resource,proto3"`
-	xxx_hidden_LockId   string                 `protobuf:"bytes,6,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_LockId   string                 `protobuf:"bytes,1,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_App      string                 `protobuf:"bytes,2,opt,name=app,proto3"`
+	xxx_hidden_Tenant   string                 `protobuf:"bytes,3,opt,name=tenant,proto3"`
+	xxx_hidden_Ip       string                 `protobuf:"bytes,4,opt,name=ip,proto3"`
+	xxx_hidden_Ttl      int32                  `protobuf:"varint,5,opt,name=ttl,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,6,rep,name=resource,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -239,6 +239,13 @@ func (x *RLockRequest) ProtoReflect() protoreflect.Message {
 		return ms
 	}
 	return mi.MessageOf(x)
+}
+
+func (x *RLockRequest) GetLockId() string {
+	if x != nil {
+		return x.xxx_hidden_LockId
+	}
+	return ""
 }
 
 func (x *RLockRequest) GetApp() string {
@@ -276,11 +283,8 @@ func (x *RLockRequest) GetResource() []string {
 	return nil
 }
 
-func (x *RLockRequest) GetLockId() string {
-	if x != nil {
-		return x.xxx_hidden_LockId
-	}
-	return ""
+func (x *RLockRequest) SetLockId(v string) {
+	x.xxx_hidden_LockId = v
 }
 
 func (x *RLockRequest) SetApp(v string) {
@@ -303,31 +307,27 @@ func (x *RLockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
-func (x *RLockRequest) SetLockId(v string) {
-	x.xxx_hidden_LockId = v
-}
-
 type RLockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
+	LockId   string
 	App      string
 	Tenant   string
 	Ip       string
 	Ttl      int32
 	Resource []string
-	LockId   string
 }
 
 func (b0 RLockRequest_builder) Build() *RLockRequest {
 	m0 := &RLockRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
+	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_App = b.App
 	x.xxx_hidden_Tenant = b.Tenant
 	x.xxx_hidden_Ip = b.Ip
 	x.xxx_hidden_Ttl = b.Ttl
 	x.xxx_hidden_Resource = b.Resource
-	x.xxx_hidden_LockId = b.LockId
 	return m0
 }
 
@@ -390,10 +390,10 @@ func (b0 RLockResponse_builder) Build() *RLockResponse {
 
 type UnlockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_App      string                 `protobuf:"bytes,1,opt,name=app,proto3"`
-	xxx_hidden_Tenant   string                 `protobuf:"bytes,2,opt,name=tenant,proto3"`
-	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
-	xxx_hidden_LockId   string                 `protobuf:"bytes,4,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_LockId   string                 `protobuf:"bytes,1,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_App      string                 `protobuf:"bytes,2,opt,name=app,proto3"`
+	xxx_hidden_Tenant   string                 `protobuf:"bytes,3,opt,name=tenant,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,4,rep,name=resource,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -423,6 +423,13 @@ func (x *UnlockRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+func (x *UnlockRequest) GetLockId() string {
+	if x != nil {
+		return x.xxx_hidden_LockId
+	}
+	return ""
+}
+
 func (x *UnlockRequest) GetApp() string {
 	if x != nil {
 		return x.xxx_hidden_App
@@ -444,11 +451,8 @@ func (x *UnlockRequest) GetResource() []string {
 	return nil
 }
 
-func (x *UnlockRequest) GetLockId() string {
-	if x != nil {
-		return x.xxx_hidden_LockId
-	}
-	return ""
+func (x *UnlockRequest) SetLockId(v string) {
+	x.xxx_hidden_LockId = v
 }
 
 func (x *UnlockRequest) SetApp(v string) {
@@ -463,27 +467,23 @@ func (x *UnlockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
-func (x *UnlockRequest) SetLockId(v string) {
-	x.xxx_hidden_LockId = v
-}
-
 type UnlockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
+	LockId   string
 	App      string
 	Tenant   string
 	Resource []string
-	LockId   string
 }
 
 func (b0 UnlockRequest_builder) Build() *UnlockRequest {
 	m0 := &UnlockRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
+	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_App = b.App
 	x.xxx_hidden_Tenant = b.Tenant
 	x.xxx_hidden_Resource = b.Resource
-	x.xxx_hidden_LockId = b.LockId
 	return m0
 }
 
@@ -532,10 +532,10 @@ func (b0 UnlockResponse_builder) Build() *UnlockResponse {
 
 type RUnlockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_App      string                 `protobuf:"bytes,1,opt,name=app,proto3"`
-	xxx_hidden_Tenant   string                 `protobuf:"bytes,2,opt,name=tenant,proto3"`
-	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
-	xxx_hidden_LockId   string                 `protobuf:"bytes,4,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_LockId   string                 `protobuf:"bytes,1,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_App      string                 `protobuf:"bytes,2,opt,name=app,proto3"`
+	xxx_hidden_Tenant   string                 `protobuf:"bytes,3,opt,name=tenant,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,4,rep,name=resource,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -565,6 +565,13 @@ func (x *RUnlockRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+func (x *RUnlockRequest) GetLockId() string {
+	if x != nil {
+		return x.xxx_hidden_LockId
+	}
+	return ""
+}
+
 func (x *RUnlockRequest) GetApp() string {
 	if x != nil {
 		return x.xxx_hidden_App
@@ -586,11 +593,8 @@ func (x *RUnlockRequest) GetResource() []string {
 	return nil
 }
 
-func (x *RUnlockRequest) GetLockId() string {
-	if x != nil {
-		return x.xxx_hidden_LockId
-	}
-	return ""
+func (x *RUnlockRequest) SetLockId(v string) {
+	x.xxx_hidden_LockId = v
 }
 
 func (x *RUnlockRequest) SetApp(v string) {
@@ -605,27 +609,23 @@ func (x *RUnlockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
-func (x *RUnlockRequest) SetLockId(v string) {
-	x.xxx_hidden_LockId = v
-}
-
 type RUnlockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
+	LockId   string
 	App      string
 	Tenant   string
 	Resource []string
-	LockId   string
 }
 
 func (b0 RUnlockRequest_builder) Build() *RUnlockRequest {
 	m0 := &RUnlockRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
+	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_App = b.App
 	x.xxx_hidden_Tenant = b.Tenant
 	x.xxx_hidden_Resource = b.Resource
-	x.xxx_hidden_LockId = b.LockId
 	return m0
 }
 
@@ -674,10 +674,10 @@ func (b0 RUnlockResponse_builder) Build() *RUnlockResponse {
 
 type ExtendTTLRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_App      string                 `protobuf:"bytes,1,opt,name=app,proto3"`
-	xxx_hidden_Tenant   string                 `protobuf:"bytes,2,opt,name=tenant,proto3"`
-	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
-	xxx_hidden_LockId   string                 `protobuf:"bytes,4,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_LockId   string                 `protobuf:"bytes,1,opt,name=lock_id,json=lockId,proto3"`
+	xxx_hidden_App      string                 `protobuf:"bytes,2,opt,name=app,proto3"`
+	xxx_hidden_Tenant   string                 `protobuf:"bytes,3,opt,name=tenant,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,4,rep,name=resource,proto3"`
 	xxx_hidden_Ttl      int32                  `protobuf:"varint,5,opt,name=ttl,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -708,6 +708,13 @@ func (x *ExtendTTLRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+func (x *ExtendTTLRequest) GetLockId() string {
+	if x != nil {
+		return x.xxx_hidden_LockId
+	}
+	return ""
+}
+
 func (x *ExtendTTLRequest) GetApp() string {
 	if x != nil {
 		return x.xxx_hidden_App
@@ -729,18 +736,15 @@ func (x *ExtendTTLRequest) GetResource() []string {
 	return nil
 }
 
-func (x *ExtendTTLRequest) GetLockId() string {
-	if x != nil {
-		return x.xxx_hidden_LockId
-	}
-	return ""
-}
-
 func (x *ExtendTTLRequest) GetTtl() int32 {
 	if x != nil {
 		return x.xxx_hidden_Ttl
 	}
 	return 0
+}
+
+func (x *ExtendTTLRequest) SetLockId(v string) {
+	x.xxx_hidden_LockId = v
 }
 
 func (x *ExtendTTLRequest) SetApp(v string) {
@@ -755,10 +759,6 @@ func (x *ExtendTTLRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
-func (x *ExtendTTLRequest) SetLockId(v string) {
-	x.xxx_hidden_LockId = v
-}
-
 func (x *ExtendTTLRequest) SetTtl(v int32) {
 	x.xxx_hidden_Ttl = v
 }
@@ -766,10 +766,10 @@ func (x *ExtendTTLRequest) SetTtl(v int32) {
 type ExtendTTLRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
+	LockId   string
 	App      string
 	Tenant   string
 	Resource []string
-	LockId   string
 	Ttl      int32
 }
 
@@ -777,10 +777,10 @@ func (b0 ExtendTTLRequest_builder) Build() *ExtendTTLRequest {
 	m0 := &ExtendTTLRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
+	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_App = b.App
 	x.xxx_hidden_Tenant = b.Tenant
 	x.xxx_hidden_Resource = b.Resource
-	x.xxx_hidden_LockId = b.LockId
 	x.xxx_hidden_Ttl = b.Ttl
 	return m0
 }
@@ -833,41 +833,41 @@ var File_sync_management_lock_proto protoreflect.FileDescriptor
 const file_sync_management_lock_proto_rawDesc = "" +
 	"\n" +
 	"\x1async/management/lock.proto\x12\x15freym.sync.management\"\x8e\x01\n" +
-	"\vLockRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x0e\n" +
-	"\x02ip\x18\x03 \x01(\tR\x02ip\x12\x10\n" +
-	"\x03ttl\x18\x04 \x01(\x05R\x03ttl\x12\x1a\n" +
-	"\bresource\x18\x05 \x03(\tR\bresource\x12\x17\n" +
-	"\alock_id\x18\x06 \x01(\tR\x06lockId\"'\n" +
+	"\vLockRequest\x12\x17\n" +
+	"\alock_id\x18\x01 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x03app\x18\x02 \x01(\tR\x03app\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x0e\n" +
+	"\x02ip\x18\x04 \x01(\tR\x02ip\x12\x10\n" +
+	"\x03ttl\x18\x05 \x01(\x05R\x03ttl\x12\x1a\n" +
+	"\bresource\x18\x06 \x03(\tR\bresource\"'\n" +
 	"\fLockResponse\x12\x17\n" +
 	"\alock_id\x18\x01 \x01(\tR\x06lockId\"\x8f\x01\n" +
-	"\fRLockRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x0e\n" +
-	"\x02ip\x18\x03 \x01(\tR\x02ip\x12\x10\n" +
-	"\x03ttl\x18\x04 \x01(\x05R\x03ttl\x12\x1a\n" +
-	"\bresource\x18\x05 \x03(\tR\bresource\x12\x17\n" +
-	"\alock_id\x18\x06 \x01(\tR\x06lockId\"(\n" +
+	"\fRLockRequest\x12\x17\n" +
+	"\alock_id\x18\x01 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x03app\x18\x02 \x01(\tR\x03app\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x0e\n" +
+	"\x02ip\x18\x04 \x01(\tR\x02ip\x12\x10\n" +
+	"\x03ttl\x18\x05 \x01(\x05R\x03ttl\x12\x1a\n" +
+	"\bresource\x18\x06 \x03(\tR\bresource\"(\n" +
 	"\rRLockResponse\x12\x17\n" +
 	"\alock_id\x18\x01 \x01(\tR\x06lockId\"n\n" +
-	"\rUnlockRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x1a\n" +
-	"\bresource\x18\x03 \x03(\tR\bresource\x12\x17\n" +
-	"\alock_id\x18\x04 \x01(\tR\x06lockId\"\x10\n" +
+	"\rUnlockRequest\x12\x17\n" +
+	"\alock_id\x18\x01 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x03app\x18\x02 \x01(\tR\x03app\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x1a\n" +
+	"\bresource\x18\x04 \x03(\tR\bresource\"\x10\n" +
 	"\x0eUnlockResponse\"o\n" +
-	"\x0eRUnlockRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x1a\n" +
-	"\bresource\x18\x03 \x03(\tR\bresource\x12\x17\n" +
-	"\alock_id\x18\x04 \x01(\tR\x06lockId\"\x11\n" +
+	"\x0eRUnlockRequest\x12\x17\n" +
+	"\alock_id\x18\x01 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x03app\x18\x02 \x01(\tR\x03app\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x1a\n" +
+	"\bresource\x18\x04 \x03(\tR\bresource\"\x11\n" +
 	"\x0fRUnlockResponse\"\x83\x01\n" +
-	"\x10ExtendTTLRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x1a\n" +
-	"\bresource\x18\x03 \x03(\tR\bresource\x12\x17\n" +
-	"\alock_id\x18\x04 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x10ExtendTTLRequest\x12\x17\n" +
+	"\alock_id\x18\x01 \x01(\tR\x06lockId\x12\x10\n" +
+	"\x03app\x18\x02 \x01(\tR\x03app\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x1a\n" +
+	"\bresource\x18\x04 \x03(\tR\bresource\x12\x10\n" +
 	"\x03ttl\x18\x05 \x01(\x05R\x03ttl\"\x13\n" +
 	"\x11ExtendTTLResponseb\x06proto3"
 

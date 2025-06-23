@@ -3,7 +3,6 @@
 //   protoc-gen-ts_proto  v2.7.0
 //   protoc               v5.29.3
 
-export * from "./sync/management/lease";
 export * from "./sync/management/lock";
 export * from "./sync/management/peer_nodes";
 export * from "./sync/management/service";
