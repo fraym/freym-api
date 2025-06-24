@@ -66,8 +66,9 @@ export interface DeploySchemaRequest {
     crudTypes: ObjectType[];
     nestedTypes: ObjectType[];
     enumTypes: EnumType[];
-    views: View[];
     options: DeploymentOptions | undefined;
+    views: View[];
+    baseViews: View[];
 }
 
 export interface DeploySchemaResponse {}
@@ -150,8 +151,9 @@ function createBaseDeploySchemaRequest(): DeploySchemaRequest {
         crudTypes: [],
         nestedTypes: [],
         enumTypes: [],
-        views: [],
         options: undefined,
+        views: [],
+        baseViews: [],
     };
 }
 
@@ -175,11 +177,14 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         for (const v of message.enumTypes) {
             EnumType.encode(v!, writer.uint32(50).fork()).join();
         }
-        for (const v of message.views) {
-            View.encode(v!, writer.uint32(58).fork()).join();
-        }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(66).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(58).fork()).join();
+        }
+        for (const v of message.views) {
+            View.encode(v!, writer.uint32(66).fork()).join();
+        }
+        for (const v of message.baseViews) {
+            View.encode(v!, writer.uint32(74).fork()).join();
         }
         return writer;
     },
@@ -244,7 +249,7 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.views.push(View.decode(reader, reader.uint32()));
+                    message.options = DeploymentOptions.decode(reader, reader.uint32());
                     continue;
                 }
                 case 8: {
@@ -252,7 +257,15 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                         break;
                     }
 
-                    message.options = DeploymentOptions.decode(reader, reader.uint32());
+                    message.views.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 9: {
+                    if (tag !== 74) {
+                        break;
+                    }
+
+                    message.baseViews.push(View.decode(reader, reader.uint32()));
                     continue;
                 }
             }
@@ -280,10 +293,13 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
             enumTypes: globalThis.Array.isArray(object?.enumTypes)
                 ? object.enumTypes.map((e: any) => EnumType.fromJSON(e))
                 : [],
+            options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
             views: globalThis.Array.isArray(object?.views)
                 ? object.views.map((e: any) => View.fromJSON(e))
                 : [],
-            options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
+            baseViews: globalThis.Array.isArray(object?.baseViews)
+                ? object.baseViews.map((e: any) => View.fromJSON(e))
+                : [],
         };
     },
 
@@ -307,11 +323,14 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         if (message.enumTypes?.length) {
             obj.enumTypes = message.enumTypes.map(e => EnumType.toJSON(e));
         }
+        if (message.options !== undefined) {
+            obj.options = DeploymentOptions.toJSON(message.options);
+        }
         if (message.views?.length) {
             obj.views = message.views.map(e => View.toJSON(e));
         }
-        if (message.options !== undefined) {
-            obj.options = DeploymentOptions.toJSON(message.options);
+        if (message.baseViews?.length) {
+            obj.baseViews = message.baseViews.map(e => View.toJSON(e));
         }
         return obj;
     },
@@ -327,11 +346,12 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         message.crudTypes = object.crudTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.nestedTypes = object.nestedTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.enumTypes = object.enumTypes?.map(e => EnumType.fromPartial(e)) || [];
-        message.views = object.views?.map(e => View.fromPartial(e)) || [];
         message.options =
             object.options !== undefined && object.options !== null
                 ? DeploymentOptions.fromPartial(object.options)
                 : undefined;
+        message.views = object.views?.map(e => View.fromPartial(e)) || [];
+        message.baseViews = object.baseViews?.map(e => View.fromPartial(e)) || [];
         return message;
     },
 };

@@ -94,6 +94,20 @@ export interface EventMetadata {
     target: DeploymentTarget;
 }
 
+export interface DataOrder {
+    field: string;
+    descending: boolean;
+}
+
+export interface Data {
+    data: { [key: string]: string };
+}
+
+export interface Data_DataEntry {
+    key: string;
+    value: string;
+}
+
 function createBaseAuthData(): AuthData {
     return { tenantId: "", userId: "", scopes: [], data: {} };
 }
@@ -694,6 +708,243 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         message.causationId = object.causationId ?? "";
         message.correlationId = object.correlationId ?? "";
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        return message;
+    },
+};
+
+function createBaseDataOrder(): DataOrder {
+    return { field: "", descending: false };
+}
+
+export const DataOrder: MessageFns<DataOrder> = {
+    encode(message: DataOrder, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.field !== "") {
+            writer.uint32(10).string(message.field);
+        }
+        if (message.descending !== false) {
+            writer.uint32(16).bool(message.descending);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): DataOrder {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseDataOrder();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.field = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 16) {
+                        break;
+                    }
+
+                    message.descending = reader.bool();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): DataOrder {
+        return {
+            field: isSet(object.field) ? globalThis.String(object.field) : "",
+            descending: isSet(object.descending) ? globalThis.Boolean(object.descending) : false,
+        };
+    },
+
+    toJSON(message: DataOrder): unknown {
+        const obj: any = {};
+        if (message.field !== "") {
+            obj.field = message.field;
+        }
+        if (message.descending !== false) {
+            obj.descending = message.descending;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<DataOrder>): DataOrder {
+        return DataOrder.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<DataOrder>): DataOrder {
+        const message = createBaseDataOrder();
+        message.field = object.field ?? "";
+        message.descending = object.descending ?? false;
+        return message;
+    },
+};
+
+function createBaseData(): Data {
+    return { data: {} };
+}
+
+export const Data: MessageFns<Data> = {
+    encode(message: Data, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        Object.entries(message.data).forEach(([key, value]) => {
+            Data_DataEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
+        });
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): Data {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseData();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    const entry1 = Data_DataEntry.decode(reader, reader.uint32());
+                    if (entry1.value !== undefined) {
+                        message.data[entry1.key] = entry1.value;
+                    }
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): Data {
+        return {
+            data: isObject(object.data)
+                ? Object.entries(object.data).reduce<{ [key: string]: string }>(
+                      (acc, [key, value]) => {
+                          acc[key] = String(value);
+                          return acc;
+                      },
+                      {}
+                  )
+                : {},
+        };
+    },
+
+    toJSON(message: Data): unknown {
+        const obj: any = {};
+        if (message.data) {
+            const entries = Object.entries(message.data);
+            if (entries.length > 0) {
+                obj.data = {};
+                entries.forEach(([k, v]) => {
+                    obj.data[k] = v;
+                });
+            }
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<Data>): Data {
+        return Data.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<Data>): Data {
+        const message = createBaseData();
+        message.data = Object.entries(object.data ?? {}).reduce<{ [key: string]: string }>(
+            (acc, [key, value]) => {
+                if (value !== undefined) {
+                    acc[key] = globalThis.String(value);
+                }
+                return acc;
+            },
+            {}
+        );
+        return message;
+    },
+};
+
+function createBaseData_DataEntry(): Data_DataEntry {
+    return { key: "", value: "" };
+}
+
+export const Data_DataEntry: MessageFns<Data_DataEntry> = {
+    encode(message: Data_DataEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.key !== "") {
+            writer.uint32(10).string(message.key);
+        }
+        if (message.value !== "") {
+            writer.uint32(18).string(message.value);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): Data_DataEntry {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseData_DataEntry();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.key = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.value = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): Data_DataEntry {
+        return {
+            key: isSet(object.key) ? globalThis.String(object.key) : "",
+            value: isSet(object.value) ? globalThis.String(object.value) : "",
+        };
+    },
+
+    toJSON(message: Data_DataEntry): unknown {
+        const obj: any = {};
+        if (message.key !== "") {
+            obj.key = message.key;
+        }
+        if (message.value !== "") {
+            obj.value = message.value;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<Data_DataEntry>): Data_DataEntry {
+        return Data_DataEntry.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<Data_DataEntry>): Data_DataEntry {
+        const message = createBaseData_DataEntry();
+        message.key = object.key ?? "";
+        message.value = object.value ?? "";
         return message;
     },
 };

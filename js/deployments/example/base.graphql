@@ -122,3 +122,4 @@ directive @renamed(prev: [String!]!) on OBJECT | FIELD_DEFINITION
 
 ## view only
 directive @view(sqlFile: String!, revalidate: Int) on OBJECT
+directive @baseView(sqlFile: String!, revalidate: Int) on OBJECT

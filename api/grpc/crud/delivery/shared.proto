@@ -30,3 +30,13 @@ enum DeploymentTarget {
 	DEPLOYMENT_TARGET_BLUE = 0;
 	DEPLOYMENT_TARGET_GREEN = 1;
 }
+
+message DataOrder {
+	string field = 1;
+	bool descending = 2;
+}
+
+message Data {
+	map<string, string> data = 1;
+}
+

@@ -67,6 +67,8 @@ export interface DeploySchemaRequest {
     nestedTypes: ObjectType[];
     enumTypes: EnumType[];
     options: DeploymentOptions | undefined;
+    views: View[];
+    baseViews: View[];
 }
 
 export interface DeploySchemaResponse {}
@@ -134,6 +136,13 @@ export interface EnumType {
     values: string[];
 }
 
+export interface View {
+    name: string;
+    sql: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
+}
+
 function createBaseDeploySchemaRequest(): DeploySchemaRequest {
     return {
         deploymentId: "0",
@@ -143,6 +152,8 @@ function createBaseDeploySchemaRequest(): DeploySchemaRequest {
         nestedTypes: [],
         enumTypes: [],
         options: undefined,
+        views: [],
+        baseViews: [],
     };
 }
 
@@ -168,6 +179,12 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         }
         if (message.options !== undefined) {
             DeploymentOptions.encode(message.options, writer.uint32(58).fork()).join();
+        }
+        for (const v of message.views) {
+            View.encode(v!, writer.uint32(66).fork()).join();
+        }
+        for (const v of message.baseViews) {
+            View.encode(v!, writer.uint32(74).fork()).join();
         }
         return writer;
     },
@@ -235,6 +252,22 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                     message.options = DeploymentOptions.decode(reader, reader.uint32());
                     continue;
                 }
+                case 8: {
+                    if (tag !== 66) {
+                        break;
+                    }
+
+                    message.views.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 9: {
+                    if (tag !== 74) {
+                        break;
+                    }
+
+                    message.baseViews.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -261,6 +294,12 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
                 ? object.enumTypes.map((e: any) => EnumType.fromJSON(e))
                 : [],
             options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
+            views: globalThis.Array.isArray(object?.views)
+                ? object.views.map((e: any) => View.fromJSON(e))
+                : [],
+            baseViews: globalThis.Array.isArray(object?.baseViews)
+                ? object.baseViews.map((e: any) => View.fromJSON(e))
+                : [],
         };
     },
 
@@ -287,6 +326,12 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
         if (message.options !== undefined) {
             obj.options = DeploymentOptions.toJSON(message.options);
         }
+        if (message.views?.length) {
+            obj.views = message.views.map(e => View.toJSON(e));
+        }
+        if (message.baseViews?.length) {
+            obj.baseViews = message.baseViews.map(e => View.toJSON(e));
+        }
         return obj;
     },
 
@@ -305,6 +350,8 @@ export const DeploySchemaRequest: MessageFns<DeploySchemaRequest> = {
             object.options !== undefined && object.options !== null
                 ? DeploymentOptions.fromPartial(object.options)
                 : undefined;
+        message.views = object.views?.map(e => View.fromPartial(e)) || [];
+        message.baseViews = object.baseViews?.map(e => View.fromPartial(e)) || [];
         return message;
     },
 };
@@ -1374,6 +1421,118 @@ export const EnumType: MessageFns<EnumType> = {
         const message = createBaseEnumType();
         message.name = object.name ?? "";
         message.values = object.values?.map(e => e) || [];
+        return message;
+    },
+};
+
+function createBaseView(): View {
+    return { name: "", sql: "", directives: [], fields: [] };
+}
+
+export const View: MessageFns<View> = {
+    encode(message: View, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.name !== "") {
+            writer.uint32(10).string(message.name);
+        }
+        if (message.sql !== "") {
+            writer.uint32(18).string(message.sql);
+        }
+        for (const v of message.directives) {
+            TypeDirective.encode(v!, writer.uint32(26).fork()).join();
+        }
+        for (const v of message.fields) {
+            TypeField.encode(v!, writer.uint32(34).fork()).join();
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): View {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseView();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.name = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.sql = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.directives.push(TypeDirective.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 4: {
+                    if (tag !== 34) {
+                        break;
+                    }
+
+                    message.fields.push(TypeField.decode(reader, reader.uint32()));
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): View {
+        return {
+            name: isSet(object.name) ? globalThis.String(object.name) : "",
+            sql: isSet(object.sql) ? globalThis.String(object.sql) : "",
+            directives: globalThis.Array.isArray(object?.directives)
+                ? object.directives.map((e: any) => TypeDirective.fromJSON(e))
+                : [],
+            fields: globalThis.Array.isArray(object?.fields)
+                ? object.fields.map((e: any) => TypeField.fromJSON(e))
+                : [],
+        };
+    },
+
+    toJSON(message: View): unknown {
+        const obj: any = {};
+        if (message.name !== "") {
+            obj.name = message.name;
+        }
+        if (message.sql !== "") {
+            obj.sql = message.sql;
+        }
+        if (message.directives?.length) {
+            obj.directives = message.directives.map(e => TypeDirective.toJSON(e));
+        }
+        if (message.fields?.length) {
+            obj.fields = message.fields.map(e => TypeField.toJSON(e));
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<View>): View {
+        return View.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<View>): View {
+        const message = createBaseView();
+        message.name = object.name ?? "";
+        message.sql = object.sql ?? "";
+        message.directives = object.directives?.map(e => TypeDirective.fromPartial(e)) || [];
+        message.fields = object.fields?.map(e => TypeField.fromPartial(e)) || [];
         return message;
     },
 };

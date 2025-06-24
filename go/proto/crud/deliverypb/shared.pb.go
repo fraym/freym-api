@@ -419,6 +419,134 @@ func (b0 EventMetadata_builder) Build() *EventMetadata {
 	return m0
 }
 
+type DataOrder struct {
+	state                 protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Field      string                 `protobuf:"bytes,1,opt,name=field,proto3"`
+	xxx_hidden_Descending bool                   `protobuf:"varint,2,opt,name=descending,proto3"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *DataOrder) Reset() {
+	*x = DataOrder{}
+	mi := &file_crud_delivery_shared_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataOrder) ProtoMessage() {}
+
+func (x *DataOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_delivery_shared_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *DataOrder) GetField() string {
+	if x != nil {
+		return x.xxx_hidden_Field
+	}
+	return ""
+}
+
+func (x *DataOrder) GetDescending() bool {
+	if x != nil {
+		return x.xxx_hidden_Descending
+	}
+	return false
+}
+
+func (x *DataOrder) SetField(v string) {
+	x.xxx_hidden_Field = v
+}
+
+func (x *DataOrder) SetDescending(v bool) {
+	x.xxx_hidden_Descending = v
+}
+
+type DataOrder_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Field      string
+	Descending bool
+}
+
+func (b0 DataOrder_builder) Build() *DataOrder {
+	m0 := &DataOrder{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Field = b.Field
+	x.xxx_hidden_Descending = b.Descending
+	return m0
+}
+
+type Data struct {
+	state           protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Data map[string]string      `protobuf:"bytes,1,rep,name=data,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *Data) Reset() {
+	*x = Data{}
+	mi := &file_crud_delivery_shared_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Data) ProtoMessage() {}
+
+func (x *Data) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_delivery_shared_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *Data) GetData() map[string]string {
+	if x != nil {
+		return x.xxx_hidden_Data
+	}
+	return nil
+}
+
+func (x *Data) SetData(v map[string]string) {
+	x.xxx_hidden_Data = v
+}
+
+type Data_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Data map[string]string
+}
+
+func (b0 Data_builder) Build() *Data {
+	m0 := &Data{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Data = b.Data
+	return m0
+}
+
 var File_crud_delivery_shared_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_shared_proto_rawDesc = "" +
@@ -447,34 +575,48 @@ const file_crud_delivery_shared_proto_rawDesc = "" +
 	"\rEventMetadata\x12!\n" +
 	"\fcausation_id\x18\x01 \x01(\tR\vcausationId\x12%\n" +
 	"\x0ecorrelation_id\x18\x02 \x01(\tR\rcorrelationId\x12=\n" +
-	"\x06target\x18\x03 \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target*K\n" +
+	"\x06target\x18\x03 \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\"A\n" +
+	"\tDataOrder\x12\x14\n" +
+	"\x05field\x18\x01 \x01(\tR\x05field\x12\x1e\n" +
+	"\n" +
+	"descending\x18\x02 \x01(\bR\n" +
+	"descending\"x\n" +
+	"\x04Data\x127\n" +
+	"\x04data\x18\x01 \x03(\v2#.freym.crud.delivery.Data.DataEntryR\x04data\x1a7\n" +
+	"\tDataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*K\n" +
 	"\x10DeploymentTarget\x12\x1a\n" +
 	"\x16DEPLOYMENT_TARGET_BLUE\x10\x00\x12\x1b\n" +
 	"\x17DEPLOYMENT_TARGET_GREEN\x10\x01b\x06proto3"
 
 var file_crud_delivery_shared_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_crud_delivery_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_crud_delivery_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_crud_delivery_shared_proto_goTypes = []any{
 	(DeploymentTarget)(0),   // 0: freym.crud.delivery.DeploymentTarget
 	(*AuthData)(nil),        // 1: freym.crud.delivery.AuthData
 	(*DataFilter)(nil),      // 2: freym.crud.delivery.DataFilter
 	(*DataFieldFilter)(nil), // 3: freym.crud.delivery.DataFieldFilter
 	(*EventMetadata)(nil),   // 4: freym.crud.delivery.EventMetadata
-	nil,                     // 5: freym.crud.delivery.AuthData.DataEntry
-	nil,                     // 6: freym.crud.delivery.DataFilter.FieldsEntry
+	(*DataOrder)(nil),       // 5: freym.crud.delivery.DataOrder
+	(*Data)(nil),            // 6: freym.crud.delivery.Data
+	nil,                     // 7: freym.crud.delivery.AuthData.DataEntry
+	nil,                     // 8: freym.crud.delivery.DataFilter.FieldsEntry
+	nil,                     // 9: freym.crud.delivery.Data.DataEntry
 }
 var file_crud_delivery_shared_proto_depIdxs = []int32{
-	5, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
-	6, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
+	7, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
+	8, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
 	2, // 2: freym.crud.delivery.DataFilter.and:type_name -> freym.crud.delivery.DataFilter
 	2, // 3: freym.crud.delivery.DataFilter.or:type_name -> freym.crud.delivery.DataFilter
 	0, // 4: freym.crud.delivery.EventMetadata.target:type_name -> freym.crud.delivery.DeploymentTarget
-	3, // 5: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	9, // 5: freym.crud.delivery.Data.data:type_name -> freym.crud.delivery.Data.DataEntry
+	3, // 6: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_crud_delivery_shared_proto_init() }
@@ -488,7 +630,7 @@ func file_crud_delivery_shared_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_delivery_shared_proto_rawDesc), len(file_crud_delivery_shared_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   6,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

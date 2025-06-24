@@ -25,6 +25,12 @@ import {
     GetDataResponse,
 } from "./get_data";
 import {
+    GetViewDataListRequest,
+    GetViewDataListResponse,
+    GetViewDataRequest,
+    GetViewDataResponse,
+} from "./get_view_data";
+import {
     UpdateByFilterRequest,
     UpdateByFilterResponse,
     UpdateRequest,
@@ -44,6 +50,17 @@ export const ServiceService = {
             Buffer.from(GetDataResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => GetDataResponse.decode(value),
     },
+    getViewData: {
+        path: "/freym.crud.delivery.Service/GetViewData",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: GetViewDataRequest) =>
+            Buffer.from(GetViewDataRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => GetViewDataRequest.decode(value),
+        responseSerialize: (value: GetViewDataResponse) =>
+            Buffer.from(GetViewDataResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => GetViewDataResponse.decode(value),
+    },
     getDataList: {
         path: "/freym.crud.delivery.Service/GetDataList",
         requestStream: false,
@@ -54,6 +71,17 @@ export const ServiceService = {
         responseSerialize: (value: GetDataListResponse) =>
             Buffer.from(GetDataListResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer) => GetDataListResponse.decode(value),
+    },
+    getViewDataList: {
+        path: "/freym.crud.delivery.Service/GetViewDataList",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: GetViewDataListRequest) =>
+            Buffer.from(GetViewDataListRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer) => GetViewDataListRequest.decode(value),
+        responseSerialize: (value: GetViewDataListResponse) =>
+            Buffer.from(GetViewDataListResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer) => GetViewDataListResponse.decode(value),
     },
     create: {
         path: "/freym.crud.delivery.Service/Create",
@@ -113,7 +141,9 @@ export const ServiceService = {
 
 export interface ServiceServer extends UntypedServiceImplementation {
     getData: handleUnaryCall<GetDataRequest, GetDataResponse>;
+    getViewData: handleUnaryCall<GetViewDataRequest, GetViewDataResponse>;
     getDataList: handleUnaryCall<GetDataListRequest, GetDataListResponse>;
+    getViewDataList: handleUnaryCall<GetViewDataListRequest, GetViewDataListResponse>;
     create: handleUnaryCall<CreateRequest, CreateResponse>;
     update: handleUnaryCall<UpdateRequest, UpdateResponse>;
     updateByFilter: handleUnaryCall<UpdateByFilterRequest, UpdateByFilterResponse>;
@@ -137,6 +167,21 @@ export interface ServiceClient extends Client {
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: GetDataResponse) => void
     ): ClientUnaryCall;
+    getViewData(
+        request: GetViewDataRequest,
+        callback: (error: ServiceError | null, response: GetViewDataResponse) => void
+    ): ClientUnaryCall;
+    getViewData(
+        request: GetViewDataRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: GetViewDataResponse) => void
+    ): ClientUnaryCall;
+    getViewData(
+        request: GetViewDataRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: GetViewDataResponse) => void
+    ): ClientUnaryCall;
     getDataList(
         request: GetDataListRequest,
         callback: (error: ServiceError | null, response: GetDataListResponse) => void
@@ -151,6 +196,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: GetDataListResponse) => void
+    ): ClientUnaryCall;
+    getViewDataList(
+        request: GetViewDataListRequest,
+        callback: (error: ServiceError | null, response: GetViewDataListResponse) => void
+    ): ClientUnaryCall;
+    getViewDataList(
+        request: GetViewDataListRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: GetViewDataListResponse) => void
+    ): ClientUnaryCall;
+    getViewDataList(
+        request: GetViewDataListRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: GetViewDataListResponse) => void
     ): ClientUnaryCall;
     create(
         request: CreateRequest,

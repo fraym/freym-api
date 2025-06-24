@@ -18,6 +18,7 @@ type ManagementClient interface {
 		nestedTypes []ObjectType,
 		enums []EnumType,
 		views []View,
+		baseViews []View,
 		options *DeploymentOptions,
 	) error
 	ActivateSchema(ctx context.Context, deploymentId int64) error
@@ -60,6 +61,7 @@ func (c *projectionsManagementClient) DeploySchema(
 	nestedTypes []ObjectType,
 	enums []EnumType,
 	views []View,
+	baseViews []View,
 	options *DeploymentOptions,
 ) error {
 	newProjectionTypes, err := objectTypeListToPb(projectionTypes)
@@ -87,6 +89,11 @@ func (c *projectionsManagementClient) DeploySchema(
 		return err
 	}
 
+	newBaseViews, err := viewListToPb(baseViews)
+	if err != nil {
+		return err
+	}
+
 	_, err = c.client.DeploySchema(ctx, managementpb.DeploySchemaRequest_builder{
 		DeploymentId:    deploymentId,
 		Namespace:       namespace,
@@ -95,6 +102,7 @@ func (c *projectionsManagementClient) DeploySchema(
 		NestedTypes:     newNestedTypes,
 		EnumTypes:       newEnums,
 		Views:           newViews,
+		BaseViews:       newBaseViews,
 		Options:         options.toPb(),
 	}.Build())
 	return err

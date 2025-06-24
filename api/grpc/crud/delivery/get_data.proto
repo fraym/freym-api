@@ -39,13 +39,3 @@ message DataWait {
 	DataFilter condition_filter = 1;
 	int64 timeout = 2;
 }
-
-message DataOrder {
-	string field = 1;
-	bool descending = 2;
-}
-
-message Data {
-	map<string, string> data = 1;
-}
-

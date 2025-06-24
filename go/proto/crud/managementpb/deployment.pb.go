@@ -70,6 +70,8 @@ type DeploySchemaRequest struct {
 	xxx_hidden_NestedTypes     *[]*ObjectType         `protobuf:"bytes,5,rep,name=nested_types,json=nestedTypes,proto3"`
 	xxx_hidden_EnumTypes       *[]*EnumType           `protobuf:"bytes,6,rep,name=enum_types,json=enumTypes,proto3"`
 	xxx_hidden_Options         *DeploymentOptions     `protobuf:"bytes,7,opt,name=options,proto3"`
+	xxx_hidden_Views           *[]*View               `protobuf:"bytes,8,rep,name=views,proto3"`
+	xxx_hidden_BaseViews       *[]*View               `protobuf:"bytes,9,rep,name=baseViews,proto3"`
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -156,6 +158,24 @@ func (x *DeploySchemaRequest) GetOptions() *DeploymentOptions {
 	return nil
 }
 
+func (x *DeploySchemaRequest) GetViews() []*View {
+	if x != nil {
+		if x.xxx_hidden_Views != nil {
+			return *x.xxx_hidden_Views
+		}
+	}
+	return nil
+}
+
+func (x *DeploySchemaRequest) GetBaseViews() []*View {
+	if x != nil {
+		if x.xxx_hidden_BaseViews != nil {
+			return *x.xxx_hidden_BaseViews
+		}
+	}
+	return nil
+}
+
 func (x *DeploySchemaRequest) SetDeploymentId(v int64) {
 	x.xxx_hidden_DeploymentId = v
 }
@@ -184,6 +204,14 @@ func (x *DeploySchemaRequest) SetOptions(v *DeploymentOptions) {
 	x.xxx_hidden_Options = v
 }
 
+func (x *DeploySchemaRequest) SetViews(v []*View) {
+	x.xxx_hidden_Views = &v
+}
+
+func (x *DeploySchemaRequest) SetBaseViews(v []*View) {
+	x.xxx_hidden_BaseViews = &v
+}
+
 func (x *DeploySchemaRequest) HasOptions() bool {
 	if x == nil {
 		return false
@@ -205,6 +233,8 @@ type DeploySchemaRequest_builder struct {
 	NestedTypes     []*ObjectType
 	EnumTypes       []*EnumType
 	Options         *DeploymentOptions
+	Views           []*View
+	BaseViews       []*View
 }
 
 func (b0 DeploySchemaRequest_builder) Build() *DeploySchemaRequest {
@@ -218,6 +248,8 @@ func (b0 DeploySchemaRequest_builder) Build() *DeploySchemaRequest {
 	x.xxx_hidden_NestedTypes = &b.NestedTypes
 	x.xxx_hidden_EnumTypes = &b.EnumTypes
 	x.xxx_hidden_Options = b.Options
+	x.xxx_hidden_Views = &b.Views
+	x.xxx_hidden_BaseViews = &b.BaseViews
 	return m0
 }
 
@@ -1211,11 +1243,114 @@ func (b0 EnumType_builder) Build() *EnumType {
 	return m0
 }
 
+type View struct {
+	state                 protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Name       string                 `protobuf:"bytes,1,opt,name=name,proto3"`
+	xxx_hidden_Sql        string                 `protobuf:"bytes,2,opt,name=sql,proto3"`
+	xxx_hidden_Directives *[]*TypeDirective      `protobuf:"bytes,3,rep,name=directives,proto3"`
+	xxx_hidden_Fields     *[]*TypeField          `protobuf:"bytes,4,rep,name=fields,proto3"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *View) Reset() {
+	*x = View{}
+	mi := &file_crud_management_deployment_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *View) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*View) ProtoMessage() {}
+
+func (x *View) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_management_deployment_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *View) GetName() string {
+	if x != nil {
+		return x.xxx_hidden_Name
+	}
+	return ""
+}
+
+func (x *View) GetSql() string {
+	if x != nil {
+		return x.xxx_hidden_Sql
+	}
+	return ""
+}
+
+func (x *View) GetDirectives() []*TypeDirective {
+	if x != nil {
+		if x.xxx_hidden_Directives != nil {
+			return *x.xxx_hidden_Directives
+		}
+	}
+	return nil
+}
+
+func (x *View) GetFields() []*TypeField {
+	if x != nil {
+		if x.xxx_hidden_Fields != nil {
+			return *x.xxx_hidden_Fields
+		}
+	}
+	return nil
+}
+
+func (x *View) SetName(v string) {
+	x.xxx_hidden_Name = v
+}
+
+func (x *View) SetSql(v string) {
+	x.xxx_hidden_Sql = v
+}
+
+func (x *View) SetDirectives(v []*TypeDirective) {
+	x.xxx_hidden_Directives = &v
+}
+
+func (x *View) SetFields(v []*TypeField) {
+	x.xxx_hidden_Fields = &v
+}
+
+type View_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Name       string
+	Sql        string
+	Directives []*TypeDirective
+	Fields     []*TypeField
+}
+
+func (b0 View_builder) Build() *View {
+	m0 := &View{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Name = b.Name
+	x.xxx_hidden_Sql = b.Sql
+	x.xxx_hidden_Directives = &b.Directives
+	x.xxx_hidden_Fields = &b.Fields
+	return m0
+}
+
 var File_crud_management_deployment_proto protoreflect.FileDescriptor
 
 const file_crud_management_deployment_proto_rawDesc = "" +
 	"\n" +
-	" crud/management/deployment.proto\x12\x15freym.crud.management\"\xb2\x03\n" +
+	" crud/management/deployment.proto\x12\x15freym.crud.management\"\xa0\x04\n" +
 	"\x13DeploySchemaRequest\x12#\n" +
 	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\x12\x1c\n" +
 	"\tnamespace\x18\x02 \x01(\tR\tnamespace\x12L\n" +
@@ -1225,7 +1360,9 @@ const file_crud_management_deployment_proto_rawDesc = "" +
 	"\fnested_types\x18\x05 \x03(\v2!.freym.crud.management.ObjectTypeR\vnestedTypes\x12>\n" +
 	"\n" +
 	"enum_types\x18\x06 \x03(\v2\x1f.freym.crud.management.EnumTypeR\tenumTypes\x12B\n" +
-	"\aoptions\x18\a \x01(\v2(.freym.crud.management.DeploymentOptionsR\aoptions\"\x16\n" +
+	"\aoptions\x18\a \x01(\v2(.freym.crud.management.DeploymentOptionsR\aoptions\x121\n" +
+	"\x05views\x18\b \x03(\v2\x1b.freym.crud.management.ViewR\x05views\x129\n" +
+	"\tbaseViews\x18\t \x03(\v2\x1b.freym.crud.management.ViewR\tbaseViews\"\x16\n" +
 	"\x14DeploySchemaResponse\"<\n" +
 	"\x15ActivateSchemaRequest\x12#\n" +
 	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\"\x18\n" +
@@ -1267,13 +1404,20 @@ const file_crud_management_deployment_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"6\n" +
 	"\bEnumType\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06values\x18\x02 \x03(\tR\x06values*K\n" +
+	"\x06values\x18\x02 \x03(\tR\x06values\"\xac\x01\n" +
+	"\x04View\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
+	"\x03sql\x18\x02 \x01(\tR\x03sql\x12D\n" +
+	"\n" +
+	"directives\x18\x03 \x03(\v2$.freym.crud.management.TypeDirectiveR\n" +
+	"directives\x128\n" +
+	"\x06fields\x18\x04 \x03(\v2 .freym.crud.management.TypeFieldR\x06fields*K\n" +
 	"\x10DeploymentTarget\x12\x1a\n" +
 	"\x16DEPLOYMENT_TARGET_BLUE\x10\x00\x12\x1b\n" +
 	"\x17DEPLOYMENT_TARGET_GREEN\x10\x01b\x06proto3"
 
 var file_crud_management_deployment_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_crud_management_deployment_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_crud_management_deployment_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_crud_management_deployment_proto_goTypes = []any{
 	(DeploymentTarget)(0),                     // 0: freym.crud.management.DeploymentTarget
 	(*DeploySchemaRequest)(nil),               // 1: freym.crud.management.DeploySchemaRequest
@@ -1293,6 +1437,7 @@ var file_crud_management_deployment_proto_goTypes = []any{
 	(*TypeField)(nil),                         // 15: freym.crud.management.TypeField
 	(*TypeArgument)(nil),                      // 16: freym.crud.management.TypeArgument
 	(*EnumType)(nil),                          // 17: freym.crud.management.EnumType
+	(*View)(nil),                              // 18: freym.crud.management.View
 }
 var file_crud_management_deployment_proto_depIdxs = []int32{
 	13, // 0: freym.crud.management.DeploySchemaRequest.projection_types:type_name -> freym.crud.management.ObjectType
@@ -1300,17 +1445,21 @@ var file_crud_management_deployment_proto_depIdxs = []int32{
 	13, // 2: freym.crud.management.DeploySchemaRequest.nested_types:type_name -> freym.crud.management.ObjectType
 	17, // 3: freym.crud.management.DeploySchemaRequest.enum_types:type_name -> freym.crud.management.EnumType
 	12, // 4: freym.crud.management.DeploySchemaRequest.options:type_name -> freym.crud.management.DeploymentOptions
-	0,  // 5: freym.crud.management.RollbackSchemaRequest.target:type_name -> freym.crud.management.DeploymentTarget
-	0,  // 6: freym.crud.management.DeploymentOptions.target:type_name -> freym.crud.management.DeploymentTarget
-	14, // 7: freym.crud.management.ObjectType.directives:type_name -> freym.crud.management.TypeDirective
-	15, // 8: freym.crud.management.ObjectType.fields:type_name -> freym.crud.management.TypeField
-	16, // 9: freym.crud.management.TypeDirective.arguments:type_name -> freym.crud.management.TypeArgument
-	14, // 10: freym.crud.management.TypeField.directives:type_name -> freym.crud.management.TypeDirective
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	18, // 5: freym.crud.management.DeploySchemaRequest.views:type_name -> freym.crud.management.View
+	18, // 6: freym.crud.management.DeploySchemaRequest.baseViews:type_name -> freym.crud.management.View
+	0,  // 7: freym.crud.management.RollbackSchemaRequest.target:type_name -> freym.crud.management.DeploymentTarget
+	0,  // 8: freym.crud.management.DeploymentOptions.target:type_name -> freym.crud.management.DeploymentTarget
+	14, // 9: freym.crud.management.ObjectType.directives:type_name -> freym.crud.management.TypeDirective
+	15, // 10: freym.crud.management.ObjectType.fields:type_name -> freym.crud.management.TypeField
+	16, // 11: freym.crud.management.TypeDirective.arguments:type_name -> freym.crud.management.TypeArgument
+	14, // 12: freym.crud.management.TypeField.directives:type_name -> freym.crud.management.TypeDirective
+	14, // 13: freym.crud.management.View.directives:type_name -> freym.crud.management.TypeDirective
+	15, // 14: freym.crud.management.View.fields:type_name -> freym.crud.management.TypeField
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_crud_management_deployment_proto_init() }
@@ -1324,7 +1473,7 @@ func file_crud_management_deployment_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_management_deployment_proto_rawDesc), len(file_crud_management_deployment_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

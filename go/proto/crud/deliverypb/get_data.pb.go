@@ -638,134 +638,6 @@ func (b0 DataWait_builder) Build() *DataWait {
 	return m0
 }
 
-type DataOrder struct {
-	state                 protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Field      string                 `protobuf:"bytes,1,opt,name=field,proto3"`
-	xxx_hidden_Descending bool                   `protobuf:"varint,2,opt,name=descending,proto3"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
-}
-
-func (x *DataOrder) Reset() {
-	*x = DataOrder{}
-	mi := &file_crud_delivery_get_data_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DataOrder) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DataOrder) ProtoMessage() {}
-
-func (x *DataOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_crud_delivery_get_data_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *DataOrder) GetField() string {
-	if x != nil {
-		return x.xxx_hidden_Field
-	}
-	return ""
-}
-
-func (x *DataOrder) GetDescending() bool {
-	if x != nil {
-		return x.xxx_hidden_Descending
-	}
-	return false
-}
-
-func (x *DataOrder) SetField(v string) {
-	x.xxx_hidden_Field = v
-}
-
-func (x *DataOrder) SetDescending(v bool) {
-	x.xxx_hidden_Descending = v
-}
-
-type DataOrder_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Field      string
-	Descending bool
-}
-
-func (b0 DataOrder_builder) Build() *DataOrder {
-	m0 := &DataOrder{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Field = b.Field
-	x.xxx_hidden_Descending = b.Descending
-	return m0
-}
-
-type Data struct {
-	state           protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Data map[string]string      `protobuf:"bytes,1,rep,name=data,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *Data) Reset() {
-	*x = Data{}
-	mi := &file_crud_delivery_get_data_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Data) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Data) ProtoMessage() {}
-
-func (x *Data) ProtoReflect() protoreflect.Message {
-	mi := &file_crud_delivery_get_data_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *Data) GetData() map[string]string {
-	if x != nil {
-		return x.xxx_hidden_Data
-	}
-	return nil
-}
-
-func (x *Data) SetData(v map[string]string) {
-	x.xxx_hidden_Data = v
-}
-
-type Data_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Data map[string]string
-}
-
-func (b0 Data_builder) Build() *Data {
-	m0 := &Data{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Data = b.Data
-	return m0
-}
-
 var File_crud_delivery_get_data_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_get_data_proto_rawDesc = "" +
@@ -799,50 +671,38 @@ const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\x05total\x18\x04 \x01(\x03R\x05total\"p\n" +
 	"\bDataWait\x12J\n" +
 	"\x10condition_filter\x18\x01 \x01(\v2\x1f.freym.crud.delivery.DataFilterR\x0fconditionFilter\x12\x18\n" +
-	"\atimeout\x18\x02 \x01(\x03R\atimeout\"A\n" +
-	"\tDataOrder\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\x12\x1e\n" +
-	"\n" +
-	"descending\x18\x02 \x01(\bR\n" +
-	"descending\"x\n" +
-	"\x04Data\x127\n" +
-	"\x04data\x18\x01 \x03(\v2#.freym.crud.delivery.Data.DataEntryR\x04data\x1a7\n" +
-	"\tDataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01b\x06proto3"
+	"\atimeout\x18\x02 \x01(\x03R\atimeoutb\x06proto3"
 
-var file_crud_delivery_get_data_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_crud_delivery_get_data_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_crud_delivery_get_data_proto_goTypes = []any{
 	(*GetDataRequest)(nil),      // 0: freym.crud.delivery.GetDataRequest
 	(*GetDataResponse)(nil),     // 1: freym.crud.delivery.GetDataResponse
 	(*GetDataListRequest)(nil),  // 2: freym.crud.delivery.GetDataListRequest
 	(*GetDataListResponse)(nil), // 3: freym.crud.delivery.GetDataListResponse
 	(*DataWait)(nil),            // 4: freym.crud.delivery.DataWait
-	(*DataOrder)(nil),           // 5: freym.crud.delivery.DataOrder
-	(*Data)(nil),                // 6: freym.crud.delivery.Data
-	nil,                         // 7: freym.crud.delivery.Data.DataEntry
-	(*AuthData)(nil),            // 8: freym.crud.delivery.AuthData
-	(*DataFilter)(nil),          // 9: freym.crud.delivery.DataFilter
-	(DeploymentTarget)(0),       // 10: freym.crud.delivery.DeploymentTarget
+	(*AuthData)(nil),            // 5: freym.crud.delivery.AuthData
+	(*DataFilter)(nil),          // 6: freym.crud.delivery.DataFilter
+	(DeploymentTarget)(0),       // 7: freym.crud.delivery.DeploymentTarget
+	(*Data)(nil),                // 8: freym.crud.delivery.Data
+	(*DataOrder)(nil),           // 9: freym.crud.delivery.DataOrder
 }
 var file_crud_delivery_get_data_proto_depIdxs = []int32{
-	8,  // 0: freym.crud.delivery.GetDataRequest.auth:type_name -> freym.crud.delivery.AuthData
-	9,  // 1: freym.crud.delivery.GetDataRequest.filter:type_name -> freym.crud.delivery.DataFilter
+	5,  // 0: freym.crud.delivery.GetDataRequest.auth:type_name -> freym.crud.delivery.AuthData
+	6,  // 1: freym.crud.delivery.GetDataRequest.filter:type_name -> freym.crud.delivery.DataFilter
 	4,  // 2: freym.crud.delivery.GetDataRequest.wait:type_name -> freym.crud.delivery.DataWait
-	10, // 3: freym.crud.delivery.GetDataRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
-	6,  // 4: freym.crud.delivery.GetDataResponse.result:type_name -> freym.crud.delivery.Data
-	8,  // 5: freym.crud.delivery.GetDataListRequest.auth:type_name -> freym.crud.delivery.AuthData
-	9,  // 6: freym.crud.delivery.GetDataListRequest.filter:type_name -> freym.crud.delivery.DataFilter
-	5,  // 7: freym.crud.delivery.GetDataListRequest.order:type_name -> freym.crud.delivery.DataOrder
-	10, // 8: freym.crud.delivery.GetDataListRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
-	6,  // 9: freym.crud.delivery.GetDataListResponse.result:type_name -> freym.crud.delivery.Data
-	9,  // 10: freym.crud.delivery.DataWait.condition_filter:type_name -> freym.crud.delivery.DataFilter
-	7,  // 11: freym.crud.delivery.Data.data:type_name -> freym.crud.delivery.Data.DataEntry
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	7,  // 3: freym.crud.delivery.GetDataRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
+	8,  // 4: freym.crud.delivery.GetDataResponse.result:type_name -> freym.crud.delivery.Data
+	5,  // 5: freym.crud.delivery.GetDataListRequest.auth:type_name -> freym.crud.delivery.AuthData
+	6,  // 6: freym.crud.delivery.GetDataListRequest.filter:type_name -> freym.crud.delivery.DataFilter
+	9,  // 7: freym.crud.delivery.GetDataListRequest.order:type_name -> freym.crud.delivery.DataOrder
+	7,  // 8: freym.crud.delivery.GetDataListRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
+	8,  // 9: freym.crud.delivery.GetDataListResponse.result:type_name -> freym.crud.delivery.Data
+	6,  // 10: freym.crud.delivery.DataWait.condition_filter:type_name -> freym.crud.delivery.DataFilter
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_crud_delivery_get_data_proto_init() }
@@ -857,7 +717,7 @@ func file_crud_delivery_get_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_delivery_get_data_proto_rawDesc), len(file_crud_delivery_get_data_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

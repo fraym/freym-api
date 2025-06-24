@@ -20,9 +20,10 @@ func (c *MockManagementClient) DeploySchema(
 	nestedTypes []ObjectType,
 	enums []EnumType,
 	views []View,
+	baseViews []View,
 	options *DeploymentOptions,
 ) error {
-	return c.Called(ctx, deploymentId, namespace, projectionTypes, crudTypes, nestedTypes, enums, views, options).
+	return c.Called(ctx, deploymentId, namespace, projectionTypes, crudTypes, nestedTypes, enums, views, baseViews, options).
 		Error(0)
 }
 

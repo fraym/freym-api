@@ -17,6 +17,8 @@ type ManagementClient interface {
 		crudTypes []ObjectType,
 		nestedTypes []ObjectType,
 		enums []EnumType,
+		views []View,
+		baseViews []View,
 		options *DeploymentOptions,
 	) error
 	ActivateSchema(ctx context.Context, deploymentId int64) error
@@ -56,6 +58,8 @@ func (c *crudManagementClient) DeploySchema(
 	crudTypes []ObjectType,
 	nestedTypes []ObjectType,
 	enums []EnumType,
+	views []View,
+	baseViews []View,
 	options *DeploymentOptions,
 ) error {
 	newProjectionTypes, err := objectTypeListToPb(projectionTypes)
@@ -78,6 +82,16 @@ func (c *crudManagementClient) DeploySchema(
 		return err
 	}
 
+	newViews, err := viewListToPb(views)
+	if err != nil {
+		return err
+	}
+
+	newBaseViews, err := viewListToPb(baseViews)
+	if err != nil {
+		return err
+	}
+
 	_, err = c.client.DeploySchema(ctx, managementpb.DeploySchemaRequest_builder{
 		DeploymentId:    deploymentId,
 		Namespace:       namespace,
@@ -85,6 +99,8 @@ func (c *crudManagementClient) DeploySchema(
 		CrudTypes:       newCrudTypes,
 		NestedTypes:     newNestedTypes,
 		EnumTypes:       newEnums,
+		Views:           newViews,
+		BaseViews:       newBaseViews,
 		Options:         options.toPb(),
 	}.Build())
 	return err

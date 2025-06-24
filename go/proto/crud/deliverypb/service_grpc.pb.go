@@ -19,13 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Service_GetData_FullMethodName        = "/freym.crud.delivery.Service/GetData"
-	Service_GetDataList_FullMethodName    = "/freym.crud.delivery.Service/GetDataList"
-	Service_Create_FullMethodName         = "/freym.crud.delivery.Service/Create"
-	Service_Update_FullMethodName         = "/freym.crud.delivery.Service/Update"
-	Service_UpdateByFilter_FullMethodName = "/freym.crud.delivery.Service/UpdateByFilter"
-	Service_Delete_FullMethodName         = "/freym.crud.delivery.Service/Delete"
-	Service_Clone_FullMethodName          = "/freym.crud.delivery.Service/Clone"
+	Service_GetData_FullMethodName         = "/freym.crud.delivery.Service/GetData"
+	Service_GetViewData_FullMethodName     = "/freym.crud.delivery.Service/GetViewData"
+	Service_GetDataList_FullMethodName     = "/freym.crud.delivery.Service/GetDataList"
+	Service_GetViewDataList_FullMethodName = "/freym.crud.delivery.Service/GetViewDataList"
+	Service_Create_FullMethodName          = "/freym.crud.delivery.Service/Create"
+	Service_Update_FullMethodName          = "/freym.crud.delivery.Service/Update"
+	Service_UpdateByFilter_FullMethodName  = "/freym.crud.delivery.Service/UpdateByFilter"
+	Service_Delete_FullMethodName          = "/freym.crud.delivery.Service/Delete"
+	Service_Clone_FullMethodName           = "/freym.crud.delivery.Service/Clone"
 )
 
 // ServiceClient is the client API for Service service.
@@ -33,7 +35,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
 	GetData(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*GetDataResponse, error)
+	GetViewData(ctx context.Context, in *GetViewDataRequest, opts ...grpc.CallOption) (*GetViewDataResponse, error)
 	GetDataList(ctx context.Context, in *GetDataListRequest, opts ...grpc.CallOption) (*GetDataListResponse, error)
+	GetViewDataList(ctx context.Context, in *GetViewDataListRequest, opts ...grpc.CallOption) (*GetViewDataListResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	UpdateByFilter(ctx context.Context, in *UpdateByFilterRequest, opts ...grpc.CallOption) (*UpdateByFilterResponse, error)
@@ -59,10 +63,30 @@ func (c *serviceClient) GetData(ctx context.Context, in *GetDataRequest, opts ..
 	return out, nil
 }
 
+func (c *serviceClient) GetViewData(ctx context.Context, in *GetViewDataRequest, opts ...grpc.CallOption) (*GetViewDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetViewDataResponse)
+	err := c.cc.Invoke(ctx, Service_GetViewData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) GetDataList(ctx context.Context, in *GetDataListRequest, opts ...grpc.CallOption) (*GetDataListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDataListResponse)
 	err := c.cc.Invoke(ctx, Service_GetDataList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) GetViewDataList(ctx context.Context, in *GetViewDataListRequest, opts ...grpc.CallOption) (*GetViewDataListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetViewDataListResponse)
+	err := c.cc.Invoke(ctx, Service_GetViewDataList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +148,9 @@ func (c *serviceClient) Clone(ctx context.Context, in *CloneRequest, opts ...grp
 // for forward compatibility.
 type ServiceServer interface {
 	GetData(context.Context, *GetDataRequest) (*GetDataResponse, error)
+	GetViewData(context.Context, *GetViewDataRequest) (*GetViewDataResponse, error)
 	GetDataList(context.Context, *GetDataListRequest) (*GetDataListResponse, error)
+	GetViewDataList(context.Context, *GetViewDataListRequest) (*GetViewDataListResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	UpdateByFilter(context.Context, *UpdateByFilterRequest) (*UpdateByFilterResponse, error)
@@ -143,8 +169,14 @@ type UnimplementedServiceServer struct{}
 func (UnimplementedServiceServer) GetData(context.Context, *GetDataRequest) (*GetDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetData not implemented")
 }
+func (UnimplementedServiceServer) GetViewData(context.Context, *GetViewDataRequest) (*GetViewDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetViewData not implemented")
+}
 func (UnimplementedServiceServer) GetDataList(context.Context, *GetDataListRequest) (*GetDataListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDataList not implemented")
+}
+func (UnimplementedServiceServer) GetViewDataList(context.Context, *GetViewDataListRequest) (*GetViewDataListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetViewDataList not implemented")
 }
 func (UnimplementedServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
@@ -200,6 +232,24 @@ func _Service_GetData_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetViewData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetViewDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetViewData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetViewData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetViewData(ctx, req.(*GetViewDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_GetDataList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDataListRequest)
 	if err := dec(in); err != nil {
@@ -214,6 +264,24 @@ func _Service_GetDataList_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).GetDataList(ctx, req.(*GetDataListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_GetViewDataList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetViewDataListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetViewDataList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetViewDataList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetViewDataList(ctx, req.(*GetViewDataListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -320,8 +388,16 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_GetData_Handler,
 		},
 		{
+			MethodName: "GetViewData",
+			Handler:    _Service_GetViewData_Handler,
+		},
+		{
 			MethodName: "GetDataList",
 			Handler:    _Service_GetDataList_Handler,
+		},
+		{
+			MethodName: "GetViewDataList",
+			Handler:    _Service_GetViewDataList_Handler,
 		},
 		{
 			MethodName: "Create",

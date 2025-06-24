@@ -10,7 +10,8 @@ message CreateDeploymentRequest {
 	repeated ObjectType nested_types = 5;
 	repeated EnumType enum_types = 6;
 	repeated View views = 7;
-	DeploymentOptions options = 8;
+	repeated View baseViews = 8;
+	DeploymentOptions options = 9;
 
 }
 

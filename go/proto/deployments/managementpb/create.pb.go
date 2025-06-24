@@ -29,7 +29,8 @@ type CreateDeploymentRequest struct {
 	xxx_hidden_NestedTypes     *[]*ObjectType         `protobuf:"bytes,5,rep,name=nested_types,json=nestedTypes,proto3"`
 	xxx_hidden_EnumTypes       *[]*EnumType           `protobuf:"bytes,6,rep,name=enum_types,json=enumTypes,proto3"`
 	xxx_hidden_Views           *[]*View               `protobuf:"bytes,7,rep,name=views,proto3"`
-	xxx_hidden_Options         *DeploymentOptions     `protobuf:"bytes,8,opt,name=options,proto3"`
+	xxx_hidden_BaseViews       *[]*View               `protobuf:"bytes,8,rep,name=baseViews,proto3"`
+	xxx_hidden_Options         *DeploymentOptions     `protobuf:"bytes,9,opt,name=options,proto3"`
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -118,6 +119,15 @@ func (x *CreateDeploymentRequest) GetViews() []*View {
 	return nil
 }
 
+func (x *CreateDeploymentRequest) GetBaseViews() []*View {
+	if x != nil {
+		if x.xxx_hidden_BaseViews != nil {
+			return *x.xxx_hidden_BaseViews
+		}
+	}
+	return nil
+}
+
 func (x *CreateDeploymentRequest) GetOptions() *DeploymentOptions {
 	if x != nil {
 		return x.xxx_hidden_Options
@@ -153,6 +163,10 @@ func (x *CreateDeploymentRequest) SetViews(v []*View) {
 	x.xxx_hidden_Views = &v
 }
 
+func (x *CreateDeploymentRequest) SetBaseViews(v []*View) {
+	x.xxx_hidden_BaseViews = &v
+}
+
 func (x *CreateDeploymentRequest) SetOptions(v *DeploymentOptions) {
 	x.xxx_hidden_Options = v
 }
@@ -178,6 +192,7 @@ type CreateDeploymentRequest_builder struct {
 	NestedTypes     []*ObjectType
 	EnumTypes       []*EnumType
 	Views           []*View
+	BaseViews       []*View
 	Options         *DeploymentOptions
 }
 
@@ -192,6 +207,7 @@ func (b0 CreateDeploymentRequest_builder) Build() *CreateDeploymentRequest {
 	x.xxx_hidden_NestedTypes = &b.NestedTypes
 	x.xxx_hidden_EnumTypes = &b.EnumTypes
 	x.xxx_hidden_Views = &b.Views
+	x.xxx_hidden_BaseViews = &b.BaseViews
 	x.xxx_hidden_Options = b.Options
 	return m0
 }
@@ -836,7 +852,7 @@ var File_deployments_management_create_proto protoreflect.FileDescriptor
 
 const file_deployments_management_create_proto_rawDesc = "" +
 	"\n" +
-	"#deployments/management/create.proto\x12\x1cfreym.deployments.management\x1a#deployments/management/shared.proto\"\x90\x04\n" +
+	"#deployments/management/create.proto\x12\x1cfreym.deployments.management\x1a#deployments/management/shared.proto\"\xd2\x04\n" +
 	"\x17CreateDeploymentRequest\x12\x1c\n" +
 	"\tnamespace\x18\x01 \x01(\tR\tnamespace\x12 \n" +
 	"\vpermissions\x18\x02 \x03(\tR\vpermissions\x12S\n" +
@@ -846,8 +862,9 @@ const file_deployments_management_create_proto_rawDesc = "" +
 	"\fnested_types\x18\x05 \x03(\v2(.freym.deployments.management.ObjectTypeR\vnestedTypes\x12E\n" +
 	"\n" +
 	"enum_types\x18\x06 \x03(\v2&.freym.deployments.management.EnumTypeR\tenumTypes\x128\n" +
-	"\x05views\x18\a \x03(\v2\".freym.deployments.management.ViewR\x05views\x12I\n" +
-	"\aoptions\x18\b \x01(\v2/.freym.deployments.management.DeploymentOptionsR\aoptions\"?\n" +
+	"\x05views\x18\a \x03(\v2\".freym.deployments.management.ViewR\x05views\x12@\n" +
+	"\tbaseViews\x18\b \x03(\v2\".freym.deployments.management.ViewR\tbaseViews\x12I\n" +
+	"\aoptions\x18\t \x01(\v2/.freym.deployments.management.DeploymentOptionsR\aoptions\"?\n" +
 	"\x18CreateDeploymentResponse\x12#\n" +
 	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\"\x96\x01\n" +
 	"\x11DeploymentOptions\x12F\n" +
@@ -903,19 +920,20 @@ var file_deployments_management_create_proto_depIdxs = []int32{
 	3,  // 2: freym.deployments.management.CreateDeploymentRequest.nested_types:type_name -> freym.deployments.management.ObjectType
 	7,  // 3: freym.deployments.management.CreateDeploymentRequest.enum_types:type_name -> freym.deployments.management.EnumType
 	8,  // 4: freym.deployments.management.CreateDeploymentRequest.views:type_name -> freym.deployments.management.View
-	2,  // 5: freym.deployments.management.CreateDeploymentRequest.options:type_name -> freym.deployments.management.DeploymentOptions
-	9,  // 6: freym.deployments.management.DeploymentOptions.target:type_name -> freym.deployments.management.DeploymentTarget
-	4,  // 7: freym.deployments.management.ObjectType.directives:type_name -> freym.deployments.management.TypeDirective
-	5,  // 8: freym.deployments.management.ObjectType.fields:type_name -> freym.deployments.management.TypeField
-	6,  // 9: freym.deployments.management.TypeDirective.arguments:type_name -> freym.deployments.management.TypeArgument
-	4,  // 10: freym.deployments.management.TypeField.directives:type_name -> freym.deployments.management.TypeDirective
-	4,  // 11: freym.deployments.management.View.directives:type_name -> freym.deployments.management.TypeDirective
-	5,  // 12: freym.deployments.management.View.fields:type_name -> freym.deployments.management.TypeField
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	8,  // 5: freym.deployments.management.CreateDeploymentRequest.baseViews:type_name -> freym.deployments.management.View
+	2,  // 6: freym.deployments.management.CreateDeploymentRequest.options:type_name -> freym.deployments.management.DeploymentOptions
+	9,  // 7: freym.deployments.management.DeploymentOptions.target:type_name -> freym.deployments.management.DeploymentTarget
+	4,  // 8: freym.deployments.management.ObjectType.directives:type_name -> freym.deployments.management.TypeDirective
+	5,  // 9: freym.deployments.management.ObjectType.fields:type_name -> freym.deployments.management.TypeField
+	6,  // 10: freym.deployments.management.TypeDirective.arguments:type_name -> freym.deployments.management.TypeArgument
+	4,  // 11: freym.deployments.management.TypeField.directives:type_name -> freym.deployments.management.TypeDirective
+	4,  // 12: freym.deployments.management.View.directives:type_name -> freym.deployments.management.TypeDirective
+	5,  // 13: freym.deployments.management.View.fields:type_name -> freym.deployments.management.TypeField
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_deployments_management_create_proto_init() }

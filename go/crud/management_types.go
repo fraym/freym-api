@@ -21,6 +21,47 @@ func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
 	}.Build()
 }
 
+type View struct {
+	Name       string
+	Sql        string
+	Directives []TypeDirective
+	Fields     []TypeField
+}
+
+func viewListToPb(list []View) ([]*managementpb.View, error) {
+	var newList []*managementpb.View
+
+	for _, view := range list {
+		newEnum, err := view.toPb()
+		if err != nil {
+			return nil, err
+		}
+
+		newList = append(newList, newEnum)
+	}
+
+	return newList, nil
+}
+
+func (v *View) toPb() (*managementpb.View, error) {
+	directives, err := typeDirectiveListToPb(v.Directives)
+	if err != nil {
+		return nil, err
+	}
+
+	fields, err := typeFieldListToPb(v.Fields)
+	if err != nil {
+		return nil, err
+	}
+
+	return managementpb.View_builder{
+		Name:       v.Name,
+		Sql:        v.Sql,
+		Directives: directives,
+		Fields:     fields,
+	}.Build(), nil
+}
+
 type ObjectType struct {
 	Name       string
 	Directives []TypeDirective

@@ -1,5 +1,11 @@
 # vNext
 
+# v0.38.0
+
+- (feature) Add `@view` and `@baseView` to crud
+- (feature) Add `@baseView` to projections
+- (bc) Cleanup client function naming
+
 # v0.37.2
 
 - (bug) Fix output dir of `@fraym/react` package

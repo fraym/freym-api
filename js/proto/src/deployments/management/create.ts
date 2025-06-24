@@ -20,6 +20,7 @@ export interface CreateDeploymentRequest {
     nestedTypes: ObjectType[];
     enumTypes: EnumType[];
     views: View[];
+    baseViews: View[];
     options: DeploymentOptions | undefined;
 }
 
@@ -76,6 +77,7 @@ function createBaseCreateDeploymentRequest(): CreateDeploymentRequest {
         nestedTypes: [],
         enumTypes: [],
         views: [],
+        baseViews: [],
         options: undefined,
     };
 }
@@ -106,8 +108,11 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
         for (const v of message.views) {
             View.encode(v!, writer.uint32(58).fork()).join();
         }
+        for (const v of message.baseViews) {
+            View.encode(v!, writer.uint32(66).fork()).join();
+        }
         if (message.options !== undefined) {
-            DeploymentOptions.encode(message.options, writer.uint32(66).fork()).join();
+            DeploymentOptions.encode(message.options, writer.uint32(74).fork()).join();
         }
         return writer;
     },
@@ -180,6 +185,14 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
                         break;
                     }
 
+                    message.baseViews.push(View.decode(reader, reader.uint32()));
+                    continue;
+                }
+                case 9: {
+                    if (tag !== 74) {
+                        break;
+                    }
+
                     message.options = DeploymentOptions.decode(reader, reader.uint32());
                     continue;
                 }
@@ -213,6 +226,9 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
             views: globalThis.Array.isArray(object?.views)
                 ? object.views.map((e: any) => View.fromJSON(e))
                 : [],
+            baseViews: globalThis.Array.isArray(object?.baseViews)
+                ? object.baseViews.map((e: any) => View.fromJSON(e))
+                : [],
             options: isSet(object.options) ? DeploymentOptions.fromJSON(object.options) : undefined,
         };
     },
@@ -240,6 +256,9 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
         if (message.views?.length) {
             obj.views = message.views.map(e => View.toJSON(e));
         }
+        if (message.baseViews?.length) {
+            obj.baseViews = message.baseViews.map(e => View.toJSON(e));
+        }
         if (message.options !== undefined) {
             obj.options = DeploymentOptions.toJSON(message.options);
         }
@@ -258,6 +277,7 @@ export const CreateDeploymentRequest: MessageFns<CreateDeploymentRequest> = {
         message.nestedTypes = object.nestedTypes?.map(e => ObjectType.fromPartial(e)) || [];
         message.enumTypes = object.enumTypes?.map(e => EnumType.fromPartial(e)) || [];
         message.views = object.views?.map(e => View.fromPartial(e)) || [];
+        message.baseViews = object.baseViews?.map(e => View.fromPartial(e)) || [];
         message.options =
             object.options !== undefined && object.options !== null
                 ? DeploymentOptions.fromPartial(object.options)

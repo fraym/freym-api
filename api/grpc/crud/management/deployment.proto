@@ -9,6 +9,8 @@ message DeploySchemaRequest {
 	repeated ObjectType nested_types = 5;
 	repeated EnumType enum_types = 6;
 	DeploymentOptions options = 7;
+	repeated View views = 8;
+	repeated View baseViews = 9;
 }
 
 message DeploySchemaResponse {}
@@ -79,4 +81,11 @@ message TypeArgument {
 message EnumType {
 	string name = 1;
 	repeated string values = 2;
+}
+
+message View {
+	string name = 1;
+	string sql = 2;
+	repeated TypeDirective directives = 3;
+	repeated TypeField fields = 4;
 }
