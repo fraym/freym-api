@@ -6,6 +6,7 @@ export interface Deployment {
     nestedTypes: ObjectType[];
     enumTypes: EnumType[];
     views: View[];
+    baseViews: View[];
     options: DeploymentOptions;
 }
 

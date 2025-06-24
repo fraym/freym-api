@@ -8,7 +8,7 @@ import {
     rollbackDeployment,
     rollbackDeploymentByNamespace,
 } from "../api/deployment";
-import { getMigrationFromSchema } from "../schema";
+import { getDeploymentFromSchema } from "../schema";
 import { DeploymentTarget } from "../schema/data";
 import { useConfig } from "./config";
 import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
@@ -33,7 +33,7 @@ export const runCreateDeployment = async (
         loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
 
-    const deployment = await getMigrationFromSchema(schema, config.namespace, {
+    const deployment = await getDeploymentFromSchema(schema, config.namespace, {
         target,
         force,
         skipServices,

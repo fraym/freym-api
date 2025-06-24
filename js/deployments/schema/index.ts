@@ -7,7 +7,7 @@ import { getEnums, getPermissions } from "./enum";
 import { getObjectFields } from "./field";
 import { ensureValidName } from "./util";
 
-export const getMigrationFromSchema = async (
+export const getDeploymentFromSchema = async (
     schema: GraphQLSchema,
     namespace: string,
     options: DeploymentOptions
@@ -29,12 +29,14 @@ const getTypes = async (
     projectionTypes: ObjectType[];
     nestedTypes: ObjectType[];
     views: View[];
+    baseViews: View[];
 }> => {
     const usedNames: string[] = [];
     const crudTypes: ObjectType[] = [];
     const projectionTypes: ObjectType[] = [];
     const nestedTypes: ObjectType[] = [];
     const views: View[] = [];
+    const baseViews: View[] = [];
 
     for (const t of schema.toConfig().types) {
         if (!(t instanceof GraphQLObjectType) || t.toString().startsWith("__")) {
@@ -64,7 +66,7 @@ const getTypes = async (
                 directives: getObjectDirectives(t),
                 fields: getObjectFields(t, namespace),
             });
-        } else if (hasDirective(t, "view")) {
+        } else if (hasDirective(t, "view") || hasDirective(t, "baseView")) {
             if (!t.astNode?.loc) {
                 throw new Error(`cannot resolve path of file that contains @view "${name}"`);
             }
@@ -94,12 +96,21 @@ const getTypes = async (
                 encoding: "utf8",
             });
 
-            views.push({
-                name,
-                sql,
-                directives,
-                fields: getObjectFields(t, namespace),
-            });
+            if (hasDirective(t, "baseView")) {
+                baseViews.push({
+                    name,
+                    sql,
+                    directives,
+                    fields: getObjectFields(t, namespace),
+                });
+            } else {
+                views.push({
+                    name,
+                    sql,
+                    directives,
+                    fields: getObjectFields(t, namespace),
+                });
+            }
         } else {
             nestedTypes.push({
                 name,
@@ -114,5 +125,6 @@ const getTypes = async (
         projectionTypes,
         nestedTypes,
         views,
+        baseViews,
     };
 };

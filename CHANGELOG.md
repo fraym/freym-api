@@ -1,5 +1,9 @@
 # vNext
 
+# v0.38.1
+
+- (bug) Add missing baseView to deployment
+
 # v0.38.0
 
 - (feature) Add `@view` and `@baseView` to crud
