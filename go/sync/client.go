@@ -20,7 +20,7 @@ type Client[T peer.ServiceClient] interface {
 	RLock(tenantId string, resource ...string) error
 	RUnlock(tenantId string, resource ...string)
 	GetPeerPool() peer.PeerPool[T]
-	Stop() error
+	Close() error
 }
 
 type syncClient[T peer.ServiceClient] struct {
@@ -96,7 +96,7 @@ func (c *syncClient[T]) GetPeerPool() peer.PeerPool[T] {
 	return c.peerPool
 }
 
-func (c *syncClient[T]) Stop() error {
+func (c *syncClient[T]) Close() error {
 	return c.onStop()
 }
 

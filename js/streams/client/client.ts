@@ -25,6 +25,9 @@ export interface StreamIterator {
 type LastEventCheck = (lastEvent: SubscriptionEvent | null) => boolean;
 
 export interface Client {
+    close: () => void;
+    publish: (topic: string, events: PublishEvent[]) => Promise<void>;
+    subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
     getEvent: (tenantId: string, topic: string, eventId: string) => Promise<SubscriptionEvent>;
     getLastEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
     getLastEventByTypes: (
@@ -47,14 +50,19 @@ export interface Client {
         perPage: number,
         handler: HandlerFunc
     ) => Promise<void>;
-    publish: (topic: string, events: PublishEvent[]) => Promise<void>;
     getStreamIterator: (
         topic: string,
         tenantId: string,
         stream: string,
         perPage: number
     ) => StreamIterator;
-    subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
+    createStreamSnapshot: (
+        tenantId: string,
+        topic: string,
+        stream: string,
+        lastSnapshottedEventId: string,
+        snapshotEvent: PublishEvent
+    ) => Promise<void>;
     invalidateGdprData: (tenantId: string, topic: string, gdprId: string) => Promise<void>;
     introduceGdprOnEventField: (
         tenantId: string,
@@ -63,15 +71,7 @@ export interface Client {
         eventId: string,
         fieldName: string
     ) => Promise<void>;
-    createStreamSnapshot: (
-        tenantId: string,
-        topic: string,
-        stream: string,
-        lastSnapshottedEventId: string,
-        snapshotEvent: PublishEvent
-    ) => Promise<void>;
     renameEventType: (topic: string, oldEventType: string, newEventType: string) => Promise<void>;
-    close: () => void;
 }
 
 export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {

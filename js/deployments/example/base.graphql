@@ -58,6 +58,7 @@ directive @from(
     topics: [String!]
     condition: String
     value: String
+    allowNull: Boolean
 ) repeatable on FIELD_DEFINITION
 directive @uuidV4(generate: Boolean) on FIELD_DEFINITION
 directive @fromJwtData(key: String!) on FIELD_DEFINITION

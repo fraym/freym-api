@@ -13,7 +13,7 @@ export interface Client {
     unlock: (tenantId: string, ...resource: string[]) => Promise<void>;
     rLock: (tenantId: string, ...resource: string[]) => Promise<void>;
     rUnlock: (tenantId: string, ...resource: string[]) => Promise<void>;
-    stop: () => Promise<void>;
+    close: () => Promise<void>;
 }
 
 export const newClient = async (config: ClientConfig): Promise<Client> => {
@@ -47,7 +47,7 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
             await connection.waitForConnect();
             await rUnlock(lease, tenantId, resource, serviceClient);
         },
-        stop: async () => {
+        close: async () => {
             connection.stop();
             lease.stop();
             await lease.waitForStop();

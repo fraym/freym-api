@@ -43,6 +43,6 @@ func (c *MockClient[T]) IsReady() bool {
 	return c.Called().Bool(0)
 }
 
-func (c *MockClient[T]) Stop() error {
+func (c *MockClient[T]) Close() error {
 	return c.Called().Error(0)
 }

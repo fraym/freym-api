@@ -11,47 +11,9 @@ import (
 )
 
 type Client interface {
-	GetAllEvents(
-		ctx context.Context,
-		tenant string,
-		topic string,
-		includedEventTypes []string,
-		perPage int,
-		queueSize int,
-		handler dto.HandlerFunc,
-	) error
-	GetAllEventsAfterEvent(
-		ctx context.Context,
-		tenant string,
-		topic string,
-		includedEventTypes []string,
-		eventId string,
-		perPage int,
-		queueSize int,
-		handler dto.HandlerFunc,
-	) error
-	GetStream(
-		ctx context.Context,
-		tenant string,
-		topic string,
-		stream string,
-		deploymentId int64,
-		perPage int,
-		queueSize int,
-		handler dto.HandlerFunc,
-	) error
-	GetStreamAfterEvent(
-		ctx context.Context,
-		tenant string,
-		topic string,
-		stream string,
-		eventId string,
-		deploymentId int64,
-		perPage int,
-		queueSize int,
-		handler dto.HandlerFunc,
-	) error
-	IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error)
+	Close()
+	Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error
+	NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription
 	GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error)
 	GetLastEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
 	GetLastEventByTypes(
@@ -60,16 +22,46 @@ type Client interface {
 		topic string,
 		types []string,
 	) (*dto.SubscriptionEvent, error)
-	NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription
-	Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error
-	InvalidateGdprData(ctx context.Context, tenantId string, topic string, gdprId string) error
-	IntroduceGdprOnEventField(
+	IterateAllEvents(
 		ctx context.Context,
-		tenantId string,
+		tenant string,
 		topic string,
+		includedEventTypes []string,
+		perPage int,
+		queueSize int,
+		handler dto.HandlerFunc,
+	) error
+	IterateAllEventsAfterEvent(
+		ctx context.Context,
+		tenant string,
+		topic string,
+		includedEventTypes []string,
 		eventId string,
-		fieldName string,
-		defaultValue string,
+		perPage int,
+		queueSize int,
+		handler dto.HandlerFunc,
+	) error
+	IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error)
+	IterateStream(
+		ctx context.Context,
+		tenant string,
+		topic string,
+		stream string,
+		deploymentId int64,
+		perPage int,
+		queueSize int,
+		handler dto.HandlerFunc,
+	) error
+	IterateStreamAfterEvent(
+		ctx context.Context,
+		tenant string,
+		topic string,
+		stream string,
+		eventId string,
+		deploymentId int64,
+		perPage int,
+		queueSize int,
+		handler dto.HandlerFunc,
 	) error
 	CreateStreamSnapshot(
 		ctx context.Context,
@@ -79,8 +71,16 @@ type Client interface {
 		lastSnapshottedEventId string,
 		snapshotEvent *dto.PublishEvent,
 	) error
+	InvalidateGdprData(ctx context.Context, tenantId string, topic string, gdprId string) error
+	IntroduceGdprOnEventField(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		eventId string,
+		fieldName string,
+		defaultValue string,
+	) error
 	RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error
-	Close()
 }
 
 type streamsClient struct {
@@ -118,7 +118,7 @@ func NewClient(
 	}, nil
 }
 
-func (c *streamsClient) GetAllEvents(
+func (c *streamsClient) IterateAllEvents(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -130,7 +130,7 @@ func (c *streamsClient) GetAllEvents(
 	return c.service.IterateAllEvents(ctx, tenant, topic, includedEventTypes, perPage, queueSize, handler)
 }
 
-func (c *streamsClient) GetAllEventsAfterEvent(
+func (c *streamsClient) IterateAllEventsAfterEvent(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -152,7 +152,7 @@ func (c *streamsClient) GetAllEventsAfterEvent(
 	)
 }
 
-func (c *streamsClient) GetStream(
+func (c *streamsClient) IterateStream(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -165,7 +165,7 @@ func (c *streamsClient) GetStream(
 	return c.service.IterateStream(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler)
 }
 
-func (c *streamsClient) GetStreamAfterEvent(
+func (c *streamsClient) IterateStreamAfterEvent(
 	ctx context.Context,
 	tenant string,
 	topic string,

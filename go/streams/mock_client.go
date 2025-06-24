@@ -12,7 +12,7 @@ type MockClient struct {
 	mock.Mock
 }
 
-func (c *MockClient) GetAllEvents(
+func (c *MockClient) IterateAllEvents(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -24,7 +24,7 @@ func (c *MockClient) GetAllEvents(
 	return c.Called(ctx, tenant, topic, includedEventTypes, perPage, queueSize, handler).Error(0)
 }
 
-func (c *MockClient) GetAllEventsAfterEvent(
+func (c *MockClient) IterateAllEventsAfterEvent(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -37,7 +37,7 @@ func (c *MockClient) GetAllEventsAfterEvent(
 	return c.Called(ctx, tenant, topic, includedEventTypes, eventId, perPage, queueSize, handler).Error(0)
 }
 
-func (c *MockClient) GetStream(
+func (c *MockClient) IterateStream(
 	ctx context.Context,
 	tenant string,
 	topic string,
@@ -50,7 +50,7 @@ func (c *MockClient) GetStream(
 	return c.Called(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler).Error(0)
 }
 
-func (c *MockClient) GetStreamAfterEvent(
+func (c *MockClient) IterateStreamAfterEvent(
 	ctx context.Context,
 	tenant string,
 	topic string,

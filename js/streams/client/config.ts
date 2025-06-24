@@ -27,7 +27,7 @@ export const useConfigDefaults = (config: ClientConfig): Required<ClientConfig> 
     };
 };
 
-export const getEnvDeliveryConfig = (): ClientConfig => {
+export const getEnvConfig = (): ClientConfig => {
     config();
 
     let keepaliveInterval: number | undefined;
