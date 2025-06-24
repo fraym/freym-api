@@ -25,6 +25,7 @@ type LockRequest struct {
 	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
 	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
 	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	xxx_hidden_Ttl      int32                  `protobuf:"varint,4,opt,name=ttl,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -75,6 +76,13 @@ func (x *LockRequest) GetResource() []string {
 	return nil
 }
 
+func (x *LockRequest) GetTtl() int32 {
+	if x != nil {
+		return x.xxx_hidden_Ttl
+	}
+	return 0
+}
+
 func (x *LockRequest) SetLeaseId(v string) {
 	x.xxx_hidden_LeaseId = v
 }
@@ -87,12 +95,17 @@ func (x *LockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
+func (x *LockRequest) SetTtl(v int32) {
+	x.xxx_hidden_Ttl = v
+}
+
 type LockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	LeaseId  string
 	TenantId string
 	Resource []string
+	Ttl      int32
 }
 
 func (b0 LockRequest_builder) Build() *LockRequest {
@@ -102,6 +115,7 @@ func (b0 LockRequest_builder) Build() *LockRequest {
 	x.xxx_hidden_LeaseId = b.LeaseId
 	x.xxx_hidden_TenantId = b.TenantId
 	x.xxx_hidden_Resource = b.Resource
+	x.xxx_hidden_Ttl = b.Ttl
 	return m0
 }
 
@@ -153,6 +167,7 @@ type RLockRequest struct {
 	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
 	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
 	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	xxx_hidden_Ttl      int32                  `protobuf:"varint,4,opt,name=ttl,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -203,6 +218,13 @@ func (x *RLockRequest) GetResource() []string {
 	return nil
 }
 
+func (x *RLockRequest) GetTtl() int32 {
+	if x != nil {
+		return x.xxx_hidden_Ttl
+	}
+	return 0
+}
+
 func (x *RLockRequest) SetLeaseId(v string) {
 	x.xxx_hidden_LeaseId = v
 }
@@ -215,12 +237,17 @@ func (x *RLockRequest) SetResource(v []string) {
 	x.xxx_hidden_Resource = v
 }
 
+func (x *RLockRequest) SetTtl(v int32) {
+	x.xxx_hidden_Ttl = v
+}
+
 type RLockRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	LeaseId  string
 	TenantId string
 	Resource []string
+	Ttl      int32
 }
 
 func (b0 RLockRequest_builder) Build() *RLockRequest {
@@ -230,6 +257,7 @@ func (b0 RLockRequest_builder) Build() *RLockRequest {
 	x.xxx_hidden_LeaseId = b.LeaseId
 	x.xxx_hidden_TenantId = b.TenantId
 	x.xxx_hidden_Resource = b.Resource
+	x.xxx_hidden_Ttl = b.Ttl
 	return m0
 }
 
@@ -536,16 +564,18 @@ var File_sync_management_lock_proto protoreflect.FileDescriptor
 
 const file_sync_management_lock_proto_rawDesc = "" +
 	"\n" +
-	"\x1async/management/lock.proto\x12\x15freym.sync.management\"a\n" +
+	"\x1async/management/lock.proto\x12\x15freym.sync.management\"s\n" +
 	"\vLockRequest\x12\x19\n" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
-	"\bresource\x18\x03 \x03(\tR\bresource\"\x0e\n" +
-	"\fLockResponse\"b\n" +
+	"\bresource\x18\x03 \x03(\tR\bresource\x12\x10\n" +
+	"\x03ttl\x18\x04 \x01(\x05R\x03ttl\"\x0e\n" +
+	"\fLockResponse\"t\n" +
 	"\fRLockRequest\x12\x19\n" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
-	"\bresource\x18\x03 \x03(\tR\bresource\"\x0f\n" +
+	"\bresource\x18\x03 \x03(\tR\bresource\x12\x10\n" +
+	"\x03ttl\x18\x04 \x01(\x05R\x03ttl\"\x0f\n" +
 	"\rRLockResponse\"c\n" +
 	"\rUnlockRequest\x12\x19\n" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +

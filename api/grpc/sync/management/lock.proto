@@ -5,6 +5,7 @@ message LockRequest {
 	string lease_id = 1;
 	string tenant_id = 2;
 	repeated string resource = 3;
+	int32 ttl = 4;
 }
 
 message LockResponse {}
@@ -13,6 +14,7 @@ message RLockRequest {
 	string lease_id = 1;
 	string tenant_id = 2;
 	repeated string resource = 3;
+	int32 ttl = 4;
 }
 
 message RLockResponse {}

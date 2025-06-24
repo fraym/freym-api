@@ -10,6 +10,7 @@ export interface LockRequest {
     leaseId: string;
     tenantId: string;
     resource: string[];
+    ttl: number;
 }
 
 export interface LockResponse {}
@@ -18,6 +19,7 @@ export interface RLockRequest {
     leaseId: string;
     tenantId: string;
     resource: string[];
+    ttl: number;
 }
 
 export interface RLockResponse {}
@@ -39,7 +41,7 @@ export interface RUnlockRequest {
 export interface RUnlockResponse {}
 
 function createBaseLockRequest(): LockRequest {
-    return { leaseId: "", tenantId: "", resource: [] };
+    return { leaseId: "", tenantId: "", resource: [], ttl: 0 };
 }
 
 export const LockRequest: MessageFns<LockRequest> = {
@@ -52,6 +54,9 @@ export const LockRequest: MessageFns<LockRequest> = {
         }
         for (const v of message.resource) {
             writer.uint32(26).string(v!);
+        }
+        if (message.ttl !== 0) {
+            writer.uint32(32).int32(message.ttl);
         }
         return writer;
     },
@@ -87,6 +92,14 @@ export const LockRequest: MessageFns<LockRequest> = {
                     message.resource.push(reader.string());
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.ttl = reader.int32();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -103,6 +116,7 @@ export const LockRequest: MessageFns<LockRequest> = {
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
+            ttl: isSet(object.ttl) ? globalThis.Number(object.ttl) : 0,
         };
     },
 
@@ -117,6 +131,9 @@ export const LockRequest: MessageFns<LockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
+        if (message.ttl !== 0) {
+            obj.ttl = Math.round(message.ttl);
+        }
         return obj;
     },
 
@@ -128,6 +145,7 @@ export const LockRequest: MessageFns<LockRequest> = {
         message.leaseId = object.leaseId ?? "";
         message.tenantId = object.tenantId ?? "";
         message.resource = object.resource?.map(e => e) || [];
+        message.ttl = object.ttl ?? 0;
         return message;
     },
 };
@@ -176,7 +194,7 @@ export const LockResponse: MessageFns<LockResponse> = {
 };
 
 function createBaseRLockRequest(): RLockRequest {
-    return { leaseId: "", tenantId: "", resource: [] };
+    return { leaseId: "", tenantId: "", resource: [], ttl: 0 };
 }
 
 export const RLockRequest: MessageFns<RLockRequest> = {
@@ -189,6 +207,9 @@ export const RLockRequest: MessageFns<RLockRequest> = {
         }
         for (const v of message.resource) {
             writer.uint32(26).string(v!);
+        }
+        if (message.ttl !== 0) {
+            writer.uint32(32).int32(message.ttl);
         }
         return writer;
     },
@@ -224,6 +245,14 @@ export const RLockRequest: MessageFns<RLockRequest> = {
                     message.resource.push(reader.string());
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.ttl = reader.int32();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -240,6 +269,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
             resource: globalThis.Array.isArray(object?.resource)
                 ? object.resource.map((e: any) => globalThis.String(e))
                 : [],
+            ttl: isSet(object.ttl) ? globalThis.Number(object.ttl) : 0,
         };
     },
 
@@ -254,6 +284,9 @@ export const RLockRequest: MessageFns<RLockRequest> = {
         if (message.resource?.length) {
             obj.resource = message.resource;
         }
+        if (message.ttl !== 0) {
+            obj.ttl = Math.round(message.ttl);
+        }
         return obj;
     },
 
@@ -265,6 +298,7 @@ export const RLockRequest: MessageFns<RLockRequest> = {
         message.leaseId = object.leaseId ?? "";
         message.tenantId = object.tenantId ?? "";
         message.resource = object.resource?.map(e => e) || [];
+        message.ttl = object.ttl ?? 0;
         return message;
     },
 };
