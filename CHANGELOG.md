@@ -1,5 +1,9 @@
 # vNext
 
+# v0.38.2
+
+- (bug) Fix `@baseView` support
+
 # v0.38.1
 
 - (bug) Add missing baseView to deployment

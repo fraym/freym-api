@@ -78,7 +78,7 @@ const getTypes = async (
                 .join("/")
                 .replace(process.cwd(), ".");
             const directives = getObjectDirectives(t);
-            const viewDirective = directives.find(d => d.name === "view");
+            const viewDirective = directives.find(d => d.name === "view" || d.name === "baseView");
             const sqlFileArg = viewDirective?.arguments.find(a => a.name === "sqlFile");
             const sqlFileName = sqlFileArg?.value;
 

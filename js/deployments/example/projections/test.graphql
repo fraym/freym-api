@@ -33,3 +33,7 @@ type TestProjection
 type TestView @view(sqlFile: "./test.sql") {
     testNumber: Int!
 }
+
+type TestBaseView @baseView(sqlFile: "./testBase.sql") {
+    testNumber: Int!
+}
