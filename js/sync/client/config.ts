@@ -26,8 +26,8 @@ export const getEnvConfig = (): ClientConfig => {
     let keepaliveInterval: number | undefined;
     let keepaliveTimeout: number | undefined;
 
-    const keepaliveIntervalString = process.env.STREAMS_CLIENT_KEEPALIVE_INTERVAL;
-    const keepaliveTimeoutString = process.env.STREAMS_CLIENT_KEEPALIVE_TIMEOUT;
+    const keepaliveIntervalString = process.env.SYNC_CLIENT_KEEPALIVE_INTERVAL;
+    const keepaliveTimeoutString = process.env.SYNC_CLIENT_KEEPALIVE_TIMEOUT;
 
     if (keepaliveIntervalString) {
         keepaliveInterval = parseInt(keepaliveIntervalString, 10);
@@ -38,7 +38,7 @@ export const getEnvConfig = (): ClientConfig => {
     }
 
     return {
-        serverAddress: process.env.STREAMS_CLIENT_ADDRESS ?? "",
+        serverAddress: process.env.SYNC_CLIENT_ADDRESS ?? "",
         appPrefix: process.env.SYNC_CLIENT_APP_PREFIX ?? "",
         keepaliveInterval,
         keepaliveTimeout,

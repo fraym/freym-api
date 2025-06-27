@@ -1,5 +1,9 @@
 # vNext
 
+# v0.38.3
+
+- (bug) Fix env variable namings
+
 # v0.38.2
 
 - (bug) Fix `@baseView` support

@@ -35,7 +35,7 @@ export const getEnvDeliveryConfig = (): DeliveryClientConfig => {
         keepaliveInterval,
         keepaliveTimeout,
         deploymentTarget:
-            process.env.PROJECTIONS_CLIENT_DEPLOYMENT_TARGET === "green"
+            process.env.CRUD_CLIENT_DEPLOYMENT_TARGET === "green"
                 ? "DEPLOYMENT_TARGET_GREEN"
                 : "DEPLOYMENT_TARGET_BLUE",
     };
@@ -49,7 +49,7 @@ export const useDeliveryConfigDefaults = (
     }
 
     const deploymentTarget =
-        process.env.PROJECTIONS_CLIENT_DEPLOYMENT_TARGET === "green"
+        process.env.CRUD_CLIENT_DEPLOYMENT_TARGET === "green"
             ? "DEPLOYMENT_TARGET_GREEN"
             : "DEPLOYMENT_TARGET_BLUE";
 
