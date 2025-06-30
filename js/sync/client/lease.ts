@@ -1,5 +1,4 @@
 import { Lock as PbLock, ServiceClient } from "@fraym/proto/dist/index.freym.sync.management";
-import { E_CANCELED, Mutex } from "async-mutex";
 import { ServiceError } from "@grpc/grpc-js";
 import { ClientConfig } from "./config";
 import { Connection } from "./connection";
@@ -35,7 +34,6 @@ export const createLease = async (
     config: ClientConfig,
     serviceClient: ServiceClient
 ): Promise<Lease> => {
-    const mutex = new Mutex();
     const ttl = 20;
     let locks: Lock[] = [];
     let rLocks: Lock[] = [];
@@ -48,44 +46,34 @@ export const createLease = async (
         const [waitForCreateLease, onCreateLease] =
             await createResolvablePromise<CreateLeaseResponse>();
 
-        try {
-            const release = await mutex.acquire();
-            serviceClient.createLease(
-                {
-                    ip: getOwnIpAddress(),
-                    app: config.appPrefix,
-                    ttl,
-                    leaseId,
-                    alreadyRegisteredLocks: getPbLocks(leaseId, locks),
-                    alreadyRegisteredRlocks: getPbLocks(leaseId, rLocks),
-                },
-                (error, response) => {
-                    if (error) {
-                        onCreateLease({ error });
-                        return;
-                    }
-
-                    onCreateLease({ error: null, leaseId: response.leaseId });
+        serviceClient.createLease(
+            {
+                ip: getOwnIpAddress(),
+                app: config.appPrefix,
+                ttl,
+                leaseId,
+                alreadyRegisteredLocks: getPbLocks(leaseId, locks),
+                alreadyRegisteredRlocks: getPbLocks(leaseId, rLocks),
+            },
+            (error, response) => {
+                if (error) {
+                    onCreateLease({ error });
+                    return;
                 }
-            );
 
-            const response = await waitForCreateLease();
-
-            if (response.error) {
-                release();
-                throw response.error;
+                onCreateLease({ error: null, leaseId: response.leaseId });
             }
+        );
 
-            leaseId = response.leaseId;
-            keepLeaseAlive(); // do not await this!
-            release();
-            await connection.connect();
-        } catch (e) {
-            if (e === E_CANCELED) {
-                return;
-            }
-            throw e;
+        const response = await waitForCreateLease();
+
+        if (response.error) {
+            throw response.error;
         }
+
+        leaseId = response.leaseId;
+        keepLeaseAlive(); // do not await this!
+        await connection.connect();
     };
 
     const keepLeaseAlive = async () => {
@@ -145,67 +133,42 @@ export const createLease = async (
 
     return {
         stop: () => {
-            mutex.cancel();
             stopExecution();
         },
         runWithLeaseId: async (callback: (leaseId: string) => Promise<void>) => {
-            await mutex.runExclusive(async () => {
-                await callback(leaseId);
-            });
+            await callback(leaseId);
         },
         renew,
         waitForStop,
         track: async (tenant: string, resource: string[], read: boolean) => {
-            try {
-                await mutex.runExclusive(() => {
-                    if (read) {
-                        rLocks.push({ tenant, resource });
-                        return;
-                    }
-
-                    locks.push({ tenant, resource });
-                });
-            } catch (e) {
-                if (e === E_CANCELED) {
-                    return;
-                }
-                throw e;
+            if (read) {
+                rLocks.push({ tenant, resource });
+                return;
             }
+
+            locks.push({ tenant, resource });
         },
         untrack: async (tenant: string, resource: string[], read: boolean) => {
-            try {
-                await mutex.runExclusive(() => {
-                    if (read) {
-                        let found = false;
-                        const newRLocks: Lock[] = [];
+            if (read) {
+                let found = false;
+                const newRLocks: Lock[] = [];
 
-                        rLocks.forEach(lock => {
-                            if (
-                                !found &&
-                                lock.tenant === tenant &&
-                                arraysEqual(lock.resource, resource)
-                            ) {
-                                found = true;
-                                return;
-                            }
-
-                            newRLocks.push(lock);
-                        });
-
-                        rLocks = newRLocks;
+                rLocks.forEach(lock => {
+                    if (!found && lock.tenant === tenant && arraysEqual(lock.resource, resource)) {
+                        found = true;
                         return;
                     }
 
-                    locks = locks.filter(lock => {
-                        return lock.tenant !== tenant || !arraysEqual(lock.resource, resource);
-                    });
+                    newRLocks.push(lock);
                 });
-            } catch (e) {
-                if (e === E_CANCELED) {
-                    return;
-                }
-                throw e;
+
+                rLocks = newRLocks;
+                return;
             }
+
+            locks = locks.filter(lock => {
+                return lock.tenant !== tenant || !arraysEqual(lock.resource, resource);
+            });
         },
     };
 };

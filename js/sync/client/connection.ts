@@ -1,4 +1,3 @@
-import { Mutex } from "async-mutex";
 import { createResolvablePromise, racePromises } from "./promise";
 
 export interface Connection {
@@ -12,38 +11,31 @@ type OnConnect = () => void;
 
 export const newConnection = async (): Promise<Connection> => {
     const [waitForStop, onStop] = await createResolvablePromise<void>();
-    const mutex = new Mutex();
     let connected = false;
     let onConnectCallbacks: OnConnect[] = [];
 
     return {
         connect: async () => {
-            await mutex.runExclusive(async () => {
-                connected = true;
+            connected = true;
 
-                for (const callback of onConnectCallbacks) {
-                    callback();
-                }
+            for (const callback of onConnectCallbacks) {
+                callback();
+            }
 
-                onConnectCallbacks = [];
-            });
+            onConnectCallbacks = [];
         },
         disconnect: async () => {
-            await mutex.runExclusive(async () => {
-                connected = false;
-            });
+            connected = false;
         },
         waitForConnect: async () => {
             const [waitForConnect, onConnect] = await createResolvablePromise<void>();
 
-            await mutex.runExclusive(async () => {
-                if (connected) {
-                    onConnect();
-                    return;
-                }
+            if (connected) {
+                onConnect();
+                return;
+            }
 
-                onConnectCallbacks.push(onConnect);
-            });
+            onConnectCallbacks.push(onConnect);
 
             const response = await racePromises({
                 connect: waitForConnect(),

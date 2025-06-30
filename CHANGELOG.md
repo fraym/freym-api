@@ -1,5 +1,9 @@
 # vNext
 
+# v0.38.4
+
+- (bug) Remove mutex from sync client
+
 # v0.38.3
 
 - (bug) Fix env variable namings
