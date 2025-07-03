@@ -1,0 +1,9 @@
+syntax = "proto3";
+package freym.projections.management;
+
+message BackchannelRequest {
+	string type = 1;
+	map<string, string> payload = 2;
+}
+
+message BackchannelResponse {}

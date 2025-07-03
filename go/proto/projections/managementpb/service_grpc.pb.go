@@ -25,6 +25,7 @@ const (
 	Service_RollbackSchema_FullMethodName             = "/freym.projections.management.Service/RollbackSchema"
 	Service_RollbackSchemaByDeployment_FullMethodName = "/freym.projections.management.Service/RollbackSchemaByDeployment"
 	Service_GetSchemaDeployment_FullMethodName        = "/freym.projections.management.Service/GetSchemaDeployment"
+	Service_Backchannel_FullMethodName                = "/freym.projections.management.Service/Backchannel"
 )
 
 // ServiceClient is the client API for Service service.
@@ -37,6 +38,7 @@ type ServiceClient interface {
 	RollbackSchema(ctx context.Context, in *RollbackSchemaRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error)
 	RollbackSchemaByDeployment(ctx context.Context, in *RollbackSchemaByDeploymentRequest, opts ...grpc.CallOption) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(ctx context.Context, in *GetSchemaDeploymentRequest, opts ...grpc.CallOption) (*GetSchemaDeploymentResponse, error)
+	Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error)
 }
 
 type serviceClient struct {
@@ -107,6 +109,16 @@ func (c *serviceClient) GetSchemaDeployment(ctx context.Context, in *GetSchemaDe
 	return out, nil
 }
 
+func (c *serviceClient) Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BackchannelResponse)
+	err := c.cc.Invoke(ctx, Service_Backchannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility.
@@ -117,6 +129,7 @@ type ServiceServer interface {
 	RollbackSchema(context.Context, *RollbackSchemaRequest) (*RollbackSchemaResponse, error)
 	RollbackSchemaByDeployment(context.Context, *RollbackSchemaByDeploymentRequest) (*RollbackSchemaResponse, error)
 	GetSchemaDeployment(context.Context, *GetSchemaDeploymentRequest) (*GetSchemaDeploymentResponse, error)
+	Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -144,6 +157,9 @@ func (UnimplementedServiceServer) RollbackSchemaByDeployment(context.Context, *R
 }
 func (UnimplementedServiceServer) GetSchemaDeployment(context.Context, *GetSchemaDeploymentRequest) (*GetSchemaDeploymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSchemaDeployment not implemented")
+}
+func (UnimplementedServiceServer) Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Backchannel not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 func (UnimplementedServiceServer) testEmbeddedByValue()                 {}
@@ -274,6 +290,24 @@ func _Service_GetSchemaDeployment_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_Backchannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BackchannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Backchannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Backchannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Backchannel(ctx, req.(*BackchannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -304,6 +338,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSchemaDeployment",
 			Handler:    _Service_GetSchemaDeployment_Handler,
+		},
+		{
+			MethodName: "Backchannel",
+			Handler:    _Service_Backchannel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

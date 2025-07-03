@@ -1,5 +1,9 @@
 # vNext
 
+# v0.39.0
+
+- (feature) Add projections backchannel
+
 # v0.38.4
 
 - (bug) Remove mutex from sync client

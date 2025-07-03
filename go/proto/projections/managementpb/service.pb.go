@@ -24,14 +24,15 @@ var File_projections_management_service_proto protoreflect.FileDescriptor
 
 const file_projections_management_service_proto_rawDesc = "" +
 	"\n" +
-	"$projections/management/service.proto\x12\x1cfreym.projections.management\x1a'projections/management/deployment.proto2\x97\x06\n" +
+	"$projections/management/service.proto\x12\x1cfreym.projections.management\x1a'projections/management/deployment.proto\x1a(projections/management/backchannel.proto2\x8b\a\n" +
 	"\aService\x12u\n" +
 	"\fDeploySchema\x121.freym.projections.management.DeploySchemaRequest\x1a2.freym.projections.management.DeploySchemaResponse\x12{\n" +
 	"\x0eActivateSchema\x123.freym.projections.management.ActivateSchemaRequest\x1a4.freym.projections.management.ActivateSchemaResponse\x12x\n" +
 	"\rConfirmSchema\x122.freym.projections.management.ConfirmSchemaRequest\x1a3.freym.projections.management.ConfirmSchemaResponse\x12{\n" +
 	"\x0eRollbackSchema\x123.freym.projections.management.RollbackSchemaRequest\x1a4.freym.projections.management.RollbackSchemaResponse\x12\x93\x01\n" +
 	"\x1aRollbackSchemaByDeployment\x12?.freym.projections.management.RollbackSchemaByDeploymentRequest\x1a4.freym.projections.management.RollbackSchemaResponse\x12\x8a\x01\n" +
-	"\x13GetSchemaDeployment\x128.freym.projections.management.GetSchemaDeploymentRequest\x1a9.freym.projections.management.GetSchemaDeploymentResponseb\x06proto3"
+	"\x13GetSchemaDeployment\x128.freym.projections.management.GetSchemaDeploymentRequest\x1a9.freym.projections.management.GetSchemaDeploymentResponse\x12r\n" +
+	"\vBackchannel\x120.freym.projections.management.BackchannelRequest\x1a1.freym.projections.management.BackchannelResponseb\x06proto3"
 
 var file_projections_management_service_proto_goTypes = []any{
 	(*DeploySchemaRequest)(nil),               // 0: freym.projections.management.DeploySchemaRequest
@@ -40,11 +41,13 @@ var file_projections_management_service_proto_goTypes = []any{
 	(*RollbackSchemaRequest)(nil),             // 3: freym.projections.management.RollbackSchemaRequest
 	(*RollbackSchemaByDeploymentRequest)(nil), // 4: freym.projections.management.RollbackSchemaByDeploymentRequest
 	(*GetSchemaDeploymentRequest)(nil),        // 5: freym.projections.management.GetSchemaDeploymentRequest
-	(*DeploySchemaResponse)(nil),              // 6: freym.projections.management.DeploySchemaResponse
-	(*ActivateSchemaResponse)(nil),            // 7: freym.projections.management.ActivateSchemaResponse
-	(*ConfirmSchemaResponse)(nil),             // 8: freym.projections.management.ConfirmSchemaResponse
-	(*RollbackSchemaResponse)(nil),            // 9: freym.projections.management.RollbackSchemaResponse
-	(*GetSchemaDeploymentResponse)(nil),       // 10: freym.projections.management.GetSchemaDeploymentResponse
+	(*BackchannelRequest)(nil),                // 6: freym.projections.management.BackchannelRequest
+	(*DeploySchemaResponse)(nil),              // 7: freym.projections.management.DeploySchemaResponse
+	(*ActivateSchemaResponse)(nil),            // 8: freym.projections.management.ActivateSchemaResponse
+	(*ConfirmSchemaResponse)(nil),             // 9: freym.projections.management.ConfirmSchemaResponse
+	(*RollbackSchemaResponse)(nil),            // 10: freym.projections.management.RollbackSchemaResponse
+	(*GetSchemaDeploymentResponse)(nil),       // 11: freym.projections.management.GetSchemaDeploymentResponse
+	(*BackchannelResponse)(nil),               // 12: freym.projections.management.BackchannelResponse
 }
 var file_projections_management_service_proto_depIdxs = []int32{
 	0,  // 0: freym.projections.management.Service.DeploySchema:input_type -> freym.projections.management.DeploySchemaRequest
@@ -53,14 +56,16 @@ var file_projections_management_service_proto_depIdxs = []int32{
 	3,  // 3: freym.projections.management.Service.RollbackSchema:input_type -> freym.projections.management.RollbackSchemaRequest
 	4,  // 4: freym.projections.management.Service.RollbackSchemaByDeployment:input_type -> freym.projections.management.RollbackSchemaByDeploymentRequest
 	5,  // 5: freym.projections.management.Service.GetSchemaDeployment:input_type -> freym.projections.management.GetSchemaDeploymentRequest
-	6,  // 6: freym.projections.management.Service.DeploySchema:output_type -> freym.projections.management.DeploySchemaResponse
-	7,  // 7: freym.projections.management.Service.ActivateSchema:output_type -> freym.projections.management.ActivateSchemaResponse
-	8,  // 8: freym.projections.management.Service.ConfirmSchema:output_type -> freym.projections.management.ConfirmSchemaResponse
-	9,  // 9: freym.projections.management.Service.RollbackSchema:output_type -> freym.projections.management.RollbackSchemaResponse
-	9,  // 10: freym.projections.management.Service.RollbackSchemaByDeployment:output_type -> freym.projections.management.RollbackSchemaResponse
-	10, // 11: freym.projections.management.Service.GetSchemaDeployment:output_type -> freym.projections.management.GetSchemaDeploymentResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	6,  // 6: freym.projections.management.Service.Backchannel:input_type -> freym.projections.management.BackchannelRequest
+	7,  // 7: freym.projections.management.Service.DeploySchema:output_type -> freym.projections.management.DeploySchemaResponse
+	8,  // 8: freym.projections.management.Service.ActivateSchema:output_type -> freym.projections.management.ActivateSchemaResponse
+	9,  // 9: freym.projections.management.Service.ConfirmSchema:output_type -> freym.projections.management.ConfirmSchemaResponse
+	10, // 10: freym.projections.management.Service.RollbackSchema:output_type -> freym.projections.management.RollbackSchemaResponse
+	10, // 11: freym.projections.management.Service.RollbackSchemaByDeployment:output_type -> freym.projections.management.RollbackSchemaResponse
+	11, // 12: freym.projections.management.Service.GetSchemaDeployment:output_type -> freym.projections.management.GetSchemaDeploymentResponse
+	12, // 13: freym.projections.management.Service.Backchannel:output_type -> freym.projections.management.BackchannelResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -72,6 +77,7 @@ func file_projections_management_service_proto_init() {
 		return
 	}
 	file_projections_management_deployment_proto_init()
+	file_projections_management_backchannel_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
