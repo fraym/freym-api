@@ -24,14 +24,15 @@ var File_crud_management_service_proto protoreflect.FileDescriptor
 
 const file_crud_management_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1dcrud/management/service.proto\x12\x15freym.crud.management\x1a crud/management/deployment.proto2\xc2\x05\n" +
+	"\x1dcrud/management/service.proto\x12\x15freym.crud.management\x1a crud/management/deployment.proto\x1a!crud/management/backchannel.proto2\xa8\x06\n" +
 	"\aService\x12g\n" +
 	"\fDeploySchema\x12*.freym.crud.management.DeploySchemaRequest\x1a+.freym.crud.management.DeploySchemaResponse\x12m\n" +
 	"\x0eActivateSchema\x12,.freym.crud.management.ActivateSchemaRequest\x1a-.freym.crud.management.ActivateSchemaResponse\x12j\n" +
 	"\rConfirmSchema\x12+.freym.crud.management.ConfirmSchemaRequest\x1a,.freym.crud.management.ConfirmSchemaResponse\x12m\n" +
 	"\x0eRollbackSchema\x12,.freym.crud.management.RollbackSchemaRequest\x1a-.freym.crud.management.RollbackSchemaResponse\x12\x85\x01\n" +
 	"\x1aRollbackSchemaByDeployment\x128.freym.crud.management.RollbackSchemaByDeploymentRequest\x1a-.freym.crud.management.RollbackSchemaResponse\x12|\n" +
-	"\x13GetSchemaDeployment\x121.freym.crud.management.GetSchemaDeploymentRequest\x1a2.freym.crud.management.GetSchemaDeploymentResponseb\x06proto3"
+	"\x13GetSchemaDeployment\x121.freym.crud.management.GetSchemaDeploymentRequest\x1a2.freym.crud.management.GetSchemaDeploymentResponse\x12d\n" +
+	"\vBackchannel\x12).freym.crud.management.BackchannelRequest\x1a*.freym.crud.management.BackchannelResponseb\x06proto3"
 
 var file_crud_management_service_proto_goTypes = []any{
 	(*DeploySchemaRequest)(nil),               // 0: freym.crud.management.DeploySchemaRequest
@@ -40,11 +41,13 @@ var file_crud_management_service_proto_goTypes = []any{
 	(*RollbackSchemaRequest)(nil),             // 3: freym.crud.management.RollbackSchemaRequest
 	(*RollbackSchemaByDeploymentRequest)(nil), // 4: freym.crud.management.RollbackSchemaByDeploymentRequest
 	(*GetSchemaDeploymentRequest)(nil),        // 5: freym.crud.management.GetSchemaDeploymentRequest
-	(*DeploySchemaResponse)(nil),              // 6: freym.crud.management.DeploySchemaResponse
-	(*ActivateSchemaResponse)(nil),            // 7: freym.crud.management.ActivateSchemaResponse
-	(*ConfirmSchemaResponse)(nil),             // 8: freym.crud.management.ConfirmSchemaResponse
-	(*RollbackSchemaResponse)(nil),            // 9: freym.crud.management.RollbackSchemaResponse
-	(*GetSchemaDeploymentResponse)(nil),       // 10: freym.crud.management.GetSchemaDeploymentResponse
+	(*BackchannelRequest)(nil),                // 6: freym.crud.management.BackchannelRequest
+	(*DeploySchemaResponse)(nil),              // 7: freym.crud.management.DeploySchemaResponse
+	(*ActivateSchemaResponse)(nil),            // 8: freym.crud.management.ActivateSchemaResponse
+	(*ConfirmSchemaResponse)(nil),             // 9: freym.crud.management.ConfirmSchemaResponse
+	(*RollbackSchemaResponse)(nil),            // 10: freym.crud.management.RollbackSchemaResponse
+	(*GetSchemaDeploymentResponse)(nil),       // 11: freym.crud.management.GetSchemaDeploymentResponse
+	(*BackchannelResponse)(nil),               // 12: freym.crud.management.BackchannelResponse
 }
 var file_crud_management_service_proto_depIdxs = []int32{
 	0,  // 0: freym.crud.management.Service.DeploySchema:input_type -> freym.crud.management.DeploySchemaRequest
@@ -53,14 +56,16 @@ var file_crud_management_service_proto_depIdxs = []int32{
 	3,  // 3: freym.crud.management.Service.RollbackSchema:input_type -> freym.crud.management.RollbackSchemaRequest
 	4,  // 4: freym.crud.management.Service.RollbackSchemaByDeployment:input_type -> freym.crud.management.RollbackSchemaByDeploymentRequest
 	5,  // 5: freym.crud.management.Service.GetSchemaDeployment:input_type -> freym.crud.management.GetSchemaDeploymentRequest
-	6,  // 6: freym.crud.management.Service.DeploySchema:output_type -> freym.crud.management.DeploySchemaResponse
-	7,  // 7: freym.crud.management.Service.ActivateSchema:output_type -> freym.crud.management.ActivateSchemaResponse
-	8,  // 8: freym.crud.management.Service.ConfirmSchema:output_type -> freym.crud.management.ConfirmSchemaResponse
-	9,  // 9: freym.crud.management.Service.RollbackSchema:output_type -> freym.crud.management.RollbackSchemaResponse
-	9,  // 10: freym.crud.management.Service.RollbackSchemaByDeployment:output_type -> freym.crud.management.RollbackSchemaResponse
-	10, // 11: freym.crud.management.Service.GetSchemaDeployment:output_type -> freym.crud.management.GetSchemaDeploymentResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	6,  // 6: freym.crud.management.Service.Backchannel:input_type -> freym.crud.management.BackchannelRequest
+	7,  // 7: freym.crud.management.Service.DeploySchema:output_type -> freym.crud.management.DeploySchemaResponse
+	8,  // 8: freym.crud.management.Service.ActivateSchema:output_type -> freym.crud.management.ActivateSchemaResponse
+	9,  // 9: freym.crud.management.Service.ConfirmSchema:output_type -> freym.crud.management.ConfirmSchemaResponse
+	10, // 10: freym.crud.management.Service.RollbackSchema:output_type -> freym.crud.management.RollbackSchemaResponse
+	10, // 11: freym.crud.management.Service.RollbackSchemaByDeployment:output_type -> freym.crud.management.RollbackSchemaResponse
+	11, // 12: freym.crud.management.Service.GetSchemaDeployment:output_type -> freym.crud.management.GetSchemaDeploymentResponse
+	12, // 13: freym.crud.management.Service.Backchannel:output_type -> freym.crud.management.BackchannelResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -72,6 +77,7 @@ func file_crud_management_service_proto_init() {
 		return
 	}
 	file_crud_management_deployment_proto_init()
+	file_crud_management_backchannel_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

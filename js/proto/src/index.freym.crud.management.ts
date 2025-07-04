@@ -3,5 +3,6 @@
 //   protoc-gen-ts_proto  v2.7.5
 //   protoc               v5.29.3
 
+export * from "./crud/management/backchannel";
 export * from "./crud/management/deployment";
 export * from "./crud/management/service";

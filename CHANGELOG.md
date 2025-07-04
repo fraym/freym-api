@@ -1,5 +1,9 @@
 # vNext
 
+# v0.40.0
+
+- (feature) Add crud backchannel
+
 # v0.39.0
 
 - (feature) Add projections backchannel

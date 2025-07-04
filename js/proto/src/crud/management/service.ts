@@ -15,6 +15,7 @@ import {
     type handleUnaryCall,
     makeGenericClientConstructor,
 } from "@grpc/grpc-js";
+import { BackchannelRequest, BackchannelResponse } from "./backchannel";
 import {
     ActivateSchemaRequest,
     ActivateSchemaResponse,
@@ -109,6 +110,18 @@ export const ServiceService = {
         responseDeserialize: (value: Buffer): GetSchemaDeploymentResponse =>
             GetSchemaDeploymentResponse.decode(value),
     },
+    backchannel: {
+        path: "/freym.crud.management.Service/Backchannel",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: BackchannelRequest): Buffer =>
+            Buffer.from(BackchannelRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): BackchannelRequest => BackchannelRequest.decode(value),
+        responseSerialize: (value: BackchannelResponse): Buffer =>
+            Buffer.from(BackchannelResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): BackchannelResponse =>
+            BackchannelResponse.decode(value),
+    },
 } as const;
 
 export interface ServiceServer extends UntypedServiceImplementation {
@@ -121,6 +134,7 @@ export interface ServiceServer extends UntypedServiceImplementation {
         RollbackSchemaResponse
     >;
     getSchemaDeployment: handleUnaryCall<GetSchemaDeploymentRequest, GetSchemaDeploymentResponse>;
+    backchannel: handleUnaryCall<BackchannelRequest, BackchannelResponse>;
 }
 
 export interface ServiceClient extends Client {
@@ -213,6 +227,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: GetSchemaDeploymentResponse) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
     ): ClientUnaryCall;
 }
 
