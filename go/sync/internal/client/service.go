@@ -59,7 +59,7 @@ func NewService(
 	}, nil
 }
 
-func (s *Service) Lock(tenant string, resource []string) error {
+func (s *Service) Lock(ttl int32, tenant string, resource []string) error {
 	if err := s.connection.WaitForConnect(); err != nil {
 		return err
 	}
@@ -69,6 +69,7 @@ func (s *Service) Lock(tenant string, resource []string) error {
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
 			Resource: resource,
+			Ttl:      ttl,
 		}.Build())
 		return err
 	}, s.retryPause, 50); err != nil {
@@ -108,7 +109,7 @@ func (s *Service) Unlock(tenant string, resource []string) {
 	}()
 }
 
-func (s *Service) RLock(tenant string, resource []string) error {
+func (s *Service) RLock(ttl int32, tenant string, resource []string) error {
 	if err := s.connection.WaitForConnect(); err != nil {
 		return err
 	}
@@ -118,6 +119,7 @@ func (s *Service) RLock(tenant string, resource []string) error {
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
 			Resource: resource,
+			Ttl:      ttl,
 		}.Build())
 		return err
 	}, s.retryPause, 50); err != nil {
