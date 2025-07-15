@@ -94,9 +94,8 @@ func (c *MockClient) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
-	groupId string,
 ) (*dto.SubscriptionEvent, error) {
-	args := c.Called(ctx, tenantId, topic, groupId)
+	args := c.Called(ctx, tenantId, topic)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

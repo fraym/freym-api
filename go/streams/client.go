@@ -16,12 +16,7 @@ type Client interface {
 	NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription
 	GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error)
 	GetLastEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
-	GetLastHandledEvent(
-		ctx context.Context,
-		tenantId string,
-		topic string,
-		groupId string,
-	) (*dto.SubscriptionEvent, error)
+	GetLastHandledEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
 	GetLastEventByTypes(
 		ctx context.Context,
 		tenantId string,
@@ -220,9 +215,8 @@ func (c *streamsClient) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
-	groupId string,
 ) (*dto.SubscriptionEvent, error) {
-	return c.service.GetLastHandledEvent(ctx, tenantId, topic, groupId)
+	return c.service.GetLastHandledEvent(ctx, tenantId, topic)
 }
 
 func (c *streamsClient) GetLastEventByTypes(

@@ -1,5 +1,9 @@
 # vNext
 
+# v0.41.1
+
+- (bug) Read streams group id from env variables
+
 # v0.41.0
 
 - (feature) Add rpc to get the last handled event of a consumer group for a topic

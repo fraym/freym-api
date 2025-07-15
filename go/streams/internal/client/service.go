@@ -286,13 +286,12 @@ func (s *Service) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
-	groupId string,
 ) (*dto.SubscriptionEvent, error) {
 	response, err := util.RetryWithResult(func() (*managementpb.Event, error) {
 		res, err := s.client.GetLastHandledEvent(ctx, managementpb.GetLastHandledEventRequest_builder{
 			TenantId: tenantId,
 			Topic:    topic,
-			Group:    groupId,
+			Group:    s.config.GroupId,
 		}.Build())
 		if err != nil {
 			if isLastEventNotFoundError(err) {
