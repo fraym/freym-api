@@ -1,5 +1,7 @@
 # vNext
 
+# v0.37.3-alpha.1
+
 - (feature) compatibility to distributed sync service prototype
 
 # v0.37.2
