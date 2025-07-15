@@ -282,6 +282,36 @@ func (s *Service) GetLastEvent(ctx context.Context, tenantId string, topic strin
 	return util.SubscriptionEventFromPb(response)
 }
 
+func (s *Service) GetLastHandledEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	groupId string,
+) (*dto.SubscriptionEvent, error) {
+	response, err := util.RetryWithResult(func() (*managementpb.Event, error) {
+		res, err := s.client.GetLastHandledEvent(ctx, managementpb.GetLastHandledEventRequest_builder{
+			TenantId: tenantId,
+			Topic:    topic,
+			Group:    groupId,
+		}.Build())
+		if err != nil {
+			if isLastEventNotFoundError(err) {
+				return nil, nil
+			}
+			return nil, err
+		}
+		return res, nil
+	}, s.retryPause, 50)
+	if err != nil {
+		return nil, err
+	}
+	if response == nil {
+		return nil, nil
+	}
+
+	return util.SubscriptionEventFromPb(response)
+}
+
 func (s *Service) GetLastEventByTypes(
 	ctx context.Context,
 	tenantId string,

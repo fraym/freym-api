@@ -15,6 +15,7 @@ service Service {
 	rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse);
 	rpc GetEvent(GetEventRequest) returns (Event);
 	rpc GetLastEvent(GetLastEventRequest) returns (Event);
+	rpc GetLastHandledEvent(GetLastHandledEventRequest) returns (Event);
 	rpc GetLastEventByTypes(GetLastEventByTypesRequest) returns (Event);
 	rpc IsStreamEmpty(IsStreamEmptyRequest) returns (IsStreamEmptyResponse);
 	rpc PaginateStream(PaginateStreamRequest) returns (PaginateStreamResponse);

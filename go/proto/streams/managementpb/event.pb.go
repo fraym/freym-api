@@ -176,6 +176,91 @@ func (b0 GetLastEventRequest_builder) Build() *GetLastEventRequest {
 	return m0
 }
 
+type GetLastHandledEventRequest struct {
+	state               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic    string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_Group    string                 `protobuf:"bytes,3,opt,name=group,proto3"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *GetLastHandledEventRequest) Reset() {
+	*x = GetLastHandledEventRequest{}
+	mi := &file_streams_management_event_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetLastHandledEventRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetLastHandledEventRequest) ProtoMessage() {}
+
+func (x *GetLastHandledEventRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_streams_management_event_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *GetLastHandledEventRequest) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *GetLastHandledEventRequest) GetTopic() string {
+	if x != nil {
+		return x.xxx_hidden_Topic
+	}
+	return ""
+}
+
+func (x *GetLastHandledEventRequest) GetGroup() string {
+	if x != nil {
+		return x.xxx_hidden_Group
+	}
+	return ""
+}
+
+func (x *GetLastHandledEventRequest) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *GetLastHandledEventRequest) SetTopic(v string) {
+	x.xxx_hidden_Topic = v
+}
+
+func (x *GetLastHandledEventRequest) SetGroup(v string) {
+	x.xxx_hidden_Group = v
+}
+
+type GetLastHandledEventRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	TenantId string
+	Topic    string
+	Group    string
+}
+
+func (b0 GetLastHandledEventRequest_builder) Build() *GetLastHandledEventRequest {
+	m0 := &GetLastHandledEventRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Topic = b.Topic
+	x.xxx_hidden_Group = b.Group
+	return m0
+}
+
 type GetLastEventByTypesRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_TenantId string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
@@ -187,7 +272,7 @@ type GetLastEventByTypesRequest struct {
 
 func (x *GetLastEventByTypesRequest) Reset() {
 	*x = GetLastEventByTypesRequest{}
-	mi := &file_streams_management_event_proto_msgTypes[2]
+	mi := &file_streams_management_event_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +284,7 @@ func (x *GetLastEventByTypesRequest) String() string {
 func (*GetLastEventByTypesRequest) ProtoMessage() {}
 
 func (x *GetLastEventByTypesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[2]
+	mi := &file_streams_management_event_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -282,7 +367,7 @@ type Event struct {
 
 func (x *Event) Reset() {
 	*x = Event{}
-	mi := &file_streams_management_event_proto_msgTypes[3]
+	mi := &file_streams_management_event_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -294,7 +379,7 @@ func (x *Event) String() string {
 func (*Event) ProtoMessage() {}
 
 func (x *Event) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[3]
+	mi := &file_streams_management_event_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +563,7 @@ type EventOptions struct {
 
 func (x *EventOptions) Reset() {
 	*x = EventOptions{}
-	mi := &file_streams_management_event_proto_msgTypes[4]
+	mi := &file_streams_management_event_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -490,7 +575,7 @@ func (x *EventOptions) String() string {
 func (*EventOptions) ProtoMessage() {}
 
 func (x *EventOptions) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[4]
+	mi := &file_streams_management_event_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -544,7 +629,7 @@ type EventMetadata struct {
 
 func (x *EventMetadata) Reset() {
 	*x = EventMetadata{}
-	mi := &file_streams_management_event_proto_msgTypes[5]
+	mi := &file_streams_management_event_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -556,7 +641,7 @@ func (x *EventMetadata) String() string {
 func (*EventMetadata) ProtoMessage() {}
 
 func (x *EventMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[5]
+	mi := &file_streams_management_event_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -655,7 +740,7 @@ type EventPayload struct {
 
 func (x *EventPayload) Reset() {
 	*x = EventPayload{}
-	mi := &file_streams_management_event_proto_msgTypes[6]
+	mi := &file_streams_management_event_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -667,7 +752,7 @@ func (x *EventPayload) String() string {
 func (*EventPayload) ProtoMessage() {}
 
 func (x *EventPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[6]
+	mi := &file_streams_management_event_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -738,7 +823,7 @@ type EventGdprValue struct {
 
 func (x *EventGdprValue) Reset() {
 	*x = EventGdprValue{}
-	mi := &file_streams_management_event_proto_msgTypes[7]
+	mi := &file_streams_management_event_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -750,7 +835,7 @@ func (x *EventGdprValue) String() string {
 func (*EventGdprValue) ProtoMessage() {}
 
 func (x *EventGdprValue) ProtoReflect() protoreflect.Message {
-	mi := &file_streams_management_event_proto_msgTypes[7]
+	mi := &file_streams_management_event_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -824,6 +909,10 @@ const file_streams_management_event_proto_rawDesc = "" +
 	"\x13GetLastEventRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\"e\n" +
+	"\x1aGetLastHandledEventRequest\x12\x1b\n" +
+	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +
+	"\x05group\x18\x03 \x01(\tR\x05group\"e\n" +
 	"\x1aGetLastEventByTypesRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +
@@ -859,24 +948,25 @@ const file_streams_management_event_proto_rawDesc = "" +
 	"\adefault\x18\x02 \x01(\tR\adefault\x12%\n" +
 	"\x0eis_invalidated\x18\x03 \x01(\bR\risInvalidatedb\x06proto3"
 
-var file_streams_management_event_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_streams_management_event_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_streams_management_event_proto_goTypes = []any{
 	(*GetEventRequest)(nil),            // 0: freym.streams.management.GetEventRequest
 	(*GetLastEventRequest)(nil),        // 1: freym.streams.management.GetLastEventRequest
-	(*GetLastEventByTypesRequest)(nil), // 2: freym.streams.management.GetLastEventByTypesRequest
-	(*Event)(nil),                      // 3: freym.streams.management.Event
-	(*EventOptions)(nil),               // 4: freym.streams.management.EventOptions
-	(*EventMetadata)(nil),              // 5: freym.streams.management.EventMetadata
-	(*EventPayload)(nil),               // 6: freym.streams.management.EventPayload
-	(*EventGdprValue)(nil),             // 7: freym.streams.management.EventGdprValue
-	nil,                                // 8: freym.streams.management.Event.PayloadEntry
+	(*GetLastHandledEventRequest)(nil), // 2: freym.streams.management.GetLastHandledEventRequest
+	(*GetLastEventByTypesRequest)(nil), // 3: freym.streams.management.GetLastEventByTypesRequest
+	(*Event)(nil),                      // 4: freym.streams.management.Event
+	(*EventOptions)(nil),               // 5: freym.streams.management.EventOptions
+	(*EventMetadata)(nil),              // 6: freym.streams.management.EventMetadata
+	(*EventPayload)(nil),               // 7: freym.streams.management.EventPayload
+	(*EventGdprValue)(nil),             // 8: freym.streams.management.EventGdprValue
+	nil,                                // 9: freym.streams.management.Event.PayloadEntry
 }
 var file_streams_management_event_proto_depIdxs = []int32{
-	4, // 0: freym.streams.management.Event.options:type_name -> freym.streams.management.EventOptions
-	5, // 1: freym.streams.management.Event.metadata:type_name -> freym.streams.management.EventMetadata
-	8, // 2: freym.streams.management.Event.payload:type_name -> freym.streams.management.Event.PayloadEntry
-	7, // 3: freym.streams.management.EventPayload.gdpr:type_name -> freym.streams.management.EventGdprValue
-	6, // 4: freym.streams.management.Event.PayloadEntry.value:type_name -> freym.streams.management.EventPayload
+	5, // 0: freym.streams.management.Event.options:type_name -> freym.streams.management.EventOptions
+	6, // 1: freym.streams.management.Event.metadata:type_name -> freym.streams.management.EventMetadata
+	9, // 2: freym.streams.management.Event.payload:type_name -> freym.streams.management.Event.PayloadEntry
+	8, // 3: freym.streams.management.EventPayload.gdpr:type_name -> freym.streams.management.EventGdprValue
+	7, // 4: freym.streams.management.Event.PayloadEntry.value:type_name -> freym.streams.management.EventPayload
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
@@ -895,7 +985,7 @@ func file_streams_management_event_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_streams_management_event_proto_rawDesc), len(file_streams_management_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

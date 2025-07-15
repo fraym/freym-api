@@ -24,12 +24,13 @@ var File_streams_management_service_proto protoreflect.FileDescriptor
 
 const file_streams_management_service_proto_rawDesc = "" +
 	"\n" +
-	" streams/management/service.proto\x12\x18freym.streams.management\x1a streams/management/publish.proto\x1a\"streams/management/subscribe.proto\x1a\x1estreams/management/event.proto\x1a\x1dstreams/management/gdpr.proto\x1a!streams/management/paginate.proto\x1a$streams/management/backchannel.proto\x1a\x1fstreams/management/stream.proto\x1a!streams/management/snapshot.proto\x1a\x1fstreams/management/rename.proto2\x90\x0e\n" +
+	" streams/management/service.proto\x12\x18freym.streams.management\x1a streams/management/publish.proto\x1a\"streams/management/subscribe.proto\x1a\x1estreams/management/event.proto\x1a\x1dstreams/management/gdpr.proto\x1a!streams/management/paginate.proto\x1a$streams/management/backchannel.proto\x1a\x1fstreams/management/stream.proto\x1a!streams/management/snapshot.proto\x1a\x1fstreams/management/rename.proto2\xfe\x0e\n" +
 	"\aService\x12^\n" +
 	"\aPublish\x12(.freym.streams.management.PublishRequest\x1a).freym.streams.management.PublishResponse\x12h\n" +
 	"\tSubscribe\x12*.freym.streams.management.SubscribeRequest\x1a+.freym.streams.management.SubscribeResponse(\x010\x01\x12V\n" +
 	"\bGetEvent\x12).freym.streams.management.GetEventRequest\x1a\x1f.freym.streams.management.Event\x12^\n" +
 	"\fGetLastEvent\x12-.freym.streams.management.GetLastEventRequest\x1a\x1f.freym.streams.management.Event\x12l\n" +
+	"\x13GetLastHandledEvent\x124.freym.streams.management.GetLastHandledEventRequest\x1a\x1f.freym.streams.management.Event\x12l\n" +
 	"\x13GetLastEventByTypes\x124.freym.streams.management.GetLastEventByTypesRequest\x1a\x1f.freym.streams.management.Event\x12p\n" +
 	"\rIsStreamEmpty\x12..freym.streams.management.IsStreamEmptyRequest\x1a/.freym.streams.management.IsStreamEmptyResponse\x12s\n" +
 	"\x0ePaginateStream\x12/.freym.streams.management.PaginateStreamRequest\x1a0.freym.streams.management.PaginateStreamResponse\x12\x97\x01\n" +
@@ -47,64 +48,67 @@ var file_streams_management_service_proto_goTypes = []any{
 	(*SubscribeRequest)(nil),                   // 1: freym.streams.management.SubscribeRequest
 	(*GetEventRequest)(nil),                    // 2: freym.streams.management.GetEventRequest
 	(*GetLastEventRequest)(nil),                // 3: freym.streams.management.GetLastEventRequest
-	(*GetLastEventByTypesRequest)(nil),         // 4: freym.streams.management.GetLastEventByTypesRequest
-	(*IsStreamEmptyRequest)(nil),               // 5: freym.streams.management.IsStreamEmptyRequest
-	(*PaginateStreamRequest)(nil),              // 6: freym.streams.management.PaginateStreamRequest
-	(*PaginateStreamAfterEventIdRequest)(nil),  // 7: freym.streams.management.PaginateStreamAfterEventIdRequest
-	(*PaginateEventsRequest)(nil),              // 8: freym.streams.management.PaginateEventsRequest
-	(*PaginateEventsAfterEventIdRequest)(nil),  // 9: freym.streams.management.PaginateEventsAfterEventIdRequest
-	(*IntroduceGdprOnEventFieldRequest)(nil),   // 10: freym.streams.management.IntroduceGdprOnEventFieldRequest
-	(*InvalidateGdprRequest)(nil),              // 11: freym.streams.management.InvalidateGdprRequest
-	(*BackchannelEventRequest)(nil),            // 12: freym.streams.management.BackchannelEventRequest
-	(*CreateStreamSnapshotRequest)(nil),        // 13: freym.streams.management.CreateStreamSnapshotRequest
-	(*RenameEventTypeRequest)(nil),             // 14: freym.streams.management.RenameEventTypeRequest
-	(*PublishResponse)(nil),                    // 15: freym.streams.management.PublishResponse
-	(*SubscribeResponse)(nil),                  // 16: freym.streams.management.SubscribeResponse
-	(*Event)(nil),                              // 17: freym.streams.management.Event
-	(*IsStreamEmptyResponse)(nil),              // 18: freym.streams.management.IsStreamEmptyResponse
-	(*PaginateStreamResponse)(nil),             // 19: freym.streams.management.PaginateStreamResponse
-	(*PaginateStreamAfterEventIdResponse)(nil), // 20: freym.streams.management.PaginateStreamAfterEventIdResponse
-	(*PaginateEventsResponse)(nil),             // 21: freym.streams.management.PaginateEventsResponse
-	(*PaginateEventsAfterEventIdResponse)(nil), // 22: freym.streams.management.PaginateEventsAfterEventIdResponse
-	(*IntroduceGdprOnEventFieldResponse)(nil),  // 23: freym.streams.management.IntroduceGdprOnEventFieldResponse
-	(*InvalidateGdprResponse)(nil),             // 24: freym.streams.management.InvalidateGdprResponse
-	(*BackchannelEventResponse)(nil),           // 25: freym.streams.management.BackchannelEventResponse
-	(*CreateStreamSnapshotResponse)(nil),       // 26: freym.streams.management.CreateStreamSnapshotResponse
-	(*RenameEventTypeResponse)(nil),            // 27: freym.streams.management.RenameEventTypeResponse
+	(*GetLastHandledEventRequest)(nil),         // 4: freym.streams.management.GetLastHandledEventRequest
+	(*GetLastEventByTypesRequest)(nil),         // 5: freym.streams.management.GetLastEventByTypesRequest
+	(*IsStreamEmptyRequest)(nil),               // 6: freym.streams.management.IsStreamEmptyRequest
+	(*PaginateStreamRequest)(nil),              // 7: freym.streams.management.PaginateStreamRequest
+	(*PaginateStreamAfterEventIdRequest)(nil),  // 8: freym.streams.management.PaginateStreamAfterEventIdRequest
+	(*PaginateEventsRequest)(nil),              // 9: freym.streams.management.PaginateEventsRequest
+	(*PaginateEventsAfterEventIdRequest)(nil),  // 10: freym.streams.management.PaginateEventsAfterEventIdRequest
+	(*IntroduceGdprOnEventFieldRequest)(nil),   // 11: freym.streams.management.IntroduceGdprOnEventFieldRequest
+	(*InvalidateGdprRequest)(nil),              // 12: freym.streams.management.InvalidateGdprRequest
+	(*BackchannelEventRequest)(nil),            // 13: freym.streams.management.BackchannelEventRequest
+	(*CreateStreamSnapshotRequest)(nil),        // 14: freym.streams.management.CreateStreamSnapshotRequest
+	(*RenameEventTypeRequest)(nil),             // 15: freym.streams.management.RenameEventTypeRequest
+	(*PublishResponse)(nil),                    // 16: freym.streams.management.PublishResponse
+	(*SubscribeResponse)(nil),                  // 17: freym.streams.management.SubscribeResponse
+	(*Event)(nil),                              // 18: freym.streams.management.Event
+	(*IsStreamEmptyResponse)(nil),              // 19: freym.streams.management.IsStreamEmptyResponse
+	(*PaginateStreamResponse)(nil),             // 20: freym.streams.management.PaginateStreamResponse
+	(*PaginateStreamAfterEventIdResponse)(nil), // 21: freym.streams.management.PaginateStreamAfterEventIdResponse
+	(*PaginateEventsResponse)(nil),             // 22: freym.streams.management.PaginateEventsResponse
+	(*PaginateEventsAfterEventIdResponse)(nil), // 23: freym.streams.management.PaginateEventsAfterEventIdResponse
+	(*IntroduceGdprOnEventFieldResponse)(nil),  // 24: freym.streams.management.IntroduceGdprOnEventFieldResponse
+	(*InvalidateGdprResponse)(nil),             // 25: freym.streams.management.InvalidateGdprResponse
+	(*BackchannelEventResponse)(nil),           // 26: freym.streams.management.BackchannelEventResponse
+	(*CreateStreamSnapshotResponse)(nil),       // 27: freym.streams.management.CreateStreamSnapshotResponse
+	(*RenameEventTypeResponse)(nil),            // 28: freym.streams.management.RenameEventTypeResponse
 }
 var file_streams_management_service_proto_depIdxs = []int32{
 	0,  // 0: freym.streams.management.Service.Publish:input_type -> freym.streams.management.PublishRequest
 	1,  // 1: freym.streams.management.Service.Subscribe:input_type -> freym.streams.management.SubscribeRequest
 	2,  // 2: freym.streams.management.Service.GetEvent:input_type -> freym.streams.management.GetEventRequest
 	3,  // 3: freym.streams.management.Service.GetLastEvent:input_type -> freym.streams.management.GetLastEventRequest
-	4,  // 4: freym.streams.management.Service.GetLastEventByTypes:input_type -> freym.streams.management.GetLastEventByTypesRequest
-	5,  // 5: freym.streams.management.Service.IsStreamEmpty:input_type -> freym.streams.management.IsStreamEmptyRequest
-	6,  // 6: freym.streams.management.Service.PaginateStream:input_type -> freym.streams.management.PaginateStreamRequest
-	7,  // 7: freym.streams.management.Service.PaginateStreamAfterEventId:input_type -> freym.streams.management.PaginateStreamAfterEventIdRequest
-	8,  // 8: freym.streams.management.Service.PaginateEvents:input_type -> freym.streams.management.PaginateEventsRequest
-	9,  // 9: freym.streams.management.Service.PaginateEventsAfterEventId:input_type -> freym.streams.management.PaginateEventsAfterEventIdRequest
-	10, // 10: freym.streams.management.Service.IntroduceGdprOnEventField:input_type -> freym.streams.management.IntroduceGdprOnEventFieldRequest
-	11, // 11: freym.streams.management.Service.InvalidateGdpr:input_type -> freym.streams.management.InvalidateGdprRequest
-	12, // 12: freym.streams.management.Service.BackchannelEvent:input_type -> freym.streams.management.BackchannelEventRequest
-	13, // 13: freym.streams.management.Service.CreateStreamSnapshot:input_type -> freym.streams.management.CreateStreamSnapshotRequest
-	14, // 14: freym.streams.management.Service.RenameEventType:input_type -> freym.streams.management.RenameEventTypeRequest
-	15, // 15: freym.streams.management.Service.Publish:output_type -> freym.streams.management.PublishResponse
-	16, // 16: freym.streams.management.Service.Subscribe:output_type -> freym.streams.management.SubscribeResponse
-	17, // 17: freym.streams.management.Service.GetEvent:output_type -> freym.streams.management.Event
-	17, // 18: freym.streams.management.Service.GetLastEvent:output_type -> freym.streams.management.Event
-	17, // 19: freym.streams.management.Service.GetLastEventByTypes:output_type -> freym.streams.management.Event
-	18, // 20: freym.streams.management.Service.IsStreamEmpty:output_type -> freym.streams.management.IsStreamEmptyResponse
-	19, // 21: freym.streams.management.Service.PaginateStream:output_type -> freym.streams.management.PaginateStreamResponse
-	20, // 22: freym.streams.management.Service.PaginateStreamAfterEventId:output_type -> freym.streams.management.PaginateStreamAfterEventIdResponse
-	21, // 23: freym.streams.management.Service.PaginateEvents:output_type -> freym.streams.management.PaginateEventsResponse
-	22, // 24: freym.streams.management.Service.PaginateEventsAfterEventId:output_type -> freym.streams.management.PaginateEventsAfterEventIdResponse
-	23, // 25: freym.streams.management.Service.IntroduceGdprOnEventField:output_type -> freym.streams.management.IntroduceGdprOnEventFieldResponse
-	24, // 26: freym.streams.management.Service.InvalidateGdpr:output_type -> freym.streams.management.InvalidateGdprResponse
-	25, // 27: freym.streams.management.Service.BackchannelEvent:output_type -> freym.streams.management.BackchannelEventResponse
-	26, // 28: freym.streams.management.Service.CreateStreamSnapshot:output_type -> freym.streams.management.CreateStreamSnapshotResponse
-	27, // 29: freym.streams.management.Service.RenameEventType:output_type -> freym.streams.management.RenameEventTypeResponse
-	15, // [15:30] is the sub-list for method output_type
-	0,  // [0:15] is the sub-list for method input_type
+	4,  // 4: freym.streams.management.Service.GetLastHandledEvent:input_type -> freym.streams.management.GetLastHandledEventRequest
+	5,  // 5: freym.streams.management.Service.GetLastEventByTypes:input_type -> freym.streams.management.GetLastEventByTypesRequest
+	6,  // 6: freym.streams.management.Service.IsStreamEmpty:input_type -> freym.streams.management.IsStreamEmptyRequest
+	7,  // 7: freym.streams.management.Service.PaginateStream:input_type -> freym.streams.management.PaginateStreamRequest
+	8,  // 8: freym.streams.management.Service.PaginateStreamAfterEventId:input_type -> freym.streams.management.PaginateStreamAfterEventIdRequest
+	9,  // 9: freym.streams.management.Service.PaginateEvents:input_type -> freym.streams.management.PaginateEventsRequest
+	10, // 10: freym.streams.management.Service.PaginateEventsAfterEventId:input_type -> freym.streams.management.PaginateEventsAfterEventIdRequest
+	11, // 11: freym.streams.management.Service.IntroduceGdprOnEventField:input_type -> freym.streams.management.IntroduceGdprOnEventFieldRequest
+	12, // 12: freym.streams.management.Service.InvalidateGdpr:input_type -> freym.streams.management.InvalidateGdprRequest
+	13, // 13: freym.streams.management.Service.BackchannelEvent:input_type -> freym.streams.management.BackchannelEventRequest
+	14, // 14: freym.streams.management.Service.CreateStreamSnapshot:input_type -> freym.streams.management.CreateStreamSnapshotRequest
+	15, // 15: freym.streams.management.Service.RenameEventType:input_type -> freym.streams.management.RenameEventTypeRequest
+	16, // 16: freym.streams.management.Service.Publish:output_type -> freym.streams.management.PublishResponse
+	17, // 17: freym.streams.management.Service.Subscribe:output_type -> freym.streams.management.SubscribeResponse
+	18, // 18: freym.streams.management.Service.GetEvent:output_type -> freym.streams.management.Event
+	18, // 19: freym.streams.management.Service.GetLastEvent:output_type -> freym.streams.management.Event
+	18, // 20: freym.streams.management.Service.GetLastHandledEvent:output_type -> freym.streams.management.Event
+	18, // 21: freym.streams.management.Service.GetLastEventByTypes:output_type -> freym.streams.management.Event
+	19, // 22: freym.streams.management.Service.IsStreamEmpty:output_type -> freym.streams.management.IsStreamEmptyResponse
+	20, // 23: freym.streams.management.Service.PaginateStream:output_type -> freym.streams.management.PaginateStreamResponse
+	21, // 24: freym.streams.management.Service.PaginateStreamAfterEventId:output_type -> freym.streams.management.PaginateStreamAfterEventIdResponse
+	22, // 25: freym.streams.management.Service.PaginateEvents:output_type -> freym.streams.management.PaginateEventsResponse
+	23, // 26: freym.streams.management.Service.PaginateEventsAfterEventId:output_type -> freym.streams.management.PaginateEventsAfterEventIdResponse
+	24, // 27: freym.streams.management.Service.IntroduceGdprOnEventField:output_type -> freym.streams.management.IntroduceGdprOnEventFieldResponse
+	25, // 28: freym.streams.management.Service.InvalidateGdpr:output_type -> freym.streams.management.InvalidateGdprResponse
+	26, // 29: freym.streams.management.Service.BackchannelEvent:output_type -> freym.streams.management.BackchannelEventResponse
+	27, // 30: freym.streams.management.Service.CreateStreamSnapshot:output_type -> freym.streams.management.CreateStreamSnapshotResponse
+	28, // 31: freym.streams.management.Service.RenameEventType:output_type -> freym.streams.management.RenameEventTypeResponse
+	16, // [16:32] is the sub-list for method output_type
+	0,  // [0:16] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -90,6 +90,19 @@ func (c *MockClient) GetLastEvent(ctx context.Context, tenantId string, topic st
 	return args.Get(0).(*dto.SubscriptionEvent), args.Error(1)
 }
 
+func (c *MockClient) GetLastHandledEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	groupId string,
+) (*dto.SubscriptionEvent, error) {
+	args := c.Called(ctx, tenantId, topic, groupId)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*dto.SubscriptionEvent), args.Error(1)
+}
+
 func (c *MockClient) GetLastEventByTypes(
 	ctx context.Context,
 	tenantId string,

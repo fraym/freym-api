@@ -23,6 +23,7 @@ const (
 	Service_Subscribe_FullMethodName                  = "/freym.streams.management.Service/Subscribe"
 	Service_GetEvent_FullMethodName                   = "/freym.streams.management.Service/GetEvent"
 	Service_GetLastEvent_FullMethodName               = "/freym.streams.management.Service/GetLastEvent"
+	Service_GetLastHandledEvent_FullMethodName        = "/freym.streams.management.Service/GetLastHandledEvent"
 	Service_GetLastEventByTypes_FullMethodName        = "/freym.streams.management.Service/GetLastEventByTypes"
 	Service_IsStreamEmpty_FullMethodName              = "/freym.streams.management.Service/IsStreamEmpty"
 	Service_PaginateStream_FullMethodName             = "/freym.streams.management.Service/PaginateStream"
@@ -44,6 +45,7 @@ type ServiceClient interface {
 	Subscribe(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[SubscribeRequest, SubscribeResponse], error)
 	GetEvent(ctx context.Context, in *GetEventRequest, opts ...grpc.CallOption) (*Event, error)
 	GetLastEvent(ctx context.Context, in *GetLastEventRequest, opts ...grpc.CallOption) (*Event, error)
+	GetLastHandledEvent(ctx context.Context, in *GetLastHandledEventRequest, opts ...grpc.CallOption) (*Event, error)
 	GetLastEventByTypes(ctx context.Context, in *GetLastEventByTypesRequest, opts ...grpc.CallOption) (*Event, error)
 	IsStreamEmpty(ctx context.Context, in *IsStreamEmptyRequest, opts ...grpc.CallOption) (*IsStreamEmptyResponse, error)
 	PaginateStream(ctx context.Context, in *PaginateStreamRequest, opts ...grpc.CallOption) (*PaginateStreamResponse, error)
@@ -102,6 +104,16 @@ func (c *serviceClient) GetLastEvent(ctx context.Context, in *GetLastEventReques
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Event)
 	err := c.cc.Invoke(ctx, Service_GetLastEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) GetLastHandledEvent(ctx context.Context, in *GetLastHandledEventRequest, opts ...grpc.CallOption) (*Event, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Event)
+	err := c.cc.Invoke(ctx, Service_GetLastHandledEvent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -226,6 +238,7 @@ type ServiceServer interface {
 	Subscribe(grpc.BidiStreamingServer[SubscribeRequest, SubscribeResponse]) error
 	GetEvent(context.Context, *GetEventRequest) (*Event, error)
 	GetLastEvent(context.Context, *GetLastEventRequest) (*Event, error)
+	GetLastHandledEvent(context.Context, *GetLastHandledEventRequest) (*Event, error)
 	GetLastEventByTypes(context.Context, *GetLastEventByTypesRequest) (*Event, error)
 	IsStreamEmpty(context.Context, *IsStreamEmptyRequest) (*IsStreamEmptyResponse, error)
 	PaginateStream(context.Context, *PaginateStreamRequest) (*PaginateStreamResponse, error)
@@ -258,6 +271,9 @@ func (UnimplementedServiceServer) GetEvent(context.Context, *GetEventRequest) (*
 }
 func (UnimplementedServiceServer) GetLastEvent(context.Context, *GetLastEventRequest) (*Event, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLastEvent not implemented")
+}
+func (UnimplementedServiceServer) GetLastHandledEvent(context.Context, *GetLastHandledEventRequest) (*Event, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLastHandledEvent not implemented")
 }
 func (UnimplementedServiceServer) GetLastEventByTypes(context.Context, *GetLastEventByTypesRequest) (*Event, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLastEventByTypes not implemented")
@@ -370,6 +386,24 @@ func _Service_GetLastEvent_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).GetLastEvent(ctx, req.(*GetLastEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_GetLastHandledEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLastHandledEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetLastHandledEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetLastHandledEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetLastHandledEvent(ctx, req.(*GetLastHandledEventRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -590,6 +624,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLastEvent",
 			Handler:    _Service_GetLastEvent_Handler,
+		},
+		{
+			MethodName: "GetLastHandledEvent",
+			Handler:    _Service_GetLastHandledEvent_Handler,
 		},
 		{
 			MethodName: "GetLastEventByTypes",

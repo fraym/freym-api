@@ -1,5 +1,9 @@
 # vNext
 
+# v0.41.0
+
+- (feature) Add rpc to get the last handled event of a consumer group for a topic
+
 # v0.40.0
 
 - (feature) Add crud backchannel

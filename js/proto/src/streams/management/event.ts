@@ -17,6 +17,12 @@ export interface GetLastEventRequest {
     topic: string;
 }
 
+export interface GetLastHandledEventRequest {
+    tenantId: string;
+    topic: string;
+    group: string;
+}
+
 export interface GetLastEventByTypesRequest {
     tenantId: string;
     topic: string;
@@ -241,6 +247,101 @@ export const GetLastEventRequest: MessageFns<GetLastEventRequest> = {
         const message = createBaseGetLastEventRequest();
         message.tenantId = object.tenantId ?? "";
         message.topic = object.topic ?? "";
+        return message;
+    },
+};
+
+function createBaseGetLastHandledEventRequest(): GetLastHandledEventRequest {
+    return { tenantId: "", topic: "", group: "" };
+}
+
+export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> = {
+    encode(
+        message: GetLastHandledEventRequest,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.tenantId !== "") {
+            writer.uint32(10).string(message.tenantId);
+        }
+        if (message.topic !== "") {
+            writer.uint32(18).string(message.topic);
+        }
+        if (message.group !== "") {
+            writer.uint32(26).string(message.group);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): GetLastHandledEventRequest {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        const end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseGetLastHandledEventRequest();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.tenantId = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.topic = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.group = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): GetLastHandledEventRequest {
+        return {
+            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+            group: isSet(object.group) ? globalThis.String(object.group) : "",
+        };
+    },
+
+    toJSON(message: GetLastHandledEventRequest): unknown {
+        const obj: any = {};
+        if (message.tenantId !== "") {
+            obj.tenantId = message.tenantId;
+        }
+        if (message.topic !== "") {
+            obj.topic = message.topic;
+        }
+        if (message.group !== "") {
+            obj.group = message.group;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<GetLastHandledEventRequest>): GetLastHandledEventRequest {
+        return GetLastHandledEventRequest.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<GetLastHandledEventRequest>): GetLastHandledEventRequest {
+        const message = createBaseGetLastHandledEventRequest();
+        message.tenantId = object.tenantId ?? "";
+        message.topic = object.topic ?? "";
+        message.group = object.group ?? "";
         return message;
     },
 };

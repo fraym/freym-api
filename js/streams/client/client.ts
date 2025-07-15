@@ -6,6 +6,7 @@ import { HandlerFunc, PublishEvent, SubscriptionEvent } from "./event";
 import { getEvent } from "./getEvent";
 import { getLastEvent } from "./getLastEvent";
 import { getLastEventByTypes } from "./getLastEventByTypes";
+import { getLastHandledEvent } from "./getLastHandledEvent";
 import { introduceGdprOnEventField } from "./introduceGdpr";
 import { sendInvalidateGdpr } from "./invalidateGdpr";
 import { sendPublish } from "./publish";
@@ -30,6 +31,11 @@ export interface Client {
     subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
     getEvent: (tenantId: string, topic: string, eventId: string) => Promise<SubscriptionEvent>;
     getLastEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
+    getLastHandledEvent: (
+        tenantId: string,
+        topic: string,
+        groupId: string
+    ) => Promise<SubscriptionEvent | null>;
     getLastEventByTypes: (
         tenantId: string,
         topic: string,
@@ -119,6 +125,9 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
         },
         getLastEvent: async (tenantId, topic) => {
             return await getLastEvent(tenantId, topic, serviceClient);
+        },
+        getLastHandledEvent: async (tenantId, topic, groupId) => {
+            return await getLastHandledEvent(tenantId, topic, groupId, serviceClient);
         },
         getLastEventByTypes: async (tenantId, topic, types) => {
             return await getLastEventByTypes(tenantId, topic, types, serviceClient);

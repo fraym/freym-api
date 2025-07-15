@@ -12,6 +12,12 @@ message GetLastEventRequest {
 	string topic = 2;
 }
 
+message GetLastHandledEventRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string group = 3;
+}
+
 message GetLastEventByTypesRequest {
 	string tenant_id = 1;
 	string topic = 2;

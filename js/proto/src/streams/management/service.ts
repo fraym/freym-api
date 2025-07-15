@@ -18,7 +18,13 @@ import {
     makeGenericClientConstructor,
 } from "@grpc/grpc-js";
 import { BackchannelEventRequest, BackchannelEventResponse } from "./backchannel";
-import { Event, GetEventRequest, GetLastEventByTypesRequest, GetLastEventRequest } from "./event";
+import {
+    Event,
+    GetEventRequest,
+    GetLastEventByTypesRequest,
+    GetLastEventRequest,
+    GetLastHandledEventRequest,
+} from "./event";
 import {
     IntroduceGdprOnEventFieldRequest,
     IntroduceGdprOnEventFieldResponse,
@@ -83,6 +89,17 @@ export const ServiceService = {
             Buffer.from(GetLastEventRequest.encode(value).finish()),
         requestDeserialize: (value: Buffer): GetLastEventRequest =>
             GetLastEventRequest.decode(value),
+        responseSerialize: (value: Event): Buffer => Buffer.from(Event.encode(value).finish()),
+        responseDeserialize: (value: Buffer): Event => Event.decode(value),
+    },
+    getLastHandledEvent: {
+        path: "/freym.streams.management.Service/GetLastHandledEvent",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: GetLastHandledEventRequest): Buffer =>
+            Buffer.from(GetLastHandledEventRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): GetLastHandledEventRequest =>
+            GetLastHandledEventRequest.decode(value),
         responseSerialize: (value: Event): Buffer => Buffer.from(Event.encode(value).finish()),
         responseDeserialize: (value: Buffer): Event => Event.decode(value),
     },
@@ -234,6 +251,7 @@ export interface ServiceServer extends UntypedServiceImplementation {
     subscribe: handleBidiStreamingCall<SubscribeRequest, SubscribeResponse>;
     getEvent: handleUnaryCall<GetEventRequest, Event>;
     getLastEvent: handleUnaryCall<GetLastEventRequest, Event>;
+    getLastHandledEvent: handleUnaryCall<GetLastHandledEventRequest, Event>;
     getLastEventByTypes: handleUnaryCall<GetLastEventByTypesRequest, Event>;
     isStreamEmpty: handleUnaryCall<IsStreamEmptyRequest, IsStreamEmptyResponse>;
     paginateStream: handleUnaryCall<PaginateStreamRequest, PaginateStreamResponse>;
@@ -309,6 +327,21 @@ export interface ServiceClient extends Client {
     ): ClientUnaryCall;
     getLastEvent(
         request: GetLastEventRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: Event) => void
+    ): ClientUnaryCall;
+    getLastHandledEvent(
+        request: GetLastHandledEventRequest,
+        callback: (error: ServiceError | null, response: Event) => void
+    ): ClientUnaryCall;
+    getLastHandledEvent(
+        request: GetLastHandledEventRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: Event) => void
+    ): ClientUnaryCall;
+    getLastHandledEvent(
+        request: GetLastHandledEventRequest,
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: Event) => void
