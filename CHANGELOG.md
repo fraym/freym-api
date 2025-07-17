@@ -1,5 +1,9 @@
 # vNext
 
+# v0.42.0
+
+- (feature) Add `ci` arg to deployment command for better ci integration
+
 # v0.41.1
 
 - (bug) Read streams group id from env variables

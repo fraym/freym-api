@@ -24,9 +24,13 @@ export const runPrintDeploymentStatus = async (id: number) => {
 export const runCreateDeployment = async (
     target: DeploymentTarget,
     force: boolean,
+    ci: boolean,
     skipServices: string[]
 ) => {
-    console.log("creating deployment ...");
+    if (!ci) {
+        console.log("creating deployment ...");
+    }
+
     const config = await useConfig();
 
     const schema = await loadSchema(config.schemaGlob, {
@@ -40,7 +44,12 @@ export const runCreateDeployment = async (
     });
 
     const response = await createDeployment({ ...deployment }, config);
-    console.log(`created deployment ${response.deploymentId}`);
+
+    if (!ci) {
+        console.log(`created deployment ${response.deploymentId}`);
+    } else {
+        console.log(response.deploymentId);
+    }
 };
 
 export const runActivateDeployment = async (id: number) => {

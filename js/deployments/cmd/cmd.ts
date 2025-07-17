@@ -50,6 +50,15 @@ const isForced = (): boolean => {
     return false;
 };
 
+const isCi = (): boolean => {
+    for (const arg of process.argv) {
+        if (arg === "ci") {
+            return true;
+        }
+    }
+    return false;
+};
+
 const skipServices = (): string[] => {
     for (const arg of process.argv) {
         if (arg.startsWith("skip=")) {
@@ -71,7 +80,7 @@ switch (arg) {
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment(getTargetFromArgs(), isForced(), skipServices());
+        runCreateDeployment(getTargetFromArgs(), isForced(), isCi(), skipServices());
         break;
     case COMMAND_ACTIVATE:
         runActivateDeployment(getIdFromArgs());
