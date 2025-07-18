@@ -4,12 +4,15 @@ import {
     runActivateDeployment,
     runConfirmDeployment,
     runCreateDeployment,
+    runGetCurrentDeployment,
     runPrintDeploymentStatus,
     runRollbackDeployment,
     runRollbackNamespaceDeployment,
+    runSetCurrentDeployment,
     runWait,
 } from "./deployment";
 
+// deployment commands
 const COMMAND_STATUS = "status";
 const COMMAND_CREATE = "create";
 const COMMAND_ACTIVATE = "activate";
@@ -17,6 +20,10 @@ const COMMAND_CONFIRM = "confirm";
 const COMMAND_ROLLBACK = "rollback";
 const COMMAND_ROLLBACK_NAMESPACE = "rollback-namespace";
 const COMMAND_WAIT = "wait";
+
+// target commands
+const COMMAND_CURRENT = "current";
+const COMMAND_SET_CURRENT = "set-current";
 
 const arg = process.argv[2] ?? COMMAND_CREATE;
 
@@ -96,6 +103,12 @@ switch (arg) {
         break;
     case COMMAND_WAIT:
         runWait(getIdFromArgs());
+        break;
+    case COMMAND_CURRENT:
+        runGetCurrentDeployment();
+        break;
+    case COMMAND_SET_CURRENT:
+        runSetCurrentDeployment(getTargetFromArgs());
         break;
     default:
         throw new Error(`unknown command: ${arg}`);

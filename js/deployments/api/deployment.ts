@@ -110,3 +110,45 @@ export const rollbackDeploymentByNamespace = async (
         throw new Error(await response.text());
     }
 };
+
+export const getCurrentDeployment = async (config: Config): Promise<DeploymentTarget> => {
+    const response = await fetch(
+        `${config.serverAddress}/api/target/production/${config.namespace}`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    const data = await response.json();
+
+    return data.target;
+};
+
+export const setCurrentDeployment = async (
+    config: Config,
+    target: DeploymentTarget
+): Promise<void> => {
+    const response = await fetch(`${config.serverAddress}/api/target/production`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${config.apiToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            namespace: config.namespace,
+            target,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+};

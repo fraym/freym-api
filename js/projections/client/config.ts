@@ -13,7 +13,7 @@ export interface DeliveryClientConfig {
 }
 
 export const getEnvDeliveryConfig = (): DeliveryClientConfig => {
-    config();
+    config({ quiet: true });
 
     const serverAddress = process.env.PROJECTIONS_SERVER_ADDRESS ?? "";
     let keepaliveInterval: number | undefined;

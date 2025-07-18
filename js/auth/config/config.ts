@@ -10,7 +10,7 @@ export interface ClientConfig {
 }
 
 export const getEnvConfig = (): ClientConfig => {
-    config();
+    config({ quiet: true });
 
     const serverAddress = process.env.AUTH_SERVER_ADDRESS ?? "";
     let keepaliveInterval: number | undefined;

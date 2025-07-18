@@ -4,9 +4,11 @@ import {
     activateDeployment,
     confirmDeployment,
     createDeployment,
+    getCurrentDeployment,
     getDeploymentStatus,
     rollbackDeployment,
     rollbackDeploymentByNamespace,
+    setCurrentDeployment,
 } from "../api/deployment";
 import { getDeploymentFromSchema } from "../schema";
 import { DeploymentTarget } from "../schema/data";
@@ -110,6 +112,19 @@ export const runWait = async (id: number) => {
     }
 
     console.log("deployment is ready");
+};
+
+export const runGetCurrentDeployment = async () => {
+    const config = await useConfig();
+
+    const deployment = await getCurrentDeployment(config);
+    console.log(deployment);
+};
+
+export const runSetCurrentDeployment = async (target: DeploymentTarget) => {
+    const config = await useConfig();
+    await setCurrentDeployment(config, target);
+    console.log(`updated current deployment target to: ${target}`);
 };
 
 const sleep = async (time: number): Promise<void> => {

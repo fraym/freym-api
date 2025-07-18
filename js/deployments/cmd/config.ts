@@ -10,7 +10,7 @@ export interface Config {
 }
 
 export const useConfig = async (): Promise<Config> => {
-    config();
+    config({ quiet: true });
 
     const argv = await yargs(hideBin(process.argv))
         .config({

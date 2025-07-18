@@ -1,5 +1,10 @@
 # vNext
 
+# v0.43.0
+
+- (feature) Add `current` and `set-current` commands to deployment command
+- (improvement) Update all dependencies
+
 # v0.42.0
 
 - (feature) Add `ci` arg to deployment command for better ci integration

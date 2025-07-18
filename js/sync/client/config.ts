@@ -21,7 +21,7 @@ export const useConfigDefaults = (config: ClientConfig): Required<ClientConfig> 
 };
 
 export const getEnvConfig = (): ClientConfig => {
-    config();
+    config({ quiet: true });
 
     let keepaliveInterval: number | undefined;
     let keepaliveTimeout: number | undefined;
