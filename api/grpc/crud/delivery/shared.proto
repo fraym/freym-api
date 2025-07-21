@@ -20,6 +20,7 @@ message DataFieldFilter {
 	string value = 3;
 }
 
+
 message EventMetadata {
 	string causation_id = 1;
 	string correlation_id = 2;
@@ -40,3 +41,17 @@ message Data {
 	map<string, string> data = 1;
 }
 
+message DataWait {
+	DataFilter condition_filter = 1;
+	int64 timeout = 2;
+}
+
+message DataListWait {
+	DataListWaitCondition condition = 1;
+	int64 timeout = 2;
+}
+
+message DataListWaitCondition {
+	string operation = 1;
+	int64 value = 2;
+}

@@ -1,5 +1,7 @@
 # vNext
 
+# v0.44.0
+
 - (feature) Add upsert rpc to crud
 - (feature) Add `wait` param to list data rpc
 - (feature) Add `wait` param to view data rpc

@@ -286,6 +286,7 @@ type GetDataListRequest struct {
 	xxx_hidden_Order                *[]*DataOrder          `protobuf:"bytes,8,rep,name=order,proto3"`
 	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,9,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
 	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,10,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                 *DataListWait          `protobuf:"bytes,11,opt,name=wait,proto3"`
 	unknownFields                   protoimpl.UnknownFields
 	sizeCache                       protoimpl.SizeCache
 }
@@ -373,6 +374,13 @@ func (x *GetDataListRequest) GetTarget() DeploymentTarget {
 	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
+func (x *GetDataListRequest) GetWait() *DataListWait {
+	if x != nil {
+		return x.xxx_hidden_Wait
+	}
+	return nil
+}
+
 func (x *GetDataListRequest) SetType(v string) {
 	x.xxx_hidden_Type = v
 }
@@ -405,6 +413,10 @@ func (x *GetDataListRequest) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
 }
 
+func (x *GetDataListRequest) SetWait(v *DataListWait) {
+	x.xxx_hidden_Wait = v
+}
+
 func (x *GetDataListRequest) HasAuth() bool {
 	if x == nil {
 		return false
@@ -419,12 +431,23 @@ func (x *GetDataListRequest) HasFilter() bool {
 	return x.xxx_hidden_Filter != nil
 }
 
+func (x *GetDataListRequest) HasWait() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Wait != nil
+}
+
 func (x *GetDataListRequest) ClearAuth() {
 	x.xxx_hidden_Auth = nil
 }
 
 func (x *GetDataListRequest) ClearFilter() {
 	x.xxx_hidden_Filter = nil
+}
+
+func (x *GetDataListRequest) ClearWait() {
+	x.xxx_hidden_Wait = nil
 }
 
 type GetDataListRequest_builder struct {
@@ -438,6 +461,7 @@ type GetDataListRequest_builder struct {
 	Order                []*DataOrder
 	UseStrongConsistency bool
 	Target               DeploymentTarget
+	Wait                 *DataListWait
 }
 
 func (b0 GetDataListRequest_builder) Build() *GetDataListRequest {
@@ -452,6 +476,7 @@ func (b0 GetDataListRequest_builder) Build() *GetDataListRequest {
 	x.xxx_hidden_Order = &b.Order
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
+	x.xxx_hidden_Wait = b.Wait
 	return m0
 }
 
@@ -556,88 +581,6 @@ func (b0 GetDataListResponse_builder) Build() *GetDataListResponse {
 	return m0
 }
 
-type DataWait struct {
-	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_ConditionFilter *DataFilter            `protobuf:"bytes,1,opt,name=condition_filter,json=conditionFilter,proto3"`
-	xxx_hidden_Timeout         int64                  `protobuf:"varint,2,opt,name=timeout,proto3"`
-	unknownFields              protoimpl.UnknownFields
-	sizeCache                  protoimpl.SizeCache
-}
-
-func (x *DataWait) Reset() {
-	*x = DataWait{}
-	mi := &file_crud_delivery_get_data_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DataWait) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DataWait) ProtoMessage() {}
-
-func (x *DataWait) ProtoReflect() protoreflect.Message {
-	mi := &file_crud_delivery_get_data_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *DataWait) GetConditionFilter() *DataFilter {
-	if x != nil {
-		return x.xxx_hidden_ConditionFilter
-	}
-	return nil
-}
-
-func (x *DataWait) GetTimeout() int64 {
-	if x != nil {
-		return x.xxx_hidden_Timeout
-	}
-	return 0
-}
-
-func (x *DataWait) SetConditionFilter(v *DataFilter) {
-	x.xxx_hidden_ConditionFilter = v
-}
-
-func (x *DataWait) SetTimeout(v int64) {
-	x.xxx_hidden_Timeout = v
-}
-
-func (x *DataWait) HasConditionFilter() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_ConditionFilter != nil
-}
-
-func (x *DataWait) ClearConditionFilter() {
-	x.xxx_hidden_ConditionFilter = nil
-}
-
-type DataWait_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	ConditionFilter *DataFilter
-	Timeout         int64
-}
-
-func (b0 DataWait_builder) Build() *DataWait {
-	m0 := &DataWait{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_ConditionFilter = b.ConditionFilter
-	x.xxx_hidden_Timeout = b.Timeout
-	return m0
-}
-
 var File_crud_delivery_get_data_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_get_data_proto_rawDesc = "" +
@@ -653,7 +596,7 @@ const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\x16use_strong_consistency\x18\a \x01(\bR\x14useStrongConsistency\x12=\n" +
 	"\x06target\x18\b \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\"D\n" +
 	"\x0fGetDataResponse\x121\n" +
-	"\x06result\x18\x01 \x01(\v2\x19.freym.crud.delivery.DataR\x06result\"\xe9\x02\n" +
+	"\x06result\x18\x01 \x01(\v2\x19.freym.crud.delivery.DataR\x06result\"\xa0\x03\n" +
 	"\x12GetDataListRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x121\n" +
 	"\x04auth\x18\x02 \x01(\v2\x1d.freym.crud.delivery.AuthDataR\x04auth\x12\x14\n" +
@@ -663,41 +606,40 @@ const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\x05order\x18\b \x03(\v2\x1e.freym.crud.delivery.DataOrderR\x05order\x124\n" +
 	"\x16use_strong_consistency\x18\t \x01(\bR\x14useStrongConsistency\x12=\n" +
 	"\x06target\x18\n" +
-	" \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\"\x88\x01\n" +
+	" \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\x125\n" +
+	"\x04wait\x18\v \x01(\v2!.freym.crud.delivery.DataListWaitR\x04wait\"\x88\x01\n" +
 	"\x13GetDataListResponse\x121\n" +
 	"\x06result\x18\x01 \x03(\v2\x19.freym.crud.delivery.DataR\x06result\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x03R\x05limit\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x03R\x04page\x12\x14\n" +
-	"\x05total\x18\x04 \x01(\x03R\x05total\"p\n" +
-	"\bDataWait\x12J\n" +
-	"\x10condition_filter\x18\x01 \x01(\v2\x1f.freym.crud.delivery.DataFilterR\x0fconditionFilter\x12\x18\n" +
-	"\atimeout\x18\x02 \x01(\x03R\atimeoutb\x06proto3"
+	"\x05total\x18\x04 \x01(\x03R\x05totalb\x06proto3"
 
-var file_crud_delivery_get_data_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_crud_delivery_get_data_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_crud_delivery_get_data_proto_goTypes = []any{
 	(*GetDataRequest)(nil),      // 0: freym.crud.delivery.GetDataRequest
 	(*GetDataResponse)(nil),     // 1: freym.crud.delivery.GetDataResponse
 	(*GetDataListRequest)(nil),  // 2: freym.crud.delivery.GetDataListRequest
 	(*GetDataListResponse)(nil), // 3: freym.crud.delivery.GetDataListResponse
-	(*DataWait)(nil),            // 4: freym.crud.delivery.DataWait
-	(*AuthData)(nil),            // 5: freym.crud.delivery.AuthData
-	(*DataFilter)(nil),          // 6: freym.crud.delivery.DataFilter
+	(*AuthData)(nil),            // 4: freym.crud.delivery.AuthData
+	(*DataFilter)(nil),          // 5: freym.crud.delivery.DataFilter
+	(*DataWait)(nil),            // 6: freym.crud.delivery.DataWait
 	(DeploymentTarget)(0),       // 7: freym.crud.delivery.DeploymentTarget
 	(*Data)(nil),                // 8: freym.crud.delivery.Data
 	(*DataOrder)(nil),           // 9: freym.crud.delivery.DataOrder
+	(*DataListWait)(nil),        // 10: freym.crud.delivery.DataListWait
 }
 var file_crud_delivery_get_data_proto_depIdxs = []int32{
-	5,  // 0: freym.crud.delivery.GetDataRequest.auth:type_name -> freym.crud.delivery.AuthData
-	6,  // 1: freym.crud.delivery.GetDataRequest.filter:type_name -> freym.crud.delivery.DataFilter
-	4,  // 2: freym.crud.delivery.GetDataRequest.wait:type_name -> freym.crud.delivery.DataWait
+	4,  // 0: freym.crud.delivery.GetDataRequest.auth:type_name -> freym.crud.delivery.AuthData
+	5,  // 1: freym.crud.delivery.GetDataRequest.filter:type_name -> freym.crud.delivery.DataFilter
+	6,  // 2: freym.crud.delivery.GetDataRequest.wait:type_name -> freym.crud.delivery.DataWait
 	7,  // 3: freym.crud.delivery.GetDataRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
 	8,  // 4: freym.crud.delivery.GetDataResponse.result:type_name -> freym.crud.delivery.Data
-	5,  // 5: freym.crud.delivery.GetDataListRequest.auth:type_name -> freym.crud.delivery.AuthData
-	6,  // 6: freym.crud.delivery.GetDataListRequest.filter:type_name -> freym.crud.delivery.DataFilter
+	4,  // 5: freym.crud.delivery.GetDataListRequest.auth:type_name -> freym.crud.delivery.AuthData
+	5,  // 6: freym.crud.delivery.GetDataListRequest.filter:type_name -> freym.crud.delivery.DataFilter
 	9,  // 7: freym.crud.delivery.GetDataListRequest.order:type_name -> freym.crud.delivery.DataOrder
 	7,  // 8: freym.crud.delivery.GetDataListRequest.target:type_name -> freym.crud.delivery.DeploymentTarget
-	8,  // 9: freym.crud.delivery.GetDataListResponse.result:type_name -> freym.crud.delivery.Data
-	6,  // 10: freym.crud.delivery.DataWait.condition_filter:type_name -> freym.crud.delivery.DataFilter
+	10, // 9: freym.crud.delivery.GetDataListRequest.wait:type_name -> freym.crud.delivery.DataListWait
+	8,  // 10: freym.crud.delivery.GetDataListResponse.result:type_name -> freym.crud.delivery.Data
 	11, // [11:11] is the sub-list for method output_type
 	11, // [11:11] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
@@ -717,7 +659,7 @@ func file_crud_delivery_get_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_delivery_get_data_proto_rawDesc), len(file_crud_delivery_get_data_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

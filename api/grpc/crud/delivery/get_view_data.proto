@@ -8,6 +8,7 @@ message GetViewDataRequest {
 	DataFilter filter = 3;
 	bool use_strong_consistency = 4;
 	DeploymentTarget target = 5;
+	DataWait wait = 6;
 }
 
 message GetViewDataResponse {
@@ -23,6 +24,7 @@ message GetViewDataListRequest {
 	repeated DataOrder order = 6;
 	bool use_strong_consistency = 7;
 	DeploymentTarget target = 8;
+	DataListWait wait = 9;
 }
 
 message GetViewDataListResponse {

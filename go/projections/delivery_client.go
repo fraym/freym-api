@@ -66,6 +66,7 @@ type DeliveryClient interface {
 		view string,
 		authData *AuthData,
 		filter *Filter,
+		wait *Wait,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*Data, error)
@@ -74,6 +75,7 @@ type DeliveryClient interface {
 		view string,
 		authData *AuthData,
 		filter *JsonFilter,
+		wait *JsonWait,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
 	) (*JsonData, error)
@@ -86,6 +88,7 @@ type DeliveryClient interface {
 		order []Order,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
+		wait *ListWait,
 	) (*DataList, error)
 	GetJsonDataList(
 		ctx context.Context,
@@ -96,6 +99,7 @@ type DeliveryClient interface {
 		order []Order,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
+		wait *ListWait,
 	) (*JsonDataList, error)
 	GetViewDataList(
 		ctx context.Context,
@@ -106,6 +110,7 @@ type DeliveryClient interface {
 		order []Order,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
+		wait *ListWait,
 	) (*DataList, error)
 	GetViewJsonDataList(
 		ctx context.Context,
@@ -116,6 +121,7 @@ type DeliveryClient interface {
 		order []Order,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
+		wait *ListWait,
 	) (*JsonDataList, error)
 	UpsertData(
 		ctx context.Context,
@@ -263,6 +269,7 @@ func (c *projectionsDeliveryClient) GetViewData(
 	view string,
 	authData *AuthData,
 	filter *Filter,
+	wait *Wait,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*Data, error) {
@@ -277,6 +284,7 @@ func (c *projectionsDeliveryClient) GetViewData(
 		Filter:               filter.toProtobufFilter(),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -295,6 +303,7 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 	view string,
 	authData *AuthData,
 	filter *JsonFilter,
+	wait *JsonWait,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*JsonData, error) {
@@ -309,6 +318,7 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 		Filter:               filter.toProtobufFilter(),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -332,6 +342,7 @@ func (c *projectionsDeliveryClient) GetDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*DataList, error) {
 	var (
 		limit int64
@@ -357,6 +368,7 @@ func (c *projectionsDeliveryClient) GetDataList(
 		Order:                toProtobufOrder(order),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -390,6 +402,7 @@ func (c *projectionsDeliveryClient) GetJsonDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*JsonDataList, error) {
 	var (
 		limit int64
@@ -415,6 +428,7 @@ func (c *projectionsDeliveryClient) GetJsonDataList(
 		Order:                toProtobufOrder(order),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -443,6 +457,7 @@ func (c *projectionsDeliveryClient) GetViewDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*DataList, error) {
 	var (
 		limit int64
@@ -468,6 +483,7 @@ func (c *projectionsDeliveryClient) GetViewDataList(
 		Order:                toProtobufOrder(order),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -501,6 +517,7 @@ func (c *projectionsDeliveryClient) GetViewJsonDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*JsonDataList, error) {
 	var (
 		limit int64
@@ -526,6 +543,7 @@ func (c *projectionsDeliveryClient) GetViewJsonDataList(
 		Order:                toProtobufOrder(order),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
 	}.Build())
 	if err != nil {
 		return nil, err

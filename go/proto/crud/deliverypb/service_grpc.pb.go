@@ -24,6 +24,7 @@ const (
 	Service_GetDataList_FullMethodName     = "/freym.crud.delivery.Service/GetDataList"
 	Service_GetViewDataList_FullMethodName = "/freym.crud.delivery.Service/GetViewDataList"
 	Service_Create_FullMethodName          = "/freym.crud.delivery.Service/Create"
+	Service_Upsert_FullMethodName          = "/freym.crud.delivery.Service/Upsert"
 	Service_Update_FullMethodName          = "/freym.crud.delivery.Service/Update"
 	Service_UpdateByFilter_FullMethodName  = "/freym.crud.delivery.Service/UpdateByFilter"
 	Service_Delete_FullMethodName          = "/freym.crud.delivery.Service/Delete"
@@ -39,6 +40,7 @@ type ServiceClient interface {
 	GetDataList(ctx context.Context, in *GetDataListRequest, opts ...grpc.CallOption) (*GetDataListResponse, error)
 	GetViewDataList(ctx context.Context, in *GetViewDataListRequest, opts ...grpc.CallOption) (*GetViewDataListResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	Upsert(ctx context.Context, in *UpsertRequest, opts ...grpc.CallOption) (*UpsertResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	UpdateByFilter(ctx context.Context, in *UpdateByFilterRequest, opts ...grpc.CallOption) (*UpdateByFilterResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
@@ -103,6 +105,16 @@ func (c *serviceClient) Create(ctx context.Context, in *CreateRequest, opts ...g
 	return out, nil
 }
 
+func (c *serviceClient) Upsert(ctx context.Context, in *UpsertRequest, opts ...grpc.CallOption) (*UpsertResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpsertResponse)
+	err := c.cc.Invoke(ctx, Service_Upsert_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateResponse)
@@ -152,6 +164,7 @@ type ServiceServer interface {
 	GetDataList(context.Context, *GetDataListRequest) (*GetDataListResponse, error)
 	GetViewDataList(context.Context, *GetViewDataListRequest) (*GetViewDataListResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	Upsert(context.Context, *UpsertRequest) (*UpsertResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	UpdateByFilter(context.Context, *UpdateByFilterRequest) (*UpdateByFilterResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
@@ -180,6 +193,9 @@ func (UnimplementedServiceServer) GetViewDataList(context.Context, *GetViewDataL
 }
 func (UnimplementedServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedServiceServer) Upsert(context.Context, *UpsertRequest) (*UpsertResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Upsert not implemented")
 }
 func (UnimplementedServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -304,6 +320,24 @@ func _Service_Create_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_Upsert_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Upsert(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Upsert_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Upsert(ctx, req.(*UpsertRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateRequest)
 	if err := dec(in); err != nil {
@@ -402,6 +436,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _Service_Create_Handler,
+		},
+		{
+			MethodName: "Upsert",
+			Handler:    _Service_Upsert_Handler,
 		},
 		{
 			MethodName: "Update",

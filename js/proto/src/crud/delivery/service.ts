@@ -36,6 +36,7 @@ import {
     UpdateRequest,
     UpdateResponse,
 } from "./update";
+import { UpsertRequest, UpsertResponse } from "./upsert";
 
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {
@@ -98,6 +99,17 @@ export const ServiceService = {
             Buffer.from(CreateResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer): CreateResponse => CreateResponse.decode(value),
     },
+    upsert: {
+        path: "/freym.crud.delivery.Service/Upsert",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: UpsertRequest): Buffer =>
+            Buffer.from(UpsertRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): UpsertRequest => UpsertRequest.decode(value),
+        responseSerialize: (value: UpsertResponse): Buffer =>
+            Buffer.from(UpsertResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): UpsertResponse => UpsertResponse.decode(value),
+    },
     update: {
         path: "/freym.crud.delivery.Service/Update",
         requestStream: false,
@@ -152,6 +164,7 @@ export interface ServiceServer extends UntypedServiceImplementation {
     getDataList: handleUnaryCall<GetDataListRequest, GetDataListResponse>;
     getViewDataList: handleUnaryCall<GetViewDataListRequest, GetViewDataListResponse>;
     create: handleUnaryCall<CreateRequest, CreateResponse>;
+    upsert: handleUnaryCall<UpsertRequest, UpsertResponse>;
     update: handleUnaryCall<UpdateRequest, UpdateResponse>;
     updateByFilter: handleUnaryCall<UpdateByFilterRequest, UpdateByFilterResponse>;
     delete: handleUnaryCall<DeleteRequest, DeleteResponse>;
@@ -233,6 +246,21 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: CreateResponse) => void
+    ): ClientUnaryCall;
+    upsert(
+        request: UpsertRequest,
+        callback: (error: ServiceError | null, response: UpsertResponse) => void
+    ): ClientUnaryCall;
+    upsert(
+        request: UpsertRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: UpsertResponse) => void
+    ): ClientUnaryCall;
+    upsert(
+        request: UpsertRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: UpsertResponse) => void
     ): ClientUnaryCall;
     update(
         request: UpdateRequest,

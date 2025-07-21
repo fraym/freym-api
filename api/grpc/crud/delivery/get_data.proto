@@ -26,6 +26,7 @@ message GetDataListRequest {
 	repeated DataOrder order = 8;
 	bool use_strong_consistency = 9;
 	DeploymentTarget target = 10;
+	DataListWait wait = 11;
 }
 
 message GetDataListResponse {
@@ -33,9 +34,4 @@ message GetDataListResponse {
 	int64 limit = 2;
 	int64 page = 3;
 	int64 total = 4;
-}
-
-message DataWait {
-	DataFilter condition_filter = 1;
-	int64 timeout = 2;
 }

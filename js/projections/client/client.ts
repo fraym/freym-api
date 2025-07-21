@@ -12,7 +12,7 @@ import { getViewData as getDataFromView } from "./getViewData";
 import { GetViewDataList, getViewDataList as getDataListFromView } from "./getViewDataList";
 import { Order } from "./order";
 import { UpsertResponse, upsertProjectionData } from "./upsert";
-import { Wait } from "./wait";
+import { ListWait, Wait } from "./wait";
 
 export interface DeliveryClient {
     getData: <T extends ProjectionData>(
@@ -28,7 +28,8 @@ export interface DeliveryClient {
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        wait?: Wait
     ) => Promise<T | null>;
     getDataList: <T extends ProjectionData>(
         projection: string,
@@ -37,7 +38,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        wait?: ListWait
     ) => Promise<GetProjectionDataList<T> | null>;
     getViewDataList: <T extends ProjectionData>(
         view: string,
@@ -46,7 +48,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        wait?: ListWait
     ) => Promise<GetProjectionDataList<T> | null>;
     upsertData: <T extends ProjectionData>(
         projection: string,
@@ -106,7 +109,8 @@ export const newDeliveryClient = async (
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency: boolean = false
+        useStrongConsistency: boolean = false,
+        wait?: Wait
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,
@@ -114,7 +118,8 @@ export const newDeliveryClient = async (
             filter,
             !!useStrongConsistency,
             config.deploymentTarget,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 
@@ -125,7 +130,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false
+        useStrongConsistency: boolean = false,
+        wait?: ListWait
     ): Promise<GetProjectionDataList<T> | null> => {
         return await getProjectionDataList<T>(
             projection,
@@ -136,7 +142,8 @@ export const newDeliveryClient = async (
             order,
             !!useStrongConsistency,
             config.deploymentTarget,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 
@@ -147,7 +154,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false
+        useStrongConsistency: boolean = false,
+        wait?: ListWait
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -158,7 +166,8 @@ export const newDeliveryClient = async (
             order,
             !!useStrongConsistency,
             config.deploymentTarget,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 

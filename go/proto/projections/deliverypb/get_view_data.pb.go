@@ -27,6 +27,7 @@ type GetViewDataRequest struct {
 	xxx_hidden_Filter               *DataFilter            `protobuf:"bytes,3,opt,name=filter,proto3"`
 	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,4,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
 	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,5,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                 *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
 	unknownFields                   protoimpl.UnknownFields
 	sizeCache                       protoimpl.SizeCache
 }
@@ -91,6 +92,13 @@ func (x *GetViewDataRequest) GetTarget() DeploymentTarget {
 	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
+func (x *GetViewDataRequest) GetWait() *DataWait {
+	if x != nil {
+		return x.xxx_hidden_Wait
+	}
+	return nil
+}
+
 func (x *GetViewDataRequest) SetView(v string) {
 	x.xxx_hidden_View = v
 }
@@ -111,6 +119,10 @@ func (x *GetViewDataRequest) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
 }
 
+func (x *GetViewDataRequest) SetWait(v *DataWait) {
+	x.xxx_hidden_Wait = v
+}
+
 func (x *GetViewDataRequest) HasAuth() bool {
 	if x == nil {
 		return false
@@ -125,12 +137,23 @@ func (x *GetViewDataRequest) HasFilter() bool {
 	return x.xxx_hidden_Filter != nil
 }
 
+func (x *GetViewDataRequest) HasWait() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Wait != nil
+}
+
 func (x *GetViewDataRequest) ClearAuth() {
 	x.xxx_hidden_Auth = nil
 }
 
 func (x *GetViewDataRequest) ClearFilter() {
 	x.xxx_hidden_Filter = nil
+}
+
+func (x *GetViewDataRequest) ClearWait() {
+	x.xxx_hidden_Wait = nil
 }
 
 type GetViewDataRequest_builder struct {
@@ -141,6 +164,7 @@ type GetViewDataRequest_builder struct {
 	Filter               *DataFilter
 	UseStrongConsistency bool
 	Target               DeploymentTarget
+	Wait                 *DataWait
 }
 
 func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
@@ -152,6 +176,7 @@ func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
 	x.xxx_hidden_Filter = b.Filter
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
+	x.xxx_hidden_Wait = b.Wait
 	return m0
 }
 
@@ -233,6 +258,7 @@ type GetViewDataListRequest struct {
 	xxx_hidden_Order                *[]*DataOrder          `protobuf:"bytes,6,rep,name=order,proto3"`
 	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,7,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
 	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,8,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                 *DataListWait          `protobuf:"bytes,9,opt,name=wait,proto3"`
 	unknownFields                   protoimpl.UnknownFields
 	sizeCache                       protoimpl.SizeCache
 }
@@ -320,6 +346,13 @@ func (x *GetViewDataListRequest) GetTarget() DeploymentTarget {
 	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
+func (x *GetViewDataListRequest) GetWait() *DataListWait {
+	if x != nil {
+		return x.xxx_hidden_Wait
+	}
+	return nil
+}
+
 func (x *GetViewDataListRequest) SetView(v string) {
 	x.xxx_hidden_View = v
 }
@@ -352,6 +385,10 @@ func (x *GetViewDataListRequest) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
 }
 
+func (x *GetViewDataListRequest) SetWait(v *DataListWait) {
+	x.xxx_hidden_Wait = v
+}
+
 func (x *GetViewDataListRequest) HasAuth() bool {
 	if x == nil {
 		return false
@@ -366,12 +403,23 @@ func (x *GetViewDataListRequest) HasFilter() bool {
 	return x.xxx_hidden_Filter != nil
 }
 
+func (x *GetViewDataListRequest) HasWait() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Wait != nil
+}
+
 func (x *GetViewDataListRequest) ClearAuth() {
 	x.xxx_hidden_Auth = nil
 }
 
 func (x *GetViewDataListRequest) ClearFilter() {
 	x.xxx_hidden_Filter = nil
+}
+
+func (x *GetViewDataListRequest) ClearWait() {
+	x.xxx_hidden_Wait = nil
 }
 
 type GetViewDataListRequest_builder struct {
@@ -385,6 +433,7 @@ type GetViewDataListRequest_builder struct {
 	Order                []*DataOrder
 	UseStrongConsistency bool
 	Target               DeploymentTarget
+	Wait                 *DataListWait
 }
 
 func (b0 GetViewDataListRequest_builder) Build() *GetViewDataListRequest {
@@ -399,6 +448,7 @@ func (b0 GetViewDataListRequest_builder) Build() *GetViewDataListRequest {
 	x.xxx_hidden_Order = &b.Order
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
+	x.xxx_hidden_Wait = b.Wait
 	return m0
 }
 
@@ -507,15 +557,16 @@ var File_projections_delivery_get_view_data_proto protoreflect.FileDescriptor
 
 const file_projections_delivery_get_view_data_proto_rawDesc = "" +
 	"\n" +
-	"(projections/delivery/get_view_data.proto\x12\x1afreym.projections.delivery\x1a!projections/delivery/shared.proto\"\x9e\x02\n" +
+	"(projections/delivery/get_view_data.proto\x12\x1afreym.projections.delivery\x1a!projections/delivery/shared.proto\"\xd8\x02\n" +
 	"\x12GetViewDataRequest\x12\x12\n" +
 	"\x04view\x18\x01 \x01(\tR\x04view\x128\n" +
 	"\x04auth\x18\x02 \x01(\v2$.freym.projections.delivery.AuthDataR\x04auth\x12>\n" +
 	"\x06filter\x18\x03 \x01(\v2&.freym.projections.delivery.DataFilterR\x06filter\x124\n" +
 	"\x16use_strong_consistency\x18\x04 \x01(\bR\x14useStrongConsistency\x12D\n" +
-	"\x06target\x18\x05 \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\"O\n" +
+	"\x06target\x18\x05 \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\x128\n" +
+	"\x04wait\x18\x06 \x01(\v2$.freym.projections.delivery.DataWaitR\x04wait\"O\n" +
 	"\x13GetViewDataResponse\x128\n" +
-	"\x06result\x18\x01 \x01(\v2 .freym.projections.delivery.DataR\x06result\"\x89\x03\n" +
+	"\x06result\x18\x01 \x01(\v2 .freym.projections.delivery.DataR\x06result\"\xc7\x03\n" +
 	"\x16GetViewDataListRequest\x12\x12\n" +
 	"\x04view\x18\x01 \x01(\tR\x04view\x128\n" +
 	"\x04auth\x18\x02 \x01(\v2$.freym.projections.delivery.AuthDataR\x04auth\x12\x14\n" +
@@ -524,7 +575,8 @@ const file_projections_delivery_get_view_data_proto_rawDesc = "" +
 	"\x06filter\x18\x05 \x01(\v2&.freym.projections.delivery.DataFilterR\x06filter\x12;\n" +
 	"\x05order\x18\x06 \x03(\v2%.freym.projections.delivery.DataOrderR\x05order\x124\n" +
 	"\x16use_strong_consistency\x18\a \x01(\bR\x14useStrongConsistency\x12D\n" +
-	"\x06target\x18\b \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\"\x93\x01\n" +
+	"\x06target\x18\b \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\x12<\n" +
+	"\x04wait\x18\t \x01(\v2(.freym.projections.delivery.DataListWaitR\x04wait\"\x93\x01\n" +
 	"\x17GetViewDataListResponse\x128\n" +
 	"\x06result\x18\x01 \x03(\v2 .freym.projections.delivery.DataR\x06result\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x03R\x05limit\x12\x12\n" +
@@ -540,24 +592,28 @@ var file_projections_delivery_get_view_data_proto_goTypes = []any{
 	(*AuthData)(nil),                // 4: freym.projections.delivery.AuthData
 	(*DataFilter)(nil),              // 5: freym.projections.delivery.DataFilter
 	(DeploymentTarget)(0),           // 6: freym.projections.delivery.DeploymentTarget
-	(*Data)(nil),                    // 7: freym.projections.delivery.Data
-	(*DataOrder)(nil),               // 8: freym.projections.delivery.DataOrder
+	(*DataWait)(nil),                // 7: freym.projections.delivery.DataWait
+	(*Data)(nil),                    // 8: freym.projections.delivery.Data
+	(*DataOrder)(nil),               // 9: freym.projections.delivery.DataOrder
+	(*DataListWait)(nil),            // 10: freym.projections.delivery.DataListWait
 }
 var file_projections_delivery_get_view_data_proto_depIdxs = []int32{
-	4, // 0: freym.projections.delivery.GetViewDataRequest.auth:type_name -> freym.projections.delivery.AuthData
-	5, // 1: freym.projections.delivery.GetViewDataRequest.filter:type_name -> freym.projections.delivery.DataFilter
-	6, // 2: freym.projections.delivery.GetViewDataRequest.target:type_name -> freym.projections.delivery.DeploymentTarget
-	7, // 3: freym.projections.delivery.GetViewDataResponse.result:type_name -> freym.projections.delivery.Data
-	4, // 4: freym.projections.delivery.GetViewDataListRequest.auth:type_name -> freym.projections.delivery.AuthData
-	5, // 5: freym.projections.delivery.GetViewDataListRequest.filter:type_name -> freym.projections.delivery.DataFilter
-	8, // 6: freym.projections.delivery.GetViewDataListRequest.order:type_name -> freym.projections.delivery.DataOrder
-	6, // 7: freym.projections.delivery.GetViewDataListRequest.target:type_name -> freym.projections.delivery.DeploymentTarget
-	7, // 8: freym.projections.delivery.GetViewDataListResponse.result:type_name -> freym.projections.delivery.Data
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	4,  // 0: freym.projections.delivery.GetViewDataRequest.auth:type_name -> freym.projections.delivery.AuthData
+	5,  // 1: freym.projections.delivery.GetViewDataRequest.filter:type_name -> freym.projections.delivery.DataFilter
+	6,  // 2: freym.projections.delivery.GetViewDataRequest.target:type_name -> freym.projections.delivery.DeploymentTarget
+	7,  // 3: freym.projections.delivery.GetViewDataRequest.wait:type_name -> freym.projections.delivery.DataWait
+	8,  // 4: freym.projections.delivery.GetViewDataResponse.result:type_name -> freym.projections.delivery.Data
+	4,  // 5: freym.projections.delivery.GetViewDataListRequest.auth:type_name -> freym.projections.delivery.AuthData
+	5,  // 6: freym.projections.delivery.GetViewDataListRequest.filter:type_name -> freym.projections.delivery.DataFilter
+	9,  // 7: freym.projections.delivery.GetViewDataListRequest.order:type_name -> freym.projections.delivery.DataOrder
+	6,  // 8: freym.projections.delivery.GetViewDataListRequest.target:type_name -> freym.projections.delivery.DeploymentTarget
+	10, // 9: freym.projections.delivery.GetViewDataListRequest.wait:type_name -> freym.projections.delivery.DataListWait
+	8,  // 10: freym.projections.delivery.GetViewDataListResponse.result:type_name -> freym.projections.delivery.Data
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_projections_delivery_get_view_data_proto_init() }

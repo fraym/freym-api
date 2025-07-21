@@ -9,7 +9,9 @@ import {
     AuthData,
     Data,
     DataFilter,
+    DataListWait,
     DataOrder,
+    DataWait,
     DeploymentTarget,
     deploymentTargetFromJSON,
     deploymentTargetToJSON,
@@ -40,6 +42,7 @@ export interface GetDataListRequest {
     order: DataOrder[];
     useStrongConsistency: boolean;
     target: DeploymentTarget;
+    wait: DataListWait | undefined;
 }
 
 export interface GetDataListResponse {
@@ -47,11 +50,6 @@ export interface GetDataListResponse {
     limit: string;
     page: string;
     total: string;
-}
-
-export interface DataWait {
-    conditionFilter: DataFilter | undefined;
-    timeout: string;
 }
 
 function createBaseGetDataRequest(): GetDataRequest {
@@ -321,6 +319,7 @@ function createBaseGetDataListRequest(): GetDataListRequest {
         order: [],
         useStrongConsistency: false,
         target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+        wait: undefined,
     };
 }
 
@@ -349,6 +348,9 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
         }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             writer.uint32(64).int32(deploymentTargetToNumber(message.target));
+        }
+        if (message.wait !== undefined) {
+            DataListWait.encode(message.wait, writer.uint32(74).fork()).join();
         }
         return writer;
     },
@@ -424,6 +426,14 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
                     message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
+                case 9: {
+                    if (tag !== 74) {
+                        break;
+                    }
+
+                    message.wait = DataListWait.decode(reader, reader.uint32());
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -449,6 +459,7 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+            wait: isSet(object.wait) ? DataListWait.fromJSON(object.wait) : undefined,
         };
     },
 
@@ -478,6 +489,9 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
+        if (message.wait !== undefined) {
+            obj.wait = DataListWait.toJSON(message.wait);
+        }
         return obj;
     },
 
@@ -500,6 +514,10 @@ export const GetDataListRequest: MessageFns<GetDataListRequest> = {
         message.order = object.order?.map(e => DataOrder.fromPartial(e)) || [];
         message.useStrongConsistency = object.useStrongConsistency ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        message.wait =
+            object.wait !== undefined && object.wait !== null
+                ? DataListWait.fromPartial(object.wait)
+                : undefined;
         return message;
     },
 };
@@ -610,87 +628,6 @@ export const GetDataListResponse: MessageFns<GetDataListResponse> = {
         message.limit = object.limit ?? "0";
         message.page = object.page ?? "0";
         message.total = object.total ?? "0";
-        return message;
-    },
-};
-
-function createBaseDataWait(): DataWait {
-    return { conditionFilter: undefined, timeout: "0" };
-}
-
-export const DataWait: MessageFns<DataWait> = {
-    encode(message: DataWait, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.conditionFilter !== undefined) {
-            DataFilter.encode(message.conditionFilter, writer.uint32(10).fork()).join();
-        }
-        if (message.timeout !== "0") {
-            writer.uint32(16).int64(message.timeout);
-        }
-        return writer;
-    },
-
-    decode(input: BinaryReader | Uint8Array, length?: number): DataWait {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        const end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseDataWait();
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1: {
-                    if (tag !== 10) {
-                        break;
-                    }
-
-                    message.conditionFilter = DataFilter.decode(reader, reader.uint32());
-                    continue;
-                }
-                case 2: {
-                    if (tag !== 16) {
-                        break;
-                    }
-
-                    message.timeout = reader.int64().toString();
-                    continue;
-                }
-            }
-            if ((tag & 7) === 4 || tag === 0) {
-                break;
-            }
-            reader.skip(tag & 7);
-        }
-        return message;
-    },
-
-    fromJSON(object: any): DataWait {
-        return {
-            conditionFilter: isSet(object.conditionFilter)
-                ? DataFilter.fromJSON(object.conditionFilter)
-                : undefined,
-            timeout: isSet(object.timeout) ? globalThis.String(object.timeout) : "0",
-        };
-    },
-
-    toJSON(message: DataWait): unknown {
-        const obj: any = {};
-        if (message.conditionFilter !== undefined) {
-            obj.conditionFilter = DataFilter.toJSON(message.conditionFilter);
-        }
-        if (message.timeout !== "0") {
-            obj.timeout = message.timeout;
-        }
-        return obj;
-    },
-
-    create(base?: DeepPartial<DataWait>): DataWait {
-        return DataWait.fromPartial(base ?? {});
-    },
-    fromPartial(object: DeepPartial<DataWait>): DataWait {
-        const message = createBaseDataWait();
-        message.conditionFilter =
-            object.conditionFilter !== undefined && object.conditionFilter !== null
-                ? DataFilter.fromPartial(object.conditionFilter)
-                : undefined;
-        message.timeout = object.timeout ?? "0";
         return message;
     },
 };

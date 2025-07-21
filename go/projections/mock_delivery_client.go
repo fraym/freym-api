@@ -72,10 +72,11 @@ func (c *MockDeliveryClient) GetViewData(
 	view string,
 	authData *AuthData,
 	filter *Filter,
+	wait *Wait,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*Data, error) {
-	args := c.Called(ctx, view, authData, filter, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -87,10 +88,11 @@ func (c *MockDeliveryClient) GetViewJsonData(
 	view string,
 	authData *AuthData,
 	filter *JsonFilter,
+	wait *JsonWait,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
 ) (*JsonData, error) {
-	args := c.Called(ctx, view, authData, filter, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -106,8 +108,9 @@ func (c *MockDeliveryClient) GetDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*DataList, error) {
-	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target)
+	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target, wait)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -123,8 +126,9 @@ func (c *MockDeliveryClient) GetJsonDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*JsonDataList, error) {
-	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target)
+	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target, wait)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -140,8 +144,9 @@ func (c *MockDeliveryClient) GetViewDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*DataList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -157,8 +162,9 @@ func (c *MockDeliveryClient) GetViewJsonDataList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*JsonDataList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

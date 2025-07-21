@@ -24,13 +24,14 @@ var File_crud_delivery_service_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1bcrud/delivery/service.proto\x12\x13freym.crud.delivery\x1a\x1ccrud/delivery/get_data.proto\x1a!crud/delivery/get_view_data.proto\x1a\x1acrud/delivery/create.proto\x1a\x1acrud/delivery/update.proto\x1a\x1acrud/delivery/delete.proto\x1a\x19crud/delivery/clone.proto2\xc5\x06\n" +
+	"\x1bcrud/delivery/service.proto\x12\x13freym.crud.delivery\x1a\x1ccrud/delivery/get_data.proto\x1a!crud/delivery/get_view_data.proto\x1a\x1acrud/delivery/create.proto\x1a\x1acrud/delivery/update.proto\x1a\x1acrud/delivery/upsert.proto\x1a\x1acrud/delivery/delete.proto\x1a\x19crud/delivery/clone.proto2\x98\a\n" +
 	"\aService\x12T\n" +
 	"\aGetData\x12#.freym.crud.delivery.GetDataRequest\x1a$.freym.crud.delivery.GetDataResponse\x12`\n" +
 	"\vGetViewData\x12'.freym.crud.delivery.GetViewDataRequest\x1a(.freym.crud.delivery.GetViewDataResponse\x12`\n" +
 	"\vGetDataList\x12'.freym.crud.delivery.GetDataListRequest\x1a(.freym.crud.delivery.GetDataListResponse\x12l\n" +
 	"\x0fGetViewDataList\x12+.freym.crud.delivery.GetViewDataListRequest\x1a,.freym.crud.delivery.GetViewDataListResponse\x12Q\n" +
 	"\x06Create\x12\".freym.crud.delivery.CreateRequest\x1a#.freym.crud.delivery.CreateResponse\x12Q\n" +
+	"\x06Upsert\x12\".freym.crud.delivery.UpsertRequest\x1a#.freym.crud.delivery.UpsertResponse\x12Q\n" +
 	"\x06Update\x12\".freym.crud.delivery.UpdateRequest\x1a#.freym.crud.delivery.UpdateResponse\x12i\n" +
 	"\x0eUpdateByFilter\x12*.freym.crud.delivery.UpdateByFilterRequest\x1a+.freym.crud.delivery.UpdateByFilterResponse\x12Q\n" +
 	"\x06Delete\x12\".freym.crud.delivery.DeleteRequest\x1a#.freym.crud.delivery.DeleteResponse\x12N\n" +
@@ -42,19 +43,21 @@ var file_crud_delivery_service_proto_goTypes = []any{
 	(*GetDataListRequest)(nil),      // 2: freym.crud.delivery.GetDataListRequest
 	(*GetViewDataListRequest)(nil),  // 3: freym.crud.delivery.GetViewDataListRequest
 	(*CreateRequest)(nil),           // 4: freym.crud.delivery.CreateRequest
-	(*UpdateRequest)(nil),           // 5: freym.crud.delivery.UpdateRequest
-	(*UpdateByFilterRequest)(nil),   // 6: freym.crud.delivery.UpdateByFilterRequest
-	(*DeleteRequest)(nil),           // 7: freym.crud.delivery.DeleteRequest
-	(*CloneRequest)(nil),            // 8: freym.crud.delivery.CloneRequest
-	(*GetDataResponse)(nil),         // 9: freym.crud.delivery.GetDataResponse
-	(*GetViewDataResponse)(nil),     // 10: freym.crud.delivery.GetViewDataResponse
-	(*GetDataListResponse)(nil),     // 11: freym.crud.delivery.GetDataListResponse
-	(*GetViewDataListResponse)(nil), // 12: freym.crud.delivery.GetViewDataListResponse
-	(*CreateResponse)(nil),          // 13: freym.crud.delivery.CreateResponse
-	(*UpdateResponse)(nil),          // 14: freym.crud.delivery.UpdateResponse
-	(*UpdateByFilterResponse)(nil),  // 15: freym.crud.delivery.UpdateByFilterResponse
-	(*DeleteResponse)(nil),          // 16: freym.crud.delivery.DeleteResponse
-	(*CloneResponse)(nil),           // 17: freym.crud.delivery.CloneResponse
+	(*UpsertRequest)(nil),           // 5: freym.crud.delivery.UpsertRequest
+	(*UpdateRequest)(nil),           // 6: freym.crud.delivery.UpdateRequest
+	(*UpdateByFilterRequest)(nil),   // 7: freym.crud.delivery.UpdateByFilterRequest
+	(*DeleteRequest)(nil),           // 8: freym.crud.delivery.DeleteRequest
+	(*CloneRequest)(nil),            // 9: freym.crud.delivery.CloneRequest
+	(*GetDataResponse)(nil),         // 10: freym.crud.delivery.GetDataResponse
+	(*GetViewDataResponse)(nil),     // 11: freym.crud.delivery.GetViewDataResponse
+	(*GetDataListResponse)(nil),     // 12: freym.crud.delivery.GetDataListResponse
+	(*GetViewDataListResponse)(nil), // 13: freym.crud.delivery.GetViewDataListResponse
+	(*CreateResponse)(nil),          // 14: freym.crud.delivery.CreateResponse
+	(*UpsertResponse)(nil),          // 15: freym.crud.delivery.UpsertResponse
+	(*UpdateResponse)(nil),          // 16: freym.crud.delivery.UpdateResponse
+	(*UpdateByFilterResponse)(nil),  // 17: freym.crud.delivery.UpdateByFilterResponse
+	(*DeleteResponse)(nil),          // 18: freym.crud.delivery.DeleteResponse
+	(*CloneResponse)(nil),           // 19: freym.crud.delivery.CloneResponse
 }
 var file_crud_delivery_service_proto_depIdxs = []int32{
 	0,  // 0: freym.crud.delivery.Service.GetData:input_type -> freym.crud.delivery.GetDataRequest
@@ -62,21 +65,23 @@ var file_crud_delivery_service_proto_depIdxs = []int32{
 	2,  // 2: freym.crud.delivery.Service.GetDataList:input_type -> freym.crud.delivery.GetDataListRequest
 	3,  // 3: freym.crud.delivery.Service.GetViewDataList:input_type -> freym.crud.delivery.GetViewDataListRequest
 	4,  // 4: freym.crud.delivery.Service.Create:input_type -> freym.crud.delivery.CreateRequest
-	5,  // 5: freym.crud.delivery.Service.Update:input_type -> freym.crud.delivery.UpdateRequest
-	6,  // 6: freym.crud.delivery.Service.UpdateByFilter:input_type -> freym.crud.delivery.UpdateByFilterRequest
-	7,  // 7: freym.crud.delivery.Service.Delete:input_type -> freym.crud.delivery.DeleteRequest
-	8,  // 8: freym.crud.delivery.Service.Clone:input_type -> freym.crud.delivery.CloneRequest
-	9,  // 9: freym.crud.delivery.Service.GetData:output_type -> freym.crud.delivery.GetDataResponse
-	10, // 10: freym.crud.delivery.Service.GetViewData:output_type -> freym.crud.delivery.GetViewDataResponse
-	11, // 11: freym.crud.delivery.Service.GetDataList:output_type -> freym.crud.delivery.GetDataListResponse
-	12, // 12: freym.crud.delivery.Service.GetViewDataList:output_type -> freym.crud.delivery.GetViewDataListResponse
-	13, // 13: freym.crud.delivery.Service.Create:output_type -> freym.crud.delivery.CreateResponse
-	14, // 14: freym.crud.delivery.Service.Update:output_type -> freym.crud.delivery.UpdateResponse
-	15, // 15: freym.crud.delivery.Service.UpdateByFilter:output_type -> freym.crud.delivery.UpdateByFilterResponse
-	16, // 16: freym.crud.delivery.Service.Delete:output_type -> freym.crud.delivery.DeleteResponse
-	17, // 17: freym.crud.delivery.Service.Clone:output_type -> freym.crud.delivery.CloneResponse
-	9,  // [9:18] is the sub-list for method output_type
-	0,  // [0:9] is the sub-list for method input_type
+	5,  // 5: freym.crud.delivery.Service.Upsert:input_type -> freym.crud.delivery.UpsertRequest
+	6,  // 6: freym.crud.delivery.Service.Update:input_type -> freym.crud.delivery.UpdateRequest
+	7,  // 7: freym.crud.delivery.Service.UpdateByFilter:input_type -> freym.crud.delivery.UpdateByFilterRequest
+	8,  // 8: freym.crud.delivery.Service.Delete:input_type -> freym.crud.delivery.DeleteRequest
+	9,  // 9: freym.crud.delivery.Service.Clone:input_type -> freym.crud.delivery.CloneRequest
+	10, // 10: freym.crud.delivery.Service.GetData:output_type -> freym.crud.delivery.GetDataResponse
+	11, // 11: freym.crud.delivery.Service.GetViewData:output_type -> freym.crud.delivery.GetViewDataResponse
+	12, // 12: freym.crud.delivery.Service.GetDataList:output_type -> freym.crud.delivery.GetDataListResponse
+	13, // 13: freym.crud.delivery.Service.GetViewDataList:output_type -> freym.crud.delivery.GetViewDataListResponse
+	14, // 14: freym.crud.delivery.Service.Create:output_type -> freym.crud.delivery.CreateResponse
+	15, // 15: freym.crud.delivery.Service.Upsert:output_type -> freym.crud.delivery.UpsertResponse
+	16, // 16: freym.crud.delivery.Service.Update:output_type -> freym.crud.delivery.UpdateResponse
+	17, // 17: freym.crud.delivery.Service.UpdateByFilter:output_type -> freym.crud.delivery.UpdateByFilterResponse
+	18, // 18: freym.crud.delivery.Service.Delete:output_type -> freym.crud.delivery.DeleteResponse
+	19, // 19: freym.crud.delivery.Service.Clone:output_type -> freym.crud.delivery.CloneResponse
+	10, // [10:20] is the sub-list for method output_type
+	0,  // [0:10] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -91,6 +96,7 @@ func file_crud_delivery_service_proto_init() {
 	file_crud_delivery_get_view_data_proto_init()
 	file_crud_delivery_create_proto_init()
 	file_crud_delivery_update_proto_init()
+	file_crud_delivery_upsert_proto_init()
 	file_crud_delivery_delete_proto_init()
 	file_crud_delivery_clone_proto_init()
 	type x struct{}

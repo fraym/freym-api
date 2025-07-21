@@ -10,4 +10,5 @@ export * from "./crud/delivery/delete";
 export * from "./crud/delivery/get_data";
 export * from "./crud/delivery/get_view_data";
 export * from "./crud/delivery/update";
+export * from "./crud/delivery/upsert";
 export * from "./crud/delivery/service";

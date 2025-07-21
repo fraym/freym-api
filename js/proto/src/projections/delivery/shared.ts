@@ -108,6 +108,21 @@ export interface Data_DataEntry {
     value: string;
 }
 
+export interface DataWait {
+    conditionFilter: DataFilter | undefined;
+    timeout: string;
+}
+
+export interface DataListWait {
+    condition: DataListWaitCondition | undefined;
+    timeout: string;
+}
+
+export interface DataListWaitCondition {
+    operation: string;
+    value: string;
+}
+
 function createBaseAuthData(): AuthData {
     return { tenantId: "", userId: "", scopes: [], data: {} };
 }
@@ -945,6 +960,247 @@ export const Data_DataEntry: MessageFns<Data_DataEntry> = {
         const message = createBaseData_DataEntry();
         message.key = object.key ?? "";
         message.value = object.value ?? "";
+        return message;
+    },
+};
+
+function createBaseDataWait(): DataWait {
+    return { conditionFilter: undefined, timeout: "0" };
+}
+
+export const DataWait: MessageFns<DataWait> = {
+    encode(message: DataWait, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.conditionFilter !== undefined) {
+            DataFilter.encode(message.conditionFilter, writer.uint32(10).fork()).join();
+        }
+        if (message.timeout !== "0") {
+            writer.uint32(16).int64(message.timeout);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): DataWait {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        const end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseDataWait();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.conditionFilter = DataFilter.decode(reader, reader.uint32());
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 16) {
+                        break;
+                    }
+
+                    message.timeout = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): DataWait {
+        return {
+            conditionFilter: isSet(object.conditionFilter)
+                ? DataFilter.fromJSON(object.conditionFilter)
+                : undefined,
+            timeout: isSet(object.timeout) ? globalThis.String(object.timeout) : "0",
+        };
+    },
+
+    toJSON(message: DataWait): unknown {
+        const obj: any = {};
+        if (message.conditionFilter !== undefined) {
+            obj.conditionFilter = DataFilter.toJSON(message.conditionFilter);
+        }
+        if (message.timeout !== "0") {
+            obj.timeout = message.timeout;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<DataWait>): DataWait {
+        return DataWait.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<DataWait>): DataWait {
+        const message = createBaseDataWait();
+        message.conditionFilter =
+            object.conditionFilter !== undefined && object.conditionFilter !== null
+                ? DataFilter.fromPartial(object.conditionFilter)
+                : undefined;
+        message.timeout = object.timeout ?? "0";
+        return message;
+    },
+};
+
+function createBaseDataListWait(): DataListWait {
+    return { condition: undefined, timeout: "0" };
+}
+
+export const DataListWait: MessageFns<DataListWait> = {
+    encode(message: DataListWait, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        if (message.condition !== undefined) {
+            DataListWaitCondition.encode(message.condition, writer.uint32(10).fork()).join();
+        }
+        if (message.timeout !== "0") {
+            writer.uint32(16).int64(message.timeout);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): DataListWait {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        const end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseDataListWait();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.condition = DataListWaitCondition.decode(reader, reader.uint32());
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 16) {
+                        break;
+                    }
+
+                    message.timeout = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): DataListWait {
+        return {
+            condition: isSet(object.condition)
+                ? DataListWaitCondition.fromJSON(object.condition)
+                : undefined,
+            timeout: isSet(object.timeout) ? globalThis.String(object.timeout) : "0",
+        };
+    },
+
+    toJSON(message: DataListWait): unknown {
+        const obj: any = {};
+        if (message.condition !== undefined) {
+            obj.condition = DataListWaitCondition.toJSON(message.condition);
+        }
+        if (message.timeout !== "0") {
+            obj.timeout = message.timeout;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<DataListWait>): DataListWait {
+        return DataListWait.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<DataListWait>): DataListWait {
+        const message = createBaseDataListWait();
+        message.condition =
+            object.condition !== undefined && object.condition !== null
+                ? DataListWaitCondition.fromPartial(object.condition)
+                : undefined;
+        message.timeout = object.timeout ?? "0";
+        return message;
+    },
+};
+
+function createBaseDataListWaitCondition(): DataListWaitCondition {
+    return { operation: "", value: "0" };
+}
+
+export const DataListWaitCondition: MessageFns<DataListWaitCondition> = {
+    encode(
+        message: DataListWaitCondition,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.operation !== "") {
+            writer.uint32(10).string(message.operation);
+        }
+        if (message.value !== "0") {
+            writer.uint32(16).int64(message.value);
+        }
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): DataListWaitCondition {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        const end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseDataListWaitCondition();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.operation = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 16) {
+                        break;
+                    }
+
+                    message.value = reader.int64().toString();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): DataListWaitCondition {
+        return {
+            operation: isSet(object.operation) ? globalThis.String(object.operation) : "",
+            value: isSet(object.value) ? globalThis.String(object.value) : "0",
+        };
+    },
+
+    toJSON(message: DataListWaitCondition): unknown {
+        const obj: any = {};
+        if (message.operation !== "") {
+            obj.operation = message.operation;
+        }
+        if (message.value !== "0") {
+            obj.value = message.value;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<DataListWaitCondition>): DataListWaitCondition {
+        return DataListWaitCondition.fromPartial(base ?? {});
+    },
+    fromPartial(object: DeepPartial<DataListWaitCondition>): DataListWaitCondition {
+        const message = createBaseDataListWaitCondition();
+        message.operation = object.operation ?? "";
+        message.value = object.value ?? "0";
         return message;
     },
 };

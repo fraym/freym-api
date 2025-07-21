@@ -547,6 +547,241 @@ func (b0 Data_builder) Build() *Data {
 	return m0
 }
 
+type DataWait struct {
+	state                      protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_ConditionFilter *DataFilter            `protobuf:"bytes,1,opt,name=condition_filter,json=conditionFilter,proto3"`
+	xxx_hidden_Timeout         int64                  `protobuf:"varint,2,opt,name=timeout,proto3"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
+}
+
+func (x *DataWait) Reset() {
+	*x = DataWait{}
+	mi := &file_crud_delivery_shared_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataWait) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataWait) ProtoMessage() {}
+
+func (x *DataWait) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_delivery_shared_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *DataWait) GetConditionFilter() *DataFilter {
+	if x != nil {
+		return x.xxx_hidden_ConditionFilter
+	}
+	return nil
+}
+
+func (x *DataWait) GetTimeout() int64 {
+	if x != nil {
+		return x.xxx_hidden_Timeout
+	}
+	return 0
+}
+
+func (x *DataWait) SetConditionFilter(v *DataFilter) {
+	x.xxx_hidden_ConditionFilter = v
+}
+
+func (x *DataWait) SetTimeout(v int64) {
+	x.xxx_hidden_Timeout = v
+}
+
+func (x *DataWait) HasConditionFilter() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_ConditionFilter != nil
+}
+
+func (x *DataWait) ClearConditionFilter() {
+	x.xxx_hidden_ConditionFilter = nil
+}
+
+type DataWait_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	ConditionFilter *DataFilter
+	Timeout         int64
+}
+
+func (b0 DataWait_builder) Build() *DataWait {
+	m0 := &DataWait{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_ConditionFilter = b.ConditionFilter
+	x.xxx_hidden_Timeout = b.Timeout
+	return m0
+}
+
+type DataListWait struct {
+	state                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Condition *DataListWaitCondition `protobuf:"bytes,1,opt,name=condition,proto3"`
+	xxx_hidden_Timeout   int64                  `protobuf:"varint,2,opt,name=timeout,proto3"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *DataListWait) Reset() {
+	*x = DataListWait{}
+	mi := &file_crud_delivery_shared_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataListWait) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataListWait) ProtoMessage() {}
+
+func (x *DataListWait) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_delivery_shared_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *DataListWait) GetCondition() *DataListWaitCondition {
+	if x != nil {
+		return x.xxx_hidden_Condition
+	}
+	return nil
+}
+
+func (x *DataListWait) GetTimeout() int64 {
+	if x != nil {
+		return x.xxx_hidden_Timeout
+	}
+	return 0
+}
+
+func (x *DataListWait) SetCondition(v *DataListWaitCondition) {
+	x.xxx_hidden_Condition = v
+}
+
+func (x *DataListWait) SetTimeout(v int64) {
+	x.xxx_hidden_Timeout = v
+}
+
+func (x *DataListWait) HasCondition() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Condition != nil
+}
+
+func (x *DataListWait) ClearCondition() {
+	x.xxx_hidden_Condition = nil
+}
+
+type DataListWait_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Condition *DataListWaitCondition
+	Timeout   int64
+}
+
+func (b0 DataListWait_builder) Build() *DataListWait {
+	m0 := &DataListWait{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Condition = b.Condition
+	x.xxx_hidden_Timeout = b.Timeout
+	return m0
+}
+
+type DataListWaitCondition struct {
+	state                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Operation string                 `protobuf:"bytes,1,opt,name=operation,proto3"`
+	xxx_hidden_Value     int64                  `protobuf:"varint,2,opt,name=value,proto3"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *DataListWaitCondition) Reset() {
+	*x = DataListWaitCondition{}
+	mi := &file_crud_delivery_shared_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataListWaitCondition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataListWaitCondition) ProtoMessage() {}
+
+func (x *DataListWaitCondition) ProtoReflect() protoreflect.Message {
+	mi := &file_crud_delivery_shared_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *DataListWaitCondition) GetOperation() string {
+	if x != nil {
+		return x.xxx_hidden_Operation
+	}
+	return ""
+}
+
+func (x *DataListWaitCondition) GetValue() int64 {
+	if x != nil {
+		return x.xxx_hidden_Value
+	}
+	return 0
+}
+
+func (x *DataListWaitCondition) SetOperation(v string) {
+	x.xxx_hidden_Operation = v
+}
+
+func (x *DataListWaitCondition) SetValue(v int64) {
+	x.xxx_hidden_Value = v
+}
+
+type DataListWaitCondition_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Operation string
+	Value     int64
+}
+
+func (b0 DataListWaitCondition_builder) Build() *DataListWaitCondition {
+	m0 := &DataListWaitCondition{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Operation = b.Operation
+	x.xxx_hidden_Value = b.Value
+	return m0
+}
+
 var File_crud_delivery_shared_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_shared_proto_rawDesc = "" +
@@ -585,38 +820,52 @@ const file_crud_delivery_shared_proto_rawDesc = "" +
 	"\x04data\x18\x01 \x03(\v2#.freym.crud.delivery.Data.DataEntryR\x04data\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*K\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"p\n" +
+	"\bDataWait\x12J\n" +
+	"\x10condition_filter\x18\x01 \x01(\v2\x1f.freym.crud.delivery.DataFilterR\x0fconditionFilter\x12\x18\n" +
+	"\atimeout\x18\x02 \x01(\x03R\atimeout\"r\n" +
+	"\fDataListWait\x12H\n" +
+	"\tcondition\x18\x01 \x01(\v2*.freym.crud.delivery.DataListWaitConditionR\tcondition\x12\x18\n" +
+	"\atimeout\x18\x02 \x01(\x03R\atimeout\"K\n" +
+	"\x15DataListWaitCondition\x12\x1c\n" +
+	"\toperation\x18\x01 \x01(\tR\toperation\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value*K\n" +
 	"\x10DeploymentTarget\x12\x1a\n" +
 	"\x16DEPLOYMENT_TARGET_BLUE\x10\x00\x12\x1b\n" +
 	"\x17DEPLOYMENT_TARGET_GREEN\x10\x01b\x06proto3"
 
 var file_crud_delivery_shared_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_crud_delivery_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_crud_delivery_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_crud_delivery_shared_proto_goTypes = []any{
-	(DeploymentTarget)(0),   // 0: freym.crud.delivery.DeploymentTarget
-	(*AuthData)(nil),        // 1: freym.crud.delivery.AuthData
-	(*DataFilter)(nil),      // 2: freym.crud.delivery.DataFilter
-	(*DataFieldFilter)(nil), // 3: freym.crud.delivery.DataFieldFilter
-	(*EventMetadata)(nil),   // 4: freym.crud.delivery.EventMetadata
-	(*DataOrder)(nil),       // 5: freym.crud.delivery.DataOrder
-	(*Data)(nil),            // 6: freym.crud.delivery.Data
-	nil,                     // 7: freym.crud.delivery.AuthData.DataEntry
-	nil,                     // 8: freym.crud.delivery.DataFilter.FieldsEntry
-	nil,                     // 9: freym.crud.delivery.Data.DataEntry
+	(DeploymentTarget)(0),         // 0: freym.crud.delivery.DeploymentTarget
+	(*AuthData)(nil),              // 1: freym.crud.delivery.AuthData
+	(*DataFilter)(nil),            // 2: freym.crud.delivery.DataFilter
+	(*DataFieldFilter)(nil),       // 3: freym.crud.delivery.DataFieldFilter
+	(*EventMetadata)(nil),         // 4: freym.crud.delivery.EventMetadata
+	(*DataOrder)(nil),             // 5: freym.crud.delivery.DataOrder
+	(*Data)(nil),                  // 6: freym.crud.delivery.Data
+	(*DataWait)(nil),              // 7: freym.crud.delivery.DataWait
+	(*DataListWait)(nil),          // 8: freym.crud.delivery.DataListWait
+	(*DataListWaitCondition)(nil), // 9: freym.crud.delivery.DataListWaitCondition
+	nil,                           // 10: freym.crud.delivery.AuthData.DataEntry
+	nil,                           // 11: freym.crud.delivery.DataFilter.FieldsEntry
+	nil,                           // 12: freym.crud.delivery.Data.DataEntry
 }
 var file_crud_delivery_shared_proto_depIdxs = []int32{
-	7, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
-	8, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
-	2, // 2: freym.crud.delivery.DataFilter.and:type_name -> freym.crud.delivery.DataFilter
-	2, // 3: freym.crud.delivery.DataFilter.or:type_name -> freym.crud.delivery.DataFilter
-	0, // 4: freym.crud.delivery.EventMetadata.target:type_name -> freym.crud.delivery.DeploymentTarget
-	9, // 5: freym.crud.delivery.Data.data:type_name -> freym.crud.delivery.Data.DataEntry
-	3, // 6: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	10, // 0: freym.crud.delivery.AuthData.data:type_name -> freym.crud.delivery.AuthData.DataEntry
+	11, // 1: freym.crud.delivery.DataFilter.fields:type_name -> freym.crud.delivery.DataFilter.FieldsEntry
+	2,  // 2: freym.crud.delivery.DataFilter.and:type_name -> freym.crud.delivery.DataFilter
+	2,  // 3: freym.crud.delivery.DataFilter.or:type_name -> freym.crud.delivery.DataFilter
+	0,  // 4: freym.crud.delivery.EventMetadata.target:type_name -> freym.crud.delivery.DeploymentTarget
+	12, // 5: freym.crud.delivery.Data.data:type_name -> freym.crud.delivery.Data.DataEntry
+	2,  // 6: freym.crud.delivery.DataWait.condition_filter:type_name -> freym.crud.delivery.DataFilter
+	9,  // 7: freym.crud.delivery.DataListWait.condition:type_name -> freym.crud.delivery.DataListWaitCondition
+	3,  // 8: freym.crud.delivery.DataFilter.FieldsEntry.value:type_name -> freym.crud.delivery.DataFieldFilter
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_crud_delivery_shared_proto_init() }
@@ -630,7 +879,7 @@ func file_crud_delivery_shared_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_crud_delivery_shared_proto_rawDesc), len(file_crud_delivery_shared_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   9,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

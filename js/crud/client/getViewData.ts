@@ -2,6 +2,7 @@ import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.c
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
+import { Wait, getProtobufDataWait } from "./wait";
 
 export const getViewData = async <T extends CrudData>(
     view: string,
@@ -9,7 +10,8 @@ export const getViewData = async <T extends CrudData>(
     filter: Filter,
     useStrongConsistency: boolean,
     target: DeploymentTarget,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    wait?: Wait
 ): Promise<T | null> => {
     return new Promise<T | null>((resolve, reject) => {
         serviceClient.getViewData(
@@ -19,6 +21,7 @@ export const getViewData = async <T extends CrudData>(
                 filter: getProtobufDataFilter(filter),
                 useStrongConsistency,
                 target,
+                wait: getProtobufDataWait(wait),
             },
             (error, response) => {
                 if (error) {

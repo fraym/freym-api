@@ -38,8 +38,43 @@ func (c *MockDeliveryClient) GetEntryList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*EntryList, error) {
-	args := c.Called(ctx, typeName, authData, pagination, filter, order, useStrongConsistency, target)
+	args := c.Called(ctx, typeName, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*EntryList), args.Error(1)
+}
+
+func (c *MockDeliveryClient) GetViewEntry(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	filter *Filter,
+	wait *Wait,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*Entry, error) {
+	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*Entry), args.Error(1)
+}
+
+func (c *MockDeliveryClient) GetViewEntryList(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *Filter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+	wait *ListWait,
+) (*EntryList, error) {
+	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -59,6 +94,21 @@ func (c *MockDeliveryClient) CreateEntry(
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*CreateResponse), args.Error(1)
+}
+
+func (c *MockDeliveryClient) UpsertEntry(
+	ctx context.Context,
+	typeName string,
+	authData *AuthData,
+	id string,
+	data Entry,
+	eventMetadata *EventMetadata,
+) (*UpsertResponse, error) {
+	args := c.Called(ctx, typeName, authData, id, data, eventMetadata)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*UpsertResponse), args.Error(1)
 }
 
 func (c *MockDeliveryClient) UpdateEntry(

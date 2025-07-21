@@ -2,7 +2,6 @@ package crud
 
 import (
 	"context"
-	"time"
 
 	"github.com/Becklyn/go-wire-core/json"
 
@@ -21,6 +20,12 @@ type EntryList struct {
 type Entry map[string]any
 
 type CreateResponse struct {
+	ValidationErrors      []string
+	FieldValidationErrors map[string]string
+	Entry                 Entry
+}
+
+type UpsertResponse struct {
 	ValidationErrors      []string
 	FieldValidationErrors map[string]string
 	Entry                 Entry
@@ -48,22 +53,6 @@ type CloneResponse struct {
 	Entry                 Entry
 }
 
-type Wait struct {
-	ConditionFilter  *Filter
-	ConditionTimeout time.Duration
-}
-
-func (w *Wait) toDeliveryWait() *deliverypb.DataWait {
-	if w == nil || w.ConditionFilter == nil {
-		return nil
-	}
-
-	return deliverypb.DataWait_builder{
-		ConditionFilter: w.ConditionFilter.toProtobufFilter(),
-		Timeout:         w.ConditionTimeout.Milliseconds(),
-	}.Build()
-}
-
 type DeliveryClient interface {
 	GetEntry(
 		ctx context.Context,
@@ -85,6 +74,27 @@ type DeliveryClient interface {
 		order []Order,
 		useStrongConsistency bool,
 		target deliverypb.DeploymentTarget,
+		wait *ListWait,
+	) (*EntryList, error)
+	GetViewEntry(
+		ctx context.Context,
+		view string,
+		authData *AuthData,
+		filter *Filter,
+		wait *Wait,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+	) (*Entry, error)
+	GetViewEntryList(
+		ctx context.Context,
+		view string,
+		authData *AuthData,
+		pagination *Pagination,
+		filter *Filter,
+		order []Order,
+		useStrongConsistency bool,
+		target deliverypb.DeploymentTarget,
+		wait *ListWait,
 	) (*EntryList, error)
 	CreateEntry(
 		ctx context.Context,
@@ -94,6 +104,14 @@ type DeliveryClient interface {
 		data Entry,
 		eventMetadata *EventMetadata,
 	) (*CreateResponse, error)
+	UpsertEntry(
+		ctx context.Context,
+		typeName string,
+		authData *AuthData,
+		id string,
+		data Entry,
+		eventMetadata *EventMetadata,
+	) (*UpsertResponse, error)
 	UpdateEntry(
 		ctx context.Context,
 		typeName string,
@@ -203,6 +221,7 @@ func (c *crudDeliveryClient) GetEntryList(
 	order []Order,
 	useStrongConsistency bool,
 	target deliverypb.DeploymentTarget,
+	wait *ListWait,
 ) (*EntryList, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -228,6 +247,101 @@ func (c *crudDeliveryClient) GetEntryList(
 		Order:                toProtobufOrder(order),
 		UseStrongConsistency: useStrongConsistency,
 		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	var result []Entry
+
+	for _, element := range response.GetResult() {
+		data, err := getEntryMap(element.GetData())
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, *data)
+	}
+
+	return &EntryList{
+		Limit:   response.GetLimit(),
+		Page:    response.GetPage(),
+		Total:   response.GetTotal(),
+		Entries: result,
+	}, nil
+}
+
+func (c *crudDeliveryClient) GetViewEntry(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	filter *Filter,
+	wait *Wait,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+) (*Entry, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
+		View:                 view,
+		Auth:                 pbAuthData,
+		Filter:               filter.toProtobufFilter(),
+		Wait:                 wait.toDeliveryWait(),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	result := response.GetResult()
+
+	if result == nil {
+		return nil, nil
+	}
+	return getEntryMap(result.GetData())
+}
+
+func (c *crudDeliveryClient) GetViewEntryList(
+	ctx context.Context,
+	view string,
+	authData *AuthData,
+	pagination *Pagination,
+	filter *Filter,
+	order []Order,
+	useStrongConsistency bool,
+	target deliverypb.DeploymentTarget,
+	wait *ListWait,
+) (*EntryList, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	var (
+		limit int64
+		page  int64
+	)
+
+	if pagination != nil {
+		limit = pagination.Limit
+		page = pagination.Page
+	}
+
+	response, err := c.client.GetViewDataList(ctx, deliverypb.GetViewDataListRequest_builder{
+		View:                 view,
+		Auth:                 pbAuthData,
+		Limit:                limit,
+		Page:                 page,
+		Filter:               filter.toProtobufFilter(),
+		Order:                toProtobufOrder(order),
+		UseStrongConsistency: useStrongConsistency,
+		Target:               target,
+		Wait:                 wait.toDeliveryListWait(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -322,6 +436,47 @@ func (c *crudDeliveryClient) CreateEntry(
 	}
 
 	return &CreateResponse{
+		ValidationErrors:      response.GetValidationErrors(),
+		FieldValidationErrors: response.GetFieldValidationErrors(),
+		Entry:                 *entry,
+	}, nil
+}
+
+func (c *crudDeliveryClient) UpsertEntry(
+	ctx context.Context,
+	typeName string,
+	authData *AuthData,
+	id string,
+	data Entry,
+	eventMetadata *EventMetadata,
+) (*UpsertResponse, error) {
+	pbAuthData, err := authData.getProtobufAuthData()
+	if err != nil {
+		return nil, err
+	}
+
+	entryMap, err := getEntryStringMap(data)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.client.Upsert(ctx, deliverypb.UpsertRequest_builder{
+		Type:          typeName,
+		Auth:          pbAuthData,
+		Id:            id,
+		Data:          entryMap,
+		EventMetadata: eventMetadata.getProtobufEventMetadata(),
+	}.Build())
+	if err != nil {
+		return nil, err
+	}
+
+	entry, err := getEntryMap(response.GetNewData())
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpsertResponse{
 		ValidationErrors:      response.GetValidationErrors(),
 		FieldValidationErrors: response.GetFieldValidationErrors(),
 		Entry:                 *entry,

@@ -9,7 +9,9 @@ import {
     AuthData,
     Data,
     DataFilter,
+    DataListWait,
     DataOrder,
+    DataWait,
     DeploymentTarget,
     deploymentTargetFromJSON,
     deploymentTargetToJSON,
@@ -22,6 +24,7 @@ export interface GetViewDataRequest {
     filter: DataFilter | undefined;
     useStrongConsistency: boolean;
     target: DeploymentTarget;
+    wait: DataWait | undefined;
 }
 
 export interface GetViewDataResponse {
@@ -37,6 +40,7 @@ export interface GetViewDataListRequest {
     order: DataOrder[];
     useStrongConsistency: boolean;
     target: DeploymentTarget;
+    wait: DataListWait | undefined;
 }
 
 export interface GetViewDataListResponse {
@@ -53,6 +57,7 @@ function createBaseGetViewDataRequest(): GetViewDataRequest {
         filter: undefined,
         useStrongConsistency: false,
         target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+        wait: undefined,
     };
 }
 
@@ -72,6 +77,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             writer.uint32(40).int32(deploymentTargetToNumber(message.target));
+        }
+        if (message.wait !== undefined) {
+            DataWait.encode(message.wait, writer.uint32(50).fork()).join();
         }
         return writer;
     },
@@ -123,6 +131,14 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                     message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
+                case 6: {
+                    if (tag !== 50) {
+                        break;
+                    }
+
+                    message.wait = DataWait.decode(reader, reader.uint32());
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -143,6 +159,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+            wait: isSet(object.wait) ? DataWait.fromJSON(object.wait) : undefined,
         };
     },
 
@@ -163,6 +180,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
+        if (message.wait !== undefined) {
+            obj.wait = DataWait.toJSON(message.wait);
+        }
         return obj;
     },
 
@@ -182,6 +202,10 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                 : undefined;
         message.useStrongConsistency = object.useStrongConsistency ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        message.wait =
+            object.wait !== undefined && object.wait !== null
+                ? DataWait.fromPartial(object.wait)
+                : undefined;
         return message;
     },
 };
@@ -257,6 +281,7 @@ function createBaseGetViewDataListRequest(): GetViewDataListRequest {
         order: [],
         useStrongConsistency: false,
         target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+        wait: undefined,
     };
 }
 
@@ -288,6 +313,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         }
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             writer.uint32(64).int32(deploymentTargetToNumber(message.target));
+        }
+        if (message.wait !== undefined) {
+            DataListWait.encode(message.wait, writer.uint32(74).fork()).join();
         }
         return writer;
     },
@@ -363,6 +391,14 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                     message.target = deploymentTargetFromJSON(reader.int32());
                     continue;
                 }
+                case 9: {
+                    if (tag !== 74) {
+                        break;
+                    }
+
+                    message.wait = DataListWait.decode(reader, reader.uint32());
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -388,6 +424,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
             target: isSet(object.target)
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
+            wait: isSet(object.wait) ? DataListWait.fromJSON(object.wait) : undefined,
         };
     },
 
@@ -417,6 +454,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         if (message.target !== DeploymentTarget.DEPLOYMENT_TARGET_BLUE) {
             obj.target = deploymentTargetToJSON(message.target);
         }
+        if (message.wait !== undefined) {
+            obj.wait = DataListWait.toJSON(message.wait);
+        }
         return obj;
     },
 
@@ -439,6 +479,10 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         message.order = object.order?.map(e => DataOrder.fromPartial(e)) || [];
         message.useStrongConsistency = object.useStrongConsistency ?? false;
         message.target = object.target ?? DeploymentTarget.DEPLOYMENT_TARGET_BLUE;
+        message.wait =
+            object.wait !== undefined && object.wait !== null
+                ? DataListWait.fromPartial(object.wait)
+                : undefined;
         return message;
     },
 };

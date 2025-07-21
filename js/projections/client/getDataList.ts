@@ -6,6 +6,7 @@ import { AuthData, getProtobufAuthData } from "./auth";
 import { ProjectionData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
 import { Order, getProtobufDataOrder } from "./order";
+import { ListWait, getProtobufDataListWait } from "./wait";
 
 export interface GetProjectionDataList<T extends ProjectionData> {
     limit: number;
@@ -23,7 +24,8 @@ export const getProjectionDataList = async <T extends ProjectionData>(
     order: Order[],
     useStrongConsistency: boolean,
     target: DeploymentTarget,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    wait?: ListWait
 ): Promise<GetProjectionDataList<T> | null> => {
     return new Promise<GetProjectionDataList<T> | null>((resolve, reject) => {
         serviceClient.getDataList(
@@ -36,6 +38,7 @@ export const getProjectionDataList = async <T extends ProjectionData>(
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
                 target,
+                wait: getProtobufDataListWait(wait),
             },
             (error, response) => {
                 if (error) {

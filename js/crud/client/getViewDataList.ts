@@ -3,6 +3,7 @@ import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
 import { Order, getProtobufDataOrder } from "./order";
+import { ListWait, getProtobufDataListWait } from "./wait";
 
 export interface GetViewDataList<T extends CrudData> {
     limit: number;
@@ -20,7 +21,8 @@ export const getViewDataList = async <T extends CrudData>(
     order: Order[],
     useStrongConsistency: boolean,
     target: DeploymentTarget,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    wait?: ListWait
 ): Promise<GetViewDataList<T> | null> => {
     return new Promise<GetViewDataList<T> | null>((resolve, reject) => {
         serviceClient.getViewDataList(
@@ -33,6 +35,7 @@ export const getViewDataList = async <T extends CrudData>(
                 order: getProtobufDataOrder(order),
                 useStrongConsistency,
                 target,
+                wait: getProtobufDataListWait(wait),
             },
             (error, response) => {
                 if (error) {

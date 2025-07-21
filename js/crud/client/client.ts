@@ -15,7 +15,8 @@ import { GetViewDataList, getViewDataList as getDataListFromView } from "./getVi
 import { Order } from "./order";
 import { UpdateResponse, updateCrudData } from "./update";
 import { UpdateByFilterResponse, updateCrudDataByFilter } from "./updateByFilter";
-import { Wait } from "./wait";
+import { UpsertResponse, upsertCrudData } from "./upsert";
+import { ListWait, Wait } from "./wait";
 
 export interface DeliveryClient {
     getData: <T extends CrudData>(
@@ -32,7 +33,8 @@ export interface DeliveryClient {
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        wait?: Wait
     ) => Promise<T | null>;
     getDataList: <T extends CrudData>(
         type: string,
@@ -42,7 +44,8 @@ export interface DeliveryClient {
         filter?: Filter,
         order?: Order[],
         useStrongConsistency?: boolean,
-        target?: DeploymentTarget
+        target?: DeploymentTarget,
+        wait?: ListWait
     ) => Promise<GetCrudDataList<T>>;
     getViewDataList: <T extends CrudData>(
         view: string,
@@ -51,7 +54,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean
+        useStrongConsistency?: boolean,
+        wait?: ListWait
     ) => Promise<GetCrudDataList<T> | null>;
     create: <T extends CrudData>(
         type: string,
@@ -60,6 +64,13 @@ export interface DeliveryClient {
         id?: string,
         eventMetadata?: Partial<EventMetadata>
     ) => Promise<CreateResponse<T>>;
+    upsert: <T extends CrudData>(
+        type: string,
+        authData: AuthData,
+        data: T,
+        id?: string,
+        eventMetadata?: Partial<EventMetadata>
+    ) => Promise<UpsertResponse<T>>;
     update: <T extends CrudData>(
         type: string,
         authData: AuthData,
@@ -134,7 +145,8 @@ export const newDeliveryClient = async (
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency: boolean = false
+        useStrongConsistency: boolean = false,
+        wait?: Wait
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,
@@ -142,7 +154,8 @@ export const newDeliveryClient = async (
             filter,
             !!useStrongConsistency,
             config.deploymentTarget,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 
@@ -154,7 +167,8 @@ export const newDeliveryClient = async (
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
         useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE"
+        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE",
+        wait?: ListWait
     ): Promise<GetCrudDataList<T>> => {
         return await getCrudDataList<T>(
             type,
@@ -165,7 +179,8 @@ export const newDeliveryClient = async (
             order,
             !!useStrongConsistency,
             target,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 
@@ -176,7 +191,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false
+        useStrongConsistency: boolean = false,
+        wait?: ListWait
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -187,7 +203,8 @@ export const newDeliveryClient = async (
             order,
             !!useStrongConsistency,
             config.deploymentTarget,
-            serviceClient
+            serviceClient,
+            wait
         );
     };
 
@@ -199,6 +216,24 @@ export const newDeliveryClient = async (
         eventMetadata: Partial<EventMetadata> | null = null
     ) => {
         return await createCrudData<T>(
+            type,
+            authData,
+            data,
+            id,
+            eventMetadata,
+            config.deploymentTarget,
+            serviceClient
+        );
+    };
+
+    const upsert = async <T extends CrudData>(
+        type: string,
+        authData: AuthData,
+        data: T,
+        id: string = "",
+        eventMetadata: Partial<EventMetadata> | null = null
+    ) => {
+        return await upsertCrudData<T>(
             type,
             authData,
             data,
@@ -309,6 +344,7 @@ export const newDeliveryClient = async (
         getDataList,
         getViewDataList,
         create,
+        upsert,
         update,
         updateByFilter,
         clone,

@@ -4,6 +4,7 @@ import "crud/delivery/get_data.proto";
 import "crud/delivery/get_view_data.proto";
 import "crud/delivery/create.proto";
 import "crud/delivery/update.proto";
+import "crud/delivery/upsert.proto";
 import "crud/delivery/delete.proto";
 import "crud/delivery/clone.proto";
   
@@ -13,6 +14,7 @@ service Service {
 	rpc GetDataList(GetDataListRequest) returns (GetDataListResponse);
 	rpc GetViewDataList(GetViewDataListRequest) returns (GetViewDataListResponse);
 	rpc Create(CreateRequest) returns (CreateResponse);
+	rpc Upsert(UpsertRequest) returns (UpsertResponse);
 	rpc Update(UpdateRequest) returns (UpdateResponse);
 	rpc UpdateByFilter(UpdateByFilterRequest) returns (UpdateByFilterResponse);
 	rpc Delete(DeleteRequest) returns (DeleteResponse);
