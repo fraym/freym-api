@@ -1,0 +1,17 @@
+syntax = "proto3";
+package freym.crud.delivery;
+import "crud/delivery/shared.proto";
+
+message UpsertRequest {
+	string type = 1;
+	AuthData auth = 2;
+	string id = 3;
+	map<string, string> data = 4;
+	EventMetadata event_metadata = 5;
+} 
+
+message UpsertResponse {
+	map<string, string> new_data = 1;
+	repeated string validation_errors = 2;
+	map<string, string> field_validation_errors = 3;
+}

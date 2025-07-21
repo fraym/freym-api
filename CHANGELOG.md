@@ -1,5 +1,10 @@
 # vNext
 
+- (feature) Add upsert rpc to crud
+- (feature) Add `wait` param to list data rpc
+- (feature) Add `wait` param to view data rpc
+- (feature) Add `wait` param to view data list rpc
+
 # v0.43.0
 
 - (feature) Add `current` and `set-current` commands to deployment command
