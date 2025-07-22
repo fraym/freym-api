@@ -46,7 +46,7 @@ message DataWait {
 }
 
 message DataListWait {
-	DataListWaitCondition condition = 1;
+	repeated DataListWaitCondition condition = 1;
 	int64 timeout = 2;
 }
 
