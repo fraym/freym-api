@@ -114,7 +114,7 @@ export interface DataWait {
 }
 
 export interface DataListWait {
-    condition: DataListWaitCondition | undefined;
+    condition: DataListWaitCondition[];
     timeout: string;
 }
 
@@ -1046,13 +1046,13 @@ export const DataWait: MessageFns<DataWait> = {
 };
 
 function createBaseDataListWait(): DataListWait {
-    return { condition: undefined, timeout: "0" };
+    return { condition: [], timeout: "0" };
 }
 
 export const DataListWait: MessageFns<DataListWait> = {
     encode(message: DataListWait, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-        if (message.condition !== undefined) {
-            DataListWaitCondition.encode(message.condition, writer.uint32(10).fork()).join();
+        for (const v of message.condition) {
+            DataListWaitCondition.encode(v!, writer.uint32(10).fork()).join();
         }
         if (message.timeout !== "0") {
             writer.uint32(16).int64(message.timeout);
@@ -1072,7 +1072,7 @@ export const DataListWait: MessageFns<DataListWait> = {
                         break;
                     }
 
-                    message.condition = DataListWaitCondition.decode(reader, reader.uint32());
+                    message.condition.push(DataListWaitCondition.decode(reader, reader.uint32()));
                     continue;
                 }
                 case 2: {
@@ -1094,17 +1094,17 @@ export const DataListWait: MessageFns<DataListWait> = {
 
     fromJSON(object: any): DataListWait {
         return {
-            condition: isSet(object.condition)
-                ? DataListWaitCondition.fromJSON(object.condition)
-                : undefined,
+            condition: globalThis.Array.isArray(object?.condition)
+                ? object.condition.map((e: any) => DataListWaitCondition.fromJSON(e))
+                : [],
             timeout: isSet(object.timeout) ? globalThis.String(object.timeout) : "0",
         };
     },
 
     toJSON(message: DataListWait): unknown {
         const obj: any = {};
-        if (message.condition !== undefined) {
-            obj.condition = DataListWaitCondition.toJSON(message.condition);
+        if (message.condition?.length) {
+            obj.condition = message.condition.map(e => DataListWaitCondition.toJSON(e));
         }
         if (message.timeout !== "0") {
             obj.timeout = message.timeout;
@@ -1117,10 +1117,7 @@ export const DataListWait: MessageFns<DataListWait> = {
     },
     fromPartial(object: DeepPartial<DataListWait>): DataListWait {
         const message = createBaseDataListWait();
-        message.condition =
-            object.condition !== undefined && object.condition !== null
-                ? DataListWaitCondition.fromPartial(object.condition)
-                : undefined;
+        message.condition = object.condition?.map(e => DataListWaitCondition.fromPartial(e)) || [];
         message.timeout = object.timeout ?? "0";
         return message;
     },

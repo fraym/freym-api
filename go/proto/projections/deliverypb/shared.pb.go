@@ -630,9 +630,9 @@ func (b0 DataWait_builder) Build() *DataWait {
 }
 
 type DataListWait struct {
-	state                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Condition *DataListWaitCondition `protobuf:"bytes,1,opt,name=condition,proto3"`
-	xxx_hidden_Timeout   int64                  `protobuf:"varint,2,opt,name=timeout,proto3"`
+	state                protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Condition *[]*DataListWaitCondition `protobuf:"bytes,1,rep,name=condition,proto3"`
+	xxx_hidden_Timeout   int64                     `protobuf:"varint,2,opt,name=timeout,proto3"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -662,9 +662,11 @@ func (x *DataListWait) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *DataListWait) GetCondition() *DataListWaitCondition {
+func (x *DataListWait) GetCondition() []*DataListWaitCondition {
 	if x != nil {
-		return x.xxx_hidden_Condition
+		if x.xxx_hidden_Condition != nil {
+			return *x.xxx_hidden_Condition
+		}
 	}
 	return nil
 }
@@ -676,29 +678,18 @@ func (x *DataListWait) GetTimeout() int64 {
 	return 0
 }
 
-func (x *DataListWait) SetCondition(v *DataListWaitCondition) {
-	x.xxx_hidden_Condition = v
+func (x *DataListWait) SetCondition(v []*DataListWaitCondition) {
+	x.xxx_hidden_Condition = &v
 }
 
 func (x *DataListWait) SetTimeout(v int64) {
 	x.xxx_hidden_Timeout = v
 }
 
-func (x *DataListWait) HasCondition() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Condition != nil
-}
-
-func (x *DataListWait) ClearCondition() {
-	x.xxx_hidden_Condition = nil
-}
-
 type DataListWait_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Condition *DataListWaitCondition
+	Condition []*DataListWaitCondition
 	Timeout   int64
 }
 
@@ -706,7 +697,7 @@ func (b0 DataListWait_builder) Build() *DataListWait {
 	m0 := &DataListWait{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.xxx_hidden_Condition = b.Condition
+	x.xxx_hidden_Condition = &b.Condition
 	x.xxx_hidden_Timeout = b.Timeout
 	return m0
 }
@@ -825,7 +816,7 @@ const file_projections_delivery_shared_proto_rawDesc = "" +
 	"\x10condition_filter\x18\x01 \x01(\v2&.freym.projections.delivery.DataFilterR\x0fconditionFilter\x12\x18\n" +
 	"\atimeout\x18\x02 \x01(\x03R\atimeout\"y\n" +
 	"\fDataListWait\x12O\n" +
-	"\tcondition\x18\x01 \x01(\v21.freym.projections.delivery.DataListWaitConditionR\tcondition\x12\x18\n" +
+	"\tcondition\x18\x01 \x03(\v21.freym.projections.delivery.DataListWaitConditionR\tcondition\x12\x18\n" +
 	"\atimeout\x18\x02 \x01(\x03R\atimeout\"K\n" +
 	"\x15DataListWaitCondition\x12\x1c\n" +
 	"\toperation\x18\x01 \x01(\tR\toperation\x12\x14\n" +

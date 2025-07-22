@@ -19,7 +19,7 @@ export const getProtobufDataWait = (wait?: Wait): DataWait | undefined => {
 
 export interface ListWait {
     timeout?: number;
-    condition: DataListWaitCondition;
+    condition: DataListWaitCondition[];
 }
 
 export interface DataListWaitCondition {
@@ -33,10 +33,10 @@ export const getProtobufDataListWait = (wait?: ListWait): DataListWait | undefin
     }
 
     return {
-        condition: {
-            operation: wait.condition.operation,
-            value: wait.condition.value.toString(),
-        },
+        condition: wait.condition.map(condition => ({
+            operation: condition.operation,
+            value: condition.value.toString(),
+        })),
         timeout: (wait.timeout ?? 0).toString(),
     };
 };

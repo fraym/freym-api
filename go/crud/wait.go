@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/fraym/freym-api/go/proto/crud/deliverypb"
+	"github.com/samber/lo"
 )
 
 type Wait struct {
@@ -23,7 +24,7 @@ func (w *Wait) toDeliveryWait() *deliverypb.DataWait {
 }
 
 type ListWait struct {
-	Condition        *ListWaitCondition
+	Condition        []ListWaitCondition
 	ConditionTimeout time.Duration
 }
 
@@ -38,10 +39,12 @@ func (w *ListWait) toDeliveryListWait() *deliverypb.DataListWait {
 	}
 
 	return deliverypb.DataListWait_builder{
-		Condition: deliverypb.DataListWaitCondition_builder{
-			Operation: w.Condition.Operation,
-			Value:     w.Condition.Value,
-		}.Build(),
+		Condition: lo.Map(w.Condition, func(condition ListWaitCondition, _ int) *deliverypb.DataListWaitCondition {
+			return deliverypb.DataListWaitCondition_builder{
+				Operation: condition.Operation,
+				Value:     condition.Value,
+			}.Build()
+		}),
 		Timeout: w.ConditionTimeout.Milliseconds(),
 	}.Build()
 }
