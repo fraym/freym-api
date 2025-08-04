@@ -19,22 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Service_Publish_FullMethodName                    = "/freym.streams.management.Service/Publish"
-	Service_Subscribe_FullMethodName                  = "/freym.streams.management.Service/Subscribe"
-	Service_GetEvent_FullMethodName                   = "/freym.streams.management.Service/GetEvent"
-	Service_GetLastEvent_FullMethodName               = "/freym.streams.management.Service/GetLastEvent"
-	Service_GetLastHandledEvent_FullMethodName        = "/freym.streams.management.Service/GetLastHandledEvent"
-	Service_GetLastEventByTypes_FullMethodName        = "/freym.streams.management.Service/GetLastEventByTypes"
-	Service_IsStreamEmpty_FullMethodName              = "/freym.streams.management.Service/IsStreamEmpty"
-	Service_PaginateStream_FullMethodName             = "/freym.streams.management.Service/PaginateStream"
-	Service_PaginateStreamAfterEventId_FullMethodName = "/freym.streams.management.Service/PaginateStreamAfterEventId"
-	Service_PaginateEvents_FullMethodName             = "/freym.streams.management.Service/PaginateEvents"
-	Service_PaginateEventsAfterEventId_FullMethodName = "/freym.streams.management.Service/PaginateEventsAfterEventId"
-	Service_IntroduceGdprOnEventField_FullMethodName  = "/freym.streams.management.Service/IntroduceGdprOnEventField"
-	Service_InvalidateGdpr_FullMethodName             = "/freym.streams.management.Service/InvalidateGdpr"
-	Service_BackchannelEvent_FullMethodName           = "/freym.streams.management.Service/BackchannelEvent"
-	Service_CreateStreamSnapshot_FullMethodName       = "/freym.streams.management.Service/CreateStreamSnapshot"
-	Service_RenameEventType_FullMethodName            = "/freym.streams.management.Service/RenameEventType"
+	Service_Publish_FullMethodName                         = "/freym.streams.management.Service/Publish"
+	Service_Subscribe_FullMethodName                       = "/freym.streams.management.Service/Subscribe"
+	Service_GetEvent_FullMethodName                        = "/freym.streams.management.Service/GetEvent"
+	Service_GetLastEvent_FullMethodName                    = "/freym.streams.management.Service/GetLastEvent"
+	Service_GetLastHandledEvent_FullMethodName             = "/freym.streams.management.Service/GetLastHandledEvent"
+	Service_GetLastEventByTypes_FullMethodName             = "/freym.streams.management.Service/GetLastEventByTypes"
+	Service_PaginateEvents_FullMethodName                  = "/freym.streams.management.Service/PaginateEvents"
+	Service_PaginateEventsAfterEventId_FullMethodName      = "/freym.streams.management.Service/PaginateEventsAfterEventId"
+	Service_IsStreamEmpty_FullMethodName                   = "/freym.streams.management.Service/IsStreamEmpty"
+	Service_PaginateStream_FullMethodName                  = "/freym.streams.management.Service/PaginateStream"
+	Service_PaginateStreamAfterEventId_FullMethodName      = "/freym.streams.management.Service/PaginateStreamAfterEventId"
+	Service_IntroduceGdprOnEventField_FullMethodName       = "/freym.streams.management.Service/IntroduceGdprOnEventField"
+	Service_InvalidateGdpr_FullMethodName                  = "/freym.streams.management.Service/InvalidateGdpr"
+	Service_CreateStreamSnapshot_FullMethodName            = "/freym.streams.management.Service/CreateStreamSnapshot"
+	Service_RenameEventType_FullMethodName                 = "/freym.streams.management.Service/RenameEventType"
+	Service_WaitForTransactionalConsistency_FullMethodName = "/freym.streams.management.Service/WaitForTransactionalConsistency"
+	Service_Backchannel_FullMethodName                     = "/freym.streams.management.Service/Backchannel"
 )
 
 // ServiceClient is the client API for Service service.
@@ -47,16 +48,17 @@ type ServiceClient interface {
 	GetLastEvent(ctx context.Context, in *GetLastEventRequest, opts ...grpc.CallOption) (*Event, error)
 	GetLastHandledEvent(ctx context.Context, in *GetLastHandledEventRequest, opts ...grpc.CallOption) (*Event, error)
 	GetLastEventByTypes(ctx context.Context, in *GetLastEventByTypesRequest, opts ...grpc.CallOption) (*Event, error)
+	PaginateEvents(ctx context.Context, in *PaginateEventsRequest, opts ...grpc.CallOption) (*PaginateEventsResponse, error)
+	PaginateEventsAfterEventId(ctx context.Context, in *PaginateEventsAfterEventIdRequest, opts ...grpc.CallOption) (*PaginateEventsAfterEventIdResponse, error)
 	IsStreamEmpty(ctx context.Context, in *IsStreamEmptyRequest, opts ...grpc.CallOption) (*IsStreamEmptyResponse, error)
 	PaginateStream(ctx context.Context, in *PaginateStreamRequest, opts ...grpc.CallOption) (*PaginateStreamResponse, error)
 	PaginateStreamAfterEventId(ctx context.Context, in *PaginateStreamAfterEventIdRequest, opts ...grpc.CallOption) (*PaginateStreamAfterEventIdResponse, error)
-	PaginateEvents(ctx context.Context, in *PaginateEventsRequest, opts ...grpc.CallOption) (*PaginateEventsResponse, error)
-	PaginateEventsAfterEventId(ctx context.Context, in *PaginateEventsAfterEventIdRequest, opts ...grpc.CallOption) (*PaginateEventsAfterEventIdResponse, error)
 	IntroduceGdprOnEventField(ctx context.Context, in *IntroduceGdprOnEventFieldRequest, opts ...grpc.CallOption) (*IntroduceGdprOnEventFieldResponse, error)
 	InvalidateGdpr(ctx context.Context, in *InvalidateGdprRequest, opts ...grpc.CallOption) (*InvalidateGdprResponse, error)
-	BackchannelEvent(ctx context.Context, in *BackchannelEventRequest, opts ...grpc.CallOption) (*BackchannelEventResponse, error)
 	CreateStreamSnapshot(ctx context.Context, in *CreateStreamSnapshotRequest, opts ...grpc.CallOption) (*CreateStreamSnapshotResponse, error)
 	RenameEventType(ctx context.Context, in *RenameEventTypeRequest, opts ...grpc.CallOption) (*RenameEventTypeResponse, error)
+	WaitForTransactionalConsistency(ctx context.Context, in *WaitForTransactionalConsistencyRequest, opts ...grpc.CallOption) (*WaitForTransactionalConsistencyResponse, error)
+	Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error)
 }
 
 type serviceClient struct {
@@ -130,6 +132,26 @@ func (c *serviceClient) GetLastEventByTypes(ctx context.Context, in *GetLastEven
 	return out, nil
 }
 
+func (c *serviceClient) PaginateEvents(ctx context.Context, in *PaginateEventsRequest, opts ...grpc.CallOption) (*PaginateEventsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaginateEventsResponse)
+	err := c.cc.Invoke(ctx, Service_PaginateEvents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) PaginateEventsAfterEventId(ctx context.Context, in *PaginateEventsAfterEventIdRequest, opts ...grpc.CallOption) (*PaginateEventsAfterEventIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaginateEventsAfterEventIdResponse)
+	err := c.cc.Invoke(ctx, Service_PaginateEventsAfterEventId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) IsStreamEmpty(ctx context.Context, in *IsStreamEmptyRequest, opts ...grpc.CallOption) (*IsStreamEmptyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(IsStreamEmptyResponse)
@@ -160,26 +182,6 @@ func (c *serviceClient) PaginateStreamAfterEventId(ctx context.Context, in *Pagi
 	return out, nil
 }
 
-func (c *serviceClient) PaginateEvents(ctx context.Context, in *PaginateEventsRequest, opts ...grpc.CallOption) (*PaginateEventsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PaginateEventsResponse)
-	err := c.cc.Invoke(ctx, Service_PaginateEvents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) PaginateEventsAfterEventId(ctx context.Context, in *PaginateEventsAfterEventIdRequest, opts ...grpc.CallOption) (*PaginateEventsAfterEventIdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PaginateEventsAfterEventIdResponse)
-	err := c.cc.Invoke(ctx, Service_PaginateEventsAfterEventId_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *serviceClient) IntroduceGdprOnEventField(ctx context.Context, in *IntroduceGdprOnEventFieldRequest, opts ...grpc.CallOption) (*IntroduceGdprOnEventFieldResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(IntroduceGdprOnEventFieldResponse)
@@ -194,16 +196,6 @@ func (c *serviceClient) InvalidateGdpr(ctx context.Context, in *InvalidateGdprRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(InvalidateGdprResponse)
 	err := c.cc.Invoke(ctx, Service_InvalidateGdpr_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) BackchannelEvent(ctx context.Context, in *BackchannelEventRequest, opts ...grpc.CallOption) (*BackchannelEventResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BackchannelEventResponse)
-	err := c.cc.Invoke(ctx, Service_BackchannelEvent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -230,6 +222,26 @@ func (c *serviceClient) RenameEventType(ctx context.Context, in *RenameEventType
 	return out, nil
 }
 
+func (c *serviceClient) WaitForTransactionalConsistency(ctx context.Context, in *WaitForTransactionalConsistencyRequest, opts ...grpc.CallOption) (*WaitForTransactionalConsistencyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WaitForTransactionalConsistencyResponse)
+	err := c.cc.Invoke(ctx, Service_WaitForTransactionalConsistency_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BackchannelResponse)
+	err := c.cc.Invoke(ctx, Service_Backchannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility.
@@ -240,16 +252,17 @@ type ServiceServer interface {
 	GetLastEvent(context.Context, *GetLastEventRequest) (*Event, error)
 	GetLastHandledEvent(context.Context, *GetLastHandledEventRequest) (*Event, error)
 	GetLastEventByTypes(context.Context, *GetLastEventByTypesRequest) (*Event, error)
+	PaginateEvents(context.Context, *PaginateEventsRequest) (*PaginateEventsResponse, error)
+	PaginateEventsAfterEventId(context.Context, *PaginateEventsAfterEventIdRequest) (*PaginateEventsAfterEventIdResponse, error)
 	IsStreamEmpty(context.Context, *IsStreamEmptyRequest) (*IsStreamEmptyResponse, error)
 	PaginateStream(context.Context, *PaginateStreamRequest) (*PaginateStreamResponse, error)
 	PaginateStreamAfterEventId(context.Context, *PaginateStreamAfterEventIdRequest) (*PaginateStreamAfterEventIdResponse, error)
-	PaginateEvents(context.Context, *PaginateEventsRequest) (*PaginateEventsResponse, error)
-	PaginateEventsAfterEventId(context.Context, *PaginateEventsAfterEventIdRequest) (*PaginateEventsAfterEventIdResponse, error)
 	IntroduceGdprOnEventField(context.Context, *IntroduceGdprOnEventFieldRequest) (*IntroduceGdprOnEventFieldResponse, error)
 	InvalidateGdpr(context.Context, *InvalidateGdprRequest) (*InvalidateGdprResponse, error)
-	BackchannelEvent(context.Context, *BackchannelEventRequest) (*BackchannelEventResponse, error)
 	CreateStreamSnapshot(context.Context, *CreateStreamSnapshotRequest) (*CreateStreamSnapshotResponse, error)
 	RenameEventType(context.Context, *RenameEventTypeRequest) (*RenameEventTypeResponse, error)
+	WaitForTransactionalConsistency(context.Context, *WaitForTransactionalConsistencyRequest) (*WaitForTransactionalConsistencyResponse, error)
+	Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -278,6 +291,12 @@ func (UnimplementedServiceServer) GetLastHandledEvent(context.Context, *GetLastH
 func (UnimplementedServiceServer) GetLastEventByTypes(context.Context, *GetLastEventByTypesRequest) (*Event, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLastEventByTypes not implemented")
 }
+func (UnimplementedServiceServer) PaginateEvents(context.Context, *PaginateEventsRequest) (*PaginateEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PaginateEvents not implemented")
+}
+func (UnimplementedServiceServer) PaginateEventsAfterEventId(context.Context, *PaginateEventsAfterEventIdRequest) (*PaginateEventsAfterEventIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PaginateEventsAfterEventId not implemented")
+}
 func (UnimplementedServiceServer) IsStreamEmpty(context.Context, *IsStreamEmptyRequest) (*IsStreamEmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsStreamEmpty not implemented")
 }
@@ -287,26 +306,23 @@ func (UnimplementedServiceServer) PaginateStream(context.Context, *PaginateStrea
 func (UnimplementedServiceServer) PaginateStreamAfterEventId(context.Context, *PaginateStreamAfterEventIdRequest) (*PaginateStreamAfterEventIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PaginateStreamAfterEventId not implemented")
 }
-func (UnimplementedServiceServer) PaginateEvents(context.Context, *PaginateEventsRequest) (*PaginateEventsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PaginateEvents not implemented")
-}
-func (UnimplementedServiceServer) PaginateEventsAfterEventId(context.Context, *PaginateEventsAfterEventIdRequest) (*PaginateEventsAfterEventIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PaginateEventsAfterEventId not implemented")
-}
 func (UnimplementedServiceServer) IntroduceGdprOnEventField(context.Context, *IntroduceGdprOnEventFieldRequest) (*IntroduceGdprOnEventFieldResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IntroduceGdprOnEventField not implemented")
 }
 func (UnimplementedServiceServer) InvalidateGdpr(context.Context, *InvalidateGdprRequest) (*InvalidateGdprResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InvalidateGdpr not implemented")
 }
-func (UnimplementedServiceServer) BackchannelEvent(context.Context, *BackchannelEventRequest) (*BackchannelEventResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BackchannelEvent not implemented")
-}
 func (UnimplementedServiceServer) CreateStreamSnapshot(context.Context, *CreateStreamSnapshotRequest) (*CreateStreamSnapshotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStreamSnapshot not implemented")
 }
 func (UnimplementedServiceServer) RenameEventType(context.Context, *RenameEventTypeRequest) (*RenameEventTypeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RenameEventType not implemented")
+}
+func (UnimplementedServiceServer) WaitForTransactionalConsistency(context.Context, *WaitForTransactionalConsistencyRequest) (*WaitForTransactionalConsistencyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WaitForTransactionalConsistency not implemented")
+}
+func (UnimplementedServiceServer) Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Backchannel not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 func (UnimplementedServiceServer) testEmbeddedByValue()                 {}
@@ -426,6 +442,42 @@ func _Service_GetLastEventByTypes_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_PaginateEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaginateEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PaginateEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PaginateEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PaginateEvents(ctx, req.(*PaginateEventsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_PaginateEventsAfterEventId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaginateEventsAfterEventIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PaginateEventsAfterEventId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PaginateEventsAfterEventId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PaginateEventsAfterEventId(ctx, req.(*PaginateEventsAfterEventIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_IsStreamEmpty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IsStreamEmptyRequest)
 	if err := dec(in); err != nil {
@@ -480,42 +532,6 @@ func _Service_PaginateStreamAfterEventId_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_PaginateEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PaginateEventsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).PaginateEvents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_PaginateEvents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).PaginateEvents(ctx, req.(*PaginateEventsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_PaginateEventsAfterEventId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PaginateEventsAfterEventIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).PaginateEventsAfterEventId(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_PaginateEventsAfterEventId_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).PaginateEventsAfterEventId(ctx, req.(*PaginateEventsAfterEventIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Service_IntroduceGdprOnEventField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IntroduceGdprOnEventFieldRequest)
 	if err := dec(in); err != nil {
@@ -548,24 +564,6 @@ func _Service_InvalidateGdpr_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).InvalidateGdpr(ctx, req.(*InvalidateGdprRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_BackchannelEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BackchannelEventRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).BackchannelEvent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_BackchannelEvent_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).BackchannelEvent(ctx, req.(*BackchannelEventRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -606,6 +604,42 @@ func _Service_RenameEventType_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_WaitForTransactionalConsistency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WaitForTransactionalConsistencyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).WaitForTransactionalConsistency(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_WaitForTransactionalConsistency_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).WaitForTransactionalConsistency(ctx, req.(*WaitForTransactionalConsistencyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_Backchannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BackchannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Backchannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Backchannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Backchannel(ctx, req.(*BackchannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -634,6 +668,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_GetLastEventByTypes_Handler,
 		},
 		{
+			MethodName: "PaginateEvents",
+			Handler:    _Service_PaginateEvents_Handler,
+		},
+		{
+			MethodName: "PaginateEventsAfterEventId",
+			Handler:    _Service_PaginateEventsAfterEventId_Handler,
+		},
+		{
 			MethodName: "IsStreamEmpty",
 			Handler:    _Service_IsStreamEmpty_Handler,
 		},
@@ -646,14 +688,6 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_PaginateStreamAfterEventId_Handler,
 		},
 		{
-			MethodName: "PaginateEvents",
-			Handler:    _Service_PaginateEvents_Handler,
-		},
-		{
-			MethodName: "PaginateEventsAfterEventId",
-			Handler:    _Service_PaginateEventsAfterEventId_Handler,
-		},
-		{
 			MethodName: "IntroduceGdprOnEventField",
 			Handler:    _Service_IntroduceGdprOnEventField_Handler,
 		},
@@ -662,16 +696,20 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_InvalidateGdpr_Handler,
 		},
 		{
-			MethodName: "BackchannelEvent",
-			Handler:    _Service_BackchannelEvent_Handler,
-		},
-		{
 			MethodName: "CreateStreamSnapshot",
 			Handler:    _Service_CreateStreamSnapshot_Handler,
 		},
 		{
 			MethodName: "RenameEventType",
 			Handler:    _Service_RenameEventType_Handler,
+		},
+		{
+			MethodName: "WaitForTransactionalConsistency",
+			Handler:    _Service_WaitForTransactionalConsistency_Handler,
+		},
+		{
+			MethodName: "Backchannel",
+			Handler:    _Service_Backchannel_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

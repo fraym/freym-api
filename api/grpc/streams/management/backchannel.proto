@@ -2,10 +2,11 @@ syntax = "proto3";
 package freym.streams.management;
 import "streams/management/event.proto";
 
-message BackchannelEventRequest {
+message BackchannelRequest {
 	oneof payload {
 		Event broadcast = 1;
 		BackchannelNotice notice = 2;
+		BackchannelTransactionDoneNotice handled = 3;
 	}
 }
 
@@ -14,4 +15,10 @@ message BackchannelNotice {
 	string topic = 2;
 }
 
-message BackchannelEventResponse {}
+message BackchannelTransactionDoneNotice {
+	string tenant_id = 1;
+	string topic = 2;
+	string correlation_id = 3;
+}
+
+message BackchannelResponse {}

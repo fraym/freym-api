@@ -1,0 +1,14 @@
+syntax = "proto3";
+package freym.streams.management;
+
+message WaitForTransactionalConsistencyRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string subscriber_group = 3;
+	string correlation_id = 4;
+}
+
+message WaitForTransactionalConsistencyResponse {
+	bool success = 1;
+	string error = 2;
+}

@@ -9,22 +9,29 @@ import "streams/management/backchannel.proto";
 import "streams/management/stream.proto";
 import "streams/management/snapshot.proto";
 import "streams/management/rename.proto";
+import "streams/management/transaction.proto";
 
 service Service {
 	rpc Publish (PublishRequest) returns (PublishResponse);
 	rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse);
+
 	rpc GetEvent(GetEventRequest) returns (Event);
 	rpc GetLastEvent(GetLastEventRequest) returns (Event);
 	rpc GetLastHandledEvent(GetLastHandledEventRequest) returns (Event);
 	rpc GetLastEventByTypes(GetLastEventByTypesRequest) returns (Event);
+	rpc PaginateEvents(PaginateEventsRequest) returns (PaginateEventsResponse);
+	rpc PaginateEventsAfterEventId(PaginateEventsAfterEventIdRequest) returns (PaginateEventsAfterEventIdResponse);
+
 	rpc IsStreamEmpty(IsStreamEmptyRequest) returns (IsStreamEmptyResponse);
 	rpc PaginateStream(PaginateStreamRequest) returns (PaginateStreamResponse);
 	rpc PaginateStreamAfterEventId(PaginateStreamAfterEventIdRequest) returns (PaginateStreamAfterEventIdResponse);
-	rpc PaginateEvents(PaginateEventsRequest) returns (PaginateEventsResponse);
-	rpc PaginateEventsAfterEventId(PaginateEventsAfterEventIdRequest) returns (PaginateEventsAfterEventIdResponse);
+
 	rpc IntroduceGdprOnEventField(IntroduceGdprOnEventFieldRequest) returns (IntroduceGdprOnEventFieldResponse);
 	rpc InvalidateGdpr(InvalidateGdprRequest) returns (InvalidateGdprResponse);
-	rpc BackchannelEvent(BackchannelEventRequest) returns (BackchannelEventResponse);
+
 	rpc CreateStreamSnapshot(CreateStreamSnapshotRequest) returns (CreateStreamSnapshotResponse);
 	rpc RenameEventType(RenameEventTypeRequest) returns (RenameEventTypeResponse);
+	rpc WaitForTransactionalConsistency(WaitForTransactionalConsistencyRequest) returns (WaitForTransactionalConsistencyResponse);
+
+	rpc Backchannel(BackchannelRequest) returns (BackchannelResponse);
 }

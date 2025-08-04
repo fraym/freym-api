@@ -7,10 +7,14 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Event } from "./event";
 
-export interface BackchannelEventRequest {
+export interface BackchannelRequest {
     payload?:
         | { $case: "broadcast"; broadcast: Event }
         | { $case: "notice"; notice: BackchannelNotice }
+        | {
+              $case: "handled";
+              handled: BackchannelTransactionDoneNotice;
+          }
         | undefined;
 }
 
@@ -19,17 +23,20 @@ export interface BackchannelNotice {
     topic: string;
 }
 
-export interface BackchannelEventResponse {}
+export interface BackchannelTransactionDoneNotice {
+    tenantId: string;
+    topic: string;
+    correlationId: string;
+}
 
-function createBaseBackchannelEventRequest(): BackchannelEventRequest {
+export interface BackchannelResponse {}
+
+function createBaseBackchannelRequest(): BackchannelRequest {
     return { payload: undefined };
 }
 
-export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
-    encode(
-        message: BackchannelEventRequest,
-        writer: BinaryWriter = new BinaryWriter()
-    ): BinaryWriter {
+export const BackchannelRequest: MessageFns<BackchannelRequest> = {
+    encode(message: BackchannelRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
         switch (message.payload?.$case) {
             case "broadcast":
                 Event.encode(message.payload.broadcast, writer.uint32(10).fork()).join();
@@ -37,14 +44,20 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
             case "notice":
                 BackchannelNotice.encode(message.payload.notice, writer.uint32(18).fork()).join();
                 break;
+            case "handled":
+                BackchannelTransactionDoneNotice.encode(
+                    message.payload.handled,
+                    writer.uint32(26).fork()
+                ).join();
+                break;
         }
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelEventRequest {
+    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelRequest {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         const end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseBackchannelEventRequest();
+        const message = createBaseBackchannelRequest();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -70,6 +83,17 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
                     };
                     continue;
                 }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.payload = {
+                        $case: "handled",
+                        handled: BackchannelTransactionDoneNotice.decode(reader, reader.uint32()),
+                    };
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -79,31 +103,38 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
         return message;
     },
 
-    fromJSON(object: any): BackchannelEventRequest {
+    fromJSON(object: any): BackchannelRequest {
         return {
             payload: isSet(object.broadcast)
                 ? { $case: "broadcast", broadcast: Event.fromJSON(object.broadcast) }
                 : isSet(object.notice)
                   ? { $case: "notice", notice: BackchannelNotice.fromJSON(object.notice) }
-                  : undefined,
+                  : isSet(object.handled)
+                    ? {
+                          $case: "handled",
+                          handled: BackchannelTransactionDoneNotice.fromJSON(object.handled),
+                      }
+                    : undefined,
         };
     },
 
-    toJSON(message: BackchannelEventRequest): unknown {
+    toJSON(message: BackchannelRequest): unknown {
         const obj: any = {};
         if (message.payload?.$case === "broadcast") {
             obj.broadcast = Event.toJSON(message.payload.broadcast);
         } else if (message.payload?.$case === "notice") {
             obj.notice = BackchannelNotice.toJSON(message.payload.notice);
+        } else if (message.payload?.$case === "handled") {
+            obj.handled = BackchannelTransactionDoneNotice.toJSON(message.payload.handled);
         }
         return obj;
     },
 
-    create(base?: DeepPartial<BackchannelEventRequest>): BackchannelEventRequest {
-        return BackchannelEventRequest.fromPartial(base ?? {});
+    create(base?: DeepPartial<BackchannelRequest>): BackchannelRequest {
+        return BackchannelRequest.fromPartial(base ?? {});
     },
-    fromPartial(object: DeepPartial<BackchannelEventRequest>): BackchannelEventRequest {
-        const message = createBaseBackchannelEventRequest();
+    fromPartial(object: DeepPartial<BackchannelRequest>): BackchannelRequest {
+        const message = createBaseBackchannelRequest();
         switch (object.payload?.$case) {
             case "broadcast": {
                 if (object.payload?.broadcast !== undefined && object.payload?.broadcast !== null) {
@@ -119,6 +150,17 @@ export const BackchannelEventRequest: MessageFns<BackchannelEventRequest> = {
                     message.payload = {
                         $case: "notice",
                         notice: BackchannelNotice.fromPartial(object.payload.notice),
+                    };
+                }
+                break;
+            }
+            case "handled": {
+                if (object.payload?.handled !== undefined && object.payload?.handled !== null) {
+                    message.payload = {
+                        $case: "handled",
+                        handled: BackchannelTransactionDoneNotice.fromPartial(
+                            object.payload.handled
+                        ),
                     };
                 }
                 break;
@@ -204,19 +246,118 @@ export const BackchannelNotice: MessageFns<BackchannelNotice> = {
     },
 };
 
-function createBaseBackchannelEventResponse(): BackchannelEventResponse {
-    return {};
+function createBaseBackchannelTransactionDoneNotice(): BackchannelTransactionDoneNotice {
+    return { tenantId: "", topic: "", correlationId: "" };
 }
 
-export const BackchannelEventResponse: MessageFns<BackchannelEventResponse> = {
-    encode(_: BackchannelEventResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const BackchannelTransactionDoneNotice: MessageFns<BackchannelTransactionDoneNotice> = {
+    encode(
+        message: BackchannelTransactionDoneNotice,
+        writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+        if (message.tenantId !== "") {
+            writer.uint32(10).string(message.tenantId);
+        }
+        if (message.topic !== "") {
+            writer.uint32(18).string(message.topic);
+        }
+        if (message.correlationId !== "") {
+            writer.uint32(26).string(message.correlationId);
+        }
         return writer;
     },
 
-    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelEventResponse {
+    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelTransactionDoneNotice {
         const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
         const end = length === undefined ? reader.len : reader.pos + length;
-        const message = createBaseBackchannelEventResponse();
+        const message = createBaseBackchannelTransactionDoneNotice();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1: {
+                    if (tag !== 10) {
+                        break;
+                    }
+
+                    message.tenantId = reader.string();
+                    continue;
+                }
+                case 2: {
+                    if (tag !== 18) {
+                        break;
+                    }
+
+                    message.topic = reader.string();
+                    continue;
+                }
+                case 3: {
+                    if (tag !== 26) {
+                        break;
+                    }
+
+                    message.correlationId = reader.string();
+                    continue;
+                }
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skip(tag & 7);
+        }
+        return message;
+    },
+
+    fromJSON(object: any): BackchannelTransactionDoneNotice {
+        return {
+            tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
+            topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+            correlationId: isSet(object.correlationId)
+                ? globalThis.String(object.correlationId)
+                : "",
+        };
+    },
+
+    toJSON(message: BackchannelTransactionDoneNotice): unknown {
+        const obj: any = {};
+        if (message.tenantId !== "") {
+            obj.tenantId = message.tenantId;
+        }
+        if (message.topic !== "") {
+            obj.topic = message.topic;
+        }
+        if (message.correlationId !== "") {
+            obj.correlationId = message.correlationId;
+        }
+        return obj;
+    },
+
+    create(base?: DeepPartial<BackchannelTransactionDoneNotice>): BackchannelTransactionDoneNotice {
+        return BackchannelTransactionDoneNotice.fromPartial(base ?? {});
+    },
+    fromPartial(
+        object: DeepPartial<BackchannelTransactionDoneNotice>
+    ): BackchannelTransactionDoneNotice {
+        const message = createBaseBackchannelTransactionDoneNotice();
+        message.tenantId = object.tenantId ?? "";
+        message.topic = object.topic ?? "";
+        message.correlationId = object.correlationId ?? "";
+        return message;
+    },
+};
+
+function createBaseBackchannelResponse(): BackchannelResponse {
+    return {};
+}
+
+export const BackchannelResponse: MessageFns<BackchannelResponse> = {
+    encode(_: BackchannelResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+        return writer;
+    },
+
+    decode(input: BinaryReader | Uint8Array, length?: number): BackchannelResponse {
+        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+        const end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseBackchannelResponse();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -229,20 +370,20 @@ export const BackchannelEventResponse: MessageFns<BackchannelEventResponse> = {
         return message;
     },
 
-    fromJSON(_: any): BackchannelEventResponse {
+    fromJSON(_: any): BackchannelResponse {
         return {};
     },
 
-    toJSON(_: BackchannelEventResponse): unknown {
+    toJSON(_: BackchannelResponse): unknown {
         const obj: any = {};
         return obj;
     },
 
-    create(base?: DeepPartial<BackchannelEventResponse>): BackchannelEventResponse {
-        return BackchannelEventResponse.fromPartial(base ?? {});
+    create(base?: DeepPartial<BackchannelResponse>): BackchannelResponse {
+        return BackchannelResponse.fromPartial(base ?? {});
     },
-    fromPartial(_: DeepPartial<BackchannelEventResponse>): BackchannelEventResponse {
-        const message = createBaseBackchannelEventResponse();
+    fromPartial(_: DeepPartial<BackchannelResponse>): BackchannelResponse {
+        const message = createBaseBackchannelResponse();
         return message;
     },
 };

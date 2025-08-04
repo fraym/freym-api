@@ -1,5 +1,6 @@
 # vNext
 
+- (feature) streams: Add transactional consistency by correlation id
 - (feature) crud + projections: Strong consistency by id
 
 # v0.44.1

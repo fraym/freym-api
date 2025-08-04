@@ -20,27 +20,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type BackchannelEventRequest struct {
-	state              protoimpl.MessageState            `protogen:"opaque.v1"`
-	xxx_hidden_Payload isBackchannelEventRequest_Payload `protobuf_oneof:"payload"`
+type BackchannelRequest struct {
+	state              protoimpl.MessageState       `protogen:"opaque.v1"`
+	xxx_hidden_Payload isBackchannelRequest_Payload `protobuf_oneof:"payload"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
-func (x *BackchannelEventRequest) Reset() {
-	*x = BackchannelEventRequest{}
+func (x *BackchannelRequest) Reset() {
+	*x = BackchannelRequest{}
 	mi := &file_streams_management_backchannel_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BackchannelEventRequest) String() string {
+func (x *BackchannelRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BackchannelEventRequest) ProtoMessage() {}
+func (*BackchannelRequest) ProtoMessage() {}
 
-func (x *BackchannelEventRequest) ProtoReflect() protoreflect.Message {
+func (x *BackchannelRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_streams_management_backchannel_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -52,122 +52,160 @@ func (x *BackchannelEventRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *BackchannelEventRequest) GetBroadcast() *Event {
+func (x *BackchannelRequest) GetBroadcast() *Event {
 	if x != nil {
-		if x, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Broadcast); ok {
+		if x, ok := x.xxx_hidden_Payload.(*backchannelRequest_Broadcast); ok {
 			return x.Broadcast
 		}
 	}
 	return nil
 }
 
-func (x *BackchannelEventRequest) GetNotice() *BackchannelNotice {
+func (x *BackchannelRequest) GetNotice() *BackchannelNotice {
 	if x != nil {
-		if x, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Notice); ok {
+		if x, ok := x.xxx_hidden_Payload.(*backchannelRequest_Notice); ok {
 			return x.Notice
 		}
 	}
 	return nil
 }
 
-func (x *BackchannelEventRequest) SetBroadcast(v *Event) {
+func (x *BackchannelRequest) GetHandled() *BackchannelTransactionDoneNotice {
+	if x != nil {
+		if x, ok := x.xxx_hidden_Payload.(*backchannelRequest_Handled); ok {
+			return x.Handled
+		}
+	}
+	return nil
+}
+
+func (x *BackchannelRequest) SetBroadcast(v *Event) {
 	if v == nil {
 		x.xxx_hidden_Payload = nil
 		return
 	}
-	x.xxx_hidden_Payload = &backchannelEventRequest_Broadcast{v}
+	x.xxx_hidden_Payload = &backchannelRequest_Broadcast{v}
 }
 
-func (x *BackchannelEventRequest) SetNotice(v *BackchannelNotice) {
+func (x *BackchannelRequest) SetNotice(v *BackchannelNotice) {
 	if v == nil {
 		x.xxx_hidden_Payload = nil
 		return
 	}
-	x.xxx_hidden_Payload = &backchannelEventRequest_Notice{v}
+	x.xxx_hidden_Payload = &backchannelRequest_Notice{v}
 }
 
-func (x *BackchannelEventRequest) HasPayload() bool {
+func (x *BackchannelRequest) SetHandled(v *BackchannelTransactionDoneNotice) {
+	if v == nil {
+		x.xxx_hidden_Payload = nil
+		return
+	}
+	x.xxx_hidden_Payload = &backchannelRequest_Handled{v}
+}
+
+func (x *BackchannelRequest) HasPayload() bool {
 	if x == nil {
 		return false
 	}
 	return x.xxx_hidden_Payload != nil
 }
 
-func (x *BackchannelEventRequest) HasBroadcast() bool {
+func (x *BackchannelRequest) HasBroadcast() bool {
 	if x == nil {
 		return false
 	}
-	_, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Broadcast)
+	_, ok := x.xxx_hidden_Payload.(*backchannelRequest_Broadcast)
 	return ok
 }
 
-func (x *BackchannelEventRequest) HasNotice() bool {
+func (x *BackchannelRequest) HasNotice() bool {
 	if x == nil {
 		return false
 	}
-	_, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Notice)
+	_, ok := x.xxx_hidden_Payload.(*backchannelRequest_Notice)
 	return ok
 }
 
-func (x *BackchannelEventRequest) ClearPayload() {
+func (x *BackchannelRequest) HasHandled() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.xxx_hidden_Payload.(*backchannelRequest_Handled)
+	return ok
+}
+
+func (x *BackchannelRequest) ClearPayload() {
 	x.xxx_hidden_Payload = nil
 }
 
-func (x *BackchannelEventRequest) ClearBroadcast() {
-	if _, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Broadcast); ok {
+func (x *BackchannelRequest) ClearBroadcast() {
+	if _, ok := x.xxx_hidden_Payload.(*backchannelRequest_Broadcast); ok {
 		x.xxx_hidden_Payload = nil
 	}
 }
 
-func (x *BackchannelEventRequest) ClearNotice() {
-	if _, ok := x.xxx_hidden_Payload.(*backchannelEventRequest_Notice); ok {
+func (x *BackchannelRequest) ClearNotice() {
+	if _, ok := x.xxx_hidden_Payload.(*backchannelRequest_Notice); ok {
 		x.xxx_hidden_Payload = nil
 	}
 }
 
-const BackchannelEventRequest_Payload_not_set_case case_BackchannelEventRequest_Payload = 0
-const BackchannelEventRequest_Broadcast_case case_BackchannelEventRequest_Payload = 1
-const BackchannelEventRequest_Notice_case case_BackchannelEventRequest_Payload = 2
+func (x *BackchannelRequest) ClearHandled() {
+	if _, ok := x.xxx_hidden_Payload.(*backchannelRequest_Handled); ok {
+		x.xxx_hidden_Payload = nil
+	}
+}
 
-func (x *BackchannelEventRequest) WhichPayload() case_BackchannelEventRequest_Payload {
+const BackchannelRequest_Payload_not_set_case case_BackchannelRequest_Payload = 0
+const BackchannelRequest_Broadcast_case case_BackchannelRequest_Payload = 1
+const BackchannelRequest_Notice_case case_BackchannelRequest_Payload = 2
+const BackchannelRequest_Handled_case case_BackchannelRequest_Payload = 3
+
+func (x *BackchannelRequest) WhichPayload() case_BackchannelRequest_Payload {
 	if x == nil {
-		return BackchannelEventRequest_Payload_not_set_case
+		return BackchannelRequest_Payload_not_set_case
 	}
 	switch x.xxx_hidden_Payload.(type) {
-	case *backchannelEventRequest_Broadcast:
-		return BackchannelEventRequest_Broadcast_case
-	case *backchannelEventRequest_Notice:
-		return BackchannelEventRequest_Notice_case
+	case *backchannelRequest_Broadcast:
+		return BackchannelRequest_Broadcast_case
+	case *backchannelRequest_Notice:
+		return BackchannelRequest_Notice_case
+	case *backchannelRequest_Handled:
+		return BackchannelRequest_Handled_case
 	default:
-		return BackchannelEventRequest_Payload_not_set_case
+		return BackchannelRequest_Payload_not_set_case
 	}
 }
 
-type BackchannelEventRequest_builder struct {
+type BackchannelRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	// Fields of oneof xxx_hidden_Payload:
 	Broadcast *Event
 	Notice    *BackchannelNotice
+	Handled   *BackchannelTransactionDoneNotice
 	// -- end of xxx_hidden_Payload
 }
 
-func (b0 BackchannelEventRequest_builder) Build() *BackchannelEventRequest {
-	m0 := &BackchannelEventRequest{}
+func (b0 BackchannelRequest_builder) Build() *BackchannelRequest {
+	m0 := &BackchannelRequest{}
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Broadcast != nil {
-		x.xxx_hidden_Payload = &backchannelEventRequest_Broadcast{b.Broadcast}
+		x.xxx_hidden_Payload = &backchannelRequest_Broadcast{b.Broadcast}
 	}
 	if b.Notice != nil {
-		x.xxx_hidden_Payload = &backchannelEventRequest_Notice{b.Notice}
+		x.xxx_hidden_Payload = &backchannelRequest_Notice{b.Notice}
+	}
+	if b.Handled != nil {
+		x.xxx_hidden_Payload = &backchannelRequest_Handled{b.Handled}
 	}
 	return m0
 }
 
-type case_BackchannelEventRequest_Payload protoreflect.FieldNumber
+type case_BackchannelRequest_Payload protoreflect.FieldNumber
 
-func (x case_BackchannelEventRequest_Payload) String() string {
+func (x case_BackchannelRequest_Payload) String() string {
 	md := file_streams_management_backchannel_proto_msgTypes[0].Descriptor()
 	if x == 0 {
 		return "not set"
@@ -175,21 +213,27 @@ func (x case_BackchannelEventRequest_Payload) String() string {
 	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
 }
 
-type isBackchannelEventRequest_Payload interface {
-	isBackchannelEventRequest_Payload()
+type isBackchannelRequest_Payload interface {
+	isBackchannelRequest_Payload()
 }
 
-type backchannelEventRequest_Broadcast struct {
+type backchannelRequest_Broadcast struct {
 	Broadcast *Event `protobuf:"bytes,1,opt,name=broadcast,proto3,oneof"`
 }
 
-type backchannelEventRequest_Notice struct {
+type backchannelRequest_Notice struct {
 	Notice *BackchannelNotice `protobuf:"bytes,2,opt,name=notice,proto3,oneof"`
 }
 
-func (*backchannelEventRequest_Broadcast) isBackchannelEventRequest_Payload() {}
+type backchannelRequest_Handled struct {
+	Handled *BackchannelTransactionDoneNotice `protobuf:"bytes,3,opt,name=handled,proto3,oneof"`
+}
 
-func (*backchannelEventRequest_Notice) isBackchannelEventRequest_Payload() {}
+func (*backchannelRequest_Broadcast) isBackchannelRequest_Payload() {}
+
+func (*backchannelRequest_Notice) isBackchannelRequest_Payload() {}
+
+func (*backchannelRequest_Handled) isBackchannelRequest_Payload() {}
 
 type BackchannelNotice struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
@@ -262,26 +306,29 @@ func (b0 BackchannelNotice_builder) Build() *BackchannelNotice {
 	return m0
 }
 
-type BackchannelEventResponse struct {
-	state         protoimpl.MessageState `protogen:"opaque.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+type BackchannelTransactionDoneNotice struct {
+	state                    protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId      string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_CorrelationId string                 `protobuf:"bytes,3,opt,name=correlation_id,json=correlationId,proto3"`
+	unknownFields            protoimpl.UnknownFields
+	sizeCache                protoimpl.SizeCache
 }
 
-func (x *BackchannelEventResponse) Reset() {
-	*x = BackchannelEventResponse{}
+func (x *BackchannelTransactionDoneNotice) Reset() {
+	*x = BackchannelTransactionDoneNotice{}
 	mi := &file_streams_management_backchannel_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BackchannelEventResponse) String() string {
+func (x *BackchannelTransactionDoneNotice) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BackchannelEventResponse) ProtoMessage() {}
+func (*BackchannelTransactionDoneNotice) ProtoMessage() {}
 
-func (x *BackchannelEventResponse) ProtoReflect() protoreflect.Message {
+func (x *BackchannelTransactionDoneNotice) ProtoReflect() protoreflect.Message {
 	mi := &file_streams_management_backchannel_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -293,13 +340,95 @@ func (x *BackchannelEventResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-type BackchannelEventResponse_builder struct {
+func (x *BackchannelTransactionDoneNotice) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *BackchannelTransactionDoneNotice) GetTopic() string {
+	if x != nil {
+		return x.xxx_hidden_Topic
+	}
+	return ""
+}
+
+func (x *BackchannelTransactionDoneNotice) GetCorrelationId() string {
+	if x != nil {
+		return x.xxx_hidden_CorrelationId
+	}
+	return ""
+}
+
+func (x *BackchannelTransactionDoneNotice) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *BackchannelTransactionDoneNotice) SetTopic(v string) {
+	x.xxx_hidden_Topic = v
+}
+
+func (x *BackchannelTransactionDoneNotice) SetCorrelationId(v string) {
+	x.xxx_hidden_CorrelationId = v
+}
+
+type BackchannelTransactionDoneNotice_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	TenantId      string
+	Topic         string
+	CorrelationId string
+}
+
+func (b0 BackchannelTransactionDoneNotice_builder) Build() *BackchannelTransactionDoneNotice {
+	m0 := &BackchannelTransactionDoneNotice{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Topic = b.Topic
+	x.xxx_hidden_CorrelationId = b.CorrelationId
+	return m0
+}
+
+type BackchannelResponse struct {
+	state         protoimpl.MessageState `protogen:"opaque.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BackchannelResponse) Reset() {
+	*x = BackchannelResponse{}
+	mi := &file_streams_management_backchannel_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BackchannelResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BackchannelResponse) ProtoMessage() {}
+
+func (x *BackchannelResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_streams_management_backchannel_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+type BackchannelResponse_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 }
 
-func (b0 BackchannelEventResponse_builder) Build() *BackchannelEventResponse {
-	m0 := &BackchannelEventResponse{}
+func (b0 BackchannelResponse_builder) Build() *BackchannelResponse {
+	m0 := &BackchannelResponse{}
 	b, x := &b0, m0
 	_, _ = b, x
 	return m0
@@ -309,31 +438,38 @@ var File_streams_management_backchannel_proto protoreflect.FileDescriptor
 
 const file_streams_management_backchannel_proto_rawDesc = "" +
 	"\n" +
-	"$streams/management/backchannel.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\xac\x01\n" +
-	"\x17BackchannelEventRequest\x12?\n" +
+	"$streams/management/backchannel.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\xff\x01\n" +
+	"\x12BackchannelRequest\x12?\n" +
 	"\tbroadcast\x18\x01 \x01(\v2\x1f.freym.streams.management.EventH\x00R\tbroadcast\x12E\n" +
-	"\x06notice\x18\x02 \x01(\v2+.freym.streams.management.BackchannelNoticeH\x00R\x06noticeB\t\n" +
+	"\x06notice\x18\x02 \x01(\v2+.freym.streams.management.BackchannelNoticeH\x00R\x06notice\x12V\n" +
+	"\ahandled\x18\x03 \x01(\v2:.freym.streams.management.BackchannelTransactionDoneNoticeH\x00R\ahandledB\t\n" +
 	"\apayload\"F\n" +
 	"\x11BackchannelNotice\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
-	"\x05topic\x18\x02 \x01(\tR\x05topic\"\x1a\n" +
-	"\x18BackchannelEventResponseb\x06proto3"
+	"\x05topic\x18\x02 \x01(\tR\x05topic\"|\n" +
+	" BackchannelTransactionDoneNotice\x12\x1b\n" +
+	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12%\n" +
+	"\x0ecorrelation_id\x18\x03 \x01(\tR\rcorrelationId\"\x15\n" +
+	"\x13BackchannelResponseb\x06proto3"
 
-var file_streams_management_backchannel_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_streams_management_backchannel_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_streams_management_backchannel_proto_goTypes = []any{
-	(*BackchannelEventRequest)(nil),  // 0: freym.streams.management.BackchannelEventRequest
-	(*BackchannelNotice)(nil),        // 1: freym.streams.management.BackchannelNotice
-	(*BackchannelEventResponse)(nil), // 2: freym.streams.management.BackchannelEventResponse
-	(*Event)(nil),                    // 3: freym.streams.management.Event
+	(*BackchannelRequest)(nil),               // 0: freym.streams.management.BackchannelRequest
+	(*BackchannelNotice)(nil),                // 1: freym.streams.management.BackchannelNotice
+	(*BackchannelTransactionDoneNotice)(nil), // 2: freym.streams.management.BackchannelTransactionDoneNotice
+	(*BackchannelResponse)(nil),              // 3: freym.streams.management.BackchannelResponse
+	(*Event)(nil),                            // 4: freym.streams.management.Event
 }
 var file_streams_management_backchannel_proto_depIdxs = []int32{
-	3, // 0: freym.streams.management.BackchannelEventRequest.broadcast:type_name -> freym.streams.management.Event
-	1, // 1: freym.streams.management.BackchannelEventRequest.notice:type_name -> freym.streams.management.BackchannelNotice
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	4, // 0: freym.streams.management.BackchannelRequest.broadcast:type_name -> freym.streams.management.Event
+	1, // 1: freym.streams.management.BackchannelRequest.notice:type_name -> freym.streams.management.BackchannelNotice
+	2, // 2: freym.streams.management.BackchannelRequest.handled:type_name -> freym.streams.management.BackchannelTransactionDoneNotice
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_streams_management_backchannel_proto_init() }
@@ -343,8 +479,9 @@ func file_streams_management_backchannel_proto_init() {
 	}
 	file_streams_management_event_proto_init()
 	file_streams_management_backchannel_proto_msgTypes[0].OneofWrappers = []any{
-		(*backchannelEventRequest_Broadcast)(nil),
-		(*backchannelEventRequest_Notice)(nil),
+		(*backchannelRequest_Broadcast)(nil),
+		(*backchannelRequest_Notice)(nil),
+		(*backchannelRequest_Handled)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -352,7 +489,7 @@ func file_streams_management_backchannel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_streams_management_backchannel_proto_rawDesc), len(file_streams_management_backchannel_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

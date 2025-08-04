@@ -12,4 +12,5 @@ export * from "./streams/management/rename";
 export * from "./streams/management/subscribe";
 export * from "./streams/management/stream";
 export * from "./streams/management/snapshot";
+export * from "./streams/management/transaction";
 export * from "./streams/management/service";

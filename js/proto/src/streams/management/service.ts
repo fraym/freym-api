@@ -17,7 +17,7 @@ import {
     type handleUnaryCall,
     makeGenericClientConstructor,
 } from "@grpc/grpc-js";
-import { BackchannelEventRequest, BackchannelEventResponse } from "./backchannel";
+import { BackchannelRequest, BackchannelResponse } from "./backchannel";
 import {
     Event,
     GetEventRequest,
@@ -46,6 +46,10 @@ import { RenameEventTypeRequest, RenameEventTypeResponse } from "./rename";
 import { CreateStreamSnapshotRequest, CreateStreamSnapshotResponse } from "./snapshot";
 import { IsStreamEmptyRequest, IsStreamEmptyResponse } from "./stream";
 import { SubscribeRequest, SubscribeResponse } from "./subscribe";
+import {
+    WaitForTransactionalConsistencyRequest,
+    WaitForTransactionalConsistencyResponse,
+} from "./transaction";
 
 export type ServiceService = typeof ServiceService;
 export const ServiceService = {
@@ -114,6 +118,32 @@ export const ServiceService = {
         responseSerialize: (value: Event): Buffer => Buffer.from(Event.encode(value).finish()),
         responseDeserialize: (value: Buffer): Event => Event.decode(value),
     },
+    paginateEvents: {
+        path: "/freym.streams.management.Service/PaginateEvents",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: PaginateEventsRequest): Buffer =>
+            Buffer.from(PaginateEventsRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): PaginateEventsRequest =>
+            PaginateEventsRequest.decode(value),
+        responseSerialize: (value: PaginateEventsResponse): Buffer =>
+            Buffer.from(PaginateEventsResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): PaginateEventsResponse =>
+            PaginateEventsResponse.decode(value),
+    },
+    paginateEventsAfterEventId: {
+        path: "/freym.streams.management.Service/PaginateEventsAfterEventId",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: PaginateEventsAfterEventIdRequest): Buffer =>
+            Buffer.from(PaginateEventsAfterEventIdRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): PaginateEventsAfterEventIdRequest =>
+            PaginateEventsAfterEventIdRequest.decode(value),
+        responseSerialize: (value: PaginateEventsAfterEventIdResponse): Buffer =>
+            Buffer.from(PaginateEventsAfterEventIdResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): PaginateEventsAfterEventIdResponse =>
+            PaginateEventsAfterEventIdResponse.decode(value),
+    },
     isStreamEmpty: {
         path: "/freym.streams.management.Service/IsStreamEmpty",
         requestStream: false,
@@ -153,32 +183,6 @@ export const ServiceService = {
         responseDeserialize: (value: Buffer): PaginateStreamAfterEventIdResponse =>
             PaginateStreamAfterEventIdResponse.decode(value),
     },
-    paginateEvents: {
-        path: "/freym.streams.management.Service/PaginateEvents",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: PaginateEventsRequest): Buffer =>
-            Buffer.from(PaginateEventsRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer): PaginateEventsRequest =>
-            PaginateEventsRequest.decode(value),
-        responseSerialize: (value: PaginateEventsResponse): Buffer =>
-            Buffer.from(PaginateEventsResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer): PaginateEventsResponse =>
-            PaginateEventsResponse.decode(value),
-    },
-    paginateEventsAfterEventId: {
-        path: "/freym.streams.management.Service/PaginateEventsAfterEventId",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: PaginateEventsAfterEventIdRequest): Buffer =>
-            Buffer.from(PaginateEventsAfterEventIdRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer): PaginateEventsAfterEventIdRequest =>
-            PaginateEventsAfterEventIdRequest.decode(value),
-        responseSerialize: (value: PaginateEventsAfterEventIdResponse): Buffer =>
-            Buffer.from(PaginateEventsAfterEventIdResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer): PaginateEventsAfterEventIdResponse =>
-            PaginateEventsAfterEventIdResponse.decode(value),
-    },
     introduceGdprOnEventField: {
         path: "/freym.streams.management.Service/IntroduceGdprOnEventField",
         requestStream: false,
@@ -204,19 +208,6 @@ export const ServiceService = {
             Buffer.from(InvalidateGdprResponse.encode(value).finish()),
         responseDeserialize: (value: Buffer): InvalidateGdprResponse =>
             InvalidateGdprResponse.decode(value),
-    },
-    backchannelEvent: {
-        path: "/freym.streams.management.Service/BackchannelEvent",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value: BackchannelEventRequest): Buffer =>
-            Buffer.from(BackchannelEventRequest.encode(value).finish()),
-        requestDeserialize: (value: Buffer): BackchannelEventRequest =>
-            BackchannelEventRequest.decode(value),
-        responseSerialize: (value: BackchannelEventResponse): Buffer =>
-            Buffer.from(BackchannelEventResponse.encode(value).finish()),
-        responseDeserialize: (value: Buffer): BackchannelEventResponse =>
-            BackchannelEventResponse.decode(value),
     },
     createStreamSnapshot: {
         path: "/freym.streams.management.Service/CreateStreamSnapshot",
@@ -244,6 +235,31 @@ export const ServiceService = {
         responseDeserialize: (value: Buffer): RenameEventTypeResponse =>
             RenameEventTypeResponse.decode(value),
     },
+    waitForTransactionalConsistency: {
+        path: "/freym.streams.management.Service/WaitForTransactionalConsistency",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: WaitForTransactionalConsistencyRequest): Buffer =>
+            Buffer.from(WaitForTransactionalConsistencyRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): WaitForTransactionalConsistencyRequest =>
+            WaitForTransactionalConsistencyRequest.decode(value),
+        responseSerialize: (value: WaitForTransactionalConsistencyResponse): Buffer =>
+            Buffer.from(WaitForTransactionalConsistencyResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): WaitForTransactionalConsistencyResponse =>
+            WaitForTransactionalConsistencyResponse.decode(value),
+    },
+    backchannel: {
+        path: "/freym.streams.management.Service/Backchannel",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: BackchannelRequest): Buffer =>
+            Buffer.from(BackchannelRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): BackchannelRequest => BackchannelRequest.decode(value),
+        responseSerialize: (value: BackchannelResponse): Buffer =>
+            Buffer.from(BackchannelResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): BackchannelResponse =>
+            BackchannelResponse.decode(value),
+    },
 } as const;
 
 export interface ServiceServer extends UntypedServiceImplementation {
@@ -253,28 +269,32 @@ export interface ServiceServer extends UntypedServiceImplementation {
     getLastEvent: handleUnaryCall<GetLastEventRequest, Event>;
     getLastHandledEvent: handleUnaryCall<GetLastHandledEventRequest, Event>;
     getLastEventByTypes: handleUnaryCall<GetLastEventByTypesRequest, Event>;
+    paginateEvents: handleUnaryCall<PaginateEventsRequest, PaginateEventsResponse>;
+    paginateEventsAfterEventId: handleUnaryCall<
+        PaginateEventsAfterEventIdRequest,
+        PaginateEventsAfterEventIdResponse
+    >;
     isStreamEmpty: handleUnaryCall<IsStreamEmptyRequest, IsStreamEmptyResponse>;
     paginateStream: handleUnaryCall<PaginateStreamRequest, PaginateStreamResponse>;
     paginateStreamAfterEventId: handleUnaryCall<
         PaginateStreamAfterEventIdRequest,
         PaginateStreamAfterEventIdResponse
     >;
-    paginateEvents: handleUnaryCall<PaginateEventsRequest, PaginateEventsResponse>;
-    paginateEventsAfterEventId: handleUnaryCall<
-        PaginateEventsAfterEventIdRequest,
-        PaginateEventsAfterEventIdResponse
-    >;
     introduceGdprOnEventField: handleUnaryCall<
         IntroduceGdprOnEventFieldRequest,
         IntroduceGdprOnEventFieldResponse
     >;
     invalidateGdpr: handleUnaryCall<InvalidateGdprRequest, InvalidateGdprResponse>;
-    backchannelEvent: handleUnaryCall<BackchannelEventRequest, BackchannelEventResponse>;
     createStreamSnapshot: handleUnaryCall<
         CreateStreamSnapshotRequest,
         CreateStreamSnapshotResponse
     >;
     renameEventType: handleUnaryCall<RenameEventTypeRequest, RenameEventTypeResponse>;
+    waitForTransactionalConsistency: handleUnaryCall<
+        WaitForTransactionalConsistencyRequest,
+        WaitForTransactionalConsistencyResponse
+    >;
+    backchannel: handleUnaryCall<BackchannelRequest, BackchannelResponse>;
 }
 
 export interface ServiceClient extends Client {
@@ -361,6 +381,36 @@ export interface ServiceClient extends Client {
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: Event) => void
     ): ClientUnaryCall;
+    paginateEvents(
+        request: PaginateEventsRequest,
+        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
+    ): ClientUnaryCall;
+    paginateEvents(
+        request: PaginateEventsRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
+    ): ClientUnaryCall;
+    paginateEvents(
+        request: PaginateEventsRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
+    ): ClientUnaryCall;
+    paginateEventsAfterEventId(
+        request: PaginateEventsAfterEventIdRequest,
+        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
+    ): ClientUnaryCall;
+    paginateEventsAfterEventId(
+        request: PaginateEventsAfterEventIdRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
+    ): ClientUnaryCall;
+    paginateEventsAfterEventId(
+        request: PaginateEventsAfterEventIdRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
+    ): ClientUnaryCall;
     isStreamEmpty(
         request: IsStreamEmptyRequest,
         callback: (error: ServiceError | null, response: IsStreamEmptyResponse) => void
@@ -406,36 +456,6 @@ export interface ServiceClient extends Client {
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: PaginateStreamAfterEventIdResponse) => void
     ): ClientUnaryCall;
-    paginateEvents(
-        request: PaginateEventsRequest,
-        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
-    ): ClientUnaryCall;
-    paginateEvents(
-        request: PaginateEventsRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
-    ): ClientUnaryCall;
-    paginateEvents(
-        request: PaginateEventsRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: PaginateEventsResponse) => void
-    ): ClientUnaryCall;
-    paginateEventsAfterEventId(
-        request: PaginateEventsAfterEventIdRequest,
-        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
-    ): ClientUnaryCall;
-    paginateEventsAfterEventId(
-        request: PaginateEventsAfterEventIdRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
-    ): ClientUnaryCall;
-    paginateEventsAfterEventId(
-        request: PaginateEventsAfterEventIdRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: PaginateEventsAfterEventIdResponse) => void
-    ): ClientUnaryCall;
     introduceGdprOnEventField(
         request: IntroduceGdprOnEventFieldRequest,
         callback: (error: ServiceError | null, response: IntroduceGdprOnEventFieldResponse) => void
@@ -466,21 +486,6 @@ export interface ServiceClient extends Client {
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: InvalidateGdprResponse) => void
     ): ClientUnaryCall;
-    backchannelEvent(
-        request: BackchannelEventRequest,
-        callback: (error: ServiceError | null, response: BackchannelEventResponse) => void
-    ): ClientUnaryCall;
-    backchannelEvent(
-        request: BackchannelEventRequest,
-        metadata: Metadata,
-        callback: (error: ServiceError | null, response: BackchannelEventResponse) => void
-    ): ClientUnaryCall;
-    backchannelEvent(
-        request: BackchannelEventRequest,
-        metadata: Metadata,
-        options: Partial<CallOptions>,
-        callback: (error: ServiceError | null, response: BackchannelEventResponse) => void
-    ): ClientUnaryCall;
     createStreamSnapshot(
         request: CreateStreamSnapshotRequest,
         callback: (error: ServiceError | null, response: CreateStreamSnapshotResponse) => void
@@ -510,6 +515,45 @@ export interface ServiceClient extends Client {
         metadata: Metadata,
         options: Partial<CallOptions>,
         callback: (error: ServiceError | null, response: RenameEventTypeResponse) => void
+    ): ClientUnaryCall;
+    waitForTransactionalConsistency(
+        request: WaitForTransactionalConsistencyRequest,
+        callback: (
+            error: ServiceError | null,
+            response: WaitForTransactionalConsistencyResponse
+        ) => void
+    ): ClientUnaryCall;
+    waitForTransactionalConsistency(
+        request: WaitForTransactionalConsistencyRequest,
+        metadata: Metadata,
+        callback: (
+            error: ServiceError | null,
+            response: WaitForTransactionalConsistencyResponse
+        ) => void
+    ): ClientUnaryCall;
+    waitForTransactionalConsistency(
+        request: WaitForTransactionalConsistencyRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (
+            error: ServiceError | null,
+            response: WaitForTransactionalConsistencyResponse
+        ) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
+    ): ClientUnaryCall;
+    backchannel(
+        request: BackchannelRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: BackchannelResponse) => void
     ): ClientUnaryCall;
 }
 
