@@ -24,7 +24,7 @@
     "dependencies": {
         "@fraym/proto": "^0.44.1",
         "@grpc/grpc-js": "^1.13.4",
-        "dotenv": "^17.2.0",
+        "dotenv": "^17.2.1",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
