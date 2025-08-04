@@ -10,6 +10,7 @@ import { getProjectionData } from "./getData";
 import { GetProjectionDataList, getProjectionDataList } from "./getDataList";
 import { getViewData as getDataFromView } from "./getViewData";
 import { GetViewDataList, getViewDataList as getDataListFromView } from "./getViewDataList";
+import { GetEntryOptions, GetSingleEntryOptions } from "./options";
 import { Order } from "./order";
 import { UpsertResponse, upsertProjectionData } from "./upsert";
 import { ListWait, Wait } from "./wait";
@@ -20,16 +21,15 @@ export interface DeliveryClient {
         authData: AuthData,
         id: string,
         filter?: Filter,
-        returnEmptyDataIfNotFound?: boolean,
-        useStrongConsistency?: boolean,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetSingleEntryOptions
     ) => Promise<T | null>;
     getViewData: <T extends ProjectionData>(
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetEntryOptions
     ) => Promise<T | null>;
     getDataList: <T extends ProjectionData>(
         projection: string,
@@ -38,8 +38,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ) => Promise<GetProjectionDataList<T> | null>;
     getViewDataList: <T extends ProjectionData>(
         view: string,
@@ -48,8 +48,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ) => Promise<GetProjectionDataList<T> | null>;
     upsertData: <T extends ProjectionData>(
         projection: string,
@@ -88,20 +88,18 @@ export const newDeliveryClient = async (
         auth: AuthData,
         id: string,
         filter: Filter = { fields: {}, and: [], or: [] },
-        returnEmptyDataIfNotFound: boolean = false,
-        useStrongConsistency: boolean = false,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetSingleEntryOptions
     ): Promise<T | null> => {
         return await getProjectionData<T>(
             projection,
             auth,
             id,
             filter,
-            returnEmptyDataIfNotFound,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -109,17 +107,17 @@ export const newDeliveryClient = async (
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency: boolean = false,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetEntryOptions
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,
             auth,
             filter,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -130,8 +128,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ): Promise<GetProjectionDataList<T> | null> => {
         return await getProjectionDataList<T>(
             projection,
@@ -140,10 +138,10 @@ export const newDeliveryClient = async (
             page,
             filter,
             order,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -154,8 +152,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -164,10 +162,10 @@ export const newDeliveryClient = async (
             page,
             filter,
             order,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 

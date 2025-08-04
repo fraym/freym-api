@@ -11,6 +11,7 @@ message GetDataRequest {
 	DataWait wait = 6;
 	bool use_strong_consistency = 7;
 	DeploymentTarget target = 8;
+	string use_strong_consistency_by_id = 9;
 }
 
 message GetDataResponse {
@@ -27,6 +28,7 @@ message GetDataListRequest {
 	bool use_strong_consistency = 7;
 	DeploymentTarget target = 8;
 	DataListWait wait = 9;
+	string use_strong_consistency_by_id = 10;
 }
 
 message GetDataListResponse {

@@ -3,7 +3,6 @@ package projections
 import (
 	"context"
 
-	"github.com/fraym/freym-api/go/proto/projections/deliverypb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -17,10 +16,8 @@ func (c *MockDeliveryClient) GetData(
 	authData *AuthData,
 	id string,
 	filter *Filter,
-	returnEmptyDataIfNotFound bool,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*Data, error) {
 	args := c.Called(
 		ctx,
@@ -28,10 +25,8 @@ func (c *MockDeliveryClient) GetData(
 		authData,
 		id,
 		filter,
-		returnEmptyDataIfNotFound,
 		wait,
-		useStrongConsistency,
-		target,
+		options,
 	)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -45,10 +40,8 @@ func (c *MockDeliveryClient) GetJsonData(
 	authData *AuthData,
 	id string,
 	filter *JsonFilter,
-	returnEmptyDataIfNotFound bool,
 	wait *JsonWait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*JsonData, error) {
 	args := c.Called(
 		ctx,
@@ -56,10 +49,8 @@ func (c *MockDeliveryClient) GetJsonData(
 		authData,
 		id,
 		filter,
-		returnEmptyDataIfNotFound,
 		wait,
-		useStrongConsistency,
-		target,
+		options,
 	)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -73,10 +64,9 @@ func (c *MockDeliveryClient) GetViewData(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*Data, error) {
-	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -89,10 +79,9 @@ func (c *MockDeliveryClient) GetViewJsonData(
 	authData *AuthData,
 	filter *JsonFilter,
 	wait *JsonWait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*JsonData, error) {
-	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -106,11 +95,10 @@ func (c *MockDeliveryClient) GetDataList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*DataList, error) {
-	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, projection, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -124,11 +112,10 @@ func (c *MockDeliveryClient) GetJsonDataList(
 	pagination *Pagination,
 	filter *JsonFilter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*JsonDataList, error) {
-	args := c.Called(ctx, projection, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, projection, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -142,11 +129,10 @@ func (c *MockDeliveryClient) GetViewDataList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*DataList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, view, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -160,11 +146,10 @@ func (c *MockDeliveryClient) GetViewJsonDataList(
 	pagination *Pagination,
 	filter *JsonFilter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*JsonDataList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, view, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}

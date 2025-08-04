@@ -1,5 +1,7 @@
 # vNext
 
+- (feature) crud + projections: Strong consistency by id
+
 # v0.44.1
 
 - (bug) Fix `wait` param in crud and projections to contain a list of conditions

@@ -30,6 +30,7 @@ type GetDataRequest struct {
 	xxx_hidden_Wait                      *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
 	xxx_hidden_UseStrongConsistency      bool                   `protobuf:"varint,7,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
 	xxx_hidden_Target                    DeploymentTarget       `protobuf:"varint,8,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
+	xxx_hidden_UseStrongConsistencyById  string                 `protobuf:"bytes,9,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
 	unknownFields                        protoimpl.UnknownFields
 	sizeCache                            protoimpl.SizeCache
 }
@@ -115,6 +116,13 @@ func (x *GetDataRequest) GetTarget() DeploymentTarget {
 	return DeploymentTarget_DEPLOYMENT_TARGET_BLUE
 }
 
+func (x *GetDataRequest) GetUseStrongConsistencyById() string {
+	if x != nil {
+		return x.xxx_hidden_UseStrongConsistencyById
+	}
+	return ""
+}
+
 func (x *GetDataRequest) SetType(v string) {
 	x.xxx_hidden_Type = v
 }
@@ -145,6 +153,10 @@ func (x *GetDataRequest) SetUseStrongConsistency(v bool) {
 
 func (x *GetDataRequest) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
+}
+
+func (x *GetDataRequest) SetUseStrongConsistencyById(v string) {
+	x.xxx_hidden_UseStrongConsistencyById = v
 }
 
 func (x *GetDataRequest) HasAuth() bool {
@@ -191,6 +203,7 @@ type GetDataRequest_builder struct {
 	Wait                      *DataWait
 	UseStrongConsistency      bool
 	Target                    DeploymentTarget
+	UseStrongConsistencyById  string
 }
 
 func (b0 GetDataRequest_builder) Build() *GetDataRequest {
@@ -205,6 +218,7 @@ func (b0 GetDataRequest_builder) Build() *GetDataRequest {
 	x.xxx_hidden_Wait = b.Wait
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
+	x.xxx_hidden_UseStrongConsistencyById = b.UseStrongConsistencyById
 	return m0
 }
 
@@ -277,18 +291,19 @@ func (b0 GetDataResponse_builder) Build() *GetDataResponse {
 }
 
 type GetDataListRequest struct {
-	state                           protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Type                 string                 `protobuf:"bytes,1,opt,name=type,proto3"`
-	xxx_hidden_Auth                 *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
-	xxx_hidden_Limit                int64                  `protobuf:"varint,3,opt,name=limit,proto3"`
-	xxx_hidden_Page                 int64                  `protobuf:"varint,4,opt,name=page,proto3"`
-	xxx_hidden_Filter               *DataFilter            `protobuf:"bytes,7,opt,name=filter,proto3"`
-	xxx_hidden_Order                *[]*DataOrder          `protobuf:"bytes,8,rep,name=order,proto3"`
-	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,9,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
-	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,10,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
-	xxx_hidden_Wait                 *DataListWait          `protobuf:"bytes,11,opt,name=wait,proto3"`
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
+	state                               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Type                     string                 `protobuf:"bytes,1,opt,name=type,proto3"`
+	xxx_hidden_Auth                     *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
+	xxx_hidden_Limit                    int64                  `protobuf:"varint,3,opt,name=limit,proto3"`
+	xxx_hidden_Page                     int64                  `protobuf:"varint,4,opt,name=page,proto3"`
+	xxx_hidden_Filter                   *DataFilter            `protobuf:"bytes,7,opt,name=filter,proto3"`
+	xxx_hidden_Order                    *[]*DataOrder          `protobuf:"bytes,8,rep,name=order,proto3"`
+	xxx_hidden_UseStrongConsistency     bool                   `protobuf:"varint,9,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
+	xxx_hidden_Target                   DeploymentTarget       `protobuf:"varint,10,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                     *DataListWait          `protobuf:"bytes,11,opt,name=wait,proto3"`
+	xxx_hidden_UseStrongConsistencyById string                 `protobuf:"bytes,12,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
+	unknownFields                       protoimpl.UnknownFields
+	sizeCache                           protoimpl.SizeCache
 }
 
 func (x *GetDataListRequest) Reset() {
@@ -381,6 +396,13 @@ func (x *GetDataListRequest) GetWait() *DataListWait {
 	return nil
 }
 
+func (x *GetDataListRequest) GetUseStrongConsistencyById() string {
+	if x != nil {
+		return x.xxx_hidden_UseStrongConsistencyById
+	}
+	return ""
+}
+
 func (x *GetDataListRequest) SetType(v string) {
 	x.xxx_hidden_Type = v
 }
@@ -415,6 +437,10 @@ func (x *GetDataListRequest) SetTarget(v DeploymentTarget) {
 
 func (x *GetDataListRequest) SetWait(v *DataListWait) {
 	x.xxx_hidden_Wait = v
+}
+
+func (x *GetDataListRequest) SetUseStrongConsistencyById(v string) {
+	x.xxx_hidden_UseStrongConsistencyById = v
 }
 
 func (x *GetDataListRequest) HasAuth() bool {
@@ -453,15 +479,16 @@ func (x *GetDataListRequest) ClearWait() {
 type GetDataListRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Type                 string
-	Auth                 *AuthData
-	Limit                int64
-	Page                 int64
-	Filter               *DataFilter
-	Order                []*DataOrder
-	UseStrongConsistency bool
-	Target               DeploymentTarget
-	Wait                 *DataListWait
+	Type                     string
+	Auth                     *AuthData
+	Limit                    int64
+	Page                     int64
+	Filter                   *DataFilter
+	Order                    []*DataOrder
+	UseStrongConsistency     bool
+	Target                   DeploymentTarget
+	Wait                     *DataListWait
+	UseStrongConsistencyById string
 }
 
 func (b0 GetDataListRequest_builder) Build() *GetDataListRequest {
@@ -477,6 +504,7 @@ func (b0 GetDataListRequest_builder) Build() *GetDataListRequest {
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Wait = b.Wait
+	x.xxx_hidden_UseStrongConsistencyById = b.UseStrongConsistencyById
 	return m0
 }
 
@@ -585,7 +613,7 @@ var File_crud_delivery_get_data_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\n" +
-	"\x1ccrud/delivery/get_data.proto\x12\x13freym.crud.delivery\x1a\x1acrud/delivery/shared.proto\"\x8b\x03\n" +
+	"\x1ccrud/delivery/get_data.proto\x12\x13freym.crud.delivery\x1a\x1acrud/delivery/shared.proto\"\xcb\x03\n" +
 	"\x0eGetDataRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x121\n" +
 	"\x04auth\x18\x02 \x01(\v2\x1d.freym.crud.delivery.AuthDataR\x04auth\x12\x0e\n" +
@@ -594,9 +622,10 @@ const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\x1ereturn_empty_data_if_not_found\x18\x05 \x01(\bR\x19returnEmptyDataIfNotFound\x121\n" +
 	"\x04wait\x18\x06 \x01(\v2\x1d.freym.crud.delivery.DataWaitR\x04wait\x124\n" +
 	"\x16use_strong_consistency\x18\a \x01(\bR\x14useStrongConsistency\x12=\n" +
-	"\x06target\x18\b \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\"D\n" +
+	"\x06target\x18\b \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\x12>\n" +
+	"\x1cuse_strong_consistency_by_id\x18\t \x01(\tR\x18useStrongConsistencyById\"D\n" +
 	"\x0fGetDataResponse\x121\n" +
-	"\x06result\x18\x01 \x01(\v2\x19.freym.crud.delivery.DataR\x06result\"\xa0\x03\n" +
+	"\x06result\x18\x01 \x01(\v2\x19.freym.crud.delivery.DataR\x06result\"\xe0\x03\n" +
 	"\x12GetDataListRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x121\n" +
 	"\x04auth\x18\x02 \x01(\v2\x1d.freym.crud.delivery.AuthDataR\x04auth\x12\x14\n" +
@@ -607,7 +636,8 @@ const file_crud_delivery_get_data_proto_rawDesc = "" +
 	"\x16use_strong_consistency\x18\t \x01(\bR\x14useStrongConsistency\x12=\n" +
 	"\x06target\x18\n" +
 	" \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\x125\n" +
-	"\x04wait\x18\v \x01(\v2!.freym.crud.delivery.DataListWaitR\x04wait\"\x88\x01\n" +
+	"\x04wait\x18\v \x01(\v2!.freym.crud.delivery.DataListWaitR\x04wait\x12>\n" +
+	"\x1cuse_strong_consistency_by_id\x18\f \x01(\tR\x18useStrongConsistencyById\"\x88\x01\n" +
 	"\x13GetDataListResponse\x121\n" +
 	"\x06result\x18\x01 \x03(\v2\x19.freym.crud.delivery.DataR\x06result\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x03R\x05limit\x12\x12\n" +

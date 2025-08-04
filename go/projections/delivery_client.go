@@ -45,10 +45,8 @@ type DeliveryClient interface {
 		authData *AuthData,
 		id string,
 		filter *Filter,
-		returnEmptyDataIfNotFound bool,
 		wait *Wait,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetSingleEntryOptions,
 	) (*Data, error)
 	GetJsonData(
 		ctx context.Context,
@@ -56,10 +54,8 @@ type DeliveryClient interface {
 		authData *AuthData,
 		id string,
 		filter *JsonFilter,
-		returnEmptyDataIfNotFound bool,
 		wait *JsonWait,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetSingleEntryOptions,
 	) (*JsonData, error)
 	GetViewData(
 		ctx context.Context,
@@ -67,8 +63,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *Filter,
 		wait *Wait,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetEntryOptions,
 	) (*Data, error)
 	GetViewJsonData(
 		ctx context.Context,
@@ -76,8 +71,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *JsonFilter,
 		wait *JsonWait,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetEntryOptions,
 	) (*JsonData, error)
 	GetDataList(
 		ctx context.Context,
@@ -86,9 +80,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *Filter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*DataList, error)
 	GetJsonDataList(
 		ctx context.Context,
@@ -97,9 +90,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *JsonFilter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*JsonDataList, error)
 	GetViewDataList(
 		ctx context.Context,
@@ -108,9 +100,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *Filter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*DataList, error)
 	GetViewJsonDataList(
 		ctx context.Context,
@@ -119,9 +110,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *JsonFilter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*JsonDataList, error)
 	UpsertData(
 		ctx context.Context,
@@ -192,10 +182,8 @@ func (c *projectionsDeliveryClient) GetData(
 	authData *AuthData,
 	id string,
 	filter *Filter,
-	returnEmptyDataIfNotFound bool,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*Data, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -207,10 +195,11 @@ func (c *projectionsDeliveryClient) GetData(
 		Auth:                      pbAuthData,
 		DataId:                    id,
 		Filter:                    filter.toProtobufFilter(),
-		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
 		Wait:                      wait.toDeliveryWait(),
-		UseStrongConsistency:      useStrongConsistency,
-		Target:                    target,
+		Target:                    options.Target(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -230,10 +219,8 @@ func (c *projectionsDeliveryClient) GetJsonData(
 	authData *AuthData,
 	id string,
 	filter *JsonFilter,
-	returnEmptyDataIfNotFound bool,
 	wait *JsonWait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*JsonData, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -245,10 +232,11 @@ func (c *projectionsDeliveryClient) GetJsonData(
 		Auth:                      pbAuthData,
 		DataId:                    id,
 		Filter:                    filter.toProtobufFilter(),
-		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
 		Wait:                      wait.toDeliveryWait(),
-		UseStrongConsistency:      useStrongConsistency,
-		Target:                    target,
+		Target:                    options.Target(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -270,8 +258,7 @@ func (c *projectionsDeliveryClient) GetViewData(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*Data, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -279,12 +266,13 @@ func (c *projectionsDeliveryClient) GetViewData(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Filter:               filter.toProtobufFilter(),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryWait(),
+		View:                     view,
+		Auth:                     pbAuthData,
+		Filter:                   filter.toProtobufFilter(),
+		Wait:                     wait.toDeliveryWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -304,8 +292,7 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 	authData *AuthData,
 	filter *JsonFilter,
 	wait *JsonWait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*JsonData, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -313,12 +300,13 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Filter:               filter.toProtobufFilter(),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryWait(),
+		View:                     view,
+		Auth:                     pbAuthData,
+		Filter:                   filter.toProtobufFilter(),
+		Wait:                     wait.toDeliveryWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -340,9 +328,8 @@ func (c *projectionsDeliveryClient) GetDataList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*DataList, error) {
 	var (
 		limit int64
@@ -360,15 +347,16 @@ func (c *projectionsDeliveryClient) GetDataList(
 	}
 
 	response, err := c.client.GetDataList(ctx, deliverypb.GetDataListRequest_builder{
-		Projection:           projection,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		Projection:               projection,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -400,9 +388,8 @@ func (c *projectionsDeliveryClient) GetJsonDataList(
 	pagination *Pagination,
 	filter *JsonFilter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*JsonDataList, error) {
 	var (
 		limit int64
@@ -420,15 +407,16 @@ func (c *projectionsDeliveryClient) GetJsonDataList(
 	}
 
 	response, err := c.client.GetDataList(ctx, deliverypb.GetDataListRequest_builder{
-		Projection:           projection,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		Projection:               projection,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -455,9 +443,8 @@ func (c *projectionsDeliveryClient) GetViewDataList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*DataList, error) {
 	var (
 		limit int64
@@ -475,15 +462,16 @@ func (c *projectionsDeliveryClient) GetViewDataList(
 	}
 
 	response, err := c.client.GetViewDataList(ctx, deliverypb.GetViewDataListRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		View:                     view,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -515,9 +503,8 @@ func (c *projectionsDeliveryClient) GetViewJsonDataList(
 	pagination *Pagination,
 	filter *JsonFilter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*JsonDataList, error) {
 	var (
 		limit int64
@@ -535,15 +522,16 @@ func (c *projectionsDeliveryClient) GetViewJsonDataList(
 	}
 
 	response, err := c.client.GetViewDataList(ctx, deliverypb.GetViewDataListRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		View:                     view,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err

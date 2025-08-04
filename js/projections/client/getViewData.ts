@@ -5,16 +5,17 @@ import {
 import { AuthData, getProtobufAuthData } from "./auth";
 import { ProjectionData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
+import { GetEntryOptions } from "./options";
 import { Wait, getProtobufDataWait } from "./wait";
 
 export const getViewData = async <T extends ProjectionData>(
     view: string,
     auth: AuthData,
     filter: Filter,
-    useStrongConsistency: boolean,
     target: DeploymentTarget,
     serviceClient: ServiceClient,
-    wait?: Wait
+    wait?: Wait,
+    options?: GetEntryOptions
 ): Promise<T | null> => {
     return new Promise<T | null>((resolve, reject) => {
         serviceClient.getViewData(
@@ -22,9 +23,10 @@ export const getViewData = async <T extends ProjectionData>(
                 view,
                 auth: getProtobufAuthData(auth),
                 filter: getProtobufDataFilter(filter),
-                useStrongConsistency,
-                target,
                 wait: getProtobufDataWait(wait),
+                target,
+                useStrongConsistency: options?.useStrongConsistency ?? false,
+                useStrongConsistencyById: options?.useStrongConsistencyById ?? "",
             },
             (error, response) => {
                 if (error) {

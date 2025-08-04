@@ -21,15 +21,16 @@ const (
 )
 
 type GetViewDataRequest struct {
-	state                           protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_View                 string                 `protobuf:"bytes,1,opt,name=view,proto3"`
-	xxx_hidden_Auth                 *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
-	xxx_hidden_Filter               *DataFilter            `protobuf:"bytes,3,opt,name=filter,proto3"`
-	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,4,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
-	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,5,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
-	xxx_hidden_Wait                 *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
+	state                               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_View                     string                 `protobuf:"bytes,1,opt,name=view,proto3"`
+	xxx_hidden_Auth                     *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
+	xxx_hidden_Filter                   *DataFilter            `protobuf:"bytes,3,opt,name=filter,proto3"`
+	xxx_hidden_UseStrongConsistency     bool                   `protobuf:"varint,4,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
+	xxx_hidden_Target                   DeploymentTarget       `protobuf:"varint,5,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                     *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
+	xxx_hidden_UseStrongConsistencyById string                 `protobuf:"bytes,7,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
+	unknownFields                       protoimpl.UnknownFields
+	sizeCache                           protoimpl.SizeCache
 }
 
 func (x *GetViewDataRequest) Reset() {
@@ -99,6 +100,13 @@ func (x *GetViewDataRequest) GetWait() *DataWait {
 	return nil
 }
 
+func (x *GetViewDataRequest) GetUseStrongConsistencyById() string {
+	if x != nil {
+		return x.xxx_hidden_UseStrongConsistencyById
+	}
+	return ""
+}
+
 func (x *GetViewDataRequest) SetView(v string) {
 	x.xxx_hidden_View = v
 }
@@ -121,6 +129,10 @@ func (x *GetViewDataRequest) SetTarget(v DeploymentTarget) {
 
 func (x *GetViewDataRequest) SetWait(v *DataWait) {
 	x.xxx_hidden_Wait = v
+}
+
+func (x *GetViewDataRequest) SetUseStrongConsistencyById(v string) {
+	x.xxx_hidden_UseStrongConsistencyById = v
 }
 
 func (x *GetViewDataRequest) HasAuth() bool {
@@ -159,12 +171,13 @@ func (x *GetViewDataRequest) ClearWait() {
 type GetViewDataRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	View                 string
-	Auth                 *AuthData
-	Filter               *DataFilter
-	UseStrongConsistency bool
-	Target               DeploymentTarget
-	Wait                 *DataWait
+	View                     string
+	Auth                     *AuthData
+	Filter                   *DataFilter
+	UseStrongConsistency     bool
+	Target                   DeploymentTarget
+	Wait                     *DataWait
+	UseStrongConsistencyById string
 }
 
 func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
@@ -177,6 +190,7 @@ func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Wait = b.Wait
+	x.xxx_hidden_UseStrongConsistencyById = b.UseStrongConsistencyById
 	return m0
 }
 
@@ -249,18 +263,19 @@ func (b0 GetViewDataResponse_builder) Build() *GetViewDataResponse {
 }
 
 type GetViewDataListRequest struct {
-	state                           protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_View                 string                 `protobuf:"bytes,1,opt,name=view,proto3"`
-	xxx_hidden_Auth                 *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
-	xxx_hidden_Limit                int64                  `protobuf:"varint,3,opt,name=limit,proto3"`
-	xxx_hidden_Page                 int64                  `protobuf:"varint,4,opt,name=page,proto3"`
-	xxx_hidden_Filter               *DataFilter            `protobuf:"bytes,5,opt,name=filter,proto3"`
-	xxx_hidden_Order                *[]*DataOrder          `protobuf:"bytes,6,rep,name=order,proto3"`
-	xxx_hidden_UseStrongConsistency bool                   `protobuf:"varint,7,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
-	xxx_hidden_Target               DeploymentTarget       `protobuf:"varint,8,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
-	xxx_hidden_Wait                 *DataListWait          `protobuf:"bytes,9,opt,name=wait,proto3"`
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
+	state                               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_View                     string                 `protobuf:"bytes,1,opt,name=view,proto3"`
+	xxx_hidden_Auth                     *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
+	xxx_hidden_Limit                    int64                  `protobuf:"varint,3,opt,name=limit,proto3"`
+	xxx_hidden_Page                     int64                  `protobuf:"varint,4,opt,name=page,proto3"`
+	xxx_hidden_Filter                   *DataFilter            `protobuf:"bytes,5,opt,name=filter,proto3"`
+	xxx_hidden_Order                    *[]*DataOrder          `protobuf:"bytes,6,rep,name=order,proto3"`
+	xxx_hidden_UseStrongConsistency     bool                   `protobuf:"varint,7,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
+	xxx_hidden_Target                   DeploymentTarget       `protobuf:"varint,8,opt,name=target,proto3,enum=freym.projections.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                     *DataListWait          `protobuf:"bytes,9,opt,name=wait,proto3"`
+	xxx_hidden_UseStrongConsistencyById string                 `protobuf:"bytes,10,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
+	unknownFields                       protoimpl.UnknownFields
+	sizeCache                           protoimpl.SizeCache
 }
 
 func (x *GetViewDataListRequest) Reset() {
@@ -353,6 +368,13 @@ func (x *GetViewDataListRequest) GetWait() *DataListWait {
 	return nil
 }
 
+func (x *GetViewDataListRequest) GetUseStrongConsistencyById() string {
+	if x != nil {
+		return x.xxx_hidden_UseStrongConsistencyById
+	}
+	return ""
+}
+
 func (x *GetViewDataListRequest) SetView(v string) {
 	x.xxx_hidden_View = v
 }
@@ -387,6 +409,10 @@ func (x *GetViewDataListRequest) SetTarget(v DeploymentTarget) {
 
 func (x *GetViewDataListRequest) SetWait(v *DataListWait) {
 	x.xxx_hidden_Wait = v
+}
+
+func (x *GetViewDataListRequest) SetUseStrongConsistencyById(v string) {
+	x.xxx_hidden_UseStrongConsistencyById = v
 }
 
 func (x *GetViewDataListRequest) HasAuth() bool {
@@ -425,15 +451,16 @@ func (x *GetViewDataListRequest) ClearWait() {
 type GetViewDataListRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	View                 string
-	Auth                 *AuthData
-	Limit                int64
-	Page                 int64
-	Filter               *DataFilter
-	Order                []*DataOrder
-	UseStrongConsistency bool
-	Target               DeploymentTarget
-	Wait                 *DataListWait
+	View                     string
+	Auth                     *AuthData
+	Limit                    int64
+	Page                     int64
+	Filter                   *DataFilter
+	Order                    []*DataOrder
+	UseStrongConsistency     bool
+	Target                   DeploymentTarget
+	Wait                     *DataListWait
+	UseStrongConsistencyById string
 }
 
 func (b0 GetViewDataListRequest_builder) Build() *GetViewDataListRequest {
@@ -449,6 +476,7 @@ func (b0 GetViewDataListRequest_builder) Build() *GetViewDataListRequest {
 	x.xxx_hidden_UseStrongConsistency = b.UseStrongConsistency
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Wait = b.Wait
+	x.xxx_hidden_UseStrongConsistencyById = b.UseStrongConsistencyById
 	return m0
 }
 
@@ -557,16 +585,17 @@ var File_projections_delivery_get_view_data_proto protoreflect.FileDescriptor
 
 const file_projections_delivery_get_view_data_proto_rawDesc = "" +
 	"\n" +
-	"(projections/delivery/get_view_data.proto\x12\x1afreym.projections.delivery\x1a!projections/delivery/shared.proto\"\xd8\x02\n" +
+	"(projections/delivery/get_view_data.proto\x12\x1afreym.projections.delivery\x1a!projections/delivery/shared.proto\"\x98\x03\n" +
 	"\x12GetViewDataRequest\x12\x12\n" +
 	"\x04view\x18\x01 \x01(\tR\x04view\x128\n" +
 	"\x04auth\x18\x02 \x01(\v2$.freym.projections.delivery.AuthDataR\x04auth\x12>\n" +
 	"\x06filter\x18\x03 \x01(\v2&.freym.projections.delivery.DataFilterR\x06filter\x124\n" +
 	"\x16use_strong_consistency\x18\x04 \x01(\bR\x14useStrongConsistency\x12D\n" +
 	"\x06target\x18\x05 \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\x128\n" +
-	"\x04wait\x18\x06 \x01(\v2$.freym.projections.delivery.DataWaitR\x04wait\"O\n" +
+	"\x04wait\x18\x06 \x01(\v2$.freym.projections.delivery.DataWaitR\x04wait\x12>\n" +
+	"\x1cuse_strong_consistency_by_id\x18\a \x01(\tR\x18useStrongConsistencyById\"O\n" +
 	"\x13GetViewDataResponse\x128\n" +
-	"\x06result\x18\x01 \x01(\v2 .freym.projections.delivery.DataR\x06result\"\xc7\x03\n" +
+	"\x06result\x18\x01 \x01(\v2 .freym.projections.delivery.DataR\x06result\"\x87\x04\n" +
 	"\x16GetViewDataListRequest\x12\x12\n" +
 	"\x04view\x18\x01 \x01(\tR\x04view\x128\n" +
 	"\x04auth\x18\x02 \x01(\v2$.freym.projections.delivery.AuthDataR\x04auth\x12\x14\n" +
@@ -576,7 +605,9 @@ const file_projections_delivery_get_view_data_proto_rawDesc = "" +
 	"\x05order\x18\x06 \x03(\v2%.freym.projections.delivery.DataOrderR\x05order\x124\n" +
 	"\x16use_strong_consistency\x18\a \x01(\bR\x14useStrongConsistency\x12D\n" +
 	"\x06target\x18\b \x01(\x0e2,.freym.projections.delivery.DeploymentTargetR\x06target\x12<\n" +
-	"\x04wait\x18\t \x01(\v2(.freym.projections.delivery.DataListWaitR\x04wait\"\x93\x01\n" +
+	"\x04wait\x18\t \x01(\v2(.freym.projections.delivery.DataListWaitR\x04wait\x12>\n" +
+	"\x1cuse_strong_consistency_by_id\x18\n" +
+	" \x01(\tR\x18useStrongConsistencyById\"\x93\x01\n" +
 	"\x17GetViewDataListResponse\x128\n" +
 	"\x06result\x18\x01 \x03(\v2 .freym.projections.delivery.DataR\x06result\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x03R\x05limit\x12\x12\n" +

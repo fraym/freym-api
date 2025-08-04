@@ -61,9 +61,7 @@ type DeliveryClient interface {
 		id string,
 		filter *Filter,
 		wait *Wait,
-		returnEmptyDataIfNotFound bool,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetSingleEntryOptions,
 	) (*Entry, error)
 	GetEntryList(
 		ctx context.Context,
@@ -72,9 +70,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *Filter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*EntryList, error)
 	GetViewEntry(
 		ctx context.Context,
@@ -82,8 +79,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *Filter,
 		wait *Wait,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
+		options *GetEntryOptions,
 	) (*Entry, error)
 	GetViewEntryList(
 		ctx context.Context,
@@ -92,9 +88,8 @@ type DeliveryClient interface {
 		pagination *Pagination,
 		filter *Filter,
 		order []Order,
-		useStrongConsistency bool,
-		target deliverypb.DeploymentTarget,
 		wait *ListWait,
+		options *GetEntryOptions,
 	) (*EntryList, error)
 	CreateEntry(
 		ctx context.Context,
@@ -181,9 +176,7 @@ func (c *crudDeliveryClient) GetEntry(
 	id string,
 	filter *Filter,
 	wait *Wait,
-	returnEmptyDataIfNotFound bool,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*Entry, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -196,9 +189,10 @@ func (c *crudDeliveryClient) GetEntry(
 		Id:                        id,
 		Filter:                    filter.toProtobufFilter(),
 		Wait:                      wait.toDeliveryWait(),
-		ReturnEmptyDataIfNotFound: returnEmptyDataIfNotFound,
-		UseStrongConsistency:      useStrongConsistency,
-		Target:                    target,
+		Target:                    options.Target(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -219,9 +213,8 @@ func (c *crudDeliveryClient) GetEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*EntryList, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -239,15 +232,16 @@ func (c *crudDeliveryClient) GetEntryList(
 	}
 
 	response, err := c.client.GetDataList(ctx, deliverypb.GetDataListRequest_builder{
-		Type:                 typeName,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		Type:                     typeName,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -278,8 +272,7 @@ func (c *crudDeliveryClient) GetViewEntry(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*Entry, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -287,12 +280,13 @@ func (c *crudDeliveryClient) GetViewEntry(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Filter:               filter.toProtobufFilter(),
-		Wait:                 wait.toDeliveryWait(),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
+		View:                     view,
+		Auth:                     pbAuthData,
+		Filter:                   filter.toProtobufFilter(),
+		Wait:                     wait.toDeliveryWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -313,9 +307,8 @@ func (c *crudDeliveryClient) GetViewEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*EntryList, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -333,15 +326,16 @@ func (c *crudDeliveryClient) GetViewEntryList(
 	}
 
 	response, err := c.client.GetViewDataList(ctx, deliverypb.GetViewDataListRequest_builder{
-		View:                 view,
-		Auth:                 pbAuthData,
-		Limit:                limit,
-		Page:                 page,
-		Filter:               filter.toProtobufFilter(),
-		Order:                toProtobufOrder(order),
-		UseStrongConsistency: useStrongConsistency,
-		Target:               target,
-		Wait:                 wait.toDeliveryListWait(),
+		View:                     view,
+		Auth:                     pbAuthData,
+		Limit:                    limit,
+		Page:                     page,
+		Filter:                   filter.toProtobufFilter(),
+		Order:                    toProtobufOrder(order),
+		Wait:                     wait.toDeliveryListWait(),
+		Target:                   options.Target(),
+		UseStrongConsistency:     options.UseStrongConsistency(),
+		UseStrongConsistencyById: options.UseStrongConsistencyById(),
 	}.Build())
 	if err != nil {
 		return nil, err

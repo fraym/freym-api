@@ -1,4 +1,4 @@
-import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
+import { ServiceClient } from "@fraym/proto/dist/index.freym.crud.delivery";
 import { credentials } from "@grpc/grpc-js";
 import { AuthData } from "./auth";
 import { CloneResponse, cloneCrudData } from "./clone";
@@ -12,6 +12,7 @@ import { getCrudData } from "./getData";
 import { GetCrudDataList, getCrudDataList } from "./getDataList";
 import { getViewData as getDataFromView } from "./getViewData";
 import { GetViewDataList, getViewDataList as getDataListFromView } from "./getViewDataList";
+import { GetEntryOptions, GetSingleEntryOptions } from "./options";
 import { Order } from "./order";
 import { UpdateResponse, updateCrudData } from "./update";
 import { UpdateByFilterResponse, updateCrudDataByFilter } from "./updateByFilter";
@@ -24,17 +25,15 @@ export interface DeliveryClient {
         authData: AuthData,
         id: string,
         filter?: Filter,
-        returnEmptyDataIfNotFound?: boolean,
-        useStrongConsistency?: boolean,
-        target?: DeploymentTarget,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetSingleEntryOptions
     ) => Promise<T | null>;
     getViewData: <T extends CrudData>(
         view: string,
         authData: AuthData,
         filter?: Filter,
-        useStrongConsistency?: boolean,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetEntryOptions
     ) => Promise<T | null>;
     getDataList: <T extends CrudData>(
         type: string,
@@ -43,9 +42,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        target?: DeploymentTarget,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ) => Promise<GetCrudDataList<T>>;
     getViewDataList: <T extends CrudData>(
         view: string,
@@ -54,8 +52,8 @@ export interface DeliveryClient {
         page?: number,
         filter?: Filter,
         order?: Order[],
-        useStrongConsistency?: boolean,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ) => Promise<GetCrudDataList<T> | null>;
     create: <T extends CrudData>(
         type: string,
@@ -123,21 +121,18 @@ export const newDeliveryClient = async (
         authData: AuthData,
         id: string,
         filter: Filter = { fields: {}, and: [], or: [] },
-        returnEmptyDataIfNotFound: boolean = false,
-        useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE",
-        wait?: Wait
+        wait?: Wait,
+        options?: GetSingleEntryOptions
     ): Promise<T | null> => {
         return await getCrudData<T>(
             type,
             authData,
             id,
             filter,
-            returnEmptyDataIfNotFound,
-            !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -145,17 +140,17 @@ export const newDeliveryClient = async (
         view: string,
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
-        useStrongConsistency: boolean = false,
-        wait?: Wait
+        wait?: Wait,
+        options?: GetEntryOptions
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,
             auth,
             filter,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -166,9 +161,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        target: DeploymentTarget = "DEPLOYMENT_TARGET_BLUE",
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ): Promise<GetCrudDataList<T>> => {
         return await getCrudDataList<T>(
             type,
@@ -177,10 +171,10 @@ export const newDeliveryClient = async (
             page,
             filter,
             order,
-            !!useStrongConsistency,
-            target,
+            config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 
@@ -191,8 +185,8 @@ export const newDeliveryClient = async (
         page: number = 1,
         filter: Filter = { fields: {}, and: [], or: [] },
         order: Order[] = [],
-        useStrongConsistency: boolean = false,
-        wait?: ListWait
+        wait?: ListWait,
+        options?: GetEntryOptions
     ): Promise<GetViewDataList<T> | null> => {
         return await getDataListFromView<T>(
             view,
@@ -201,10 +195,10 @@ export const newDeliveryClient = async (
             page,
             filter,
             order,
-            !!useStrongConsistency,
             config.deploymentTarget,
             serviceClient,
-            wait
+            wait,
+            options
         );
     };
 

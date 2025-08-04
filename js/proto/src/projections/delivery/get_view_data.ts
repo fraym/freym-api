@@ -25,6 +25,7 @@ export interface GetViewDataRequest {
     useStrongConsistency: boolean;
     target: DeploymentTarget;
     wait: DataWait | undefined;
+    useStrongConsistencyById: string;
 }
 
 export interface GetViewDataResponse {
@@ -41,6 +42,7 @@ export interface GetViewDataListRequest {
     useStrongConsistency: boolean;
     target: DeploymentTarget;
     wait: DataListWait | undefined;
+    useStrongConsistencyById: string;
 }
 
 export interface GetViewDataListResponse {
@@ -58,6 +60,7 @@ function createBaseGetViewDataRequest(): GetViewDataRequest {
         useStrongConsistency: false,
         target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         wait: undefined,
+        useStrongConsistencyById: "",
     };
 }
 
@@ -80,6 +83,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         }
         if (message.wait !== undefined) {
             DataWait.encode(message.wait, writer.uint32(50).fork()).join();
+        }
+        if (message.useStrongConsistencyById !== "") {
+            writer.uint32(58).string(message.useStrongConsistencyById);
         }
         return writer;
     },
@@ -139,6 +145,14 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                     message.wait = DataWait.decode(reader, reader.uint32());
                     continue;
                 }
+                case 7: {
+                    if (tag !== 58) {
+                        break;
+                    }
+
+                    message.useStrongConsistencyById = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -160,6 +174,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
             wait: isSet(object.wait) ? DataWait.fromJSON(object.wait) : undefined,
+            useStrongConsistencyById: isSet(object.useStrongConsistencyById)
+                ? globalThis.String(object.useStrongConsistencyById)
+                : "",
         };
     },
 
@@ -182,6 +199,9 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
         }
         if (message.wait !== undefined) {
             obj.wait = DataWait.toJSON(message.wait);
+        }
+        if (message.useStrongConsistencyById !== "") {
+            obj.useStrongConsistencyById = message.useStrongConsistencyById;
         }
         return obj;
     },
@@ -206,6 +226,7 @@ export const GetViewDataRequest: MessageFns<GetViewDataRequest> = {
             object.wait !== undefined && object.wait !== null
                 ? DataWait.fromPartial(object.wait)
                 : undefined;
+        message.useStrongConsistencyById = object.useStrongConsistencyById ?? "";
         return message;
     },
 };
@@ -282,6 +303,7 @@ function createBaseGetViewDataListRequest(): GetViewDataListRequest {
         useStrongConsistency: false,
         target: DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
         wait: undefined,
+        useStrongConsistencyById: "",
     };
 }
 
@@ -316,6 +338,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         }
         if (message.wait !== undefined) {
             DataListWait.encode(message.wait, writer.uint32(74).fork()).join();
+        }
+        if (message.useStrongConsistencyById !== "") {
+            writer.uint32(82).string(message.useStrongConsistencyById);
         }
         return writer;
     },
@@ -399,6 +424,14 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                     message.wait = DataListWait.decode(reader, reader.uint32());
                     continue;
                 }
+                case 10: {
+                    if (tag !== 82) {
+                        break;
+                    }
+
+                    message.useStrongConsistencyById = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -425,6 +458,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
                 ? deploymentTargetFromJSON(object.target)
                 : DeploymentTarget.DEPLOYMENT_TARGET_BLUE,
             wait: isSet(object.wait) ? DataListWait.fromJSON(object.wait) : undefined,
+            useStrongConsistencyById: isSet(object.useStrongConsistencyById)
+                ? globalThis.String(object.useStrongConsistencyById)
+                : "",
         };
     },
 
@@ -457,6 +493,9 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
         if (message.wait !== undefined) {
             obj.wait = DataListWait.toJSON(message.wait);
         }
+        if (message.useStrongConsistencyById !== "") {
+            obj.useStrongConsistencyById = message.useStrongConsistencyById;
+        }
         return obj;
     },
 
@@ -483,6 +522,7 @@ export const GetViewDataListRequest: MessageFns<GetViewDataListRequest> = {
             object.wait !== undefined && object.wait !== null
                 ? DataListWait.fromPartial(object.wait)
                 : undefined;
+        message.useStrongConsistencyById = object.useStrongConsistencyById ?? "";
         return message;
     },
 };

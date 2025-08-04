@@ -3,7 +3,6 @@ package crud
 import (
 	"context"
 
-	"github.com/fraym/freym-api/go/proto/crud/deliverypb"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -18,11 +17,9 @@ func (c *MockDeliveryClient) GetEntry(
 	id string,
 	filter *Filter,
 	wait *Wait,
-	returnEmptyDataIfNotFound bool,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetSingleEntryOptions,
 ) (*Entry, error) {
-	args := c.Called(ctx, typeName, authData, id, filter, returnEmptyDataIfNotFound, wait, useStrongConsistency, target)
+	args := c.Called(ctx, typeName, authData, id, filter, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -36,11 +33,10 @@ func (c *MockDeliveryClient) GetEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*EntryList, error) {
-	args := c.Called(ctx, typeName, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, typeName, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -53,10 +49,9 @@ func (c *MockDeliveryClient) GetViewEntry(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
+	options *GetEntryOptions,
 ) (*Entry, error) {
-	args := c.Called(ctx, view, authData, filter, wait, useStrongConsistency, target)
+	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -70,11 +65,10 @@ func (c *MockDeliveryClient) GetViewEntryList(
 	pagination *Pagination,
 	filter *Filter,
 	order []Order,
-	useStrongConsistency bool,
-	target deliverypb.DeploymentTarget,
 	wait *ListWait,
+	options *GetEntryOptions,
 ) (*EntryList, error) {
-	args := c.Called(ctx, view, authData, pagination, filter, order, useStrongConsistency, target, wait)
+	args := c.Called(ctx, view, authData, pagination, filter, order, wait, options)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
