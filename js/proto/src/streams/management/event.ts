@@ -70,6 +70,7 @@ export interface EventMetadata {
     userId: string;
     /** when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id. */
     deploymentId: string;
+    retryNumber: string;
 }
 
 export interface EventPayload {
@@ -828,7 +829,14 @@ export const EventOptions: MessageFns<EventOptions> = {
 };
 
 function createBaseEventMetadata(): EventMetadata {
-    return { correlationId: "", causationId: "", orderSerial: "0", userId: "", deploymentId: "0" };
+    return {
+        correlationId: "",
+        causationId: "",
+        orderSerial: "0",
+        userId: "",
+        deploymentId: "0",
+        retryNumber: "0",
+    };
 }
 
 export const EventMetadata: MessageFns<EventMetadata> = {
@@ -847,6 +855,9 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         }
         if (message.deploymentId !== "0") {
             writer.uint32(40).int64(message.deploymentId);
+        }
+        if (message.retryNumber !== "0") {
+            writer.uint32(48).int64(message.retryNumber);
         }
         return writer;
     },
@@ -898,6 +909,14 @@ export const EventMetadata: MessageFns<EventMetadata> = {
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
+                case 6: {
+                    if (tag !== 48) {
+                        break;
+                    }
+
+                    message.retryNumber = reader.int64().toString();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -916,6 +935,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
             orderSerial: isSet(object.orderSerial) ? globalThis.String(object.orderSerial) : "0",
             userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            retryNumber: isSet(object.retryNumber) ? globalThis.String(object.retryNumber) : "0",
         };
     },
 
@@ -936,6 +956,9 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
         }
+        if (message.retryNumber !== "0") {
+            obj.retryNumber = message.retryNumber;
+        }
         return obj;
     },
 
@@ -949,6 +972,7 @@ export const EventMetadata: MessageFns<EventMetadata> = {
         message.orderSerial = object.orderSerial ?? "0";
         message.userId = object.userId ?? "";
         message.deploymentId = object.deploymentId ?? "0";
+        message.retryNumber = object.retryNumber ?? "0";
         return message;
     },
 };

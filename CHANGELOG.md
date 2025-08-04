@@ -1,5 +1,7 @@
 # vNext
 
+- (feature) streams: Improve retry mechanisms by adding a retry number
+- (feature) streams: Improve retry mechanisms by returning a `doRetry` flag on error
 - (feature) streams: Add transactional consistency by correlation id
 - (feature) crud + projections: Strong consistency by id
 

@@ -32,6 +32,7 @@ message Handled {
 	string tenant_id = 1;
 	string topic = 2;
 	string error = 3;
+	bool retry = 4;
 }
 
 

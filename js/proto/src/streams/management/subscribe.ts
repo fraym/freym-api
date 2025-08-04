@@ -42,6 +42,7 @@ export interface Handled {
     tenantId: string;
     topic: string;
     error: string;
+    retry: boolean;
 }
 
 /** responses */
@@ -354,7 +355,7 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
 };
 
 function createBaseHandled(): Handled {
-    return { tenantId: "", topic: "", error: "" };
+    return { tenantId: "", topic: "", error: "", retry: false };
 }
 
 export const Handled: MessageFns<Handled> = {
@@ -367,6 +368,9 @@ export const Handled: MessageFns<Handled> = {
         }
         if (message.error !== "") {
             writer.uint32(26).string(message.error);
+        }
+        if (message.retry !== false) {
+            writer.uint32(32).bool(message.retry);
         }
         return writer;
     },
@@ -402,6 +406,14 @@ export const Handled: MessageFns<Handled> = {
                     message.error = reader.string();
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.retry = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -416,6 +428,7 @@ export const Handled: MessageFns<Handled> = {
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
             topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
             error: isSet(object.error) ? globalThis.String(object.error) : "",
+            retry: isSet(object.retry) ? globalThis.Boolean(object.retry) : false,
         };
     },
 
@@ -430,6 +443,9 @@ export const Handled: MessageFns<Handled> = {
         if (message.error !== "") {
             obj.error = message.error;
         }
+        if (message.retry !== false) {
+            obj.retry = message.retry;
+        }
         return obj;
     },
 
@@ -441,6 +457,7 @@ export const Handled: MessageFns<Handled> = {
         message.tenantId = object.tenantId ?? "";
         message.topic = object.topic ?? "";
         message.error = object.error ?? "";
+        message.retry = object.retry ?? false;
         return message;
     },
 };

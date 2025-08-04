@@ -376,6 +376,7 @@ type Handled struct {
 	xxx_hidden_TenantId string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
 	xxx_hidden_Topic    string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
 	xxx_hidden_Error    string                 `protobuf:"bytes,3,opt,name=error,proto3"`
+	xxx_hidden_Retry    bool                   `protobuf:"varint,4,opt,name=retry,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -426,6 +427,13 @@ func (x *Handled) GetError() string {
 	return ""
 }
 
+func (x *Handled) GetRetry() bool {
+	if x != nil {
+		return x.xxx_hidden_Retry
+	}
+	return false
+}
+
 func (x *Handled) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -438,12 +446,17 @@ func (x *Handled) SetError(v string) {
 	x.xxx_hidden_Error = v
 }
 
+func (x *Handled) SetRetry(v bool) {
+	x.xxx_hidden_Retry = v
+}
+
 type Handled_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	TenantId string
 	Topic    string
 	Error    string
+	Retry    bool
 }
 
 func (b0 Handled_builder) Build() *Handled {
@@ -453,6 +466,7 @@ func (b0 Handled_builder) Build() *Handled {
 	x.xxx_hidden_TenantId = b.TenantId
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_Error = b.Error
+	x.xxx_hidden_Retry = b.Retry
 	return m0
 }
 
@@ -807,11 +821,12 @@ const file_streams_management_subscribe_proto_rawDesc = "" +
 	"\x11SubscribeMetadata\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12#\n" +
 	"\rsubscriber_id\x18\x02 \x01(\tR\fsubscriberId\x12#\n" +
-	"\rdeployment_id\x18\x03 \x01(\x03R\fdeploymentId\"R\n" +
+	"\rdeployment_id\x18\x03 \x01(\x03R\fdeploymentId\"h\n" +
 	"\aHandled\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +
-	"\x05error\x18\x03 \x01(\tR\x05error\"\xd8\x01\n" +
+	"\x05error\x18\x03 \x01(\tR\x05error\x12\x14\n" +
+	"\x05retry\x18\x04 \x01(\bR\x05retry\"\xd8\x01\n" +
 	"\x11SubscribeResponse\x12F\n" +
 	"\n" +
 	"subscribed\x18\x01 \x01(\v2$.freym.streams.management.SubscribedH\x00R\n" +

@@ -623,6 +623,7 @@ type EventMetadata struct {
 	xxx_hidden_OrderSerial   int64                  `protobuf:"varint,3,opt,name=order_serial,json=orderSerial,proto3"`
 	xxx_hidden_UserId        string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3"`
 	xxx_hidden_DeploymentId  int64                  `protobuf:"varint,5,opt,name=deployment_id,json=deploymentId,proto3"`
+	xxx_hidden_RetryNumber   int64                  `protobuf:"varint,6,opt,name=retry_number,json=retryNumber,proto3"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -687,6 +688,13 @@ func (x *EventMetadata) GetDeploymentId() int64 {
 	return 0
 }
 
+func (x *EventMetadata) GetRetryNumber() int64 {
+	if x != nil {
+		return x.xxx_hidden_RetryNumber
+	}
+	return 0
+}
+
 func (x *EventMetadata) SetCorrelationId(v string) {
 	x.xxx_hidden_CorrelationId = v
 }
@@ -707,6 +715,10 @@ func (x *EventMetadata) SetDeploymentId(v int64) {
 	x.xxx_hidden_DeploymentId = v
 }
 
+func (x *EventMetadata) SetRetryNumber(v int64) {
+	x.xxx_hidden_RetryNumber = v
+}
+
 type EventMetadata_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
@@ -716,6 +728,7 @@ type EventMetadata_builder struct {
 	UserId        string
 	// when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id.
 	DeploymentId int64
+	RetryNumber  int64
 }
 
 func (b0 EventMetadata_builder) Build() *EventMetadata {
@@ -727,6 +740,7 @@ func (b0 EventMetadata_builder) Build() *EventMetadata {
 	x.xxx_hidden_OrderSerial = b.OrderSerial
 	x.xxx_hidden_UserId = b.UserId
 	x.xxx_hidden_DeploymentId = b.DeploymentId
+	x.xxx_hidden_RetryNumber = b.RetryNumber
 	return m0
 }
 
@@ -933,13 +947,14 @@ const file_streams_management_event_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12<\n" +
 	"\x05value\x18\x02 \x01(\v2&.freym.streams.management.EventPayloadR\x05value:\x028\x01\",\n" +
 	"\fEventOptions\x12\x1c\n" +
-	"\tbroadcast\x18\x01 \x01(\bR\tbroadcast\"\xba\x01\n" +
+	"\tbroadcast\x18\x01 \x01(\bR\tbroadcast\"\xdd\x01\n" +
 	"\rEventMetadata\x12%\n" +
 	"\x0ecorrelation_id\x18\x01 \x01(\tR\rcorrelationId\x12!\n" +
 	"\fcausation_id\x18\x02 \x01(\tR\vcausationId\x12!\n" +
 	"\forder_serial\x18\x03 \x01(\x03R\vorderSerial\x12\x17\n" +
 	"\auser_id\x18\x04 \x01(\tR\x06userId\x12#\n" +
-	"\rdeployment_id\x18\x05 \x01(\x03R\fdeploymentId\"b\n" +
+	"\rdeployment_id\x18\x05 \x01(\x03R\fdeploymentId\x12!\n" +
+	"\fretry_number\x18\x06 \x01(\x03R\vretryNumber\"b\n" +
 	"\fEventPayload\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12<\n" +
 	"\x04gdpr\x18\x02 \x01(\v2(.freym.streams.management.EventGdprValueR\x04gdpr\"a\n" +
