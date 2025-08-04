@@ -5,6 +5,7 @@
 
 export * from "./streams/management/event";
 export * from "./streams/management/backchannel";
+export * from "./streams/management/erroneous";
 export * from "./streams/management/gdpr";
 export * from "./streams/management/paginate";
 export * from "./streams/management/publish";

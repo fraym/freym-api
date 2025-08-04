@@ -2,7 +2,8 @@ import { ServiceClient } from "@fraym/proto/dist/index.freym.streams.management"
 import { credentials } from "@grpc/grpc-js";
 import { getAllEvents, getAllEventsAfterEvent } from "./allEvents";
 import { ClientConfig, useConfigDefaults } from "./config";
-import { HandlerFunc, PublishEvent, SubscriptionEvent } from "./event";
+import { listErroneousEvents, resendErroneousEvent } from "./erroneousEvents";
+import { ErroneousEvent, HandlerFunc, PublishEvent, SubscriptionEvent } from "./event";
 import { getEvent } from "./getEvent";
 import { getLastEvent } from "./getLastEvent";
 import { getLastEventByTypes } from "./getLastEventByTypes";
@@ -13,6 +14,7 @@ import { sendPublish } from "./publish";
 import { renameEventType } from "./rename";
 import { createStreamSnapshot, getStream, getStreamAfterEvent, isStreamEmpty } from "./stream";
 import { Subscription, newSubscription } from "./subscribe";
+import { waitForTransactionalConsistency } from "./transactionalConsistency";
 
 export interface StreamIterator {
     forEach: (callback: (event: SubscriptionEvent) => void) => Promise<void>;
@@ -74,6 +76,24 @@ export interface Client {
         fieldName: string
     ) => Promise<void>;
     renameEventType: (topic: string, oldEventType: string, newEventType: string) => Promise<void>;
+    waitForTransactionalConsistency: (
+        tenantId: string,
+        topic: string,
+        correlationId: string,
+        consumerGroups: string[]
+    ) => Promise<void>;
+    listErroneousEvents: (
+        tenantId: string,
+        topic: string,
+        eventTypes: string[],
+        limit: number
+    ) => Promise<ErroneousEvent[]>;
+    resendErroneousEvent: (
+        tenantId: string,
+        topic: string,
+        consumerGroup: string,
+        eventId: string
+    ) => Promise<void>;
 }
 
 export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
@@ -271,6 +291,27 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
         },
         renameEventType: async (topic, oldEventType, newEventType) => {
             return await renameEventType(topic, oldEventType, newEventType, serviceClient);
+        },
+        waitForTransactionalConsistency: async (tenantId, topic, correlationId, consumerGroups) => {
+            return await waitForTransactionalConsistency(
+                tenantId,
+                topic,
+                correlationId,
+                consumerGroups,
+                serviceClient
+            );
+        },
+        listErroneousEvents: async (tenantId, topic, eventTypes, limit) => {
+            return await listErroneousEvents(tenantId, topic, eventTypes, limit, serviceClient);
+        },
+        resendErroneousEvent: async (tenantId, topic, consumerGroup, eventId) => {
+            return await resendErroneousEvent(
+                tenantId,
+                topic,
+                consumerGroup,
+                eventId,
+                serviceClient
+            );
         },
         close: () => {
             closeFunctions.forEach(close => close());

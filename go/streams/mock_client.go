@@ -166,6 +166,40 @@ func (c *MockClient) RenameEventType(
 	return c.Called(ctx, topic, oldEventType, newEventType).Error(0)
 }
 
+func (c *MockClient) WaitForTransactionalConsistency(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	correlationId string,
+	consumerGroups []string,
+) error {
+	return c.Called(ctx, tenantId, topic, correlationId, consumerGroups).Error(0)
+}
+
+func (c *MockClient) ListErroneousEvents(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	eventTypes []string,
+	limit int64,
+) ([]*dto.ErroneousEvent, error) {
+	args := c.Called(ctx, tenantId, topic, eventTypes, limit)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*dto.ErroneousEvent), args.Error(1)
+}
+
+func (c *MockClient) ResendErroneousEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	consumerGroup string,
+	eventId string,
+) error {
+	return c.Called(ctx, tenantId, topic, consumerGroup, eventId).Error(0)
+}
+
 func (c *MockClient) Close() {
 	c.Called()
 }

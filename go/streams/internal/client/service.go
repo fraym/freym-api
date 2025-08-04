@@ -433,6 +433,67 @@ func (s *Service) RenameEventType(ctx context.Context, topic string, oldEventTyp
 	}, s.retryPause, 50)
 }
 
+func (s *Service) WaitForTransactionalConsistency(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	correlationId string,
+	consumerGroups []string,
+) error {
+	return util.Retry(func() error {
+		_, err := s.client.WaitForTransactionalConsistency(
+			ctx,
+			managementpb.WaitForTransactionalConsistencyRequest_builder{
+				TenantId:       tenantId,
+				Topic:          topic,
+				CorrelationId:  correlationId,
+				ConsumerGroups: consumerGroups,
+			}.Build(),
+		)
+		return err
+	}, s.retryPause, 50)
+}
+
+func (s *Service) ListErroneousEvents(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	eventTypes []string,
+	limit int64,
+) ([]*dto.ErroneousEvent, error) {
+	response, err := util.RetryWithResult(func() (*managementpb.ListErroneousEventsResponse, error) {
+		return s.client.ListErroneousEvents(ctx, managementpb.ListErroneousEventsRequest_builder{
+			TenantId:   tenantId,
+			Topic:      topic,
+			EventTypes: eventTypes,
+			Limit:      limit,
+		}.Build())
+	}, s.retryPause, 50)
+	if err != nil {
+		return nil, err
+	}
+
+	return util.ErroneousEventsFromPb(response.GetEvents())
+}
+
+func (s *Service) ResendErroneousEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	consumerGroup string,
+	eventId string,
+) error {
+	return util.Retry(func() error {
+		_, err := s.client.ResendErroneousEvent(ctx, managementpb.ResendErroneousEventRequest_builder{
+			TenantId:      tenantId,
+			Topic:         topic,
+			EventId:       eventId,
+			ConsumerGroup: consumerGroup,
+		}.Build())
+		return err
+	}, s.retryPause, 50)
+}
+
 type LastEventCheckFunc func(ctx context.Context, lastEvent *dto.SubscriptionEvent) bool
 
 func isLastEventNotFoundError(err error) bool {

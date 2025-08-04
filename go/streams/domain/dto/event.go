@@ -61,6 +61,12 @@ func GetPayloadValue[T any](m EventPayloadMap, key string) (T, error) {
 	return returnValue, nil
 }
 
+type ErroneousEvent struct {
+	Event         *SubscriptionEvent
+	ConsumerGroup string
+	Error         string
+}
+
 type SubscriptionEvent struct {
 	Id            string
 	TenantId      string

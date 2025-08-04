@@ -1,5 +1,9 @@
 # vNext
 
+# v0.45.0
+
+- (feature) streams: list events that had errors
+- (feature) streams: requeue event that had errors
 - (feature) streams: Improve retry mechanisms by adding a retry number
 - (feature) streams: Improve retry mechanisms by returning a `doRetry` flag on error
 - (feature) streams: Add transactional consistency by correlation id

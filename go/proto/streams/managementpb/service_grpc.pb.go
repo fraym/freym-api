@@ -35,6 +35,8 @@ const (
 	Service_CreateStreamSnapshot_FullMethodName            = "/freym.streams.management.Service/CreateStreamSnapshot"
 	Service_RenameEventType_FullMethodName                 = "/freym.streams.management.Service/RenameEventType"
 	Service_WaitForTransactionalConsistency_FullMethodName = "/freym.streams.management.Service/WaitForTransactionalConsistency"
+	Service_ListErroneousEvents_FullMethodName             = "/freym.streams.management.Service/ListErroneousEvents"
+	Service_ResendErroneousEvent_FullMethodName            = "/freym.streams.management.Service/ResendErroneousEvent"
 	Service_Backchannel_FullMethodName                     = "/freym.streams.management.Service/Backchannel"
 )
 
@@ -58,6 +60,8 @@ type ServiceClient interface {
 	CreateStreamSnapshot(ctx context.Context, in *CreateStreamSnapshotRequest, opts ...grpc.CallOption) (*CreateStreamSnapshotResponse, error)
 	RenameEventType(ctx context.Context, in *RenameEventTypeRequest, opts ...grpc.CallOption) (*RenameEventTypeResponse, error)
 	WaitForTransactionalConsistency(ctx context.Context, in *WaitForTransactionalConsistencyRequest, opts ...grpc.CallOption) (*WaitForTransactionalConsistencyResponse, error)
+	ListErroneousEvents(ctx context.Context, in *ListErroneousEventsRequest, opts ...grpc.CallOption) (*ListErroneousEventsResponse, error)
+	ResendErroneousEvent(ctx context.Context, in *ResendErroneousEventRequest, opts ...grpc.CallOption) (*ResendErroneousEventResponse, error)
 	Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error)
 }
 
@@ -232,6 +236,26 @@ func (c *serviceClient) WaitForTransactionalConsistency(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *serviceClient) ListErroneousEvents(ctx context.Context, in *ListErroneousEventsRequest, opts ...grpc.CallOption) (*ListErroneousEventsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListErroneousEventsResponse)
+	err := c.cc.Invoke(ctx, Service_ListErroneousEvents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ResendErroneousEvent(ctx context.Context, in *ResendErroneousEventRequest, opts ...grpc.CallOption) (*ResendErroneousEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResendErroneousEventResponse)
+	err := c.cc.Invoke(ctx, Service_ResendErroneousEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) Backchannel(ctx context.Context, in *BackchannelRequest, opts ...grpc.CallOption) (*BackchannelResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BackchannelResponse)
@@ -262,6 +286,8 @@ type ServiceServer interface {
 	CreateStreamSnapshot(context.Context, *CreateStreamSnapshotRequest) (*CreateStreamSnapshotResponse, error)
 	RenameEventType(context.Context, *RenameEventTypeRequest) (*RenameEventTypeResponse, error)
 	WaitForTransactionalConsistency(context.Context, *WaitForTransactionalConsistencyRequest) (*WaitForTransactionalConsistencyResponse, error)
+	ListErroneousEvents(context.Context, *ListErroneousEventsRequest) (*ListErroneousEventsResponse, error)
+	ResendErroneousEvent(context.Context, *ResendErroneousEventRequest) (*ResendErroneousEventResponse, error)
 	Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
@@ -320,6 +346,12 @@ func (UnimplementedServiceServer) RenameEventType(context.Context, *RenameEventT
 }
 func (UnimplementedServiceServer) WaitForTransactionalConsistency(context.Context, *WaitForTransactionalConsistencyRequest) (*WaitForTransactionalConsistencyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WaitForTransactionalConsistency not implemented")
+}
+func (UnimplementedServiceServer) ListErroneousEvents(context.Context, *ListErroneousEventsRequest) (*ListErroneousEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListErroneousEvents not implemented")
+}
+func (UnimplementedServiceServer) ResendErroneousEvent(context.Context, *ResendErroneousEventRequest) (*ResendErroneousEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResendErroneousEvent not implemented")
 }
 func (UnimplementedServiceServer) Backchannel(context.Context, *BackchannelRequest) (*BackchannelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Backchannel not implemented")
@@ -622,6 +654,42 @@ func _Service_WaitForTransactionalConsistency_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_ListErroneousEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListErroneousEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ListErroneousEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ListErroneousEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ListErroneousEvents(ctx, req.(*ListErroneousEventsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ResendErroneousEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResendErroneousEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ResendErroneousEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ResendErroneousEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ResendErroneousEvent(ctx, req.(*ResendErroneousEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_Backchannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BackchannelRequest)
 	if err := dec(in); err != nil {
@@ -706,6 +774,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "WaitForTransactionalConsistency",
 			Handler:    _Service_WaitForTransactionalConsistency_Handler,
+		},
+		{
+			MethodName: "ListErroneousEvents",
+			Handler:    _Service_ListErroneousEvents_Handler,
+		},
+		{
+			MethodName: "ResendErroneousEvent",
+			Handler:    _Service_ResendErroneousEvent_Handler,
 		},
 		{
 			MethodName: "Backchannel",

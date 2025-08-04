@@ -1,0 +1,29 @@
+syntax = "proto3";
+package freym.streams.management;
+import "streams/management/event.proto";
+
+message ListErroneousEventsRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	repeated string event_types = 3;
+	int64 limit = 4;
+}
+
+message ListErroneousEventsResponse {
+	repeated ErroneousEvent events = 1;
+}
+
+message ErroneousEvent {
+	Event event = 1;
+	string consumer_group = 2;
+	string error = 3;
+}
+
+message ResendErroneousEventRequest {
+	string tenant_id = 1;
+	string topic = 2;
+	string consumer_group = 3;
+	string event_id = 4;
+}
+
+message ResendErroneousEventResponse {}

@@ -4,8 +4,8 @@ package freym.streams.management;
 message WaitForTransactionalConsistencyRequest {
 	string tenant_id = 1;
 	string topic = 2;
-	string subscriber_group = 3;
-	string correlation_id = 4;
+	string correlation_id = 3;
+	repeated string consumer_groups = 4;
 }
 
 message WaitForTransactionalConsistencyResponse {

@@ -88,3 +88,22 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		DeploymentId:  deploymentId,
 	}, nil
 }
+
+func ErroneousEventsFromPb(data []*managementpb.ErroneousEvent) ([]*dto.ErroneousEvent, error) {
+	var events []*dto.ErroneousEvent
+
+	for _, eventData := range data {
+		event, err := SubscriptionEventFromPb(eventData.GetEvent())
+		if err != nil {
+			return nil, err
+		}
+
+		events = append(events, &dto.ErroneousEvent{
+			Event:         event,
+			ConsumerGroup: eventData.GetConsumerGroup(),
+			Error:         eventData.GetError(),
+		})
+	}
+
+	return events, nil
+}

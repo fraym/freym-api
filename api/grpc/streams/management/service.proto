@@ -10,6 +10,7 @@ import "streams/management/stream.proto";
 import "streams/management/snapshot.proto";
 import "streams/management/rename.proto";
 import "streams/management/transaction.proto";
+import "streams/management/erroneous.proto";
 
 service Service {
 	rpc Publish (PublishRequest) returns (PublishResponse);
@@ -32,6 +33,9 @@ service Service {
 	rpc CreateStreamSnapshot(CreateStreamSnapshotRequest) returns (CreateStreamSnapshotResponse);
 	rpc RenameEventType(RenameEventTypeRequest) returns (RenameEventTypeResponse);
 	rpc WaitForTransactionalConsistency(WaitForTransactionalConsistencyRequest) returns (WaitForTransactionalConsistencyResponse);
+
+	rpc ListErroneousEvents(ListErroneousEventsRequest) returns (ListErroneousEventsResponse);
+	rpc ResendErroneousEvent(ResendErroneousEventRequest) returns (ResendErroneousEventResponse);
 
 	rpc Backchannel(BackchannelRequest) returns (BackchannelResponse);
 }

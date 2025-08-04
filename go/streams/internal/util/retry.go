@@ -21,7 +21,7 @@ func Retry(fn func() error, pause time.Duration, maxRetries int) error {
 		return err
 	}
 
-	for i := 0; i < maxRetries; i++ {
+	for range maxRetries {
 		time.Sleep(pause)
 
 		err = fn()
@@ -53,7 +53,7 @@ func RetryWithResult[T any](fn func() (T, error), pause time.Duration, maxRetrie
 		return result, err
 	}
 
-	for i := 0; i < maxRetries; i++ {
+	for range maxRetries {
 		time.Sleep(pause)
 
 		result, err = fn()

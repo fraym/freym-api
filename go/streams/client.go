@@ -82,6 +82,27 @@ type Client interface {
 		defaultValue string,
 	) error
 	RenameEventType(ctx context.Context, topic string, oldEventType string, newEventType string) error
+	WaitForTransactionalConsistency(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		correlationId string,
+		consumerGroups []string,
+	) error
+	ListErroneousEvents(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		eventTypes []string,
+		limit int64,
+	) ([]*dto.ErroneousEvent, error)
+	ResendErroneousEvent(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		consumerGroup string,
+		eventId string,
+	) error
 }
 
 type streamsClient struct {
@@ -273,6 +294,36 @@ func (c *streamsClient) RenameEventType(
 	newEventType string,
 ) error {
 	return c.service.RenameEventType(ctx, topic, oldEventType, newEventType)
+}
+
+func (c *streamsClient) WaitForTransactionalConsistency(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	correlationId string,
+	consumerGroups []string,
+) error {
+	return c.service.WaitForTransactionalConsistency(ctx, tenantId, topic, correlationId, consumerGroups)
+}
+
+func (c *streamsClient) ListErroneousEvents(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	eventTypes []string,
+	limit int64,
+) ([]*dto.ErroneousEvent, error) {
+	return c.service.ListErroneousEvents(ctx, tenantId, topic, eventTypes, limit)
+}
+
+func (c *streamsClient) ResendErroneousEvent(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	consumerGroup string,
+	eventId string,
+) error {
+	return c.service.ResendErroneousEvent(ctx, tenantId, topic, consumerGroup, eventId)
 }
 
 func (c *streamsClient) Close() {

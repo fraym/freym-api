@@ -21,13 +21,13 @@ const (
 )
 
 type WaitForTransactionalConsistencyRequest struct {
-	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId        string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic           string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_SubscriberGroup string                 `protobuf:"bytes,3,opt,name=subscriber_group,json=subscriberGroup,proto3"`
-	xxx_hidden_CorrelationId   string                 `protobuf:"bytes,4,opt,name=correlation_id,json=correlationId,proto3"`
-	unknownFields              protoimpl.UnknownFields
-	sizeCache                  protoimpl.SizeCache
+	state                     protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId       string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic          string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_CorrelationId  string                 `protobuf:"bytes,3,opt,name=correlation_id,json=correlationId,proto3"`
+	xxx_hidden_ConsumerGroups []string               `protobuf:"bytes,4,rep,name=consumer_groups,json=consumerGroups,proto3"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
 }
 
 func (x *WaitForTransactionalConsistencyRequest) Reset() {
@@ -69,18 +69,18 @@ func (x *WaitForTransactionalConsistencyRequest) GetTopic() string {
 	return ""
 }
 
-func (x *WaitForTransactionalConsistencyRequest) GetSubscriberGroup() string {
-	if x != nil {
-		return x.xxx_hidden_SubscriberGroup
-	}
-	return ""
-}
-
 func (x *WaitForTransactionalConsistencyRequest) GetCorrelationId() string {
 	if x != nil {
 		return x.xxx_hidden_CorrelationId
 	}
 	return ""
+}
+
+func (x *WaitForTransactionalConsistencyRequest) GetConsumerGroups() []string {
+	if x != nil {
+		return x.xxx_hidden_ConsumerGroups
+	}
+	return nil
 }
 
 func (x *WaitForTransactionalConsistencyRequest) SetTenantId(v string) {
@@ -91,21 +91,21 @@ func (x *WaitForTransactionalConsistencyRequest) SetTopic(v string) {
 	x.xxx_hidden_Topic = v
 }
 
-func (x *WaitForTransactionalConsistencyRequest) SetSubscriberGroup(v string) {
-	x.xxx_hidden_SubscriberGroup = v
-}
-
 func (x *WaitForTransactionalConsistencyRequest) SetCorrelationId(v string) {
 	x.xxx_hidden_CorrelationId = v
+}
+
+func (x *WaitForTransactionalConsistencyRequest) SetConsumerGroups(v []string) {
+	x.xxx_hidden_ConsumerGroups = v
 }
 
 type WaitForTransactionalConsistencyRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	TenantId        string
-	Topic           string
-	SubscriberGroup string
-	CorrelationId   string
+	TenantId       string
+	Topic          string
+	CorrelationId  string
+	ConsumerGroups []string
 }
 
 func (b0 WaitForTransactionalConsistencyRequest_builder) Build() *WaitForTransactionalConsistencyRequest {
@@ -114,8 +114,8 @@ func (b0 WaitForTransactionalConsistencyRequest_builder) Build() *WaitForTransac
 	_, _ = b, x
 	x.xxx_hidden_TenantId = b.TenantId
 	x.xxx_hidden_Topic = b.Topic
-	x.xxx_hidden_SubscriberGroup = b.SubscriberGroup
 	x.xxx_hidden_CorrelationId = b.CorrelationId
+	x.xxx_hidden_ConsumerGroups = b.ConsumerGroups
 	return m0
 }
 
@@ -194,12 +194,12 @@ var File_streams_management_transaction_proto protoreflect.FileDescriptor
 
 const file_streams_management_transaction_proto_rawDesc = "" +
 	"\n" +
-	"$streams/management/transaction.proto\x12\x18freym.streams.management\"\xad\x01\n" +
+	"$streams/management/transaction.proto\x12\x18freym.streams.management\"\xab\x01\n" +
 	"&WaitForTransactionalConsistencyRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
-	"\x05topic\x18\x02 \x01(\tR\x05topic\x12)\n" +
-	"\x10subscriber_group\x18\x03 \x01(\tR\x0fsubscriberGroup\x12%\n" +
-	"\x0ecorrelation_id\x18\x04 \x01(\tR\rcorrelationId\"Y\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12%\n" +
+	"\x0ecorrelation_id\x18\x03 \x01(\tR\rcorrelationId\x12'\n" +
+	"\x0fconsumer_groups\x18\x04 \x03(\tR\x0econsumerGroups\"Y\n" +
 	"'WaitForTransactionalConsistencyResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05errorb\x06proto3"

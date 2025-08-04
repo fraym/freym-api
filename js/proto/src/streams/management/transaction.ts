@@ -9,8 +9,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 export interface WaitForTransactionalConsistencyRequest {
     tenantId: string;
     topic: string;
-    subscriberGroup: string;
     correlationId: string;
+    consumerGroups: string[];
 }
 
 export interface WaitForTransactionalConsistencyResponse {
@@ -19,7 +19,7 @@ export interface WaitForTransactionalConsistencyResponse {
 }
 
 function createBaseWaitForTransactionalConsistencyRequest(): WaitForTransactionalConsistencyRequest {
-    return { tenantId: "", topic: "", subscriberGroup: "", correlationId: "" };
+    return { tenantId: "", topic: "", correlationId: "", consumerGroups: [] };
 }
 
 export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransactionalConsistencyRequest> =
@@ -34,11 +34,11 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             if (message.topic !== "") {
                 writer.uint32(18).string(message.topic);
             }
-            if (message.subscriberGroup !== "") {
-                writer.uint32(26).string(message.subscriberGroup);
-            }
             if (message.correlationId !== "") {
-                writer.uint32(34).string(message.correlationId);
+                writer.uint32(26).string(message.correlationId);
+            }
+            for (const v of message.consumerGroups) {
+                writer.uint32(34).string(v!);
             }
             return writer;
         },
@@ -74,7 +74,7 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
                             break;
                         }
 
-                        message.subscriberGroup = reader.string();
+                        message.correlationId = reader.string();
                         continue;
                     }
                     case 4: {
@@ -82,7 +82,7 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
                             break;
                         }
 
-                        message.correlationId = reader.string();
+                        message.consumerGroups.push(reader.string());
                         continue;
                     }
                 }
@@ -98,12 +98,12 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             return {
                 tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
                 topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
-                subscriberGroup: isSet(object.subscriberGroup)
-                    ? globalThis.String(object.subscriberGroup)
-                    : "",
                 correlationId: isSet(object.correlationId)
                     ? globalThis.String(object.correlationId)
                     : "",
+                consumerGroups: globalThis.Array.isArray(object?.consumerGroups)
+                    ? object.consumerGroups.map((e: any) => globalThis.String(e))
+                    : [],
             };
         },
 
@@ -115,11 +115,11 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             if (message.topic !== "") {
                 obj.topic = message.topic;
             }
-            if (message.subscriberGroup !== "") {
-                obj.subscriberGroup = message.subscriberGroup;
-            }
             if (message.correlationId !== "") {
                 obj.correlationId = message.correlationId;
+            }
+            if (message.consumerGroups?.length) {
+                obj.consumerGroups = message.consumerGroups;
             }
             return obj;
         },
@@ -135,8 +135,8 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             const message = createBaseWaitForTransactionalConsistencyRequest();
             message.tenantId = object.tenantId ?? "";
             message.topic = object.topic ?? "";
-            message.subscriberGroup = object.subscriberGroup ?? "";
             message.correlationId = object.correlationId ?? "";
+            message.consumerGroups = object.consumerGroups?.map(e => e) || [];
             return message;
         },
     };

@@ -19,6 +19,12 @@ import {
 } from "@grpc/grpc-js";
 import { BackchannelRequest, BackchannelResponse } from "./backchannel";
 import {
+    ListErroneousEventsRequest,
+    ListErroneousEventsResponse,
+    ResendErroneousEventRequest,
+    ResendErroneousEventResponse,
+} from "./erroneous";
+import {
     Event,
     GetEventRequest,
     GetLastEventByTypesRequest,
@@ -248,6 +254,32 @@ export const ServiceService = {
         responseDeserialize: (value: Buffer): WaitForTransactionalConsistencyResponse =>
             WaitForTransactionalConsistencyResponse.decode(value),
     },
+    listErroneousEvents: {
+        path: "/freym.streams.management.Service/ListErroneousEvents",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: ListErroneousEventsRequest): Buffer =>
+            Buffer.from(ListErroneousEventsRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): ListErroneousEventsRequest =>
+            ListErroneousEventsRequest.decode(value),
+        responseSerialize: (value: ListErroneousEventsResponse): Buffer =>
+            Buffer.from(ListErroneousEventsResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): ListErroneousEventsResponse =>
+            ListErroneousEventsResponse.decode(value),
+    },
+    resendErroneousEvent: {
+        path: "/freym.streams.management.Service/ResendErroneousEvent",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value: ResendErroneousEventRequest): Buffer =>
+            Buffer.from(ResendErroneousEventRequest.encode(value).finish()),
+        requestDeserialize: (value: Buffer): ResendErroneousEventRequest =>
+            ResendErroneousEventRequest.decode(value),
+        responseSerialize: (value: ResendErroneousEventResponse): Buffer =>
+            Buffer.from(ResendErroneousEventResponse.encode(value).finish()),
+        responseDeserialize: (value: Buffer): ResendErroneousEventResponse =>
+            ResendErroneousEventResponse.decode(value),
+    },
     backchannel: {
         path: "/freym.streams.management.Service/Backchannel",
         requestStream: false,
@@ -293,6 +325,11 @@ export interface ServiceServer extends UntypedServiceImplementation {
     waitForTransactionalConsistency: handleUnaryCall<
         WaitForTransactionalConsistencyRequest,
         WaitForTransactionalConsistencyResponse
+    >;
+    listErroneousEvents: handleUnaryCall<ListErroneousEventsRequest, ListErroneousEventsResponse>;
+    resendErroneousEvent: handleUnaryCall<
+        ResendErroneousEventRequest,
+        ResendErroneousEventResponse
     >;
     backchannel: handleUnaryCall<BackchannelRequest, BackchannelResponse>;
 }
@@ -539,6 +576,36 @@ export interface ServiceClient extends Client {
             error: ServiceError | null,
             response: WaitForTransactionalConsistencyResponse
         ) => void
+    ): ClientUnaryCall;
+    listErroneousEvents(
+        request: ListErroneousEventsRequest,
+        callback: (error: ServiceError | null, response: ListErroneousEventsResponse) => void
+    ): ClientUnaryCall;
+    listErroneousEvents(
+        request: ListErroneousEventsRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: ListErroneousEventsResponse) => void
+    ): ClientUnaryCall;
+    listErroneousEvents(
+        request: ListErroneousEventsRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: ListErroneousEventsResponse) => void
+    ): ClientUnaryCall;
+    resendErroneousEvent(
+        request: ResendErroneousEventRequest,
+        callback: (error: ServiceError | null, response: ResendErroneousEventResponse) => void
+    ): ClientUnaryCall;
+    resendErroneousEvent(
+        request: ResendErroneousEventRequest,
+        metadata: Metadata,
+        callback: (error: ServiceError | null, response: ResendErroneousEventResponse) => void
+    ): ClientUnaryCall;
+    resendErroneousEvent(
+        request: ResendErroneousEventRequest,
+        metadata: Metadata,
+        options: Partial<CallOptions>,
+        callback: (error: ServiceError | null, response: ResendErroneousEventResponse) => void
     ): ClientUnaryCall;
     backchannel(
         request: BackchannelRequest,

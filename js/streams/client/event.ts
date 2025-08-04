@@ -1,4 +1,7 @@
-import { Event } from "@fraym/proto/dist/index.freym.streams.management";
+import {
+    ErroneousEvent as ErroneousEventPb,
+    Event,
+} from "@fraym/proto/dist/index.freym.streams.management";
 
 export interface SubscriptionEvent extends BaseEvent {
     topic: string;
@@ -47,7 +50,7 @@ export const isGdprEventData = (value: EventData): value is GdprEventData => {
 
 export type HandlerFunc = (event: SubscriptionEvent) => Promise<void>;
 
-export const getSubscriptionEvent = (event: Event): SubscriptionEvent | null => {
+export const getSubscriptionEvent = (event: Event): SubscriptionEvent => {
     const payload: Record<string, EventData> = {};
 
     for (const key in event.payload) {
@@ -86,5 +89,23 @@ export const getSubscriptionEvent = (event: Event): SubscriptionEvent | null => 
                 ? parseInt(event.metadata.deploymentId)
                 : undefined,
         userId: event.metadata ? event.metadata.userId || undefined : undefined,
+    };
+};
+
+export interface ErroneousEvent {
+    event: SubscriptionEvent;
+    consumerGroup: string;
+    error: string;
+}
+
+export const getErroneousEvent = (event: ErroneousEventPb): ErroneousEvent | null => {
+    if (!event.event) {
+        return null;
+    }
+
+    return {
+        event: getSubscriptionEvent(event.event),
+        consumerGroup: event.consumerGroup,
+        error: event.error,
     };
 };
