@@ -15,8 +15,9 @@ type mockEventHandler struct {
 	mock.Mock
 }
 
-func (h *mockEventHandler) Handle(ctx context.Context, event *dto.SubscriptionEvent) error {
-	return h.Called(ctx, event).Error(0)
+func (h *mockEventHandler) Handle(ctx context.Context, event *dto.SubscriptionEvent) (bool, error) {
+	args := h.Called(ctx, event)
+	return args.Bool(0), args.Error(1)
 }
 
 func TestHandler_NoHandler(t *testing.T) {
@@ -24,9 +25,10 @@ func TestHandler_NoHandler(t *testing.T) {
 
 	expectedType := "test-type"
 
-	err := handler.Handle(context.Background(), &dto.SubscriptionEvent{
+	retry, err := handler.Handle(context.Background(), &dto.SubscriptionEvent{
 		Type: expectedType,
 	})
+	assert.True(t, retry)
 	assert.Error(t, err)
 }
 
@@ -35,9 +37,10 @@ func TestHandler_NoHandlerIgnoreUnhandled(t *testing.T) {
 
 	expectedType := "test-type"
 
-	err := handler.Handle(context.Background(), &dto.SubscriptionEvent{
+	retry, err := handler.Handle(context.Background(), &dto.SubscriptionEvent{
 		Type: expectedType,
 	})
+	assert.False(t, retry)
 	assert.NoError(t, err)
 }
 
@@ -50,10 +53,11 @@ func TestHandler_Handler(t *testing.T) {
 		Type: expectedType,
 	}
 
-	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(nil)
+	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(false, nil)
 
 	handler.Use(expectedType, eventHandler.Handle)
-	err := handler.Handle(context.Background(), expectedEvent)
+	retry, err := handler.Handle(context.Background(), expectedEvent)
+	assert.False(t, retry)
 	assert.NoError(t, err)
 
 	eventHandler.AssertExpectations(t)
@@ -68,10 +72,11 @@ func TestHandler_Handler_Err(t *testing.T) {
 		Type: expectedType,
 	}
 
-	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(errors.New("test"))
+	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(true, errors.New("test"))
 
 	handler.Use(expectedType, eventHandler.Handle)
-	err := handler.Handle(context.Background(), expectedEvent)
+	retry, err := handler.Handle(context.Background(), expectedEvent)
+	assert.True(t, retry)
 	assert.Error(t, err)
 
 	eventHandler.AssertExpectations(t)
@@ -86,13 +91,22 @@ func TestHandler_Handler_AllTypes(t *testing.T) {
 	expectedEvent := &dto.SubscriptionEvent{
 		Type: expectedType,
 	}
-
-	allEventsHandler.On("Handle", mock.Anything, expectedEvent).Return(nil)
-	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(nil)
-
 	handler.UseForAllEventTypes(allEventsHandler.Handle)
 	handler.Use(expectedType, eventHandler.Handle)
-	err := handler.Handle(context.Background(), expectedEvent)
+
+	// specific type handler
+	eventHandler.On("Handle", mock.Anything, expectedEvent).Return(false, nil).Once()
+
+	retry, err := handler.Handle(context.Background(), expectedEvent)
+	assert.False(t, retry)
+	assert.NoError(t, err)
+
+	// all types handler
+	expectedEvent.Type = "other"
+	allEventsHandler.On("Handle", mock.Anything, expectedEvent).Return(false, nil).Once()
+
+	retry, err = handler.Handle(context.Background(), expectedEvent)
+	assert.False(t, retry)
 	assert.NoError(t, err)
 
 	allEventsHandler.AssertExpectations(t)

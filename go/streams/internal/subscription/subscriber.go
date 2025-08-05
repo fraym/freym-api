@@ -83,14 +83,14 @@ func (s *subscriber) handleBroadcastEvent(subscribedEvent *managementpb.Event) e
 		return err
 	}
 
-	_ = s.handler(s.workCtx, subscriptionEvent)
+	_, _ = s.handler(s.workCtx, subscriptionEvent)
 	return nil
 }
 
 func (s *subscriber) handleStreamedEvent(subscribedEvent *managementpb.Event, connection Connection) error {
 	if s.handler == nil {
 		return connection.EventHandled(
-			context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "not subscribed",
+			context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "not subscribed", false,
 		)
 	}
 
@@ -99,13 +99,17 @@ func (s *subscriber) handleStreamedEvent(subscribedEvent *managementpb.Event, co
 		return err
 	}
 
-	if err := s.handler(s.workCtx, subscriptionEvent); err != nil {
+	if retry, err := s.handler(s.workCtx, subscriptionEvent); err != nil {
 		return connection.EventHandled(
-			context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "error: "+err.Error(),
+			context.Background(),
+			subscribedEvent.GetTenantId(),
+			subscribedEvent.GetTopic(),
+			"error: "+err.Error(),
+			retry,
 		)
 	}
 	return connection.EventHandled(
-		context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "",
+		context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "", false,
 	)
 }
 

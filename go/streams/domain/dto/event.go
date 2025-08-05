@@ -83,7 +83,10 @@ type SubscriptionEvent struct {
 	DeploymentId  int64
 }
 
-type HandlerFunc = func(ctx context.Context, event *SubscriptionEvent) error
+type (
+	HandlerFunc        = func(ctx context.Context, event *SubscriptionEvent) (bool, error)
+	IterateHandlerFunc = func(ctx context.Context, event *SubscriptionEvent) error
+)
 
 type PublishEvent struct {
 	Id            string

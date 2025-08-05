@@ -44,7 +44,7 @@ func (s *Service) IterateAllEvents(
 	types []string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
@@ -108,7 +108,7 @@ func (s *Service) IterateAllEventsAfterEvent(
 	eventId string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
@@ -145,7 +145,7 @@ func (s *Service) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {
@@ -188,7 +188,7 @@ func (s *Service) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
 	if err != nil {

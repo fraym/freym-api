@@ -30,7 +30,7 @@ type Client interface {
 		includedEventTypes []string,
 		perPage int,
 		queueSize int,
-		handler dto.HandlerFunc,
+		handler dto.IterateHandlerFunc,
 	) error
 	IterateAllEventsAfterEvent(
 		ctx context.Context,
@@ -40,7 +40,7 @@ type Client interface {
 		eventId string,
 		perPage int,
 		queueSize int,
-		handler dto.HandlerFunc,
+		handler dto.IterateHandlerFunc,
 	) error
 	IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error)
 	IterateStream(
@@ -51,7 +51,7 @@ type Client interface {
 		deploymentId int64,
 		perPage int,
 		queueSize int,
-		handler dto.HandlerFunc,
+		handler dto.IterateHandlerFunc,
 	) error
 	IterateStreamAfterEvent(
 		ctx context.Context,
@@ -62,7 +62,7 @@ type Client interface {
 		deploymentId int64,
 		perPage int,
 		queueSize int,
-		handler dto.HandlerFunc,
+		handler dto.IterateHandlerFunc,
 	) error
 	CreateStreamSnapshot(
 		ctx context.Context,
@@ -147,7 +147,7 @@ func (c *streamsClient) IterateAllEvents(
 	includedEventTypes []string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.service.IterateAllEvents(ctx, tenant, topic, includedEventTypes, perPage, queueSize, handler)
 }
@@ -160,7 +160,7 @@ func (c *streamsClient) IterateAllEventsAfterEvent(
 	eventId string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.service.IterateAllEventsAfterEvent(
 		ctx,
@@ -182,7 +182,7 @@ func (c *streamsClient) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.service.IterateStream(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler)
 }
@@ -196,7 +196,7 @@ func (c *streamsClient) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.service.IterateStreamAfterEvent(
 		ctx,

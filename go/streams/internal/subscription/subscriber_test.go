@@ -38,7 +38,7 @@ func TestSubscriber_Ack(t *testing.T) {
 	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics).
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
-	connection.On("EventHandled", mock.Anything, expectedTenantId, expectedTopic, expectedError).
+	connection.On("EventHandled", mock.Anything, expectedTenantId, expectedTopic, expectedError, false).
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
 
@@ -46,7 +46,7 @@ func TestSubscriber_Ack(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
-			func(handleCtx context.Context, event *dto.SubscriptionEvent) error {
+			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
 				fmt.Println("aa")
 				assert.Equal(t, expectedTenantId, event.TenantId)
 				assert.Equal(t, expectedTopic, event.Topic)
@@ -54,7 +54,7 @@ func TestSubscriber_Ack(t *testing.T) {
 
 				defer cancel()
 
-				return nil
+				return false, nil
 			},
 		)
 		assert.NoError(t, err)
@@ -108,8 +108,8 @@ func TestSubscriber_NotAck(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
-			func(handleCtx context.Context, event *dto.SubscriptionEvent) error {
-				return errors.New("test")
+			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
+				return false, errors.New("test")
 			},
 		)
 		assert.Error(t, err)
@@ -150,9 +150,9 @@ func TestSubscriber_Timeout(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
-			func(handleCtx context.Context, event *dto.SubscriptionEvent) error {
+			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
 				<-handleCtx.Done()
-				return handleCtx.Err()
+				return false, handleCtx.Err()
 			},
 		)
 		assert.Error(t, err)

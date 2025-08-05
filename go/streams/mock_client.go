@@ -19,7 +19,7 @@ func (c *MockClient) IterateAllEvents(
 	includedEventTypes []string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.Called(ctx, tenant, topic, includedEventTypes, perPage, queueSize, handler).Error(0)
 }
@@ -32,7 +32,7 @@ func (c *MockClient) IterateAllEventsAfterEvent(
 	eventId string,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.Called(ctx, tenant, topic, includedEventTypes, eventId, perPage, queueSize, handler).Error(0)
 }
@@ -45,7 +45,7 @@ func (c *MockClient) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.Called(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler).Error(0)
 }
@@ -59,7 +59,7 @@ func (c *MockClient) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
-	handler dto.HandlerFunc,
+	handler dto.IterateHandlerFunc,
 ) error {
 	return c.Called(ctx, tenant, topic, stream, eventId, deploymentId, perPage, queueSize, handler).Error(0)
 }

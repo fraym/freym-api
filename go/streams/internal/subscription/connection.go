@@ -17,7 +17,7 @@ type Connection interface {
 	Handle(handlerFn HandlerFn) error
 	Close()
 	Subscribe(ctx context.Context, groupId string, topics []string) error
-	EventHandled(ctx context.Context, tenantId string, topic string, errorMessage string) error
+	EventHandled(ctx context.Context, tenantId string, topic string, errorMessage string, retry bool) error
 }
 
 type clientConnection struct {
@@ -169,12 +169,19 @@ func (c *clientConnection) Subscribe(ctx context.Context, groupId string, topics
 	}.Build())
 }
 
-func (c *clientConnection) EventHandled(ctx context.Context, tenantId string, topic string, errorMessage string) error {
+func (c *clientConnection) EventHandled(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	errorMessage string,
+	retry bool,
+) error {
 	return c.sendRequest(ctx, managementpb.SubscribeRequest_builder{
 		Handled: managementpb.Handled_builder{
 			TenantId: tenantId,
 			Topic:    topic,
 			Error:    errorMessage,
+			Retry:    retry,
 		}.Build(),
 	}.Build())
 }

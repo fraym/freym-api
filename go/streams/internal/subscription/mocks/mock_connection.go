@@ -28,6 +28,12 @@ func (c *mockConnection) Subscribe(ctx context.Context, groupId string, topics [
 	return c.Called(ctx, groupId, topics).Error(0)
 }
 
-func (c *mockConnection) EventHandled(ctx context.Context, tenantId string, topic string, errorMessage string) error {
-	return c.Called(ctx, tenantId, topic, errorMessage).Error(0)
+func (c *mockConnection) EventHandled(
+	ctx context.Context,
+	tenantId string,
+	topic string,
+	errorMessage string,
+	retry bool,
+) error {
+	return c.Called(ctx, tenantId, topic, errorMessage, retry).Error(0)
 }

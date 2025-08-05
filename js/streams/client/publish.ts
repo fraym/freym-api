@@ -67,6 +67,7 @@ export const getProtobufPublishEventFromPublishedEvent = (
             orderSerial: "0",
             deploymentId: deploymentId.toString(),
             userId: event.userId ?? "",
+            retryNumber: "",
         },
         options: {
             broadcast: event.broadcast ?? false,

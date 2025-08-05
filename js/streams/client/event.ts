@@ -8,6 +8,7 @@ export interface SubscriptionEvent extends BaseEvent {
     raisedAt: Date;
     orderSerial?: number;
     deploymentId?: number;
+    retryNumber?: number;
 }
 
 export interface PublishEvent extends BaseEvent {
@@ -89,6 +90,7 @@ export const getSubscriptionEvent = (event: Event): SubscriptionEvent => {
                 ? parseInt(event.metadata.deploymentId)
                 : undefined,
         userId: event.metadata ? event.metadata.userId || undefined : undefined,
+        retryNumber: event.metadata ? parseInt(event.metadata.retryNumber) : undefined,
     };
 };
 

@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import { ClientDuplexStream } from "@grpc/grpc-js";
 import { Status } from "@grpc/grpc-js/build/src/constants";
 import { ClientConfig } from "./config";
+import { isRetryableError } from "./error";
 import { HandlerFunc, getSubscriptionEvent } from "./event";
 
 export interface Subscription {
@@ -26,8 +27,8 @@ export const newSubscription = (
 ): Subscription => {
     let stream: Stream | null = null;
     let closed = false;
-    const typeHandlerMap: Record<string, HandlerFunc[]> = {};
-    const globalHandlers: HandlerFunc[] = [];
+    const typeHandlerMap: Record<string, HandlerFunc> = {};
+    let globalHandler: HandlerFunc | null = null;
 
     const rebuildConnection = (currentStream: Stream, retries: number) => {
         currentStream.cancel();
@@ -78,33 +79,43 @@ export const newSubscription = (
                 return;
             }
 
-            const currentHandlers = typeHandlerMap[event.type ?? ""] ?? [];
-            currentHandlers.push(...globalHandlers);
-
-            if (currentHandlers.length === 0) {
-                if (ignoreUnhandledEvents) {
-                    newStream.write(newHandledRequest(event.tenantId, event.topic));
-                    return;
-                }
-
-                newStream.write(
-                    newHandledRequest(
-                        event.tenantId,
-                        event.topic,
-                        "no handlers for this event, maybe you forgot to register an event handler"
-                    )
-                );
+            if (!event.type) {
                 return;
             }
 
             try {
-                for (const handler of currentHandlers) {
-                    await handler(event);
+                const typedHandler = typeHandlerMap[event.type];
+
+                if (typedHandler) {
+                    await typedHandler(event);
+                } else if (globalHandler) {
+                    await globalHandler(event);
+                } else {
+                    if (ignoreUnhandledEvents) {
+                        newStream.write(newHandledRequest(event.tenantId, event.topic));
+                        return;
+                    }
+
+                    newStream.write(
+                        newHandledRequest(
+                            event.tenantId,
+                            event.topic,
+                            "no handlers for this event, maybe you forgot to register an event handler",
+                            true
+                        )
+                    );
+                    return;
                 }
 
                 newStream.write(newHandledRequest(event.tenantId, event.topic));
             } catch (err) {
-                newStream.write(newHandledRequest(event.tenantId, event.topic, err as string));
+                const shouldRetry = isRetryableError(err) && err.shouldRetry;
+                const errorMessage = err instanceof Error ? err.message : String(err);
+
+                newStream.write(
+                    newHandledRequest(event.tenantId, event.topic, errorMessage, shouldRetry)
+                );
+
                 throw err;
             }
         };
@@ -118,14 +129,10 @@ export const newSubscription = (
 
     return {
         useHandler: (type: string, handler: HandlerFunc) => {
-            if (!typeHandlerMap[type]) {
-                typeHandlerMap[type] = [handler];
-            } else {
-                typeHandlerMap[type].push(handler);
-            }
+            typeHandlerMap[type] = handler;
         },
         useHandlerForAllTypes: (handler: HandlerFunc) => {
-            globalHandlers.push(handler);
+            globalHandler = handler;
         },
         start: () => {
             reconnect(50);
@@ -177,7 +184,12 @@ export const initStream = async (
     });
 };
 
-const newHandledRequest = (tenantId: string, topic: string, error?: string): SubscribeRequest => {
+const newHandledRequest = (
+    tenantId: string,
+    topic: string,
+    error?: string,
+    retry?: boolean
+): SubscribeRequest => {
     return {
         payload: {
             $case: "handled",
@@ -185,6 +197,7 @@ const newHandledRequest = (tenantId: string, topic: string, error?: string): Sub
                 tenantId,
                 topic,
                 error: error ?? "",
+                retry: retry ?? false,
             },
         },
     };
