@@ -1,5 +1,9 @@
 # vNext
 
+# v0.46.0
+
+- (bc) Update all dependencies
+
 # v0.45.0
 
 - (feature) streams: list events that had errors
