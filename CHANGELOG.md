@@ -1,5 +1,9 @@
 # vNext
 
+# v0.47.0
+
+- (feature) Add `deployment-id` and `next-deployment-id` commands to deployment command
+
 # v0.46.0
 
 - (bc) Update all dependencies

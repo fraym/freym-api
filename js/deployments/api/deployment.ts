@@ -152,3 +152,49 @@ export const setCurrentDeployment = async (
         throw new Error(await response.text());
     }
 };
+
+export const getCurrentDeploymentId = async (
+    config: Config,
+    target: DeploymentTarget
+): Promise<number> => {
+    const response = await fetch(`${config.serverAddress}/api/target/deployment/current`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${config.apiToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            namespace: config.namespace,
+            target,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return (await response.json()).deploymentId;
+};
+
+export const getNextDeploymentId = async (
+    config: Config,
+    target: DeploymentTarget
+): Promise<number> => {
+    const response = await fetch(`${config.serverAddress}/api/target/deployment/next`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${config.apiToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            namespace: config.namespace,
+            target,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return (await response.json()).deploymentId;
+};

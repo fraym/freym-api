@@ -5,7 +5,9 @@ import {
     confirmDeployment,
     createDeployment,
     getCurrentDeployment,
+    getCurrentDeploymentId,
     getDeploymentStatus,
+    getNextDeploymentId,
     rollbackDeployment,
     rollbackDeploymentByNamespace,
     setCurrentDeployment,
@@ -125,6 +127,18 @@ export const runSetCurrentDeployment = async (target: DeploymentTarget) => {
     const config = await useConfig();
     await setCurrentDeployment(config, target);
     console.log(`updated current deployment target to: ${target}`);
+};
+
+export const runGetCurrentDeploymentId = async (target: DeploymentTarget) => {
+    const config = await useConfig();
+    const deployment = await getCurrentDeploymentId(config, target);
+    console.log(deployment);
+};
+
+export const runGetNextDeploymentId = async (target: DeploymentTarget) => {
+    const config = await useConfig();
+    const deployment = await getNextDeploymentId(config, target);
+    console.log(deployment);
 };
 
 const sleep = async (time: number): Promise<void> => {
