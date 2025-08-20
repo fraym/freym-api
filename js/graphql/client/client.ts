@@ -39,5 +39,22 @@ export const getClient = (url: string, jwt: NonNullable<JWT>, options?: ClientOp
             }),
             fetchExchange,
         ].filter(exchange => exchange !== null),
+        fetch: async (input, init) => {
+            const response = await fetch(input, init);
+
+            if (options?.onOutdated && response.headers.get("x-outdated") === "true") {
+                options.onOutdated();
+            }
+
+            if (options?.onStatusCode) {
+                const onStatusCode = options.onStatusCode[response.status];
+
+                if (onStatusCode) {
+                    onStatusCode();
+                }
+            }
+
+            return response;
+        },
     });
 };

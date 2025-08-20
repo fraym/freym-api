@@ -1,5 +1,9 @@
 # vNext
 
+# v0.48.0
+
+- (feature) Add `onOutdated` and `onStatusCode` options to graphql client
+
 # v0.47.0
 
 - (feature) Add `deployment-id` and `next-deployment-id` commands to deployment command
