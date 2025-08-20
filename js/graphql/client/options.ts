@@ -9,5 +9,7 @@ export const getClientOptions = (options?: ClientOptions) => {
     return {
         enableCache: options?.enableCache ?? false,
         cacheTtl: options?.cacheTtl ?? 300_000,
+        onOutdated: options?.onOutdated,
+        onStatusCode: options?.onStatusCode,
     };
 };

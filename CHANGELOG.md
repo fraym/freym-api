@@ -1,5 +1,9 @@
 # vNext
 
+# v0.48.1
+
+- (bug) Fix `onOutdated` and `onStatusCode` options to graphql client
+
 # v0.48.0
 
 - (feature) Add `onOutdated` and `onStatusCode` options to graphql client
