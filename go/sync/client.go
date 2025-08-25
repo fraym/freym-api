@@ -2,7 +2,6 @@ package sync
 
 import (
 	"context"
-	"fmt"
 	"net"
 
 	"github.com/fraym/freym-api/go/sync/config"
@@ -45,8 +44,6 @@ func NewClient[T peer.ServiceClient](
 		return nil, err
 	}
 
-	fmt.Println("ownIp", ownIp)
-
 	ctx, onStop := context.WithCancel(context.Background())
 
 	serviceClient, stopServiceClient, err := grpc.NewClient(conf)
@@ -54,14 +51,10 @@ func NewClient[T peer.ServiceClient](
 		return nil, handleStartupErr(logger, onStop, stopServiceClient, err)
 	}
 
-	fmt.Println("grpc client created")
-
 	service, err := client.NewService(ctx, serviceClient, logger, conf.AppPrefix, ownIp.String())
 	if err != nil {
 		return nil, handleStartupErr(logger, onStop, stopServiceClient, err)
 	}
-
-	fmt.Println("service created")
 
 	return &syncClient[T]{
 		onStop: func() error {

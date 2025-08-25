@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/fraym/freym-api/go/proto/sync/managementpb"
@@ -29,18 +28,12 @@ func NewService(
 	retryPause := time.Millisecond * 10000
 	connection := NewConnection(ctx)
 
-	fmt.Println("trying to create lease")
-
 	lease := NewLease(ctx, appPrefix, ownIp, client, logger)
 
-	fmt.Println("lease", lease.LeaseId())
-
 	connection.OnConnect(func() {
-		fmt.Println("trying to connect connection")
 		if err := util.Retry(lease.Renew, retryPause, 10); err != nil {
 			logger.Fatal().WithError(err).Write("unable to renew lease")
 		}
-		fmt.Println("connected")
 	})
 
 	peers, err := NewPeers(ctx, client, logger, appPrefix, connection.Connect, connection.Disconnect)
