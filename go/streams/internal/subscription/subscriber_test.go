@@ -3,7 +3,6 @@ package subscription_test
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 	"testing"
 	"time"

@@ -25,7 +25,7 @@ func NewService(
 	appPrefix string,
 	ownIp string,
 ) (*Service, error) {
-	retryPause := time.Millisecond * 10000
+	retryPause := time.Millisecond * 1000
 	connection := NewConnection(ctx)
 
 	lease := NewLease(ctx, appPrefix, ownIp, client, logger)
