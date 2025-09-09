@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: freym-api-js
-  namespace: fraym
+  namespace: fraeym
   labels:
     app: freym-api-js
 spec:

@@ -30,19 +30,19 @@ test: ## Run tests
 dev-go: ## Runs the go dev environment on the k8s cluster
 	kubectl apply -f .k8s/1-go-service.yml
 	kubectl apply -f .k8s/2-go-deployment.yml
-	okteto up -n fraym -f .okteto.go.yml
+	okteto up -n fraeym -f .okteto.go.yml
 
 dev-go-stop: ## Removes the go dev environment from the k8s cluster
-	okteto down -n fraym -f .okteto.go.yml
+	okteto down -n fraeym -f .okteto.go.yml
 	kubectl delete -f .k8s/2-go-deployment.yml
 	kubectl delete -f .k8s/1-go-service.yml
 
 dev-js: ## Runs the js dev environment on the k8s cluster
 	kubectl apply -f .k8s/1-js-service.yml
 	kubectl apply -f .k8s/2-js-deployment.yml
-	okteto up -n fraym -f .okteto.js.yml
+	okteto up -n fraeym -f .okteto.js.yml
 
 dev-js-stop: ## Removes the js dev environment from the k8s cluster
-	okteto down -n fraym -f .okteto.js.yml
+	okteto down -n fraeym -f .okteto.js.yml
 	kubectl delete -f .k8s/2-js-deployment.yml
 	kubectl delete -f .k8s/1-js-service.yml

@@ -1,31 +1,6 @@
 type TestProjection
     @permission(all: [])
-    @upsertOn(
-        on: { topic: "test", eventTypes: ["testType"] }
-        filterBy: {
-            fields: [
-                {
-                    projectionField: "field"
-                    eventField: "field"
-                    type: "String"
-                    operation: "equals"
-                }
-            ]
-        }
-    )
-    @removeOn(
-        on: { topic: "test", eventTypes: ["removeTestType"] }
-        filterBy: {
-            fields: [
-                {
-                    projectionField: "field"
-                    eventField: "field"
-                    type: "String"
-                    operation: "equals"
-                }
-            ]
-        }
-    ) {
+    @upsertOn(on: { topic: "test", eventTypes: ["testType"] }, identifyBy: { payload: ["id"] }) {
     field: String! @index
     field2: String
 }
