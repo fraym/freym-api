@@ -45,9 +45,10 @@ func (c *MockClient) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
-	return c.Called(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler).Error(0)
+	return c.Called(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, doNotUseSnapshots, handler).Error(0)
 }
 
 func (c *MockClient) IterateStreamAfterEvent(
@@ -59,9 +60,11 @@ func (c *MockClient) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
-	return c.Called(ctx, tenant, topic, stream, eventId, deploymentId, perPage, queueSize, handler).Error(0)
+	return c.Called(ctx, tenant, topic, stream, eventId, deploymentId, perPage, queueSize, doNotUseSnapshots, handler).
+		Error(0)
 }
 
 func (c *MockClient) IsStreamEmpty(ctx context.Context, tenant string, topic string, stream string) (bool, error) {
