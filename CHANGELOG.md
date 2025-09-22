@@ -1,5 +1,8 @@
 # vNext
 
+# v0.48.2
+
+- (bug) Add retry number to subscription event in go streams package
 - (improvement) Update all dependencies
 
 # v0.48.1

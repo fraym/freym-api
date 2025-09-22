@@ -81,6 +81,7 @@ type SubscriptionEvent struct {
 	OrderSerial   int64
 	UserId        string
 	DeploymentId  int64
+	RetryNumber   int64
 }
 
 type (

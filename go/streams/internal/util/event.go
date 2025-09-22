@@ -62,6 +62,7 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		orderSerial   int64
 		userId        string
 		deploymentId  int64
+		retryNumber   int64
 	)
 
 	if meta := data.GetMetadata(); meta != nil {
@@ -70,6 +71,7 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		orderSerial = meta.GetOrderSerial()
 		userId = meta.GetUserId()
 		deploymentId = meta.GetDeploymentId()
+		retryNumber = meta.GetRetryNumber()
 	}
 
 	return &dto.SubscriptionEvent{
@@ -86,6 +88,7 @@ func SubscriptionEventFromPb(data *managementpb.Event) (*dto.SubscriptionEvent, 
 		OrderSerial:   orderSerial,
 		UserId:        userId,
 		DeploymentId:  deploymentId,
+		RetryNumber:   retryNumber,
 	}, nil
 }
 
