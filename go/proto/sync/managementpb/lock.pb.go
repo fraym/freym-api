@@ -148,6 +148,148 @@ func (b0 LockResponse_builder) Build() *LockResponse {
 	return m0
 }
 
+type TryLockRequest struct {
+	state               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
+	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *TryLockRequest) Reset() {
+	*x = TryLockRequest{}
+	mi := &file_sync_management_lock_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TryLockRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TryLockRequest) ProtoMessage() {}
+
+func (x *TryLockRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TryLockRequest) GetLeaseId() string {
+	if x != nil {
+		return x.xxx_hidden_LeaseId
+	}
+	return ""
+}
+
+func (x *TryLockRequest) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *TryLockRequest) GetResource() []string {
+	if x != nil {
+		return x.xxx_hidden_Resource
+	}
+	return nil
+}
+
+func (x *TryLockRequest) SetLeaseId(v string) {
+	x.xxx_hidden_LeaseId = v
+}
+
+func (x *TryLockRequest) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *TryLockRequest) SetResource(v []string) {
+	x.xxx_hidden_Resource = v
+}
+
+type TryLockRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	LeaseId  string
+	TenantId string
+	Resource []string
+}
+
+func (b0 TryLockRequest_builder) Build() *TryLockRequest {
+	m0 := &TryLockRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_LeaseId = b.LeaseId
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Resource = b.Resource
+	return m0
+}
+
+type TryLockResponse struct {
+	state             protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Locked bool                   `protobuf:"varint,1,opt,name=locked,proto3"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *TryLockResponse) Reset() {
+	*x = TryLockResponse{}
+	mi := &file_sync_management_lock_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TryLockResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TryLockResponse) ProtoMessage() {}
+
+func (x *TryLockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TryLockResponse) GetLocked() bool {
+	if x != nil {
+		return x.xxx_hidden_Locked
+	}
+	return false
+}
+
+func (x *TryLockResponse) SetLocked(v bool) {
+	x.xxx_hidden_Locked = v
+}
+
+type TryLockResponse_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Locked bool
+}
+
+func (b0 TryLockResponse_builder) Build() *TryLockResponse {
+	m0 := &TryLockResponse{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Locked = b.Locked
+	return m0
+}
+
 type RLockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
@@ -159,7 +301,7 @@ type RLockRequest struct {
 
 func (x *RLockRequest) Reset() {
 	*x = RLockRequest{}
-	mi := &file_sync_management_lock_proto_msgTypes[2]
+	mi := &file_sync_management_lock_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -171,7 +313,7 @@ func (x *RLockRequest) String() string {
 func (*RLockRequest) ProtoMessage() {}
 
 func (x *RLockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[2]
+	mi := &file_sync_management_lock_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -241,7 +383,7 @@ type RLockResponse struct {
 
 func (x *RLockResponse) Reset() {
 	*x = RLockResponse{}
-	mi := &file_sync_management_lock_proto_msgTypes[3]
+	mi := &file_sync_management_lock_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -253,7 +395,7 @@ func (x *RLockResponse) String() string {
 func (*RLockResponse) ProtoMessage() {}
 
 func (x *RLockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[3]
+	mi := &file_sync_management_lock_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,6 +418,148 @@ func (b0 RLockResponse_builder) Build() *RLockResponse {
 	return m0
 }
 
+type TryRLockRequest struct {
+	state               protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
+	xxx_hidden_TenantId string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Resource []string               `protobuf:"bytes,3,rep,name=resource,proto3"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *TryRLockRequest) Reset() {
+	*x = TryRLockRequest{}
+	mi := &file_sync_management_lock_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TryRLockRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TryRLockRequest) ProtoMessage() {}
+
+func (x *TryRLockRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TryRLockRequest) GetLeaseId() string {
+	if x != nil {
+		return x.xxx_hidden_LeaseId
+	}
+	return ""
+}
+
+func (x *TryRLockRequest) GetTenantId() string {
+	if x != nil {
+		return x.xxx_hidden_TenantId
+	}
+	return ""
+}
+
+func (x *TryRLockRequest) GetResource() []string {
+	if x != nil {
+		return x.xxx_hidden_Resource
+	}
+	return nil
+}
+
+func (x *TryRLockRequest) SetLeaseId(v string) {
+	x.xxx_hidden_LeaseId = v
+}
+
+func (x *TryRLockRequest) SetTenantId(v string) {
+	x.xxx_hidden_TenantId = v
+}
+
+func (x *TryRLockRequest) SetResource(v []string) {
+	x.xxx_hidden_Resource = v
+}
+
+type TryRLockRequest_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	LeaseId  string
+	TenantId string
+	Resource []string
+}
+
+func (b0 TryRLockRequest_builder) Build() *TryRLockRequest {
+	m0 := &TryRLockRequest{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_LeaseId = b.LeaseId
+	x.xxx_hidden_TenantId = b.TenantId
+	x.xxx_hidden_Resource = b.Resource
+	return m0
+}
+
+type TryRLockResponse struct {
+	state             protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Locked bool                   `protobuf:"varint,1,opt,name=locked,proto3"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *TryRLockResponse) Reset() {
+	*x = TryRLockResponse{}
+	mi := &file_sync_management_lock_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TryRLockResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TryRLockResponse) ProtoMessage() {}
+
+func (x *TryRLockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sync_management_lock_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TryRLockResponse) GetLocked() bool {
+	if x != nil {
+		return x.xxx_hidden_Locked
+	}
+	return false
+}
+
+func (x *TryRLockResponse) SetLocked(v bool) {
+	x.xxx_hidden_Locked = v
+}
+
+type TryRLockResponse_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Locked bool
+}
+
+func (b0 TryRLockResponse_builder) Build() *TryRLockResponse {
+	m0 := &TryRLockResponse{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Locked = b.Locked
+	return m0
+}
+
 type UnlockRequest struct {
 	state               protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_LeaseId  string                 `protobuf:"bytes,1,opt,name=lease_id,json=leaseId,proto3"`
@@ -287,7 +571,7 @@ type UnlockRequest struct {
 
 func (x *UnlockRequest) Reset() {
 	*x = UnlockRequest{}
-	mi := &file_sync_management_lock_proto_msgTypes[4]
+	mi := &file_sync_management_lock_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -299,7 +583,7 @@ func (x *UnlockRequest) String() string {
 func (*UnlockRequest) ProtoMessage() {}
 
 func (x *UnlockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[4]
+	mi := &file_sync_management_lock_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -369,7 +653,7 @@ type UnlockResponse struct {
 
 func (x *UnlockResponse) Reset() {
 	*x = UnlockResponse{}
-	mi := &file_sync_management_lock_proto_msgTypes[5]
+	mi := &file_sync_management_lock_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -381,7 +665,7 @@ func (x *UnlockResponse) String() string {
 func (*UnlockResponse) ProtoMessage() {}
 
 func (x *UnlockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[5]
+	mi := &file_sync_management_lock_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -415,7 +699,7 @@ type RUnlockRequest struct {
 
 func (x *RUnlockRequest) Reset() {
 	*x = RUnlockRequest{}
-	mi := &file_sync_management_lock_proto_msgTypes[6]
+	mi := &file_sync_management_lock_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -427,7 +711,7 @@ func (x *RUnlockRequest) String() string {
 func (*RUnlockRequest) ProtoMessage() {}
 
 func (x *RUnlockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[6]
+	mi := &file_sync_management_lock_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -497,7 +781,7 @@ type RUnlockResponse struct {
 
 func (x *RUnlockResponse) Reset() {
 	*x = RUnlockResponse{}
-	mi := &file_sync_management_lock_proto_msgTypes[7]
+	mi := &file_sync_management_lock_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -509,7 +793,7 @@ func (x *RUnlockResponse) String() string {
 func (*RUnlockResponse) ProtoMessage() {}
 
 func (x *RUnlockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sync_management_lock_proto_msgTypes[7]
+	mi := &file_sync_management_lock_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -541,12 +825,24 @@ const file_sync_management_lock_proto_rawDesc = "" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
 	"\bresource\x18\x03 \x03(\tR\bresource\"\x0e\n" +
-	"\fLockResponse\"b\n" +
+	"\fLockResponse\"d\n" +
+	"\x0eTryLockRequest\x12\x19\n" +
+	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
+	"\bresource\x18\x03 \x03(\tR\bresource\")\n" +
+	"\x0fTryLockResponse\x12\x16\n" +
+	"\x06locked\x18\x01 \x01(\bR\x06locked\"b\n" +
 	"\fRLockRequest\x12\x19\n" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
 	"\bresource\x18\x03 \x03(\tR\bresource\"\x0f\n" +
-	"\rRLockResponse\"c\n" +
+	"\rRLockResponse\"e\n" +
+	"\x0fTryRLockRequest\x12\x19\n" +
+	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
+	"\bresource\x18\x03 \x03(\tR\bresource\"*\n" +
+	"\x10TryRLockResponse\x12\x16\n" +
+	"\x06locked\x18\x01 \x01(\bR\x06locked\"c\n" +
 	"\rUnlockRequest\x12\x19\n" +
 	"\blease_id\x18\x01 \x01(\tR\aleaseId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
@@ -558,16 +854,20 @@ const file_sync_management_lock_proto_rawDesc = "" +
 	"\bresource\x18\x03 \x03(\tR\bresource\"\x11\n" +
 	"\x0fRUnlockResponseb\x06proto3"
 
-var file_sync_management_lock_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_sync_management_lock_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_sync_management_lock_proto_goTypes = []any{
-	(*LockRequest)(nil),     // 0: freym.sync.management.LockRequest
-	(*LockResponse)(nil),    // 1: freym.sync.management.LockResponse
-	(*RLockRequest)(nil),    // 2: freym.sync.management.RLockRequest
-	(*RLockResponse)(nil),   // 3: freym.sync.management.RLockResponse
-	(*UnlockRequest)(nil),   // 4: freym.sync.management.UnlockRequest
-	(*UnlockResponse)(nil),  // 5: freym.sync.management.UnlockResponse
-	(*RUnlockRequest)(nil),  // 6: freym.sync.management.RUnlockRequest
-	(*RUnlockResponse)(nil), // 7: freym.sync.management.RUnlockResponse
+	(*LockRequest)(nil),      // 0: freym.sync.management.LockRequest
+	(*LockResponse)(nil),     // 1: freym.sync.management.LockResponse
+	(*TryLockRequest)(nil),   // 2: freym.sync.management.TryLockRequest
+	(*TryLockResponse)(nil),  // 3: freym.sync.management.TryLockResponse
+	(*RLockRequest)(nil),     // 4: freym.sync.management.RLockRequest
+	(*RLockResponse)(nil),    // 5: freym.sync.management.RLockResponse
+	(*TryRLockRequest)(nil),  // 6: freym.sync.management.TryRLockRequest
+	(*TryRLockResponse)(nil), // 7: freym.sync.management.TryRLockResponse
+	(*UnlockRequest)(nil),    // 8: freym.sync.management.UnlockRequest
+	(*UnlockResponse)(nil),   // 9: freym.sync.management.UnlockResponse
+	(*RUnlockRequest)(nil),   // 10: freym.sync.management.RUnlockRequest
+	(*RUnlockResponse)(nil),  // 11: freym.sync.management.RUnlockResponse
 }
 var file_sync_management_lock_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -588,7 +888,7 @@ func file_sync_management_lock_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sync_management_lock_proto_rawDesc), len(file_sync_management_lock_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

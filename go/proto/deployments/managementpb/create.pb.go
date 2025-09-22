@@ -274,6 +274,8 @@ type DeploymentOptions struct {
 	xxx_hidden_Target       DeploymentTarget       `protobuf:"varint,1,opt,name=target,proto3,enum=freym.deployments.management.DeploymentTarget"`
 	xxx_hidden_Force        bool                   `protobuf:"varint,2,opt,name=force,proto3"`
 	xxx_hidden_SkipServices []string               `protobuf:"bytes,3,rep,name=skip_services,json=skipServices,proto3"`
+	xxx_hidden_ForceTypes   []string               `protobuf:"bytes,4,rep,name=force_types,json=forceTypes,proto3"`
+	xxx_hidden_DryRun       bool                   `protobuf:"varint,5,opt,name=dry_run,json=dryRun,proto3"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -324,6 +326,20 @@ func (x *DeploymentOptions) GetSkipServices() []string {
 	return nil
 }
 
+func (x *DeploymentOptions) GetForceTypes() []string {
+	if x != nil {
+		return x.xxx_hidden_ForceTypes
+	}
+	return nil
+}
+
+func (x *DeploymentOptions) GetDryRun() bool {
+	if x != nil {
+		return x.xxx_hidden_DryRun
+	}
+	return false
+}
+
 func (x *DeploymentOptions) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
 }
@@ -336,12 +352,22 @@ func (x *DeploymentOptions) SetSkipServices(v []string) {
 	x.xxx_hidden_SkipServices = v
 }
 
+func (x *DeploymentOptions) SetForceTypes(v []string) {
+	x.xxx_hidden_ForceTypes = v
+}
+
+func (x *DeploymentOptions) SetDryRun(v bool) {
+	x.xxx_hidden_DryRun = v
+}
+
 type DeploymentOptions_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Target       DeploymentTarget
 	Force        bool
 	SkipServices []string
+	ForceTypes   []string
+	DryRun       bool
 }
 
 func (b0 DeploymentOptions_builder) Build() *DeploymentOptions {
@@ -351,6 +377,8 @@ func (b0 DeploymentOptions_builder) Build() *DeploymentOptions {
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Force = b.Force
 	x.xxx_hidden_SkipServices = b.SkipServices
+	x.xxx_hidden_ForceTypes = b.ForceTypes
+	x.xxx_hidden_DryRun = b.DryRun
 	return m0
 }
 
@@ -866,11 +894,14 @@ const file_deployments_management_create_proto_rawDesc = "" +
 	"\tbaseViews\x18\b \x03(\v2\".freym.deployments.management.ViewR\tbaseViews\x12I\n" +
 	"\aoptions\x18\t \x01(\v2/.freym.deployments.management.DeploymentOptionsR\aoptions\"?\n" +
 	"\x18CreateDeploymentResponse\x12#\n" +
-	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\"\x96\x01\n" +
+	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\"\xd0\x01\n" +
 	"\x11DeploymentOptions\x12F\n" +
 	"\x06target\x18\x01 \x01(\x0e2..freym.deployments.management.DeploymentTargetR\x06target\x12\x14\n" +
 	"\x05force\x18\x02 \x01(\bR\x05force\x12#\n" +
-	"\rskip_services\x18\x03 \x03(\tR\fskipServices\"\xae\x01\n" +
+	"\rskip_services\x18\x03 \x03(\tR\fskipServices\x12\x1f\n" +
+	"\vforce_types\x18\x04 \x03(\tR\n" +
+	"forceTypes\x12\x17\n" +
+	"\adry_run\x18\x05 \x01(\bR\x06dryRun\"\xae\x01\n" +
 	"\n" +
 	"ObjectType\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12K\n" +

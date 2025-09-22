@@ -10,6 +10,7 @@ message GetViewDataRequest {
 	DeploymentTarget target = 5;
 	DataWait wait = 6;
 	string use_strong_consistency_by_id = 7;
+	bool return_empty_data_if_not_found = 8;
 }
 
 message GetViewDataResponse {

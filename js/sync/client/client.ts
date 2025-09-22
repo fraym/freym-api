@@ -6,12 +6,16 @@ import { createLease } from "./lease";
 import { lock } from "./lock";
 import { rLock } from "./rlock";
 import { rUnlock } from "./runlock";
+import { tryLock } from "./tryLock";
+import { tryRLock } from "./tryRLock";
 import { unlock } from "./unlock";
 
 export interface Client {
     lock: (tenantId: string, ...resource: string[]) => Promise<void>;
+    tryLock: (tenantId: string, ...resource: string[]) => Promise<boolean>;
     unlock: (tenantId: string, ...resource: string[]) => Promise<void>;
     rLock: (tenantId: string, ...resource: string[]) => Promise<void>;
+    tryRLock: (tenantId: string, ...resource: string[]) => Promise<boolean>;
     rUnlock: (tenantId: string, ...resource: string[]) => Promise<void>;
     close: () => Promise<void>;
 }
@@ -35,6 +39,10 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
             await connection.waitForConnect();
             await lock(lease, tenantId, resource, serviceClient);
         },
+        tryLock: async (tenantId: string, ...resource: string[]) => {
+            await connection.waitForConnect();
+            return await tryLock(lease, tenantId, resource, serviceClient);
+        },
         unlock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
             await unlock(lease, tenantId, resource, serviceClient);
@@ -42,6 +50,10 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
         rLock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
             await rLock(lease, tenantId, resource, serviceClient);
+        },
+        tryRLock: async (tenantId: string, ...resource: string[]) => {
+            await connection.waitForConnect();
+            return await tryRLock(lease, tenantId, resource, serviceClient);
         },
         rUnlock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();

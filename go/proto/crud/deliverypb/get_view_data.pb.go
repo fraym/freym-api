@@ -21,16 +21,17 @@ const (
 )
 
 type GetViewDataRequest struct {
-	state                               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_View                     string                 `protobuf:"bytes,1,opt,name=view,proto3"`
-	xxx_hidden_Auth                     *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
-	xxx_hidden_Filter                   *DataFilter            `protobuf:"bytes,3,opt,name=filter,proto3"`
-	xxx_hidden_UseStrongConsistency     bool                   `protobuf:"varint,4,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
-	xxx_hidden_Target                   DeploymentTarget       `protobuf:"varint,5,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
-	xxx_hidden_Wait                     *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
-	xxx_hidden_UseStrongConsistencyById string                 `protobuf:"bytes,7,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
-	unknownFields                       protoimpl.UnknownFields
-	sizeCache                           protoimpl.SizeCache
+	state                                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_View                      string                 `protobuf:"bytes,1,opt,name=view,proto3"`
+	xxx_hidden_Auth                      *AuthData              `protobuf:"bytes,2,opt,name=auth,proto3"`
+	xxx_hidden_Filter                    *DataFilter            `protobuf:"bytes,3,opt,name=filter,proto3"`
+	xxx_hidden_UseStrongConsistency      bool                   `protobuf:"varint,4,opt,name=use_strong_consistency,json=useStrongConsistency,proto3"`
+	xxx_hidden_Target                    DeploymentTarget       `protobuf:"varint,5,opt,name=target,proto3,enum=freym.crud.delivery.DeploymentTarget"`
+	xxx_hidden_Wait                      *DataWait              `protobuf:"bytes,6,opt,name=wait,proto3"`
+	xxx_hidden_UseStrongConsistencyById  string                 `protobuf:"bytes,7,opt,name=use_strong_consistency_by_id,json=useStrongConsistencyById,proto3"`
+	xxx_hidden_ReturnEmptyDataIfNotFound bool                   `protobuf:"varint,8,opt,name=return_empty_data_if_not_found,json=returnEmptyDataIfNotFound,proto3"`
+	unknownFields                        protoimpl.UnknownFields
+	sizeCache                            protoimpl.SizeCache
 }
 
 func (x *GetViewDataRequest) Reset() {
@@ -107,6 +108,13 @@ func (x *GetViewDataRequest) GetUseStrongConsistencyById() string {
 	return ""
 }
 
+func (x *GetViewDataRequest) GetReturnEmptyDataIfNotFound() bool {
+	if x != nil {
+		return x.xxx_hidden_ReturnEmptyDataIfNotFound
+	}
+	return false
+}
+
 func (x *GetViewDataRequest) SetView(v string) {
 	x.xxx_hidden_View = v
 }
@@ -133,6 +141,10 @@ func (x *GetViewDataRequest) SetWait(v *DataWait) {
 
 func (x *GetViewDataRequest) SetUseStrongConsistencyById(v string) {
 	x.xxx_hidden_UseStrongConsistencyById = v
+}
+
+func (x *GetViewDataRequest) SetReturnEmptyDataIfNotFound(v bool) {
+	x.xxx_hidden_ReturnEmptyDataIfNotFound = v
 }
 
 func (x *GetViewDataRequest) HasAuth() bool {
@@ -171,13 +183,14 @@ func (x *GetViewDataRequest) ClearWait() {
 type GetViewDataRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	View                     string
-	Auth                     *AuthData
-	Filter                   *DataFilter
-	UseStrongConsistency     bool
-	Target                   DeploymentTarget
-	Wait                     *DataWait
-	UseStrongConsistencyById string
+	View                      string
+	Auth                      *AuthData
+	Filter                    *DataFilter
+	UseStrongConsistency      bool
+	Target                    DeploymentTarget
+	Wait                      *DataWait
+	UseStrongConsistencyById  string
+	ReturnEmptyDataIfNotFound bool
 }
 
 func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
@@ -191,6 +204,7 @@ func (b0 GetViewDataRequest_builder) Build() *GetViewDataRequest {
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Wait = b.Wait
 	x.xxx_hidden_UseStrongConsistencyById = b.UseStrongConsistencyById
+	x.xxx_hidden_ReturnEmptyDataIfNotFound = b.ReturnEmptyDataIfNotFound
 	return m0
 }
 
@@ -585,7 +599,7 @@ var File_crud_delivery_get_view_data_proto protoreflect.FileDescriptor
 
 const file_crud_delivery_get_view_data_proto_rawDesc = "" +
 	"\n" +
-	"!crud/delivery/get_view_data.proto\x12\x13freym.crud.delivery\x1a\x1acrud/delivery/shared.proto\"\xfc\x02\n" +
+	"!crud/delivery/get_view_data.proto\x12\x13freym.crud.delivery\x1a\x1acrud/delivery/shared.proto\"\xbf\x03\n" +
 	"\x12GetViewDataRequest\x12\x12\n" +
 	"\x04view\x18\x01 \x01(\tR\x04view\x121\n" +
 	"\x04auth\x18\x02 \x01(\v2\x1d.freym.crud.delivery.AuthDataR\x04auth\x127\n" +
@@ -593,7 +607,8 @@ const file_crud_delivery_get_view_data_proto_rawDesc = "" +
 	"\x16use_strong_consistency\x18\x04 \x01(\bR\x14useStrongConsistency\x12=\n" +
 	"\x06target\x18\x05 \x01(\x0e2%.freym.crud.delivery.DeploymentTargetR\x06target\x121\n" +
 	"\x04wait\x18\x06 \x01(\v2\x1d.freym.crud.delivery.DataWaitR\x04wait\x12>\n" +
-	"\x1cuse_strong_consistency_by_id\x18\a \x01(\tR\x18useStrongConsistencyById\"H\n" +
+	"\x1cuse_strong_consistency_by_id\x18\a \x01(\tR\x18useStrongConsistencyById\x12A\n" +
+	"\x1ereturn_empty_data_if_not_found\x18\b \x01(\bR\x19returnEmptyDataIfNotFound\"H\n" +
 	"\x13GetViewDataResponse\x121\n" +
 	"\x06result\x18\x01 \x01(\v2\x19.freym.crud.delivery.DataR\x06result\"\xe4\x03\n" +
 	"\x16GetViewDataListRequest\x12\x12\n" +

@@ -11,6 +11,7 @@ message PaginateStreamRequest {
 	// when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id.
 	int64 deployment_id = 6;
 	string snapshot_event_id = 7;
+	bool do_not_use_snapshots = 8;
 }
 
 message PaginateStreamResponse {
@@ -28,6 +29,7 @@ message PaginateStreamAfterEventIdRequest {
 	// when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id.
 	int64 deployment_id = 7;
 	string snapshot_event_id = 8;
+	bool do_not_use_snapshots = 9;
 }
 
 message PaginateStreamAfterEventIdResponse {

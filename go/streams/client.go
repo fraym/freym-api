@@ -51,6 +51,7 @@ type Client interface {
 		deploymentId int64,
 		perPage int,
 		queueSize int,
+		doNotUseSnapshots bool,
 		handler dto.IterateHandlerFunc,
 	) error
 	IterateStreamAfterEvent(
@@ -62,6 +63,7 @@ type Client interface {
 		deploymentId int64,
 		perPage int,
 		queueSize int,
+		doNotUseSnapshots bool,
 		handler dto.IterateHandlerFunc,
 	) error
 	CreateStreamSnapshot(
@@ -182,9 +184,20 @@ func (c *streamsClient) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
-	return c.service.IterateStream(ctx, tenant, topic, stream, deploymentId, perPage, queueSize, handler)
+	return c.service.IterateStream(
+		ctx,
+		tenant,
+		topic,
+		stream,
+		deploymentId,
+		perPage,
+		queueSize,
+		doNotUseSnapshots,
+		handler,
+	)
 }
 
 func (c *streamsClient) IterateStreamAfterEvent(
@@ -196,6 +209,7 @@ func (c *streamsClient) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
 	return c.service.IterateStreamAfterEvent(
@@ -207,6 +221,7 @@ func (c *streamsClient) IterateStreamAfterEvent(
 		deploymentId,
 		perPage,
 		queueSize,
+		doNotUseSnapshots,
 		handler,
 	)
 }

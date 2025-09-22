@@ -49,6 +49,7 @@ message GetSchemaDeploymentResponse {
 message DeploymentOptions {
 	DeploymentTarget target = 1;
 	bool force = 2;
+	repeated string force_types = 3;
 }
 
 enum DeploymentTarget {

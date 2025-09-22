@@ -1,5 +1,12 @@
 # vNext
 
+# v0.49.0
+
+- (feature) Add `types` option to deployment command to force type deployments
+- (feature) Add `dry-run` option to deployment command
+- (feature) Add `doNotUseSnapshots` option to streams client
+- (feature) Add `TryLock` and `TryRLock` methods to sync client
+
 # v0.48.3
 
 - (bug) Fix `StreamHandlerError` constructor in js streams package

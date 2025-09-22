@@ -135,8 +135,8 @@ export const createLease = async (
         stop: () => {
             stopExecution();
         },
-        runWithLeaseId: async (callback: (leaseId: string) => Promise<void>) => {
-            await callback(leaseId);
+        runWithLeaseId: async <T>(callback: (leaseId: string) => Promise<T>) => {
+            return await callback(leaseId);
         },
         renew,
         waitForStop,

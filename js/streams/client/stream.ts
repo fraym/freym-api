@@ -11,7 +11,8 @@ export const getStream = async (
     handler: HandlerFunc,
     stopLoadingMore: StopLoadingMoreFunc,
     deploymentId: number,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    doNotUseSnapshots: boolean
 ): Promise<void> => {
     let page = 0;
     let snapshotEventId: string | null = null;
@@ -25,10 +26,13 @@ export const getStream = async (
             page,
             deploymentId,
             snapshotEventId,
-            serviceClient
+            serviceClient,
+            doNotUseSnapshots
         );
 
-        snapshotEventId = response.snapshotEventId;
+        if (!doNotUseSnapshots) {
+            snapshotEventId = response.snapshotEventId;
+        }
 
         page++;
 
@@ -61,7 +65,8 @@ const getStreamPage = async (
     page: number,
     deploymentId: number,
     snapshotEventId: string | null,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    doNotUseSnapshots: boolean
 ) => {
     return retry(
         () =>
@@ -75,6 +80,7 @@ const getStreamPage = async (
                         perPage: perPage.toString(),
                         deploymentId: deploymentId.toString(),
                         snapshotEventId: snapshotEventId ?? "",
+                        doNotUseSnapshots,
                     },
                     async (error, data) => {
                         if (error) {
@@ -98,7 +104,8 @@ export const getStreamAfterEvent = async (
     handler: HandlerFunc,
     stopLoadingMore: StopLoadingMoreFunc,
     deploymentId: number,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    doNotUseSnapshots: boolean
 ): Promise<void> => {
     let page = 0;
     let snapshotEventId: string | null = null;
@@ -113,10 +120,13 @@ export const getStreamAfterEvent = async (
             page,
             deploymentId,
             snapshotEventId,
-            serviceClient
+            serviceClient,
+            doNotUseSnapshots
         );
 
-        snapshotEventId = response.snapshotEventId;
+        if (!doNotUseSnapshots) {
+            snapshotEventId = response.snapshotEventId;
+        }
 
         page++;
 
@@ -145,7 +155,8 @@ const getStreamPageAfterEvent = async (
     page: number,
     deploymentId: number,
     snapshotEventId: string | null,
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    doNotUseSnapshots: boolean
 ) => {
     return retry(
         () =>
@@ -160,6 +171,7 @@ const getStreamPageAfterEvent = async (
                         perPage: perPage.toString(),
                         deploymentId: deploymentId.toString(),
                         snapshotEventId: snapshotEventId ?? "",
+                        doNotUseSnapshots,
                     },
                     async (error, data) => {
                         if (error) {

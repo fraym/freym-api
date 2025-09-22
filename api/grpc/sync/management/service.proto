@@ -12,7 +12,10 @@ service Service {
 	rpc GetPeerNodes(GetPeerNodesRequest) returns (stream GetPeerNodesResponse);
 
 	rpc Lock(LockRequest) returns (LockResponse);
+	rpc TryLock(TryLockRequest) returns (TryLockResponse);
 	rpc Unlock(UnlockRequest) returns (UnlockResponse);
+
 	rpc RLock(RLockRequest) returns (RLockResponse);
+	rpc TryRLock(TryRLockRequest) returns (TryRLockResponse);
 	rpc RUnlock(RUnlockRequest) returns (RUnlockResponse);
 }

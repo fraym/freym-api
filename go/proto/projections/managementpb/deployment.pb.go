@@ -782,11 +782,12 @@ func (b0 GetSchemaDeploymentResponse_builder) Build() *GetSchemaDeploymentRespon
 }
 
 type DeploymentOptions struct {
-	state             protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Target DeploymentTarget       `protobuf:"varint,1,opt,name=target,proto3,enum=freym.projections.management.DeploymentTarget"`
-	xxx_hidden_Force  bool                   `protobuf:"varint,2,opt,name=force,proto3"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Target     DeploymentTarget       `protobuf:"varint,1,opt,name=target,proto3,enum=freym.projections.management.DeploymentTarget"`
+	xxx_hidden_Force      bool                   `protobuf:"varint,2,opt,name=force,proto3"`
+	xxx_hidden_ForceTypes []string               `protobuf:"bytes,3,rep,name=force_types,json=forceTypes,proto3"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *DeploymentOptions) Reset() {
@@ -828,6 +829,13 @@ func (x *DeploymentOptions) GetForce() bool {
 	return false
 }
 
+func (x *DeploymentOptions) GetForceTypes() []string {
+	if x != nil {
+		return x.xxx_hidden_ForceTypes
+	}
+	return nil
+}
+
 func (x *DeploymentOptions) SetTarget(v DeploymentTarget) {
 	x.xxx_hidden_Target = v
 }
@@ -836,11 +844,16 @@ func (x *DeploymentOptions) SetForce(v bool) {
 	x.xxx_hidden_Force = v
 }
 
+func (x *DeploymentOptions) SetForceTypes(v []string) {
+	x.xxx_hidden_ForceTypes = v
+}
+
 type DeploymentOptions_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Target DeploymentTarget
-	Force  bool
+	Target     DeploymentTarget
+	Force      bool
+	ForceTypes []string
 }
 
 func (b0 DeploymentOptions_builder) Build() *DeploymentOptions {
@@ -849,6 +862,7 @@ func (b0 DeploymentOptions_builder) Build() *DeploymentOptions {
 	_, _ = b, x
 	x.xxx_hidden_Target = b.Target
 	x.xxx_hidden_Force = b.Force
+	x.xxx_hidden_ForceTypes = b.ForceTypes
 	return m0
 }
 
@@ -1379,10 +1393,12 @@ const file_projections_management_deployment_proto_rawDesc = "" +
 	"\x1aGetSchemaDeploymentRequest\x12#\n" +
 	"\rdeployment_id\x18\x01 \x01(\x03R\fdeploymentId\"9\n" +
 	"\x1bGetSchemaDeploymentResponse\x12\x1a\n" +
-	"\bprogress\x18\x01 \x01(\rR\bprogress\"q\n" +
+	"\bprogress\x18\x01 \x01(\rR\bprogress\"\x92\x01\n" +
 	"\x11DeploymentOptions\x12F\n" +
 	"\x06target\x18\x01 \x01(\x0e2..freym.projections.management.DeploymentTargetR\x06target\x12\x14\n" +
-	"\x05force\x18\x02 \x01(\bR\x05force\"\xae\x01\n" +
+	"\x05force\x18\x02 \x01(\bR\x05force\x12\x1f\n" +
+	"\vforce_types\x18\x03 \x03(\tR\n" +
+	"forceTypes\"\xae\x01\n" +
 	"\n" +
 	"ObjectType\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12K\n" +

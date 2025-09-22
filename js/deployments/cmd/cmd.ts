@@ -70,6 +70,15 @@ const isCi = (): boolean => {
     return false;
 };
 
+const isDryRun = (): boolean => {
+    for (const arg of process.argv) {
+        if (arg === "dry-run") {
+            return true;
+        }
+    }
+    return false;
+};
+
 const skipServices = (): string[] => {
     for (const arg of process.argv) {
         if (arg.startsWith("skip=")) {
@@ -86,12 +95,35 @@ const skipServices = (): string[] => {
     return [];
 };
 
+const forceTypes = (): string[] => {
+    for (const arg of process.argv) {
+        if (arg.startsWith("types=")) {
+            const skipArg = arg.split("=")[1];
+
+            if (!skipArg) {
+                throw new Error("invalid types argument");
+            }
+
+            return skipArg.split(",");
+        }
+    }
+
+    return [];
+};
+
 switch (arg) {
     case COMMAND_STATUS:
         runPrintDeploymentStatus(getIdFromArgs());
         break;
     case COMMAND_CREATE:
-        runCreateDeployment(getTargetFromArgs(), isForced(), isCi(), skipServices());
+        runCreateDeployment(
+            getTargetFromArgs(),
+            isForced(),
+            isCi(),
+            skipServices(),
+            isDryRun(),
+            forceTypes()
+        );
         break;
     case COMMAND_ACTIVATE:
         runActivateDeployment(getIdFromArgs());

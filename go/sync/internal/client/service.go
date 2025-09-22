@@ -80,6 +80,32 @@ func (s *Service) Lock(tenant string, resource []string) error {
 	return nil
 }
 
+func (s *Service) TryLock(tenant string, resource []string) (bool, error) {
+	if err := s.connection.WaitForConnect(); err != nil {
+		return false, err
+	}
+
+	locked := false
+
+	if err := util.Retry(func() error {
+		res, err := s.client.TryLock(context.Background(), managementpb.TryLockRequest_builder{
+			LeaseId:  s.lease.LeaseId(),
+			TenantId: tenant,
+			Resource: resource,
+		}.Build())
+
+		locked = res.GetLocked()
+
+		return err
+	}, s.retryPause, 50); err != nil {
+		return false, err
+	}
+
+	s.lease.Track(tenant, resource, false)
+
+	return locked, nil
+}
+
 func (s *Service) Unlock(tenant string, resource []string) {
 	go func() {
 		if err := s.connection.WaitForConnect(); err != nil {
@@ -127,6 +153,32 @@ func (s *Service) RLock(tenant string, resource []string) error {
 	s.lease.Track(tenant, resource, true)
 
 	return nil
+}
+
+func (s *Service) TryRLock(tenant string, resource []string) (bool, error) {
+	if err := s.connection.WaitForConnect(); err != nil {
+		return false, err
+	}
+
+	locked := false
+
+	if err := util.Retry(func() error {
+		res, err := s.client.TryRLock(context.Background(), managementpb.TryRLockRequest_builder{
+			LeaseId:  s.lease.LeaseId(),
+			TenantId: tenant,
+			Resource: resource,
+		}.Build())
+
+		locked = res.GetLocked()
+
+		return err
+	}, s.retryPause, 50); err != nil {
+		return false, err
+	}
+
+	s.lease.Track(tenant, resource, true)
+
+	return locked, nil
 }
 
 func (s *Service) RUnlock(tenant string, resource []string) {

@@ -29,7 +29,9 @@ export const runCreateDeployment = async (
     target: DeploymentTarget,
     force: boolean,
     ci: boolean,
-    skipServices: string[]
+    skipServices: string[],
+    dryRun: boolean,
+    forceTypes: string[]
 ) => {
     if (!ci) {
         console.log("creating deployment ...");
@@ -45,6 +47,8 @@ export const runCreateDeployment = async (
         target,
         force,
         skipServices,
+        dryRun,
+        forceTypes,
     });
 
     const response = await createDeployment({ ...deployment }, config);

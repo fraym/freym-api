@@ -12,7 +12,6 @@ message CreateDeploymentRequest {
 	repeated View views = 7;
 	repeated View baseViews = 8;
 	DeploymentOptions options = 9;
-
 }
 
 message CreateDeploymentResponse {
@@ -24,6 +23,8 @@ message DeploymentOptions {
 	DeploymentTarget target = 1;
 	bool force = 2;
 	repeated string skip_services = 3;
+	repeated string force_types = 4;
+	bool dry_run = 5;
 }
 
 message ObjectType {

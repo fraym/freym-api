@@ -21,6 +21,7 @@ type DeploymentOptions struct {
 	SkipServices []string
 	Force        bool
 	Target       managementpb.DeploymentTarget
+	ForceTypes   []string
 }
 
 type Client interface {
@@ -89,6 +90,7 @@ func (c *deploymentsClient) DeploySchema(
 		SkipServices: options.SkipServices,
 		Force:        options.Force,
 		Target:       options.Target,
+		ForceTypes:   options.ForceTypes,
 	}.Build())
 
 	response, err := c.client.CreateDeployment(ctx, requestData)

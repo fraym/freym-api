@@ -20,6 +20,8 @@ export interface DeploymentOptions {
     target: DeploymentTarget;
     force: boolean;
     skipServices: string[];
+    dryRun: boolean;
+    forceTypes: string[];
 }
 
 export interface View {

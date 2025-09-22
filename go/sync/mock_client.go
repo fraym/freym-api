@@ -23,12 +23,22 @@ func (c *MockClient[T]) Lock(tenantId string, resource ...string) error {
 	return c.Called(tenantId, resource).Error(0)
 }
 
+func (c *MockClient[T]) TryLock(tenantId string, resource ...string) (bool, error) {
+	args := c.Called(tenantId, resource)
+	return args.Bool(0), args.Error(1)
+}
+
 func (c *MockClient[T]) Unlock(tenantId string, resource ...string) {
 	c.Called(tenantId, resource)
 }
 
 func (c *MockClient[T]) RLock(tenantId string, resource ...string) error {
 	return c.Called(tenantId, resource).Error(0)
+}
+
+func (c *MockClient[T]) TryRLock(tenantId string, resource ...string) (bool, error) {
+	args := c.Called(tenantId, resource)
+	return args.Bool(0), args.Error(1)
 }
 
 func (c *MockClient[T]) RUnlock(tenantId string, resource ...string) {

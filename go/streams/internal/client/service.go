@@ -145,6 +145,7 @@ func (s *Service) IterateStream(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
@@ -160,20 +161,23 @@ func (s *Service) IterateStream(
 	return util.Iterate(ctx, handler, func(ctx context.Context, page, perPage int) ([]*dto.SubscriptionEvent, error) {
 		response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamResponse, error) {
 			return s.client.PaginateStream(ctx, managementpb.PaginateStreamRequest_builder{
-				TenantId:        tenant,
-				Topic:           topic,
-				Stream:          stream,
-				Page:            int64(page),
-				PerPage:         int64(perPage),
-				DeploymentId:    deploymentId,
-				SnapshotEventId: snapshotEventId,
+				TenantId:          tenant,
+				Topic:             topic,
+				Stream:            stream,
+				Page:              int64(page),
+				PerPage:           int64(perPage),
+				DeploymentId:      deploymentId,
+				SnapshotEventId:   snapshotEventId,
+				DoNotUseSnapshots: doNotUseSnapshots,
 			}.Build())
 		}, s.retryPause, 50)
 		if err != nil {
 			return nil, err
 		}
 
-		snapshotEventId = response.GetSnapshotEventId()
+		if !doNotUseSnapshots {
+			snapshotEventId = response.GetSnapshotEventId()
+		}
 
 		return util.SubscriptionEventsFromPb(response.GetEvents())
 	}, lastEventCheck, perPage, queueSize)
@@ -188,6 +192,7 @@ func (s *Service) IterateStreamAfterEvent(
 	deploymentId int64,
 	perPage int,
 	queueSize int,
+	doNotUseSnapshots bool,
 	handler dto.IterateHandlerFunc,
 ) error {
 	lastEventCheck, err := s.getLastEventCheckFunc(ctx, tenant, topic)
@@ -203,21 +208,24 @@ func (s *Service) IterateStreamAfterEvent(
 	return util.Iterate(ctx, handler, func(ctx context.Context, page, perPage int) ([]*dto.SubscriptionEvent, error) {
 		response, err := util.RetryWithResult(func() (*managementpb.PaginateStreamAfterEventIdResponse, error) {
 			return s.client.PaginateStreamAfterEventId(ctx, managementpb.PaginateStreamAfterEventIdRequest_builder{
-				TenantId:        tenant,
-				Topic:           topic,
-				Stream:          stream,
-				EventId:         eventId,
-				Page:            int64(page),
-				PerPage:         int64(perPage),
-				DeploymentId:    deploymentId,
-				SnapshotEventId: snapshotEventId,
+				TenantId:          tenant,
+				Topic:             topic,
+				Stream:            stream,
+				EventId:           eventId,
+				Page:              int64(page),
+				PerPage:           int64(perPage),
+				DeploymentId:      deploymentId,
+				SnapshotEventId:   snapshotEventId,
+				DoNotUseSnapshots: doNotUseSnapshots,
 			}.Build())
 		}, s.retryPause, 50)
 		if err != nil {
 			return nil, err
 		}
 
-		snapshotEventId = response.GetSnapshotEventId()
+		if !doNotUseSnapshots {
+			snapshotEventId = response.GetSnapshotEventId()
+		}
 
 		return util.SubscriptionEventsFromPb(response.GetEvents())
 	}, lastEventCheck, perPage, queueSize)

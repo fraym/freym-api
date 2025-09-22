@@ -24,15 +24,17 @@ var File_sync_management_service_proto protoreflect.FileDescriptor
 
 const file_sync_management_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1dsync/management/service.proto\x12\x15freym.sync.management\x1a\x1bsync/management/lease.proto\x1a sync/management/peer_nodes.proto\x1a\x1async/management/lock.proto2\xf0\x05\n" +
+	"\x1dsync/management/service.proto\x12\x15freym.sync.management\x1a\x1bsync/management/lease.proto\x1a sync/management/peer_nodes.proto\x1a\x1async/management/lock.proto2\xa7\a\n" +
 	"\aService\x12d\n" +
 	"\vCreateLease\x12).freym.sync.management.CreateLeaseRequest\x1a*.freym.sync.management.CreateLeaseResponse\x12^\n" +
 	"\tKeepLease\x12'.freym.sync.management.KeepLeaseRequest\x1a(.freym.sync.management.KeepLeaseResponse\x12^\n" +
 	"\tDropLease\x12'.freym.sync.management.DropLeaseRequest\x1a(.freym.sync.management.DropLeaseResponse\x12i\n" +
 	"\fGetPeerNodes\x12*.freym.sync.management.GetPeerNodesRequest\x1a+.freym.sync.management.GetPeerNodesResponse0\x01\x12O\n" +
-	"\x04Lock\x12\".freym.sync.management.LockRequest\x1a#.freym.sync.management.LockResponse\x12U\n" +
+	"\x04Lock\x12\".freym.sync.management.LockRequest\x1a#.freym.sync.management.LockResponse\x12X\n" +
+	"\aTryLock\x12%.freym.sync.management.TryLockRequest\x1a&.freym.sync.management.TryLockResponse\x12U\n" +
 	"\x06Unlock\x12$.freym.sync.management.UnlockRequest\x1a%.freym.sync.management.UnlockResponse\x12R\n" +
-	"\x05RLock\x12#.freym.sync.management.RLockRequest\x1a$.freym.sync.management.RLockResponse\x12X\n" +
+	"\x05RLock\x12#.freym.sync.management.RLockRequest\x1a$.freym.sync.management.RLockResponse\x12[\n" +
+	"\bTryRLock\x12&.freym.sync.management.TryRLockRequest\x1a'.freym.sync.management.TryRLockResponse\x12X\n" +
 	"\aRUnlock\x12%.freym.sync.management.RUnlockRequest\x1a&.freym.sync.management.RUnlockResponseb\x06proto3"
 
 var file_sync_management_service_proto_goTypes = []any{
@@ -41,17 +43,21 @@ var file_sync_management_service_proto_goTypes = []any{
 	(*DropLeaseRequest)(nil),     // 2: freym.sync.management.DropLeaseRequest
 	(*GetPeerNodesRequest)(nil),  // 3: freym.sync.management.GetPeerNodesRequest
 	(*LockRequest)(nil),          // 4: freym.sync.management.LockRequest
-	(*UnlockRequest)(nil),        // 5: freym.sync.management.UnlockRequest
-	(*RLockRequest)(nil),         // 6: freym.sync.management.RLockRequest
-	(*RUnlockRequest)(nil),       // 7: freym.sync.management.RUnlockRequest
-	(*CreateLeaseResponse)(nil),  // 8: freym.sync.management.CreateLeaseResponse
-	(*KeepLeaseResponse)(nil),    // 9: freym.sync.management.KeepLeaseResponse
-	(*DropLeaseResponse)(nil),    // 10: freym.sync.management.DropLeaseResponse
-	(*GetPeerNodesResponse)(nil), // 11: freym.sync.management.GetPeerNodesResponse
-	(*LockResponse)(nil),         // 12: freym.sync.management.LockResponse
-	(*UnlockResponse)(nil),       // 13: freym.sync.management.UnlockResponse
-	(*RLockResponse)(nil),        // 14: freym.sync.management.RLockResponse
-	(*RUnlockResponse)(nil),      // 15: freym.sync.management.RUnlockResponse
+	(*TryLockRequest)(nil),       // 5: freym.sync.management.TryLockRequest
+	(*UnlockRequest)(nil),        // 6: freym.sync.management.UnlockRequest
+	(*RLockRequest)(nil),         // 7: freym.sync.management.RLockRequest
+	(*TryRLockRequest)(nil),      // 8: freym.sync.management.TryRLockRequest
+	(*RUnlockRequest)(nil),       // 9: freym.sync.management.RUnlockRequest
+	(*CreateLeaseResponse)(nil),  // 10: freym.sync.management.CreateLeaseResponse
+	(*KeepLeaseResponse)(nil),    // 11: freym.sync.management.KeepLeaseResponse
+	(*DropLeaseResponse)(nil),    // 12: freym.sync.management.DropLeaseResponse
+	(*GetPeerNodesResponse)(nil), // 13: freym.sync.management.GetPeerNodesResponse
+	(*LockResponse)(nil),         // 14: freym.sync.management.LockResponse
+	(*TryLockResponse)(nil),      // 15: freym.sync.management.TryLockResponse
+	(*UnlockResponse)(nil),       // 16: freym.sync.management.UnlockResponse
+	(*RLockResponse)(nil),        // 17: freym.sync.management.RLockResponse
+	(*TryRLockResponse)(nil),     // 18: freym.sync.management.TryRLockResponse
+	(*RUnlockResponse)(nil),      // 19: freym.sync.management.RUnlockResponse
 }
 var file_sync_management_service_proto_depIdxs = []int32{
 	0,  // 0: freym.sync.management.Service.CreateLease:input_type -> freym.sync.management.CreateLeaseRequest
@@ -59,19 +65,23 @@ var file_sync_management_service_proto_depIdxs = []int32{
 	2,  // 2: freym.sync.management.Service.DropLease:input_type -> freym.sync.management.DropLeaseRequest
 	3,  // 3: freym.sync.management.Service.GetPeerNodes:input_type -> freym.sync.management.GetPeerNodesRequest
 	4,  // 4: freym.sync.management.Service.Lock:input_type -> freym.sync.management.LockRequest
-	5,  // 5: freym.sync.management.Service.Unlock:input_type -> freym.sync.management.UnlockRequest
-	6,  // 6: freym.sync.management.Service.RLock:input_type -> freym.sync.management.RLockRequest
-	7,  // 7: freym.sync.management.Service.RUnlock:input_type -> freym.sync.management.RUnlockRequest
-	8,  // 8: freym.sync.management.Service.CreateLease:output_type -> freym.sync.management.CreateLeaseResponse
-	9,  // 9: freym.sync.management.Service.KeepLease:output_type -> freym.sync.management.KeepLeaseResponse
-	10, // 10: freym.sync.management.Service.DropLease:output_type -> freym.sync.management.DropLeaseResponse
-	11, // 11: freym.sync.management.Service.GetPeerNodes:output_type -> freym.sync.management.GetPeerNodesResponse
-	12, // 12: freym.sync.management.Service.Lock:output_type -> freym.sync.management.LockResponse
-	13, // 13: freym.sync.management.Service.Unlock:output_type -> freym.sync.management.UnlockResponse
-	14, // 14: freym.sync.management.Service.RLock:output_type -> freym.sync.management.RLockResponse
-	15, // 15: freym.sync.management.Service.RUnlock:output_type -> freym.sync.management.RUnlockResponse
-	8,  // [8:16] is the sub-list for method output_type
-	0,  // [0:8] is the sub-list for method input_type
+	5,  // 5: freym.sync.management.Service.TryLock:input_type -> freym.sync.management.TryLockRequest
+	6,  // 6: freym.sync.management.Service.Unlock:input_type -> freym.sync.management.UnlockRequest
+	7,  // 7: freym.sync.management.Service.RLock:input_type -> freym.sync.management.RLockRequest
+	8,  // 8: freym.sync.management.Service.TryRLock:input_type -> freym.sync.management.TryRLockRequest
+	9,  // 9: freym.sync.management.Service.RUnlock:input_type -> freym.sync.management.RUnlockRequest
+	10, // 10: freym.sync.management.Service.CreateLease:output_type -> freym.sync.management.CreateLeaseResponse
+	11, // 11: freym.sync.management.Service.KeepLease:output_type -> freym.sync.management.KeepLeaseResponse
+	12, // 12: freym.sync.management.Service.DropLease:output_type -> freym.sync.management.DropLeaseResponse
+	13, // 13: freym.sync.management.Service.GetPeerNodes:output_type -> freym.sync.management.GetPeerNodesResponse
+	14, // 14: freym.sync.management.Service.Lock:output_type -> freym.sync.management.LockResponse
+	15, // 15: freym.sync.management.Service.TryLock:output_type -> freym.sync.management.TryLockResponse
+	16, // 16: freym.sync.management.Service.Unlock:output_type -> freym.sync.management.UnlockResponse
+	17, // 17: freym.sync.management.Service.RLock:output_type -> freym.sync.management.RLockResponse
+	18, // 18: freym.sync.management.Service.TryRLock:output_type -> freym.sync.management.TryRLockResponse
+	19, // 19: freym.sync.management.Service.RUnlock:output_type -> freym.sync.management.RUnlockResponse
+	10, // [10:20] is the sub-list for method output_type
+	0,  // [0:10] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

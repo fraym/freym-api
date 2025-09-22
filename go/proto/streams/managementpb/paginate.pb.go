@@ -21,16 +21,17 @@ const (
 )
 
 type PaginateStreamRequest struct {
-	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId        string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic           string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_Stream          string                 `protobuf:"bytes,3,opt,name=stream,proto3"`
-	xxx_hidden_Page            int64                  `protobuf:"varint,4,opt,name=page,proto3"`
-	xxx_hidden_PerPage         int64                  `protobuf:"varint,5,opt,name=per_page,json=perPage,proto3"`
-	xxx_hidden_DeploymentId    int64                  `protobuf:"varint,6,opt,name=deployment_id,json=deploymentId,proto3"`
-	xxx_hidden_SnapshotEventId string                 `protobuf:"bytes,7,opt,name=snapshot_event_id,json=snapshotEventId,proto3"`
-	unknownFields              protoimpl.UnknownFields
-	sizeCache                  protoimpl.SizeCache
+	state                        protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId          string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic             string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_Stream            string                 `protobuf:"bytes,3,opt,name=stream,proto3"`
+	xxx_hidden_Page              int64                  `protobuf:"varint,4,opt,name=page,proto3"`
+	xxx_hidden_PerPage           int64                  `protobuf:"varint,5,opt,name=per_page,json=perPage,proto3"`
+	xxx_hidden_DeploymentId      int64                  `protobuf:"varint,6,opt,name=deployment_id,json=deploymentId,proto3"`
+	xxx_hidden_SnapshotEventId   string                 `protobuf:"bytes,7,opt,name=snapshot_event_id,json=snapshotEventId,proto3"`
+	xxx_hidden_DoNotUseSnapshots bool                   `protobuf:"varint,8,opt,name=do_not_use_snapshots,json=doNotUseSnapshots,proto3"`
+	unknownFields                protoimpl.UnknownFields
+	sizeCache                    protoimpl.SizeCache
 }
 
 func (x *PaginateStreamRequest) Reset() {
@@ -107,6 +108,13 @@ func (x *PaginateStreamRequest) GetSnapshotEventId() string {
 	return ""
 }
 
+func (x *PaginateStreamRequest) GetDoNotUseSnapshots() bool {
+	if x != nil {
+		return x.xxx_hidden_DoNotUseSnapshots
+	}
+	return false
+}
+
 func (x *PaginateStreamRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -135,6 +143,10 @@ func (x *PaginateStreamRequest) SetSnapshotEventId(v string) {
 	x.xxx_hidden_SnapshotEventId = v
 }
 
+func (x *PaginateStreamRequest) SetDoNotUseSnapshots(v bool) {
+	x.xxx_hidden_DoNotUseSnapshots = v
+}
+
 type PaginateStreamRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
@@ -144,8 +156,9 @@ type PaginateStreamRequest_builder struct {
 	Page     int64
 	PerPage  int64
 	// when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id.
-	DeploymentId    int64
-	SnapshotEventId string
+	DeploymentId      int64
+	SnapshotEventId   string
+	DoNotUseSnapshots bool
 }
 
 func (b0 PaginateStreamRequest_builder) Build() *PaginateStreamRequest {
@@ -159,6 +172,7 @@ func (b0 PaginateStreamRequest_builder) Build() *PaginateStreamRequest {
 	x.xxx_hidden_PerPage = b.PerPage
 	x.xxx_hidden_DeploymentId = b.DeploymentId
 	x.xxx_hidden_SnapshotEventId = b.SnapshotEventId
+	x.xxx_hidden_DoNotUseSnapshots = b.DoNotUseSnapshots
 	return m0
 }
 
@@ -236,17 +250,18 @@ func (b0 PaginateStreamResponse_builder) Build() *PaginateStreamResponse {
 }
 
 type PaginateStreamAfterEventIdRequest struct {
-	state                      protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId        string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic           string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_Stream          string                 `protobuf:"bytes,3,opt,name=stream,proto3"`
-	xxx_hidden_EventId         string                 `protobuf:"bytes,4,opt,name=event_id,json=eventId,proto3"`
-	xxx_hidden_Page            int64                  `protobuf:"varint,5,opt,name=page,proto3"`
-	xxx_hidden_PerPage         int64                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3"`
-	xxx_hidden_DeploymentId    int64                  `protobuf:"varint,7,opt,name=deployment_id,json=deploymentId,proto3"`
-	xxx_hidden_SnapshotEventId string                 `protobuf:"bytes,8,opt,name=snapshot_event_id,json=snapshotEventId,proto3"`
-	unknownFields              protoimpl.UnknownFields
-	sizeCache                  protoimpl.SizeCache
+	state                        protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId          string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic             string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_Stream            string                 `protobuf:"bytes,3,opt,name=stream,proto3"`
+	xxx_hidden_EventId           string                 `protobuf:"bytes,4,opt,name=event_id,json=eventId,proto3"`
+	xxx_hidden_Page              int64                  `protobuf:"varint,5,opt,name=page,proto3"`
+	xxx_hidden_PerPage           int64                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3"`
+	xxx_hidden_DeploymentId      int64                  `protobuf:"varint,7,opt,name=deployment_id,json=deploymentId,proto3"`
+	xxx_hidden_SnapshotEventId   string                 `protobuf:"bytes,8,opt,name=snapshot_event_id,json=snapshotEventId,proto3"`
+	xxx_hidden_DoNotUseSnapshots bool                   `protobuf:"varint,9,opt,name=do_not_use_snapshots,json=doNotUseSnapshots,proto3"`
+	unknownFields                protoimpl.UnknownFields
+	sizeCache                    protoimpl.SizeCache
 }
 
 func (x *PaginateStreamAfterEventIdRequest) Reset() {
@@ -330,6 +345,13 @@ func (x *PaginateStreamAfterEventIdRequest) GetSnapshotEventId() string {
 	return ""
 }
 
+func (x *PaginateStreamAfterEventIdRequest) GetDoNotUseSnapshots() bool {
+	if x != nil {
+		return x.xxx_hidden_DoNotUseSnapshots
+	}
+	return false
+}
+
 func (x *PaginateStreamAfterEventIdRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -362,6 +384,10 @@ func (x *PaginateStreamAfterEventIdRequest) SetSnapshotEventId(v string) {
 	x.xxx_hidden_SnapshotEventId = v
 }
 
+func (x *PaginateStreamAfterEventIdRequest) SetDoNotUseSnapshots(v bool) {
+	x.xxx_hidden_DoNotUseSnapshots = v
+}
+
 type PaginateStreamAfterEventIdRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
@@ -372,8 +398,9 @@ type PaginateStreamAfterEventIdRequest_builder struct {
 	Page     int64
 	PerPage  int64
 	// when a deployment_id (!= 0) is provided the snapshot will only be used by queries with a deployment_id that is equal or higher than the shapshot deployment_id.
-	DeploymentId    int64
-	SnapshotEventId string
+	DeploymentId      int64
+	SnapshotEventId   string
+	DoNotUseSnapshots bool
 }
 
 func (b0 PaginateStreamAfterEventIdRequest_builder) Build() *PaginateStreamAfterEventIdRequest {
@@ -388,6 +415,7 @@ func (b0 PaginateStreamAfterEventIdRequest_builder) Build() *PaginateStreamAfter
 	x.xxx_hidden_PerPage = b.PerPage
 	x.xxx_hidden_DeploymentId = b.DeploymentId
 	x.xxx_hidden_SnapshotEventId = b.SnapshotEventId
+	x.xxx_hidden_DoNotUseSnapshots = b.DoNotUseSnapshots
 	return m0
 }
 
@@ -826,7 +854,7 @@ var File_streams_management_paginate_proto protoreflect.FileDescriptor
 
 const file_streams_management_paginate_proto_rawDesc = "" +
 	"\n" +
-	"!streams/management/paginate.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\xe2\x01\n" +
+	"!streams/management/paginate.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\x93\x02\n" +
 	"\x15PaginateStreamRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x16\n" +
@@ -834,10 +862,11 @@ const file_streams_management_paginate_proto_rawDesc = "" +
 	"\x04page\x18\x04 \x01(\x03R\x04page\x12\x19\n" +
 	"\bper_page\x18\x05 \x01(\x03R\aperPage\x12#\n" +
 	"\rdeployment_id\x18\x06 \x01(\x03R\fdeploymentId\x12*\n" +
-	"\x11snapshot_event_id\x18\a \x01(\tR\x0fsnapshotEventId\"}\n" +
+	"\x11snapshot_event_id\x18\a \x01(\tR\x0fsnapshotEventId\x12/\n" +
+	"\x14do_not_use_snapshots\x18\b \x01(\bR\x11doNotUseSnapshots\"}\n" +
 	"\x16PaginateStreamResponse\x127\n" +
 	"\x06events\x18\x01 \x03(\v2\x1f.freym.streams.management.EventR\x06events\x12*\n" +
-	"\x11snapshot_event_id\x18\x02 \x01(\tR\x0fsnapshotEventId\"\x89\x02\n" +
+	"\x11snapshot_event_id\x18\x02 \x01(\tR\x0fsnapshotEventId\"\xba\x02\n" +
 	"!PaginateStreamAfterEventIdRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x16\n" +
@@ -846,7 +875,8 @@ const file_streams_management_paginate_proto_rawDesc = "" +
 	"\x04page\x18\x05 \x01(\x03R\x04page\x12\x19\n" +
 	"\bper_page\x18\x06 \x01(\x03R\aperPage\x12#\n" +
 	"\rdeployment_id\x18\a \x01(\x03R\fdeploymentId\x12*\n" +
-	"\x11snapshot_event_id\x18\b \x01(\tR\x0fsnapshotEventId\"\x89\x01\n" +
+	"\x11snapshot_event_id\x18\b \x01(\tR\x0fsnapshotEventId\x12/\n" +
+	"\x14do_not_use_snapshots\x18\t \x01(\bR\x11doNotUseSnapshots\"\x89\x01\n" +
 	"\"PaginateStreamAfterEventIdResponse\x127\n" +
 	"\x06events\x18\x01 \x03(\v2\x1f.freym.streams.management.EventR\x06events\x12*\n" +
 	"\x11snapshot_event_id\x18\x02 \x01(\tR\x0fsnapshotEventId\"\x8f\x01\n" +

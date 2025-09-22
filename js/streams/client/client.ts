@@ -58,7 +58,8 @@ export interface Client {
         topic: string,
         tenantId: string,
         stream: string,
-        perPage: number
+        perPage: number,
+        doNotUseSnapshots?: boolean
     ) => StreamIterator;
     createStreamSnapshot: (
         tenantId: string,
@@ -193,7 +194,7 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
         publish: async (topic, events) => {
             return await sendPublish(topic, events, config.deploymentId, serviceClient);
         },
-        getStreamIterator: (topic, tenantId, stream, perPage) => {
+        getStreamIterator: (topic, tenantId, stream, perPage, doNotUseSnapshots = false) => {
             return {
                 forEach: async callback => {
                     const lastEventCheck = await getLastEventCheck(tenantId, topic);
@@ -212,7 +213,8 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
                         },
                         lastEventCheck,
                         config.deploymentId,
-                        serviceClient
+                        serviceClient,
+                        doNotUseSnapshots
                     );
                 },
                 forEachAfterEvent: async (eventId, callback) => {
@@ -233,7 +235,8 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
                         },
                         lastEventCheck,
                         config.deploymentId,
-                        serviceClient
+                        serviceClient,
+                        doNotUseSnapshots
                     );
                 },
                 isEmpty: async () => {
