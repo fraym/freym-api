@@ -1,5 +1,9 @@
 # vNext
 
+# v0.48.3
+
+- (bug) Fix `StreamHandlerError` constructor in js streams package
+
 # v0.48.2
 
 - (bug) Add retry number to subscription event in go streams package

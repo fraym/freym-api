@@ -6,8 +6,9 @@ export interface RetryableError {
 export class StreamHandlerError extends Error implements RetryableError {
     public shouldRetry: boolean;
 
-    constructor(message: string, shouldRetry: boolean = false) {
-        super(message);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(error: any, shouldRetry: boolean = false) {
+        super(error instanceof Error ? error.message : String(error));
         this.name = "StreamHandlerError";
         this.shouldRetry = shouldRetry;
     }
