@@ -6,6 +6,7 @@
 - (feature) Add `dry-run` option to deployment command
 - (feature) Add `doNotUseSnapshots` option to streams client
 - (feature) Add `TryLock` and `TryRLock` methods to sync client
+- (feature) Add `returnEmptyDataIfNotFound` option to single view entry queries in crud and projections clients
 
 # v0.48.3
 

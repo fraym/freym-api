@@ -2,7 +2,7 @@ import { DeploymentTarget, ServiceClient } from "@fraym/proto/dist/index.freym.c
 import { AuthData, getProtobufAuthData } from "./auth";
 import { CrudData } from "./data";
 import { Filter, getProtobufDataFilter } from "./filter";
-import { GetEntryOptions } from "./options";
+import { GetSingleEntryOptions } from "./options";
 import { Wait, getProtobufDataWait } from "./wait";
 
 export const getViewData = async <T extends CrudData>(
@@ -12,7 +12,7 @@ export const getViewData = async <T extends CrudData>(
     target: DeploymentTarget,
     serviceClient: ServiceClient,
     wait?: Wait,
-    options?: GetEntryOptions
+    options?: GetSingleEntryOptions
 ): Promise<T | null> => {
     return new Promise<T | null>((resolve, reject) => {
         serviceClient.getViewData(
@@ -24,6 +24,7 @@ export const getViewData = async <T extends CrudData>(
                 target,
                 useStrongConsistency: options?.useStrongConsistency ?? false,
                 useStrongConsistencyById: options?.useStrongConsistencyById ?? "",
+                returnEmptyDataIfNotFound: options?.returnEmptyDataIfNotFound ?? false,
             },
             (error, response) => {
                 if (error) {

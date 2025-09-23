@@ -26,9 +26,9 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@graphql-tools/import": "^7.1.1",
+        "@graphql-tools/import": "^7.1.2",
         "@graphql-tools/load": "^8.1.2",
-        "@grpc/grpc-js": "^1.13.4",
+        "@grpc/grpc-js": "^1.14.0",
         "dotenv": "^17.2.2",
         "glob": "^11.0.3",
         "globby": "11.1.0",
