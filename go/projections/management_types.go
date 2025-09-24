@@ -6,8 +6,9 @@ import (
 )
 
 type DeploymentOptions struct {
-	Target managementpb.DeploymentTarget
-	Force  bool
+	Target     managementpb.DeploymentTarget
+	Force      bool
+	ForceTypes []string
 }
 
 func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
@@ -16,8 +17,9 @@ func (o *DeploymentOptions) toPb() *managementpb.DeploymentOptions {
 	}
 
 	return managementpb.DeploymentOptions_builder{
-		Target: o.Target,
-		Force:  o.Force,
+		Target:     o.Target,
+		Force:      o.Force,
+		ForceTypes: o.ForceTypes,
 	}.Build()
 }
 

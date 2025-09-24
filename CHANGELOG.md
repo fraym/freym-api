@@ -1,5 +1,9 @@
 # vNext
 
+# v0.49.4
+
+- (feature) Add `forceTypes` option to deployment options in projections management client
+
 # v0.49.3
 
 - (bug) Fix `returnEmptyDataIfNotFound` option to single view entry queries in crud and projections clients
