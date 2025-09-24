@@ -1,5 +1,9 @@
 # vNext
 
+# v0.49.1
+
+- (improvement) Downgrade grpc-js to 1.13.0
+
 # v0.49.0
 
 - (feature) Add `types` option to deployment command to force type deployments

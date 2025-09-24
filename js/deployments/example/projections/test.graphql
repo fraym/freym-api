@@ -6,9 +6,15 @@ type TestProjection
 }
 
 type TestView @view(sqlFile: "./test.sql") {
-    testNumber: Int!
+    testNumber: Int! @index
+    obj: Object!
 }
 
 type TestBaseView @baseView(sqlFile: "./testBase.sql") {
-    testNumber: Int!
+    testNumber: Int! @index
+}
+
+type Object {
+    o: Object!
+    field2: String!
 }

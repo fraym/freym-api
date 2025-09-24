@@ -1,1 +1,1 @@
-SELECT tb.testNumber as testNumber FROM testbaseviewview as tb;
+SELECT tb.testNumber as testNumber, NULL AS obj FROM testbaseviewview as tb;
