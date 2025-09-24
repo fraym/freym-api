@@ -15,6 +15,10 @@ type TestBaseView @baseView(sqlFile: "./testBase.sql") {
 }
 
 type Object {
-    o: Object!
-    field2: String!
+    o: Object2!
+    field: String!
+}
+
+type Object2 {
+    field: String!
 }

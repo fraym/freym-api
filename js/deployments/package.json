@@ -1,6 +1,6 @@
 {
     "name": "@fraym/deployments",
-    "version": "0.49.1",
+    "version": "0.49.2",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -28,7 +28,7 @@
     "dependencies": {
         "@graphql-tools/import": "^7.1.2",
         "@graphql-tools/load": "^8.1.2",
-        "@grpc/grpc-js": "1.13.0",
+        "@grpc/grpc-js": "1.13.2",
         "dotenv": "^17.2.2",
         "glob": "^11.0.3",
         "globby": "11.1.0",

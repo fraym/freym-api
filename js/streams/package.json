@@ -1,6 +1,6 @@
 {
     "name": "@fraym/streams",
-    "version": "0.49.1",
+    "version": "0.49.2",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -22,13 +22,13 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@fraym/proto": "^0.49.1",
-        "@grpc/grpc-js": "1.13.0",
+        "@fraym/proto": "^0.49.2",
+        "@grpc/grpc-js": "1.13.2",
         "dotenv": "^17.2.2",
-        "uuid": "^13.0.0"
+        "uuid": "11.1.0"
     },
     "devDependencies": {
-        "@types/uuid": "^10.0.0"
+        "@types/uuid": "^11.0.0"
     },
     "prettier": "@becklyn/prettier"
 }

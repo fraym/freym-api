@@ -1,5 +1,10 @@
 # vNext
 
+# v0.49.2
+
+- (improvement) Upgrade grpc-js to 1.13.2
+- (bug) Pin uuid pacakge version 11.1.0
+
 # v0.49.1
 
 - (improvement) Downgrade grpc-js to 1.13.0
