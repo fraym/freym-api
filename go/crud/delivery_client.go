@@ -79,7 +79,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *Filter,
 		wait *Wait,
-		options *GetEntryOptions,
+		options *GetSingleEntryOptions,
 	) (*Entry, error)
 	GetViewEntryList(
 		ctx context.Context,
@@ -272,7 +272,7 @@ func (c *crudDeliveryClient) GetViewEntry(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*Entry, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -280,13 +280,14 @@ func (c *crudDeliveryClient) GetViewEntry(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                     view,
-		Auth:                     pbAuthData,
-		Filter:                   filter.toProtobufFilter(),
-		Wait:                     wait.toDeliveryWait(),
-		Target:                   options.Target(),
-		UseStrongConsistency:     options.UseStrongConsistency(),
-		UseStrongConsistencyById: options.UseStrongConsistencyById(),
+		View:                      view,
+		Auth:                      pbAuthData,
+		Filter:                    filter.toProtobufFilter(),
+		Wait:                      wait.toDeliveryWait(),
+		Target:                    options.Target(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
 	}.Build())
 	if err != nil {
 		return nil, err

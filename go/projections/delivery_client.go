@@ -63,7 +63,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *Filter,
 		wait *Wait,
-		options *GetEntryOptions,
+		options *GetSingleEntryOptions,
 	) (*Data, error)
 	GetViewJsonData(
 		ctx context.Context,
@@ -71,7 +71,7 @@ type DeliveryClient interface {
 		authData *AuthData,
 		filter *JsonFilter,
 		wait *JsonWait,
-		options *GetEntryOptions,
+		options *GetSingleEntryOptions,
 	) (*JsonData, error)
 	GetDataList(
 		ctx context.Context,
@@ -258,7 +258,7 @@ func (c *projectionsDeliveryClient) GetViewData(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*Data, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -266,13 +266,14 @@ func (c *projectionsDeliveryClient) GetViewData(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                     view,
-		Auth:                     pbAuthData,
-		Filter:                   filter.toProtobufFilter(),
-		Wait:                     wait.toDeliveryWait(),
-		Target:                   options.Target(),
-		UseStrongConsistency:     options.UseStrongConsistency(),
-		UseStrongConsistencyById: options.UseStrongConsistencyById(),
+		View:                      view,
+		Auth:                      pbAuthData,
+		Filter:                    filter.toProtobufFilter(),
+		Wait:                      wait.toDeliveryWait(),
+		Target:                    options.Target(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
 	}.Build())
 	if err != nil {
 		return nil, err
@@ -292,7 +293,7 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 	authData *AuthData,
 	filter *JsonFilter,
 	wait *JsonWait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*JsonData, error) {
 	pbAuthData, err := authData.getProtobufAuthData()
 	if err != nil {
@@ -300,13 +301,14 @@ func (c *projectionsDeliveryClient) GetViewJsonData(
 	}
 
 	response, err := c.client.GetViewData(ctx, deliverypb.GetViewDataRequest_builder{
-		View:                     view,
-		Auth:                     pbAuthData,
-		Filter:                   filter.toProtobufFilter(),
-		Wait:                     wait.toDeliveryWait(),
-		Target:                   options.Target(),
-		UseStrongConsistency:     options.UseStrongConsistency(),
-		UseStrongConsistencyById: options.UseStrongConsistencyById(),
+		View:                      view,
+		Auth:                      pbAuthData,
+		Filter:                    filter.toProtobufFilter(),
+		Wait:                      wait.toDeliveryWait(),
+		Target:                    options.Target(),
+		UseStrongConsistency:      options.UseStrongConsistency(),
+		UseStrongConsistencyById:  options.UseStrongConsistencyById(),
+		ReturnEmptyDataIfNotFound: options.ReturnEmptyDataIfNotFound(),
 	}.Build())
 	if err != nil {
 		return nil, err

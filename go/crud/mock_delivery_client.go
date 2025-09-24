@@ -49,7 +49,7 @@ func (c *MockDeliveryClient) GetViewEntry(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*Entry, error) {
 	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {

@@ -1,5 +1,9 @@
 # vNext
 
+# v0.49.3
+
+- (bug) Fix `returnEmptyDataIfNotFound` option to single view entry queries in crud and projections clients
+
 # v0.49.2
 
 - (improvement) Upgrade grpc-js to 1.13.2

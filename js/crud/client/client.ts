@@ -33,7 +33,7 @@ export interface DeliveryClient {
         authData: AuthData,
         filter?: Filter,
         wait?: Wait,
-        options?: GetEntryOptions
+        options?: GetSingleEntryOptions
     ) => Promise<T | null>;
     getDataList: <T extends CrudData>(
         type: string,
@@ -141,7 +141,7 @@ export const newDeliveryClient = async (
         auth: AuthData,
         filter: Filter = { fields: {}, and: [], or: [] },
         wait?: Wait,
-        options?: GetEntryOptions
+        options?: GetSingleEntryOptions
     ): Promise<T | null> => {
         return await getDataFromView<T>(
             view,

@@ -7,7 +7,7 @@ type TestProjection
 
 type TestView @view(sqlFile: "./test.sql") {
     testNumber: Int! @index
-    obj: Object!
+    obj: TestProjection!
 }
 
 type TestBaseView @baseView(sqlFile: "./testBase.sql") {

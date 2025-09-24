@@ -64,7 +64,7 @@ func (c *MockDeliveryClient) GetViewData(
 	authData *AuthData,
 	filter *Filter,
 	wait *Wait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*Data, error) {
 	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {
@@ -79,7 +79,7 @@ func (c *MockDeliveryClient) GetViewJsonData(
 	authData *AuthData,
 	filter *JsonFilter,
 	wait *JsonWait,
-	options *GetEntryOptions,
+	options *GetSingleEntryOptions,
 ) (*JsonData, error) {
 	args := c.Called(ctx, view, authData, filter, wait, options)
 	if args.Get(0) == nil {
