@@ -65,6 +65,9 @@ directive @fromJwtData(key: String!) on FIELD_DEFINITION
 directive @safeHtml on FIELD_DEFINITION
 directive @immutable on FIELD_DEFINITION
 directive @sequence(offset: Int, group: [String!]) on FIELD_DEFINITION
+directive @fullTextSearch on FIELD_DEFINITION
+directive @facetedSearch(range: Boolean) on FIELD_DEFINITION
+directive @searchable(publicSearchKey: String) on OBJECT
 
 ## projections only
 scalar EventEnvelope

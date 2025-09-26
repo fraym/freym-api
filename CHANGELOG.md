@@ -1,5 +1,7 @@
 # vNext
 
+- (improvement) Add `@searchable` and `@facetedSearch` directives to graphql schema
+
 # v0.49.4
 
 - (feature) Add `forceTypes` option to deployment options in projections management client
