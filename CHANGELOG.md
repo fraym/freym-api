@@ -1,5 +1,6 @@
 # vNext
 
+- (improvement) Add `@geosearch` directive to graphql schema
 - (improvement) Add `@searchable` and `@facetedSearch` directives to graphql schema
 
 # v0.49.4
