@@ -4,6 +4,7 @@ import { ClientConfig, useConfigDefaults } from "./config";
 import { newConnection } from "./connection";
 import { createLease } from "./lease";
 import { lock } from "./lock";
+import { newRequestGate } from "./requestGate";
 import { rLock } from "./rlock";
 import { rUnlock } from "./runlock";
 import { tryLock } from "./tryLock";
@@ -29,6 +30,9 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
         "grpc.max_receive_message_length": 2147483647,
     });
 
+    const lockRequestGate = newRequestGate(900);
+    const unlockRequestGate = newRequestGate(80);
+
     const connection = await newConnection();
     const lease = await createLease(connection, config, serviceClient);
 
@@ -37,27 +41,27 @@ export const newClient = async (config: ClientConfig): Promise<Client> => {
     return {
         lock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            await lock(lease, tenantId, resource, serviceClient);
+            await lock(lease, tenantId, resource, serviceClient, lockRequestGate);
         },
         tryLock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            return await tryLock(lease, tenantId, resource, serviceClient);
+            return await tryLock(lease, tenantId, resource, serviceClient, lockRequestGate);
         },
         unlock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            await unlock(lease, tenantId, resource, serviceClient);
+            await unlock(lease, tenantId, resource, serviceClient, unlockRequestGate);
         },
         rLock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            await rLock(lease, tenantId, resource, serviceClient);
+            await rLock(lease, tenantId, resource, serviceClient, lockRequestGate);
         },
         tryRLock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            return await tryRLock(lease, tenantId, resource, serviceClient);
+            return await tryRLock(lease, tenantId, resource, serviceClient, lockRequestGate);
         },
         rUnlock: async (tenantId: string, ...resource: string[]) => {
             await connection.waitForConnect();
-            await rUnlock(lease, tenantId, resource, serviceClient);
+            await rUnlock(lease, tenantId, resource, serviceClient, unlockRequestGate);
         },
         close: async () => {
             connection.stop();

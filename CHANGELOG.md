@@ -1,7 +1,10 @@
 # vNext
 
+# v0.49.5
+
 - (improvement) Add `@geosearch` directive to graphql schema
 - (improvement) Add `@searchable` and `@facetedSearch` directives to graphql schema
+- (bug) Add request gate to sync client to limit concurrent requests
 
 # v0.49.4
 

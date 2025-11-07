@@ -10,12 +10,14 @@ import (
 )
 
 type Service struct {
-	connection *connection
-	lease      *lease
-	peers      *peers
-	client     managementpb.ServiceClient
-	logger     golog.Logger
-	retryPause time.Duration
+	connection        *connection
+	lease             *lease
+	peers             *peers
+	client            managementpb.ServiceClient
+	logger            golog.Logger
+	retryPause        time.Duration
+	lockRequestGate   *requestGate
+	unlockRequestGate *requestGate
 }
 
 func NewService(
@@ -50,12 +52,14 @@ func NewService(
 	})
 
 	return &Service{
-		connection: connection,
-		lease:      lease,
-		peers:      peers,
-		client:     client,
-		logger:     logger,
-		retryPause: retryPause,
+		connection:        connection,
+		lease:             lease,
+		peers:             peers,
+		client:            client,
+		logger:            logger,
+		retryPause:        retryPause,
+		lockRequestGate:   newRequestGate(900),
+		unlockRequestGate: newRequestGate(80),
 	}, nil
 }
 
@@ -65,6 +69,9 @@ func (s *Service) Lock(tenant string, resource []string) error {
 	}
 
 	if err := util.Retry(func() error {
+		s.lockRequestGate.Enter()
+		defer s.lockRequestGate.Leave()
+
 		_, err := s.client.Lock(context.Background(), managementpb.LockRequest_builder{
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
@@ -88,6 +95,9 @@ func (s *Service) TryLock(tenant string, resource []string) (bool, error) {
 	locked := false
 
 	if err := util.Retry(func() error {
+		s.lockRequestGate.Enter()
+		defer s.lockRequestGate.Leave()
+
 		res, err := s.client.TryLock(context.Background(), managementpb.TryLockRequest_builder{
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
@@ -107,31 +117,32 @@ func (s *Service) TryLock(tenant string, resource []string) (bool, error) {
 }
 
 func (s *Service) Unlock(tenant string, resource []string) {
-	go func() {
-		if err := s.connection.WaitForConnect(); err != nil {
-			s.logger.Fatal().WithFields(map[string]any{
-				"tenant":   tenant,
-				"resource": resource,
-			}).WithError(err).Write("unable to unlock")
-			return
-		}
+	if err := s.connection.WaitForConnect(); err != nil {
+		s.logger.Fatal().WithFields(map[string]any{
+			"tenant":   tenant,
+			"resource": resource,
+		}).WithError(err).Write("unable to unlock")
+		return
+	}
 
-		if err := util.Retry(func() error {
-			_, err := s.client.Unlock(context.Background(), managementpb.UnlockRequest_builder{
-				LeaseId:  s.lease.LeaseId(),
-				TenantId: tenant,
-				Resource: resource,
-			}.Build())
-			return err
-		}, s.retryPause, 50); err != nil {
-			s.logger.Fatal().WithFields(map[string]any{
-				"tenant":   tenant,
-				"resource": resource,
-			}).WithError(err).Write("unable to unlock")
-		} else {
-			s.lease.Untrack(tenant, resource, false)
-		}
-	}()
+	if err := util.Retry(func() error {
+		s.unlockRequestGate.Enter()
+		defer s.unlockRequestGate.Leave()
+
+		_, err := s.client.Unlock(context.Background(), managementpb.UnlockRequest_builder{
+			LeaseId:  s.lease.LeaseId(),
+			TenantId: tenant,
+			Resource: resource,
+		}.Build())
+		return err
+	}, s.retryPause, 50); err != nil {
+		s.logger.Fatal().WithFields(map[string]any{
+			"tenant":   tenant,
+			"resource": resource,
+		}).WithError(err).Write("unable to unlock")
+	} else {
+		s.lease.Untrack(tenant, resource, false)
+	}
 }
 
 func (s *Service) RLock(tenant string, resource []string) error {
@@ -140,6 +151,9 @@ func (s *Service) RLock(tenant string, resource []string) error {
 	}
 
 	if err := util.Retry(func() error {
+		s.lockRequestGate.Enter()
+		defer s.lockRequestGate.Leave()
+
 		_, err := s.client.RLock(context.Background(), managementpb.RLockRequest_builder{
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
@@ -163,6 +177,9 @@ func (s *Service) TryRLock(tenant string, resource []string) (bool, error) {
 	locked := false
 
 	if err := util.Retry(func() error {
+		s.lockRequestGate.Enter()
+		defer s.lockRequestGate.Leave()
+
 		res, err := s.client.TryRLock(context.Background(), managementpb.TryRLockRequest_builder{
 			LeaseId:  s.lease.LeaseId(),
 			TenantId: tenant,
@@ -182,31 +199,32 @@ func (s *Service) TryRLock(tenant string, resource []string) (bool, error) {
 }
 
 func (s *Service) RUnlock(tenant string, resource []string) {
-	go func() {
-		if err := s.connection.WaitForConnect(); err != nil {
-			s.logger.Fatal().WithFields(map[string]any{
-				"tenant":   tenant,
-				"resource": resource,
-			}).WithError(err).Write("unable to runlock")
-			return
-		}
+	if err := s.connection.WaitForConnect(); err != nil {
+		s.logger.Fatal().WithFields(map[string]any{
+			"tenant":   tenant,
+			"resource": resource,
+		}).WithError(err).Write("unable to runlock")
+		return
+	}
 
-		if err := util.Retry(func() error {
-			_, err := s.client.RUnlock(context.Background(), managementpb.RUnlockRequest_builder{
-				LeaseId:  s.lease.LeaseId(),
-				TenantId: tenant,
-				Resource: resource,
-			}.Build())
-			return err
-		}, s.retryPause, 50); err != nil {
-			s.logger.Fatal().WithFields(map[string]any{
-				"tenant":   tenant,
-				"resource": resource,
-			}).WithError(err).Write("unable to runlock")
-		} else {
-			s.lease.Untrack(tenant, resource, true)
-		}
-	}()
+	if err := util.Retry(func() error {
+		s.unlockRequestGate.Enter()
+		defer s.unlockRequestGate.Leave()
+
+		_, err := s.client.RUnlock(context.Background(), managementpb.RUnlockRequest_builder{
+			LeaseId:  s.lease.LeaseId(),
+			TenantId: tenant,
+			Resource: resource,
+		}.Build())
+		return err
+	}, s.retryPause, 50); err != nil {
+		s.logger.Fatal().WithFields(map[string]any{
+			"tenant":   tenant,
+			"resource": resource,
+		}).WithError(err).Write("unable to runlock")
+	} else {
+		s.lease.Untrack(tenant, resource, true)
+	}
 }
 
 func (s *Service) WaitForStop() {

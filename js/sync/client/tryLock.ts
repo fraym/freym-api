@@ -1,17 +1,21 @@
 import { ServiceClient } from "@fraym/proto/dist/index.freym.sync.management";
 import { Lease } from "./lease";
+import { RequestGate } from "./requestGate";
 import { retry } from "./retry";
 
 export const tryLock = async (
     lease: Lease,
     tenantId: string,
     resource: string[],
-    serviceClient: ServiceClient
+    serviceClient: ServiceClient,
+    requestGate: RequestGate
 ) => {
     let locked = false;
 
     await retry(() =>
         lease.runWithLeaseId(async leaseId => {
+            await requestGate.enter();
+
             return new Promise<void>((resolve, reject) => {
                 serviceClient.tryLock(
                     {
@@ -20,6 +24,8 @@ export const tryLock = async (
                         resource,
                     },
                     (error, response) => {
+                        requestGate.leave();
+
                         if (error) {
                             reject(error);
                             return;

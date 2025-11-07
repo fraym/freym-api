@@ -9,7 +9,7 @@ func Retry(fn func() error, pause time.Duration, maxRetries int) error {
 
 	var err error
 
-	for i := 0; i < maxRetries; i++ {
+	for range maxRetries {
 		time.Sleep(pause)
 
 		err = fn()

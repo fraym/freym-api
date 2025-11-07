@@ -34,7 +34,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Releasing new versions
 
-- update versions in all `package.json` files (using the `make version-js` command)
+- update versions in all `package.json` files (using the `make bump` command)
   - package versions
   - dependency version in case a package references another package in this monorepo
 - add a git tag in the form: `v#.#.#` or `v#.#.#-alpha.#`

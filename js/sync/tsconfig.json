@@ -7,5 +7,5 @@
         "declarationMap": false
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules", "dist", ".turbo"]
+    "exclude": ["node_modules", "dist", ".turbo", "test"]
 }

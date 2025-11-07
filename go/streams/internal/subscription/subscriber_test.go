@@ -3,7 +3,6 @@ package subscription_test
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -47,7 +46,6 @@ func TestSubscriber_Ack(t *testing.T) {
 			ctx,
 			expectedIncludedTopics,
 			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
-				fmt.Println("aa")
 				assert.Equal(t, expectedTenantId, event.TenantId)
 				assert.Equal(t, expectedTopic, event.Topic)
 				assert.Equal(t, expectedEventId, event.Id)

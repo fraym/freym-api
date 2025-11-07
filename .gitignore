@@ -1,0 +1,9 @@
+node_modules
+.idea
+.test
+*.tsbuildinfo
+/core
+.turbo
+dist
+.DS_Store
+js/sync/test
