@@ -1,5 +1,9 @@
 # vNext
 
+# v0.50.0
+
+- (feature) Add `parallelTopicProcessing` option to streams client
+
 # v0.49.5
 
 - (improvement) Add `@geosearch` directive to graphql schema

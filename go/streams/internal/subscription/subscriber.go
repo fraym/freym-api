@@ -38,6 +38,7 @@ func NewSubscriber(
 	connection Connection,
 	endpoint *Endpoint,
 	config *config.Config,
+	parallelTopicProcessing bool,
 	onPanic func(err error),
 ) *subscriber {
 	s := &subscriber{
@@ -90,7 +91,12 @@ func (s *subscriber) handleBroadcastEvent(subscribedEvent *managementpb.Event) e
 func (s *subscriber) handleStreamedEvent(subscribedEvent *managementpb.Event, connection Connection) error {
 	if s.handler == nil {
 		return connection.EventHandled(
-			context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "not subscribed", false,
+			context.Background(),
+			subscribedEvent.GetTenantId(),
+			subscribedEvent.GetTopic(),
+			"not subscribed",
+			false,
+			subscribedEvent.GetStream(),
 		)
 	}
 
@@ -106,10 +112,16 @@ func (s *subscriber) handleStreamedEvent(subscribedEvent *managementpb.Event, co
 			subscribedEvent.GetTopic(),
 			"error: "+err.Error(),
 			retry,
+			subscribedEvent.GetStream(),
 		)
 	}
 	return connection.EventHandled(
-		context.Background(), subscribedEvent.GetTenantId(), subscribedEvent.GetTopic(), "", false,
+		context.Background(),
+		subscribedEvent.GetTenantId(),
+		subscribedEvent.GetTopic(),
+		"",
+		false,
+		subscribedEvent.GetStream(),
 	)
 }
 
@@ -129,7 +141,12 @@ func (s *subscriber) handlePanic(panicResponse *managementpb.Panic) error {
 	return nil
 }
 
-func (s *subscriber) Subscribe(ctx context.Context, topics []string, handler dto.HandlerFunc) error {
+func (s *subscriber) Subscribe(
+	ctx context.Context,
+	topics []string,
+	parallelTopicProcessing bool,
+	handler dto.HandlerFunc,
+) error {
 	groupId := s.config.GroupId
 	if len(groupId) == 0 {
 		return fmt.Errorf("cannot use empty value for STREAMS_CLIENT_GROUP_ID")
@@ -142,7 +159,7 @@ func (s *subscriber) Subscribe(ctx context.Context, topics []string, handler dto
 	s.subscribeErrChan = make(chan string)
 	s.subscribeLock.Unlock()
 
-	if err := s.connection.Subscribe(ctx, groupId, topics); err != nil {
+	if err := s.connection.Subscribe(ctx, groupId, topics, parallelTopicProcessing); err != nil {
 		return err
 	}
 

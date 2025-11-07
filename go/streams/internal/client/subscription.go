@@ -24,8 +24,9 @@ type Subscription struct {
 	logger  golog.Logger
 	handler *handler
 
-	topics       []string
-	deploymentId int64
+	topics                  []string
+	deploymentId            int64
+	parallelTopicProcessing bool
 }
 
 func newSubscription(
@@ -36,17 +37,19 @@ func newSubscription(
 	topics []string,
 	ignoreUnhandledEvents bool,
 	deploymentId int64,
+	parallelTopicProcessing bool,
 ) *Subscription {
 	return &Subscription{
-		mx:           &sync.Mutex{},
-		parentCtx:    ctx,
-		stop:         nil,
-		config:       config,
-		client:       client,
-		logger:       logger,
-		handler:      NewHandler(ignoreUnhandledEvents),
-		topics:       topics,
-		deploymentId: deploymentId,
+		mx:                      &sync.Mutex{},
+		parentCtx:               ctx,
+		stop:                    nil,
+		config:                  config,
+		client:                  client,
+		logger:                  logger,
+		handler:                 NewHandler(ignoreUnhandledEvents),
+		topics:                  topics,
+		deploymentId:            deploymentId,
+		parallelTopicProcessing: parallelTopicProcessing,
 	}
 }
 
@@ -107,10 +110,17 @@ func (s *Subscription) connect(subscriptionCtx context.Context, errChan chan err
 	}
 
 	endpoint := subscription.NewEndpoint(s.logger)
-	subscriber := subscription.NewSubscriber(subscriptionCtx, connection, endpoint, s.config, func(err error) {
-		defer endConnection()
-		errChan <- err
-	})
+	subscriber := subscription.NewSubscriber(
+		subscriptionCtx,
+		connection,
+		endpoint,
+		s.config,
+		s.parallelTopicProcessing,
+		func(err error) {
+			defer endConnection()
+			errChan <- err
+		},
+	)
 
 	go func() {
 		if err := endpoint.UseConnection(connection); err != nil {
@@ -119,7 +129,7 @@ func (s *Subscription) connect(subscriptionCtx context.Context, errChan chan err
 		}
 	}()
 
-	if err := subscriber.Subscribe(connectionCtx, s.topics, s.handler.Handle); err != nil {
+	if err := subscriber.Subscribe(connectionCtx, s.topics, s.parallelTopicProcessing, s.handler.Handle); err != nil {
 		endConnection()
 		return err
 	}

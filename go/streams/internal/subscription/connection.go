@@ -16,8 +16,15 @@ type HandlerFn func(response *managementpb.SubscribeResponse) error
 type Connection interface {
 	Handle(handlerFn HandlerFn) error
 	Close()
-	Subscribe(ctx context.Context, groupId string, topics []string) error
-	EventHandled(ctx context.Context, tenantId string, topic string, errorMessage string, retry bool) error
+	Subscribe(ctx context.Context, groupId string, topics []string, parallelTopicProcessing bool) error
+	EventHandled(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		errorMessage string,
+		retry bool,
+		stream string,
+	) error
 }
 
 type clientConnection struct {
@@ -156,13 +163,19 @@ func (c *clientConnection) Close() {
 	c.sendCancel()
 }
 
-func (c *clientConnection) Subscribe(ctx context.Context, groupId string, topics []string) error {
+func (c *clientConnection) Subscribe(
+	ctx context.Context,
+	groupId string,
+	topics []string,
+	parallelTopicProcessing bool,
+) error {
 	return c.sendRequest(ctx, managementpb.SubscribeRequest_builder{
 		Subscribe: managementpb.Subscribe_builder{
 			Metadata: managementpb.SubscribeMetadata_builder{
-				Group:        groupId,
-				SubscriberId: uuid.NewString(),
-				DeploymentId: c.deploymentId,
+				Group:                   groupId,
+				SubscriberId:            uuid.NewString(),
+				DeploymentId:            c.deploymentId,
+				ParallelTopicProcessing: parallelTopicProcessing,
 			}.Build(),
 			Topics: topics,
 		}.Build(),
@@ -175,6 +188,7 @@ func (c *clientConnection) EventHandled(
 	topic string,
 	errorMessage string,
 	retry bool,
+	stream string,
 ) error {
 	return c.sendRequest(ctx, managementpb.SubscribeRequest_builder{
 		Handled: managementpb.Handled_builder{
@@ -182,6 +196,7 @@ func (c *clientConnection) EventHandled(
 			Topic:    topic,
 			Error:    errorMessage,
 			Retry:    retry,
+			Stream:   stream,
 		}.Build(),
 	}.Build())
 }

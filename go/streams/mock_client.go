@@ -122,8 +122,9 @@ func (c *MockClient) NewSubscription(
 	topics []string,
 	ignoreUnhandledEvents bool,
 	deploymentId int64,
+	parallelTopicProcessing bool,
 ) *client.Subscription {
-	args := c.Called(topics, ignoreUnhandledEvents, deploymentId)
+	args := c.Called(topics, ignoreUnhandledEvents, deploymentId, parallelTopicProcessing)
 	if args.Get(0) == nil {
 		return nil
 	}

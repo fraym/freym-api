@@ -13,7 +13,12 @@ import (
 type Client interface {
 	Close()
 	Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error
-	NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *client.Subscription
+	NewSubscription(
+		topics []string,
+		ignoreUnhandledEvents bool,
+		deploymentId int64,
+		parallelTopicProcessing bool,
+	) *client.Subscription
 	GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error)
 	GetLastEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
 	GetLastHandledEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
@@ -268,8 +273,9 @@ func (c *streamsClient) NewSubscription(
 	topics []string,
 	ignoreUnhandledEvents bool,
 	deploymentId int64,
+	parallelTopicProcessing bool,
 ) *client.Subscription {
-	return c.service.NewSubscription(topics, ignoreUnhandledEvents, deploymentId)
+	return c.service.NewSubscription(topics, ignoreUnhandledEvents, deploymentId, parallelTopicProcessing)
 }
 
 func (c *streamsClient) Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error {

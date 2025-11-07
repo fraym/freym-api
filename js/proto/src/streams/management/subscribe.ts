@@ -36,6 +36,7 @@ export interface SubscribeMetadata {
     subscriberId: string;
     /** when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id. */
     deploymentId: string;
+    parallelTopicProcessing: boolean;
 }
 
 export interface Handled {
@@ -43,6 +44,7 @@ export interface Handled {
     topic: string;
     error: string;
     retry: boolean;
+    stream: string;
 }
 
 /** responses */
@@ -263,7 +265,7 @@ export const Subscribe: MessageFns<Subscribe> = {
 };
 
 function createBaseSubscribeMetadata(): SubscribeMetadata {
-    return { group: "", subscriberId: "", deploymentId: "0" };
+    return { group: "", subscriberId: "", deploymentId: "0", parallelTopicProcessing: false };
 }
 
 export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
@@ -276,6 +278,9 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
         }
         if (message.deploymentId !== "0") {
             writer.uint32(24).int64(message.deploymentId);
+        }
+        if (message.parallelTopicProcessing !== false) {
+            writer.uint32(32).bool(message.parallelTopicProcessing);
         }
         return writer;
     },
@@ -311,6 +316,14 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
                     message.deploymentId = reader.int64().toString();
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.parallelTopicProcessing = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -325,6 +338,9 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
             group: isSet(object.group) ? globalThis.String(object.group) : "",
             subscriberId: isSet(object.subscriberId) ? globalThis.String(object.subscriberId) : "",
             deploymentId: isSet(object.deploymentId) ? globalThis.String(object.deploymentId) : "0",
+            parallelTopicProcessing: isSet(object.parallelTopicProcessing)
+                ? globalThis.Boolean(object.parallelTopicProcessing)
+                : false,
         };
     },
 
@@ -339,6 +355,9 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
         if (message.deploymentId !== "0") {
             obj.deploymentId = message.deploymentId;
         }
+        if (message.parallelTopicProcessing !== false) {
+            obj.parallelTopicProcessing = message.parallelTopicProcessing;
+        }
         return obj;
     },
 
@@ -350,12 +369,13 @@ export const SubscribeMetadata: MessageFns<SubscribeMetadata> = {
         message.group = object.group ?? "";
         message.subscriberId = object.subscriberId ?? "";
         message.deploymentId = object.deploymentId ?? "0";
+        message.parallelTopicProcessing = object.parallelTopicProcessing ?? false;
         return message;
     },
 };
 
 function createBaseHandled(): Handled {
-    return { tenantId: "", topic: "", error: "", retry: false };
+    return { tenantId: "", topic: "", error: "", retry: false, stream: "" };
 }
 
 export const Handled: MessageFns<Handled> = {
@@ -371,6 +391,9 @@ export const Handled: MessageFns<Handled> = {
         }
         if (message.retry !== false) {
             writer.uint32(32).bool(message.retry);
+        }
+        if (message.stream !== "") {
+            writer.uint32(42).string(message.stream);
         }
         return writer;
     },
@@ -414,6 +437,14 @@ export const Handled: MessageFns<Handled> = {
                     message.retry = reader.bool();
                     continue;
                 }
+                case 5: {
+                    if (tag !== 42) {
+                        break;
+                    }
+
+                    message.stream = reader.string();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -429,6 +460,7 @@ export const Handled: MessageFns<Handled> = {
             topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
             error: isSet(object.error) ? globalThis.String(object.error) : "",
             retry: isSet(object.retry) ? globalThis.Boolean(object.retry) : false,
+            stream: isSet(object.stream) ? globalThis.String(object.stream) : "",
         };
     },
 
@@ -446,6 +478,9 @@ export const Handled: MessageFns<Handled> = {
         if (message.retry !== false) {
             obj.retry = message.retry;
         }
+        if (message.stream !== "") {
+            obj.stream = message.stream;
+        }
         return obj;
     },
 
@@ -458,6 +493,7 @@ export const Handled: MessageFns<Handled> = {
         message.topic = object.topic ?? "";
         message.error = object.error ?? "";
         message.retry = object.retry ?? false;
+        message.stream = object.stream ?? "";
         return message;
     },
 };

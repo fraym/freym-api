@@ -286,12 +286,13 @@ func (b0 Subscribe_builder) Build() *Subscribe {
 }
 
 type SubscribeMetadata struct {
-	state                   protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Group        string                 `protobuf:"bytes,1,opt,name=group,proto3"`
-	xxx_hidden_SubscriberId string                 `protobuf:"bytes,2,opt,name=subscriber_id,json=subscriberId,proto3"`
-	xxx_hidden_DeploymentId int64                  `protobuf:"varint,3,opt,name=deployment_id,json=deploymentId,proto3"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	state                              protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Group                   string                 `protobuf:"bytes,1,opt,name=group,proto3"`
+	xxx_hidden_SubscriberId            string                 `protobuf:"bytes,2,opt,name=subscriber_id,json=subscriberId,proto3"`
+	xxx_hidden_DeploymentId            int64                  `protobuf:"varint,3,opt,name=deployment_id,json=deploymentId,proto3"`
+	xxx_hidden_ParallelTopicProcessing bool                   `protobuf:"varint,4,opt,name=parallel_topic_processing,json=parallelTopicProcessing,proto3"`
+	unknownFields                      protoimpl.UnknownFields
+	sizeCache                          protoimpl.SizeCache
 }
 
 func (x *SubscribeMetadata) Reset() {
@@ -340,6 +341,13 @@ func (x *SubscribeMetadata) GetDeploymentId() int64 {
 	return 0
 }
 
+func (x *SubscribeMetadata) GetParallelTopicProcessing() bool {
+	if x != nil {
+		return x.xxx_hidden_ParallelTopicProcessing
+	}
+	return false
+}
+
 func (x *SubscribeMetadata) SetGroup(v string) {
 	x.xxx_hidden_Group = v
 }
@@ -352,13 +360,18 @@ func (x *SubscribeMetadata) SetDeploymentId(v int64) {
 	x.xxx_hidden_DeploymentId = v
 }
 
+func (x *SubscribeMetadata) SetParallelTopicProcessing(v bool) {
+	x.xxx_hidden_ParallelTopicProcessing = v
+}
+
 type SubscribeMetadata_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Group        string
 	SubscriberId string
 	// when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id.
-	DeploymentId int64
+	DeploymentId            int64
+	ParallelTopicProcessing bool
 }
 
 func (b0 SubscribeMetadata_builder) Build() *SubscribeMetadata {
@@ -368,6 +381,7 @@ func (b0 SubscribeMetadata_builder) Build() *SubscribeMetadata {
 	x.xxx_hidden_Group = b.Group
 	x.xxx_hidden_SubscriberId = b.SubscriberId
 	x.xxx_hidden_DeploymentId = b.DeploymentId
+	x.xxx_hidden_ParallelTopicProcessing = b.ParallelTopicProcessing
 	return m0
 }
 
@@ -377,6 +391,7 @@ type Handled struct {
 	xxx_hidden_Topic    string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
 	xxx_hidden_Error    string                 `protobuf:"bytes,3,opt,name=error,proto3"`
 	xxx_hidden_Retry    bool                   `protobuf:"varint,4,opt,name=retry,proto3"`
+	xxx_hidden_Stream   string                 `protobuf:"bytes,5,opt,name=stream,proto3"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -434,6 +449,13 @@ func (x *Handled) GetRetry() bool {
 	return false
 }
 
+func (x *Handled) GetStream() string {
+	if x != nil {
+		return x.xxx_hidden_Stream
+	}
+	return ""
+}
+
 func (x *Handled) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -450,6 +472,10 @@ func (x *Handled) SetRetry(v bool) {
 	x.xxx_hidden_Retry = v
 }
 
+func (x *Handled) SetStream(v string) {
+	x.xxx_hidden_Stream = v
+}
+
 type Handled_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
@@ -457,6 +483,7 @@ type Handled_builder struct {
 	Topic    string
 	Error    string
 	Retry    bool
+	Stream   string
 }
 
 func (b0 Handled_builder) Build() *Handled {
@@ -467,6 +494,7 @@ func (b0 Handled_builder) Build() *Handled {
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_Error = b.Error
 	x.xxx_hidden_Retry = b.Retry
+	x.xxx_hidden_Stream = b.Stream
 	return m0
 }
 
@@ -817,16 +845,18 @@ const file_streams_management_subscribe_proto_rawDesc = "" +
 	"\apayload\"l\n" +
 	"\tSubscribe\x12G\n" +
 	"\bmetadata\x18\x01 \x01(\v2+.freym.streams.management.SubscribeMetadataR\bmetadata\x12\x16\n" +
-	"\x06topics\x18\x02 \x03(\tR\x06topics\"s\n" +
+	"\x06topics\x18\x02 \x03(\tR\x06topics\"\xaf\x01\n" +
 	"\x11SubscribeMetadata\x12\x14\n" +
 	"\x05group\x18\x01 \x01(\tR\x05group\x12#\n" +
 	"\rsubscriber_id\x18\x02 \x01(\tR\fsubscriberId\x12#\n" +
-	"\rdeployment_id\x18\x03 \x01(\x03R\fdeploymentId\"h\n" +
+	"\rdeployment_id\x18\x03 \x01(\x03R\fdeploymentId\x12:\n" +
+	"\x19parallel_topic_processing\x18\x04 \x01(\bR\x17parallelTopicProcessing\"\x80\x01\n" +
 	"\aHandled\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +
 	"\x05error\x18\x03 \x01(\tR\x05error\x12\x14\n" +
-	"\x05retry\x18\x04 \x01(\bR\x05retry\"\xd8\x01\n" +
+	"\x05retry\x18\x04 \x01(\bR\x05retry\x12\x16\n" +
+	"\x06stream\x18\x05 \x01(\tR\x06stream\"\xd8\x01\n" +
 	"\x11SubscribeResponse\x12F\n" +
 	"\n" +
 	"subscribed\x18\x01 \x01(\v2$.freym.streams.management.SubscribedH\x00R\n" +

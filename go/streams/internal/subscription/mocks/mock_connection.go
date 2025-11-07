@@ -24,8 +24,13 @@ func (c *mockConnection) Close() {
 	c.Called()
 }
 
-func (c *mockConnection) Subscribe(ctx context.Context, groupId string, topics []string) error {
-	return c.Called(ctx, groupId, topics).Error(0)
+func (c *mockConnection) Subscribe(
+	ctx context.Context,
+	groupId string,
+	topics []string,
+	parallelTopicProcessing bool,
+) error {
+	return c.Called(ctx, groupId, topics, parallelTopicProcessing).Error(0)
 }
 
 func (c *mockConnection) EventHandled(
@@ -34,6 +39,7 @@ func (c *mockConnection) EventHandled(
 	topic string,
 	errorMessage string,
 	retry bool,
+	stream string,
 ) error {
-	return c.Called(ctx, tenantId, topic, errorMessage, retry).Error(0)
+	return c.Called(ctx, tenantId, topic, errorMessage, retry, stream).Error(0)
 }

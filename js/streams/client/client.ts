@@ -30,7 +30,11 @@ type LastEventCheck = (lastEvent: SubscriptionEvent | null) => boolean;
 export interface Client {
     close: () => void;
     publish: (topic: string, events: PublishEvent[]) => Promise<void>;
-    subscribe: (topics?: string[], ignoreUnhandledEvents?: boolean) => Subscription;
+    subscribe: (
+        topics?: string[],
+        ignoreUnhandledEvents?: boolean,
+        parallelTopicProcessing?: boolean
+    ) => Subscription;
     getEvent: (tenantId: string, topic: string, eventId: string) => Promise<SubscriptionEvent>;
     getLastEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
     getLastHandledEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
@@ -244,10 +248,15 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
                 },
             };
         },
-        subscribe: (topics: string[] = [], ignoreUnhandledEvents: boolean = false) => {
+        subscribe: (
+            topics: string[] = [],
+            ignoreUnhandledEvents: boolean = false,
+            parallelTopicProcessing: boolean = false
+        ) => {
             const subscription = newSubscription(
                 topics,
                 ignoreUnhandledEvents,
+                parallelTopicProcessing,
                 config,
                 serviceClient
             );

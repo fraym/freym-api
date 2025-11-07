@@ -31,13 +31,20 @@ func TestSubscriber_Ack(t *testing.T) {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 
-	subscriber := subscription.NewSubscriber(context.Background(), connection, endpoint, config, func(err error) {})
+	subscriber := subscription.NewSubscriber(
+		context.Background(),
+		connection,
+		endpoint,
+		config,
+		false,
+		func(err error) {},
+	)
 	ctx, cancel := context.WithCancel(context.Background())
 
-	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics).
+	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics, false).
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
-	connection.On("EventHandled", mock.Anything, expectedTenantId, expectedTopic, expectedError, false).
+	connection.On("EventHandled", mock.Anything, expectedTenantId, expectedTopic, expectedError, false, "").
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
 
@@ -45,6 +52,7 @@ func TestSubscriber_Ack(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
+			false,
 			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
 				assert.Equal(t, expectedTenantId, event.TenantId)
 				assert.Equal(t, expectedTopic, event.Topic)
@@ -95,10 +103,17 @@ func TestSubscriber_NotAck(t *testing.T) {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 
-	subscriber := subscription.NewSubscriber(context.Background(), connection, endpoint, config, func(err error) {})
+	subscriber := subscription.NewSubscriber(
+		context.Background(),
+		connection,
+		endpoint,
+		config,
+		false,
+		func(err error) {},
+	)
 	ctx, cancel := context.WithCancel(context.Background())
 
-	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics).
+	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics, false).
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
 
@@ -106,6 +121,7 @@ func TestSubscriber_NotAck(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
+			false,
 			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
 				return false, errors.New("test")
 			},
@@ -137,10 +153,17 @@ func TestSubscriber_Timeout(t *testing.T) {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 
-	subscriber := subscription.NewSubscriber(context.Background(), connection, endpoint, config, func(err error) {})
+	subscriber := subscription.NewSubscriber(
+		context.Background(),
+		connection,
+		endpoint,
+		config,
+		false,
+		func(err error) {},
+	)
 	ctx, cancel := context.WithCancel(context.Background())
 
-	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics).
+	connection.On("Subscribe", ctx, config.GroupId, expectedIncludedTopics, false).
 		Return(nil).
 		Run(func(args mock.Arguments) { wg.Done() })
 
@@ -148,6 +171,7 @@ func TestSubscriber_Timeout(t *testing.T) {
 		err := subscriber.Subscribe(
 			ctx,
 			expectedIncludedTopics,
+			false,
 			func(handleCtx context.Context, event *dto.SubscriptionEvent) (bool, error) {
 				<-handleCtx.Done()
 				return false, handleCtx.Err()

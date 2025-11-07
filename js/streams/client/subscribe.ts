@@ -22,6 +22,7 @@ export type Stream = ClientDuplexStream<SubscribeRequest, SubscribeResponse>;
 export const newSubscription = (
     topics: string[],
     ignoreUnhandledEvents: boolean,
+    parallelTopicProcessing: boolean,
     config: Required<ClientConfig>,
     serviceClient: ServiceClient
 ): Subscription => {
@@ -92,7 +93,9 @@ export const newSubscription = (
                     await globalHandler(event);
                 } else {
                     if (ignoreUnhandledEvents) {
-                        newStream.write(newHandledRequest(event.tenantId, event.topic));
+                        newStream.write(
+                            newHandledRequest(event.tenantId, event.topic, event.stream)
+                        );
                         return;
                     }
 
@@ -100,6 +103,7 @@ export const newSubscription = (
                         newHandledRequest(
                             event.tenantId,
                             event.topic,
+                            event.stream,
                             "no handlers for this event, maybe you forgot to register an event handler",
                             true
                         )
@@ -113,7 +117,13 @@ export const newSubscription = (
                 const errorMessage = err instanceof Error ? err.message : String(err);
 
                 newStream.write(
-                    newHandledRequest(event.tenantId, event.topic, errorMessage, shouldRetry)
+                    newHandledRequest(
+                        event.tenantId,
+                        event.topic,
+                        event.stream,
+                        errorMessage,
+                        shouldRetry
+                    )
                 );
 
                 throw err;
@@ -121,7 +131,7 @@ export const newSubscription = (
         };
         stream = newStream;
 
-        await initStream(topics, config, newStream);
+        await initStream(topics, config, parallelTopicProcessing, newStream);
 
         retries = 50;
         newStream.on("data", dataFn);
@@ -151,6 +161,7 @@ export const newSubscription = (
 export const initStream = async (
     topics: string[],
     config: Required<ClientConfig>,
+    parallelTopicProcessing: boolean,
     stream: Stream
 ): Promise<Stream> => {
     return new Promise<Stream>((resolve, reject) => {
@@ -162,6 +173,7 @@ export const initStream = async (
                         group: config.groupId,
                         subscriberId: uuid(),
                         deploymentId: config.deploymentId.toString(),
+                        parallelTopicProcessing,
                     },
                     topics,
                 },
@@ -187,6 +199,7 @@ export const initStream = async (
 const newHandledRequest = (
     tenantId: string,
     topic: string,
+    stream?: string,
     error?: string,
     retry?: boolean
 ): SubscribeRequest => {
@@ -196,6 +209,7 @@ const newHandledRequest = (
             handled: {
                 tenantId,
                 topic,
+                stream: stream ?? "",
                 error: error ?? "",
                 retry: retry ?? false,
             },

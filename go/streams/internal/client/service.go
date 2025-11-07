@@ -350,8 +350,22 @@ func (s *Service) GetLastEventByTypes(
 	return util.SubscriptionEventFromPb(response)
 }
 
-func (s *Service) NewSubscription(topics []string, ignoreUnhandledEvents bool, deploymentId int64) *Subscription {
-	return newSubscription(s.ctx, s.config, s.client, s.logger, topics, ignoreUnhandledEvents, deploymentId)
+func (s *Service) NewSubscription(
+	topics []string,
+	ignoreUnhandledEvents bool,
+	deploymentId int64,
+	parallelTopicProcessing bool,
+) *Subscription {
+	return newSubscription(
+		s.ctx,
+		s.config,
+		s.client,
+		s.logger,
+		topics,
+		ignoreUnhandledEvents,
+		deploymentId,
+		parallelTopicProcessing,
+	)
 }
 
 func (s *Service) Publish(ctx context.Context, topic string, events []*dto.PublishEvent) error {

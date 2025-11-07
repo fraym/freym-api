@@ -26,6 +26,7 @@ message SubscribeMetadata {
 	string subscriber_id = 2;
 	// when a deployment_id (!= 0) is provided the event will only be handled by subscriptions with a deployment_id that is equal or higher than the events deployment_id.
 	int64 deployment_id = 3;
+	bool parallel_topic_processing = 4;
 }
 
 message Handled {
@@ -33,6 +34,7 @@ message Handled {
 	string topic = 2;
 	string error = 3;
 	bool retry = 4;
+	string stream = 5;
 }
 
 
