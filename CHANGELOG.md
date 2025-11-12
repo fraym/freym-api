@@ -1,5 +1,9 @@
 # vNext
 
+# v0.50.1
+
+- (improvement) Better logging in streams connection
+
 # v0.50.0
 
 - (feature) Add `parallelTopicProcessing` option to streams client

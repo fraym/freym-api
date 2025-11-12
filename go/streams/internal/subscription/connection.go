@@ -103,6 +103,7 @@ loop:
 
 		go func() {
 			if err := handlerFn(response); err != nil {
+				c.logger.Debug().WithError(err).Write("handler function returned an error")
 				errChan <- err
 				return
 			}
