@@ -5,8 +5,8 @@ import "streams/management/event.proto";
 message BackchannelRequest {
 	oneof payload {
 		Event broadcast = 1;
-		BackchannelNotice notice = 2;
-		BackchannelTransactionDoneNotice handled = 3;
+		BackchannelNotice notice = 2; // deprecated
+		BackchannelTransactionDoneNotice transaction_done = 3;
 	}
 }
 
