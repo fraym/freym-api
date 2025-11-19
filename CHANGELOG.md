@@ -3,6 +3,7 @@
 # v0.49.7
 
 - (improvement) Better logging in streams connection
+- (improvement) Update all dependencies
 
 # v0.49.6
 
