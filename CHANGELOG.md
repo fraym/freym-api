@@ -1,5 +1,10 @@
 # vNext
 
+# v0.50.2
+
+- (improvement) Better logging in streams connection
+- (improvement) Update all dependencies
+
 # v0.50.1
 
 - (improvement) Better logging in streams connection

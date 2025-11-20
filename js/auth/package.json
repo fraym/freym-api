@@ -1,6 +1,6 @@
 {
     "name": "@fraym/auth",
-    "version": "0.50.1",
+    "version": "0.50.2",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -22,9 +22,9 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@fraym/proto": "^0.50.1",
-        "@grpc/grpc-js": "1.13.2",
-        "dotenv": "^17.2.2",
+        "@fraym/proto": "^0.50.2",
+        "@grpc/grpc-js": "^1.14.1",
+        "dotenv": "^17.2.3",
         "jose": "4.15.9"
     },
     "prettier": "@becklyn/prettier"

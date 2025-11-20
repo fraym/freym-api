@@ -1,6 +1,6 @@
 {
     "name": "@fraym/react",
-    "version": "0.50.1",
+    "version": "0.50.2",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -26,12 +26,12 @@
         "node": ">=20"
     },
     "dependencies": {
-        "@fraym/graphql": "^0.50.1",
+        "@fraym/graphql": "^0.50.2",
         "@urql/core": "^6.0.1"
     },
     "devDependencies": {
-        "@types/react": "^19.1.13",
-        "react": "^19.1.1"
+        "@types/react": "^19.2.6",
+        "react": "^19.2.0"
     },
     "peerDependencies": {
         "react": "^18.0.0 || ^19.0.0"
