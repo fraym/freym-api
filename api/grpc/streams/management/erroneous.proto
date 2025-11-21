@@ -7,6 +7,7 @@ message ListErroneousEventsRequest {
 	string topic = 2;
 	repeated string event_types = 3;
 	int64 limit = 4;
+	bool parallel_topic_processing = 5;
 }
 
 message ListErroneousEventsResponse {
@@ -24,6 +25,7 @@ message ResendErroneousEventRequest {
 	string topic = 2;
 	string consumer_group = 3;
 	string event_id = 4;
+	bool parallel_topic_processing = 5;
 }
 
 message ResendErroneousEventResponse {}

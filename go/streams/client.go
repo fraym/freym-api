@@ -21,7 +21,12 @@ type Client interface {
 	) *client.Subscription
 	GetEvent(ctx context.Context, tenantId string, topic string, eventId string) (*dto.SubscriptionEvent, error)
 	GetLastEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
-	GetLastHandledEvent(ctx context.Context, tenantId string, topic string) (*dto.SubscriptionEvent, error)
+	GetLastHandledEvent(
+		ctx context.Context,
+		tenantId string,
+		topic string,
+		parallelTopicProcessing bool,
+	) (*dto.SubscriptionEvent, error)
 	GetLastEventByTypes(
 		ctx context.Context,
 		tenantId string,
@@ -95,6 +100,7 @@ type Client interface {
 		topic string,
 		correlationId string,
 		consumerGroups []string,
+		parallelTopicProcessing bool,
 	) error
 	ListErroneousEvents(
 		ctx context.Context,
@@ -102,6 +108,7 @@ type Client interface {
 		topic string,
 		eventTypes []string,
 		limit int64,
+		parallelTopicProcessing bool,
 	) ([]*dto.ErroneousEvent, error)
 	ResendErroneousEvent(
 		ctx context.Context,
@@ -109,6 +116,7 @@ type Client interface {
 		topic string,
 		consumerGroup string,
 		eventId string,
+		parallelTopicProcessing bool,
 	) error
 }
 
@@ -256,8 +264,9 @@ func (c *streamsClient) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
+	parallelTopicProcessing bool,
 ) (*dto.SubscriptionEvent, error) {
-	return c.service.GetLastHandledEvent(ctx, tenantId, topic)
+	return c.service.GetLastHandledEvent(ctx, tenantId, topic, parallelTopicProcessing)
 }
 
 func (c *streamsClient) GetLastEventByTypes(
@@ -323,8 +332,16 @@ func (c *streamsClient) WaitForTransactionalConsistency(
 	topic string,
 	correlationId string,
 	consumerGroups []string,
+	parallelTopicProcessing bool,
 ) error {
-	return c.service.WaitForTransactionalConsistency(ctx, tenantId, topic, correlationId, consumerGroups)
+	return c.service.WaitForTransactionalConsistency(
+		ctx,
+		tenantId,
+		topic,
+		correlationId,
+		consumerGroups,
+		parallelTopicProcessing,
+	)
 }
 
 func (c *streamsClient) ListErroneousEvents(
@@ -333,8 +350,9 @@ func (c *streamsClient) ListErroneousEvents(
 	topic string,
 	eventTypes []string,
 	limit int64,
+	parallelTopicProcessing bool,
 ) ([]*dto.ErroneousEvent, error) {
-	return c.service.ListErroneousEvents(ctx, tenantId, topic, eventTypes, limit)
+	return c.service.ListErroneousEvents(ctx, tenantId, topic, eventTypes, limit, parallelTopicProcessing)
 }
 
 func (c *streamsClient) ResendErroneousEvent(
@@ -343,8 +361,9 @@ func (c *streamsClient) ResendErroneousEvent(
 	topic string,
 	consumerGroup string,
 	eventId string,
+	parallelTopicProcessing bool,
 ) error {
-	return c.service.ResendErroneousEvent(ctx, tenantId, topic, consumerGroup, eventId)
+	return c.service.ResendErroneousEvent(ctx, tenantId, topic, consumerGroup, eventId, parallelTopicProcessing)
 }
 
 func (c *streamsClient) Close() {

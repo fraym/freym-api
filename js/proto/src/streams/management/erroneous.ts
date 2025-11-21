@@ -12,6 +12,7 @@ export interface ListErroneousEventsRequest {
     topic: string;
     eventTypes: string[];
     limit: string;
+    parallelTopicProcessing: boolean;
 }
 
 export interface ListErroneousEventsResponse {
@@ -29,12 +30,13 @@ export interface ResendErroneousEventRequest {
     topic: string;
     consumerGroup: string;
     eventId: string;
+    parallelTopicProcessing: boolean;
 }
 
 export interface ResendErroneousEventResponse {}
 
 function createBaseListErroneousEventsRequest(): ListErroneousEventsRequest {
-    return { tenantId: "", topic: "", eventTypes: [], limit: "0" };
+    return { tenantId: "", topic: "", eventTypes: [], limit: "0", parallelTopicProcessing: false };
 }
 
 export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> = {
@@ -53,6 +55,9 @@ export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> 
         }
         if (message.limit !== "0") {
             writer.uint32(32).int64(message.limit);
+        }
+        if (message.parallelTopicProcessing !== false) {
+            writer.uint32(40).bool(message.parallelTopicProcessing);
         }
         return writer;
     },
@@ -96,6 +101,14 @@ export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> 
                     message.limit = reader.int64().toString();
                     continue;
                 }
+                case 5: {
+                    if (tag !== 40) {
+                        break;
+                    }
+
+                    message.parallelTopicProcessing = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -113,6 +126,9 @@ export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> 
                 ? object.eventTypes.map((e: any) => globalThis.String(e))
                 : [],
             limit: isSet(object.limit) ? globalThis.String(object.limit) : "0",
+            parallelTopicProcessing: isSet(object.parallelTopicProcessing)
+                ? globalThis.Boolean(object.parallelTopicProcessing)
+                : false,
         };
     },
 
@@ -130,6 +146,9 @@ export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> 
         if (message.limit !== "0") {
             obj.limit = message.limit;
         }
+        if (message.parallelTopicProcessing !== false) {
+            obj.parallelTopicProcessing = message.parallelTopicProcessing;
+        }
         return obj;
     },
 
@@ -142,6 +161,7 @@ export const ListErroneousEventsRequest: MessageFns<ListErroneousEventsRequest> 
         message.topic = object.topic ?? "";
         message.eventTypes = object.eventTypes?.map(e => e) || [];
         message.limit = object.limit ?? "0";
+        message.parallelTopicProcessing = object.parallelTopicProcessing ?? false;
         return message;
     },
 };
@@ -309,7 +329,13 @@ export const ErroneousEvent: MessageFns<ErroneousEvent> = {
 };
 
 function createBaseResendErroneousEventRequest(): ResendErroneousEventRequest {
-    return { tenantId: "", topic: "", consumerGroup: "", eventId: "" };
+    return {
+        tenantId: "",
+        topic: "",
+        consumerGroup: "",
+        eventId: "",
+        parallelTopicProcessing: false,
+    };
 }
 
 export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest> = {
@@ -328,6 +354,9 @@ export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest
         }
         if (message.eventId !== "") {
             writer.uint32(34).string(message.eventId);
+        }
+        if (message.parallelTopicProcessing !== false) {
+            writer.uint32(40).bool(message.parallelTopicProcessing);
         }
         return writer;
     },
@@ -371,6 +400,14 @@ export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest
                     message.eventId = reader.string();
                     continue;
                 }
+                case 5: {
+                    if (tag !== 40) {
+                        break;
+                    }
+
+                    message.parallelTopicProcessing = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -388,6 +425,9 @@ export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest
                 ? globalThis.String(object.consumerGroup)
                 : "",
             eventId: isSet(object.eventId) ? globalThis.String(object.eventId) : "",
+            parallelTopicProcessing: isSet(object.parallelTopicProcessing)
+                ? globalThis.Boolean(object.parallelTopicProcessing)
+                : false,
         };
     },
 
@@ -405,6 +445,9 @@ export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest
         if (message.eventId !== "") {
             obj.eventId = message.eventId;
         }
+        if (message.parallelTopicProcessing !== false) {
+            obj.parallelTopicProcessing = message.parallelTopicProcessing;
+        }
         return obj;
     },
 
@@ -417,6 +460,7 @@ export const ResendErroneousEventRequest: MessageFns<ResendErroneousEventRequest
         message.topic = object.topic ?? "";
         message.consumerGroup = object.consumerGroup ?? "";
         message.eventId = object.eventId ?? "";
+        message.parallelTopicProcessing = object.parallelTopicProcessing ?? false;
         return message;
     },
 };

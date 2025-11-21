@@ -97,8 +97,9 @@ func (c *MockClient) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
+	parallelTopicProcessing bool,
 ) (*dto.SubscriptionEvent, error) {
-	args := c.Called(ctx, tenantId, topic)
+	args := c.Called(ctx, tenantId, topic, parallelTopicProcessing)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -176,8 +177,9 @@ func (c *MockClient) WaitForTransactionalConsistency(
 	topic string,
 	correlationId string,
 	consumerGroups []string,
+	parallelTopicProcessing bool,
 ) error {
-	return c.Called(ctx, tenantId, topic, correlationId, consumerGroups).Error(0)
+	return c.Called(ctx, tenantId, topic, correlationId, consumerGroups, parallelTopicProcessing).Error(0)
 }
 
 func (c *MockClient) ListErroneousEvents(
@@ -186,8 +188,9 @@ func (c *MockClient) ListErroneousEvents(
 	topic string,
 	eventTypes []string,
 	limit int64,
+	parallelTopicProcessing bool,
 ) ([]*dto.ErroneousEvent, error) {
-	args := c.Called(ctx, tenantId, topic, eventTypes, limit)
+	args := c.Called(ctx, tenantId, topic, eventTypes, limit, parallelTopicProcessing)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -200,8 +203,9 @@ func (c *MockClient) ResendErroneousEvent(
 	topic string,
 	consumerGroup string,
 	eventId string,
+	parallelTopicProcessing bool,
 ) error {
-	return c.Called(ctx, tenantId, topic, consumerGroup, eventId).Error(0)
+	return c.Called(ctx, tenantId, topic, consumerGroup, eventId, parallelTopicProcessing).Error(0)
 }
 
 func (c *MockClient) Close() {

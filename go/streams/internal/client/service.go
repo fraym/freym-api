@@ -294,12 +294,14 @@ func (s *Service) GetLastHandledEvent(
 	ctx context.Context,
 	tenantId string,
 	topic string,
+	parallelTopicProcessing bool,
 ) (*dto.SubscriptionEvent, error) {
 	response, err := util.RetryWithResult(func() (*managementpb.Event, error) {
 		res, err := s.client.GetLastHandledEvent(ctx, managementpb.GetLastHandledEventRequest_builder{
-			TenantId: tenantId,
-			Topic:    topic,
-			Group:    s.config.GroupId,
+			TenantId:                tenantId,
+			Topic:                   topic,
+			Group:                   s.config.GroupId,
+			ParallelTopicProcessing: parallelTopicProcessing,
 		}.Build())
 		if err != nil {
 			if isLastEventNotFoundError(err) {
@@ -461,15 +463,17 @@ func (s *Service) WaitForTransactionalConsistency(
 	topic string,
 	correlationId string,
 	consumerGroups []string,
+	parallelTopicProcessing bool,
 ) error {
 	return util.Retry(func() error {
 		_, err := s.client.WaitForTransactionalConsistency(
 			ctx,
 			managementpb.WaitForTransactionalConsistencyRequest_builder{
-				TenantId:       tenantId,
-				Topic:          topic,
-				CorrelationId:  correlationId,
-				ConsumerGroups: consumerGroups,
+				TenantId:                tenantId,
+				Topic:                   topic,
+				CorrelationId:           correlationId,
+				ConsumerGroups:          consumerGroups,
+				ParallelTopicProcessing: parallelTopicProcessing,
 			}.Build(),
 		)
 		return err
@@ -482,13 +486,15 @@ func (s *Service) ListErroneousEvents(
 	topic string,
 	eventTypes []string,
 	limit int64,
+	parallelTopicProcessing bool,
 ) ([]*dto.ErroneousEvent, error) {
 	response, err := util.RetryWithResult(func() (*managementpb.ListErroneousEventsResponse, error) {
 		return s.client.ListErroneousEvents(ctx, managementpb.ListErroneousEventsRequest_builder{
-			TenantId:   tenantId,
-			Topic:      topic,
-			EventTypes: eventTypes,
-			Limit:      limit,
+			TenantId:                tenantId,
+			Topic:                   topic,
+			EventTypes:              eventTypes,
+			Limit:                   limit,
+			ParallelTopicProcessing: parallelTopicProcessing,
 		}.Build())
 	}, s.retryPause, 50)
 	if err != nil {
@@ -504,13 +510,15 @@ func (s *Service) ResendErroneousEvent(
 	topic string,
 	consumerGroup string,
 	eventId string,
+	parallelTopicProcessing bool,
 ) error {
 	return util.Retry(func() error {
 		_, err := s.client.ResendErroneousEvent(ctx, managementpb.ResendErroneousEventRequest_builder{
-			TenantId:      tenantId,
-			Topic:         topic,
-			EventId:       eventId,
-			ConsumerGroup: consumerGroup,
+			TenantId:                tenantId,
+			Topic:                   topic,
+			EventId:                 eventId,
+			ConsumerGroup:           consumerGroup,
+			ParallelTopicProcessing: parallelTopicProcessing,
 		}.Build())
 		return err
 	}, s.retryPause, 50)

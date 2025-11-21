@@ -1,6 +1,6 @@
 {
     "name": "@fraym/projections",
-    "version": "0.50.2",
+    "version": "0.50.3",
     "license": "MIT",
     "homepage": "https://github.com/fraym/freym-api",
     "repository": {
@@ -22,7 +22,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@fraym/proto": "^0.50.2",
+        "@fraym/proto": "^0.50.3",
         "@grpc/grpc-js": "^1.14.1",
         "dotenv": "^17.2.3"
     },

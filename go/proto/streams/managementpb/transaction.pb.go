@@ -21,13 +21,14 @@ const (
 )
 
 type WaitForTransactionalConsistencyRequest struct {
-	state                     protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId       string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic          string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_CorrelationId  string                 `protobuf:"bytes,3,opt,name=correlation_id,json=correlationId,proto3"`
-	xxx_hidden_ConsumerGroups []string               `protobuf:"bytes,4,rep,name=consumer_groups,json=consumerGroups,proto3"`
-	unknownFields             protoimpl.UnknownFields
-	sizeCache                 protoimpl.SizeCache
+	state                              protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId                string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic                   string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_CorrelationId           string                 `protobuf:"bytes,3,opt,name=correlation_id,json=correlationId,proto3"`
+	xxx_hidden_ConsumerGroups          []string               `protobuf:"bytes,4,rep,name=consumer_groups,json=consumerGroups,proto3"`
+	xxx_hidden_ParallelTopicProcessing bool                   `protobuf:"varint,5,opt,name=parallel_topic_processing,json=parallelTopicProcessing,proto3"`
+	unknownFields                      protoimpl.UnknownFields
+	sizeCache                          protoimpl.SizeCache
 }
 
 func (x *WaitForTransactionalConsistencyRequest) Reset() {
@@ -83,6 +84,13 @@ func (x *WaitForTransactionalConsistencyRequest) GetConsumerGroups() []string {
 	return nil
 }
 
+func (x *WaitForTransactionalConsistencyRequest) GetParallelTopicProcessing() bool {
+	if x != nil {
+		return x.xxx_hidden_ParallelTopicProcessing
+	}
+	return false
+}
+
 func (x *WaitForTransactionalConsistencyRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -99,13 +107,18 @@ func (x *WaitForTransactionalConsistencyRequest) SetConsumerGroups(v []string) {
 	x.xxx_hidden_ConsumerGroups = v
 }
 
+func (x *WaitForTransactionalConsistencyRequest) SetParallelTopicProcessing(v bool) {
+	x.xxx_hidden_ParallelTopicProcessing = v
+}
+
 type WaitForTransactionalConsistencyRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	TenantId       string
-	Topic          string
-	CorrelationId  string
-	ConsumerGroups []string
+	TenantId                string
+	Topic                   string
+	CorrelationId           string
+	ConsumerGroups          []string
+	ParallelTopicProcessing bool
 }
 
 func (b0 WaitForTransactionalConsistencyRequest_builder) Build() *WaitForTransactionalConsistencyRequest {
@@ -116,6 +129,7 @@ func (b0 WaitForTransactionalConsistencyRequest_builder) Build() *WaitForTransac
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_CorrelationId = b.CorrelationId
 	x.xxx_hidden_ConsumerGroups = b.ConsumerGroups
+	x.xxx_hidden_ParallelTopicProcessing = b.ParallelTopicProcessing
 	return m0
 }
 
@@ -194,12 +208,13 @@ var File_streams_management_transaction_proto protoreflect.FileDescriptor
 
 const file_streams_management_transaction_proto_rawDesc = "" +
 	"\n" +
-	"$streams/management/transaction.proto\x12\x18freym.streams.management\"\xab\x01\n" +
+	"$streams/management/transaction.proto\x12\x18freym.streams.management\"\xe7\x01\n" +
 	"&WaitForTransactionalConsistencyRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12%\n" +
 	"\x0ecorrelation_id\x18\x03 \x01(\tR\rcorrelationId\x12'\n" +
-	"\x0fconsumer_groups\x18\x04 \x03(\tR\x0econsumerGroups\"Y\n" +
+	"\x0fconsumer_groups\x18\x04 \x03(\tR\x0econsumerGroups\x12:\n" +
+	"\x19parallel_topic_processing\x18\x05 \x01(\bR\x17parallelTopicProcessing\"Y\n" +
 	"'WaitForTransactionalConsistencyResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05errorb\x06proto3"

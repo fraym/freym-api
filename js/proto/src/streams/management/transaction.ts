@@ -11,6 +11,7 @@ export interface WaitForTransactionalConsistencyRequest {
     topic: string;
     correlationId: string;
     consumerGroups: string[];
+    parallelTopicProcessing: boolean;
 }
 
 export interface WaitForTransactionalConsistencyResponse {
@@ -19,7 +20,13 @@ export interface WaitForTransactionalConsistencyResponse {
 }
 
 function createBaseWaitForTransactionalConsistencyRequest(): WaitForTransactionalConsistencyRequest {
-    return { tenantId: "", topic: "", correlationId: "", consumerGroups: [] };
+    return {
+        tenantId: "",
+        topic: "",
+        correlationId: "",
+        consumerGroups: [],
+        parallelTopicProcessing: false,
+    };
 }
 
 export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransactionalConsistencyRequest> =
@@ -39,6 +46,9 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             }
             for (const v of message.consumerGroups) {
                 writer.uint32(34).string(v!);
+            }
+            if (message.parallelTopicProcessing !== false) {
+                writer.uint32(40).bool(message.parallelTopicProcessing);
             }
             return writer;
         },
@@ -85,6 +95,14 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
                         message.consumerGroups.push(reader.string());
                         continue;
                     }
+                    case 5: {
+                        if (tag !== 40) {
+                            break;
+                        }
+
+                        message.parallelTopicProcessing = reader.bool();
+                        continue;
+                    }
                 }
                 if ((tag & 7) === 4 || tag === 0) {
                     break;
@@ -104,6 +122,9 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
                 consumerGroups: globalThis.Array.isArray(object?.consumerGroups)
                     ? object.consumerGroups.map((e: any) => globalThis.String(e))
                     : [],
+                parallelTopicProcessing: isSet(object.parallelTopicProcessing)
+                    ? globalThis.Boolean(object.parallelTopicProcessing)
+                    : false,
             };
         },
 
@@ -121,6 +142,9 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             if (message.consumerGroups?.length) {
                 obj.consumerGroups = message.consumerGroups;
             }
+            if (message.parallelTopicProcessing !== false) {
+                obj.parallelTopicProcessing = message.parallelTopicProcessing;
+            }
             return obj;
         },
 
@@ -137,6 +161,7 @@ export const WaitForTransactionalConsistencyRequest: MessageFns<WaitForTransacti
             message.topic = object.topic ?? "";
             message.correlationId = object.correlationId ?? "";
             message.consumerGroups = object.consumerGroups?.map(e => e) || [];
+            message.parallelTopicProcessing = object.parallelTopicProcessing ?? false;
             return message;
         },
     };

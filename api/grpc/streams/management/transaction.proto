@@ -6,6 +6,7 @@ message WaitForTransactionalConsistencyRequest {
 	string topic = 2;
 	string correlation_id = 3;
 	repeated string consumer_groups = 4;
+	bool parallel_topic_processing = 5;
 }
 
 message WaitForTransactionalConsistencyResponse {

@@ -177,12 +177,13 @@ func (b0 GetLastEventRequest_builder) Build() *GetLastEventRequest {
 }
 
 type GetLastHandledEventRequest struct {
-	state               protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic    string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_Group    string                 `protobuf:"bytes,3,opt,name=group,proto3"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                              protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId                string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic                   string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_Group                   string                 `protobuf:"bytes,3,opt,name=group,proto3"`
+	xxx_hidden_ParallelTopicProcessing bool                   `protobuf:"varint,4,opt,name=parallel_topic_processing,json=parallelTopicProcessing,proto3"`
+	unknownFields                      protoimpl.UnknownFields
+	sizeCache                          protoimpl.SizeCache
 }
 
 func (x *GetLastHandledEventRequest) Reset() {
@@ -231,6 +232,13 @@ func (x *GetLastHandledEventRequest) GetGroup() string {
 	return ""
 }
 
+func (x *GetLastHandledEventRequest) GetParallelTopicProcessing() bool {
+	if x != nil {
+		return x.xxx_hidden_ParallelTopicProcessing
+	}
+	return false
+}
+
 func (x *GetLastHandledEventRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -243,12 +251,17 @@ func (x *GetLastHandledEventRequest) SetGroup(v string) {
 	x.xxx_hidden_Group = v
 }
 
+func (x *GetLastHandledEventRequest) SetParallelTopicProcessing(v bool) {
+	x.xxx_hidden_ParallelTopicProcessing = v
+}
+
 type GetLastHandledEventRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	TenantId string
-	Topic    string
-	Group    string
+	TenantId                string
+	Topic                   string
+	Group                   string
+	ParallelTopicProcessing bool
 }
 
 func (b0 GetLastHandledEventRequest_builder) Build() *GetLastHandledEventRequest {
@@ -258,6 +271,7 @@ func (b0 GetLastHandledEventRequest_builder) Build() *GetLastHandledEventRequest
 	x.xxx_hidden_TenantId = b.TenantId
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_Group = b.Group
+	x.xxx_hidden_ParallelTopicProcessing = b.ParallelTopicProcessing
 	return m0
 }
 
@@ -922,11 +936,12 @@ const file_streams_management_event_proto_rawDesc = "" +
 	"\x02id\x18\x03 \x01(\tR\x02id\"H\n" +
 	"\x13GetLastEventRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
-	"\x05topic\x18\x02 \x01(\tR\x05topic\"e\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\"\xa1\x01\n" +
 	"\x1aGetLastHandledEventRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +
-	"\x05group\x18\x03 \x01(\tR\x05group\"e\n" +
+	"\x05group\x18\x03 \x01(\tR\x05group\x12:\n" +
+	"\x19parallel_topic_processing\x18\x04 \x01(\bR\x17parallelTopicProcessing\"e\n" +
 	"\x1aGetLastEventByTypesRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x14\n" +

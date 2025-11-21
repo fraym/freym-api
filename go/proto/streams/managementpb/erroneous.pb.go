@@ -21,13 +21,14 @@ const (
 )
 
 type ListErroneousEventsRequest struct {
-	state                 protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId   string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic      string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_EventTypes []string               `protobuf:"bytes,3,rep,name=event_types,json=eventTypes,proto3"`
-	xxx_hidden_Limit      int64                  `protobuf:"varint,4,opt,name=limit,proto3"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
+	state                              protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId                string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic                   string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_EventTypes              []string               `protobuf:"bytes,3,rep,name=event_types,json=eventTypes,proto3"`
+	xxx_hidden_Limit                   int64                  `protobuf:"varint,4,opt,name=limit,proto3"`
+	xxx_hidden_ParallelTopicProcessing bool                   `protobuf:"varint,5,opt,name=parallel_topic_processing,json=parallelTopicProcessing,proto3"`
+	unknownFields                      protoimpl.UnknownFields
+	sizeCache                          protoimpl.SizeCache
 }
 
 func (x *ListErroneousEventsRequest) Reset() {
@@ -83,6 +84,13 @@ func (x *ListErroneousEventsRequest) GetLimit() int64 {
 	return 0
 }
 
+func (x *ListErroneousEventsRequest) GetParallelTopicProcessing() bool {
+	if x != nil {
+		return x.xxx_hidden_ParallelTopicProcessing
+	}
+	return false
+}
+
 func (x *ListErroneousEventsRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -99,13 +107,18 @@ func (x *ListErroneousEventsRequest) SetLimit(v int64) {
 	x.xxx_hidden_Limit = v
 }
 
+func (x *ListErroneousEventsRequest) SetParallelTopicProcessing(v bool) {
+	x.xxx_hidden_ParallelTopicProcessing = v
+}
+
 type ListErroneousEventsRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	TenantId   string
-	Topic      string
-	EventTypes []string
-	Limit      int64
+	TenantId                string
+	Topic                   string
+	EventTypes              []string
+	Limit                   int64
+	ParallelTopicProcessing bool
 }
 
 func (b0 ListErroneousEventsRequest_builder) Build() *ListErroneousEventsRequest {
@@ -116,6 +129,7 @@ func (b0 ListErroneousEventsRequest_builder) Build() *ListErroneousEventsRequest
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_EventTypes = b.EventTypes
 	x.xxx_hidden_Limit = b.Limit
+	x.xxx_hidden_ParallelTopicProcessing = b.ParallelTopicProcessing
 	return m0
 }
 
@@ -275,13 +289,14 @@ func (b0 ErroneousEvent_builder) Build() *ErroneousEvent {
 }
 
 type ResendErroneousEventRequest struct {
-	state                    protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_TenantId      string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
-	xxx_hidden_Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
-	xxx_hidden_ConsumerGroup string                 `protobuf:"bytes,3,opt,name=consumer_group,json=consumerGroup,proto3"`
-	xxx_hidden_EventId       string                 `protobuf:"bytes,4,opt,name=event_id,json=eventId,proto3"`
-	unknownFields            protoimpl.UnknownFields
-	sizeCache                protoimpl.SizeCache
+	state                              protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_TenantId                string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3"`
+	xxx_hidden_Topic                   string                 `protobuf:"bytes,2,opt,name=topic,proto3"`
+	xxx_hidden_ConsumerGroup           string                 `protobuf:"bytes,3,opt,name=consumer_group,json=consumerGroup,proto3"`
+	xxx_hidden_EventId                 string                 `protobuf:"bytes,4,opt,name=event_id,json=eventId,proto3"`
+	xxx_hidden_ParallelTopicProcessing bool                   `protobuf:"varint,5,opt,name=parallel_topic_processing,json=parallelTopicProcessing,proto3"`
+	unknownFields                      protoimpl.UnknownFields
+	sizeCache                          protoimpl.SizeCache
 }
 
 func (x *ResendErroneousEventRequest) Reset() {
@@ -337,6 +352,13 @@ func (x *ResendErroneousEventRequest) GetEventId() string {
 	return ""
 }
 
+func (x *ResendErroneousEventRequest) GetParallelTopicProcessing() bool {
+	if x != nil {
+		return x.xxx_hidden_ParallelTopicProcessing
+	}
+	return false
+}
+
 func (x *ResendErroneousEventRequest) SetTenantId(v string) {
 	x.xxx_hidden_TenantId = v
 }
@@ -353,13 +375,18 @@ func (x *ResendErroneousEventRequest) SetEventId(v string) {
 	x.xxx_hidden_EventId = v
 }
 
+func (x *ResendErroneousEventRequest) SetParallelTopicProcessing(v bool) {
+	x.xxx_hidden_ParallelTopicProcessing = v
+}
+
 type ResendErroneousEventRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	TenantId      string
-	Topic         string
-	ConsumerGroup string
-	EventId       string
+	TenantId                string
+	Topic                   string
+	ConsumerGroup           string
+	EventId                 string
+	ParallelTopicProcessing bool
 }
 
 func (b0 ResendErroneousEventRequest_builder) Build() *ResendErroneousEventRequest {
@@ -370,6 +397,7 @@ func (b0 ResendErroneousEventRequest_builder) Build() *ResendErroneousEventReque
 	x.xxx_hidden_Topic = b.Topic
 	x.xxx_hidden_ConsumerGroup = b.ConsumerGroup
 	x.xxx_hidden_EventId = b.EventId
+	x.xxx_hidden_ParallelTopicProcessing = b.ParallelTopicProcessing
 	return m0
 }
 
@@ -420,24 +448,26 @@ var File_streams_management_erroneous_proto protoreflect.FileDescriptor
 
 const file_streams_management_erroneous_proto_rawDesc = "" +
 	"\n" +
-	"\"streams/management/erroneous.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\x86\x01\n" +
+	"\"streams/management/erroneous.proto\x12\x18freym.streams.management\x1a\x1estreams/management/event.proto\"\xc2\x01\n" +
 	"\x1aListErroneousEventsRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1f\n" +
 	"\vevent_types\x18\x03 \x03(\tR\n" +
 	"eventTypes\x12\x14\n" +
-	"\x05limit\x18\x04 \x01(\x03R\x05limit\"_\n" +
+	"\x05limit\x18\x04 \x01(\x03R\x05limit\x12:\n" +
+	"\x19parallel_topic_processing\x18\x05 \x01(\bR\x17parallelTopicProcessing\"_\n" +
 	"\x1bListErroneousEventsResponse\x12@\n" +
 	"\x06events\x18\x01 \x03(\v2(.freym.streams.management.ErroneousEventR\x06events\"\x84\x01\n" +
 	"\x0eErroneousEvent\x125\n" +
 	"\x05event\x18\x01 \x01(\v2\x1f.freym.streams.management.EventR\x05event\x12%\n" +
 	"\x0econsumer_group\x18\x02 \x01(\tR\rconsumerGroup\x12\x14\n" +
-	"\x05error\x18\x03 \x01(\tR\x05error\"\x92\x01\n" +
+	"\x05error\x18\x03 \x01(\tR\x05error\"\xce\x01\n" +
 	"\x1bResendErroneousEventRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12%\n" +
 	"\x0econsumer_group\x18\x03 \x01(\tR\rconsumerGroup\x12\x19\n" +
-	"\bevent_id\x18\x04 \x01(\tR\aeventId\"\x1e\n" +
+	"\bevent_id\x18\x04 \x01(\tR\aeventId\x12:\n" +
+	"\x19parallel_topic_processing\x18\x05 \x01(\bR\x17parallelTopicProcessing\"\x1e\n" +
 	"\x1cResendErroneousEventResponseb\x06proto3"
 
 var file_streams_management_erroneous_proto_msgTypes = make([]protoimpl.MessageInfo, 5)

@@ -21,6 +21,7 @@ export interface GetLastHandledEventRequest {
     tenantId: string;
     topic: string;
     group: string;
+    parallelTopicProcessing: boolean;
 }
 
 export interface GetLastEventByTypesRequest {
@@ -253,7 +254,7 @@ export const GetLastEventRequest: MessageFns<GetLastEventRequest> = {
 };
 
 function createBaseGetLastHandledEventRequest(): GetLastHandledEventRequest {
-    return { tenantId: "", topic: "", group: "" };
+    return { tenantId: "", topic: "", group: "", parallelTopicProcessing: false };
 }
 
 export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> = {
@@ -269,6 +270,9 @@ export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> 
         }
         if (message.group !== "") {
             writer.uint32(26).string(message.group);
+        }
+        if (message.parallelTopicProcessing !== false) {
+            writer.uint32(32).bool(message.parallelTopicProcessing);
         }
         return writer;
     },
@@ -304,6 +308,14 @@ export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> 
                     message.group = reader.string();
                     continue;
                 }
+                case 4: {
+                    if (tag !== 32) {
+                        break;
+                    }
+
+                    message.parallelTopicProcessing = reader.bool();
+                    continue;
+                }
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -318,6 +330,9 @@ export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> 
             tenantId: isSet(object.tenantId) ? globalThis.String(object.tenantId) : "",
             topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
             group: isSet(object.group) ? globalThis.String(object.group) : "",
+            parallelTopicProcessing: isSet(object.parallelTopicProcessing)
+                ? globalThis.Boolean(object.parallelTopicProcessing)
+                : false,
         };
     },
 
@@ -332,6 +347,9 @@ export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> 
         if (message.group !== "") {
             obj.group = message.group;
         }
+        if (message.parallelTopicProcessing !== false) {
+            obj.parallelTopicProcessing = message.parallelTopicProcessing;
+        }
         return obj;
     },
 
@@ -343,6 +361,7 @@ export const GetLastHandledEventRequest: MessageFns<GetLastHandledEventRequest> 
         message.tenantId = object.tenantId ?? "";
         message.topic = object.topic ?? "";
         message.group = object.group ?? "";
+        message.parallelTopicProcessing = object.parallelTopicProcessing ?? false;
         return message;
     },
 };

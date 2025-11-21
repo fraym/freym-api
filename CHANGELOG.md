@@ -1,5 +1,9 @@
 # vNext
 
+# v0.50.3
+
+- (bug) Add `parallelTopicProcessing` option to all event processing apis
+
 # v0.50.2
 
 - (improvement) Better logging in streams connection
