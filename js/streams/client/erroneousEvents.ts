@@ -6,6 +6,7 @@ export const listErroneousEvents = async (
     tenantId: string,
     topic: string,
     eventTypes: string[],
+    parallelTopicProcessing: boolean,
     limit: number,
     serviceClient: ServiceClient
 ) => {
@@ -17,6 +18,7 @@ export const listErroneousEvents = async (
                         tenantId,
                         topic,
                         eventTypes,
+                        parallelTopicProcessing,
                         limit: limit.toString(),
                     },
                     async (error, data) => {
@@ -47,6 +49,7 @@ export const resendErroneousEvent = async (
     topic: string,
     consumerGroup: string,
     eventId: string,
+    parallelTopicProcessing: boolean,
     serviceClient: ServiceClient
 ) => {
     return retry(
@@ -58,6 +61,7 @@ export const resendErroneousEvent = async (
                         topic,
                         consumerGroup,
                         eventId,
+                        parallelTopicProcessing,
                     },
                     async error => {
                         if (error) {

@@ -6,6 +6,7 @@ export const getLastHandledEvent = async (
     tenantId: string,
     topic: string,
     group: string,
+    parallelTopicProcessing: boolean,
     serviceClient: ServiceClient
 ) => {
     return retry(
@@ -16,6 +17,7 @@ export const getLastHandledEvent = async (
                         tenantId,
                         topic,
                         group,
+                        parallelTopicProcessing,
                     },
                     (error, response) => {
                         if (error?.details.includes("unable to find last handled event")) {

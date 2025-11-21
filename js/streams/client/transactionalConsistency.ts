@@ -6,6 +6,7 @@ export const waitForTransactionalConsistency = async (
     topic: string,
     correlationId: string,
     consumerGroups: string[],
+    parallelTopicProcessing: boolean,
     serviceClient: ServiceClient
 ) => {
     return retry(
@@ -17,6 +18,7 @@ export const waitForTransactionalConsistency = async (
                         topic,
                         correlationId,
                         consumerGroups,
+                        parallelTopicProcessing,
                     },
                     error => {
                         if (error) {

@@ -37,7 +37,11 @@ export interface Client {
     ) => Subscription;
     getEvent: (tenantId: string, topic: string, eventId: string) => Promise<SubscriptionEvent>;
     getLastEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
-    getLastHandledEvent: (tenantId: string, topic: string) => Promise<SubscriptionEvent | null>;
+    getLastHandledEvent: (
+        tenantId: string,
+        topic: string,
+        parallelTopicProcessing: boolean
+    ) => Promise<SubscriptionEvent | null>;
     getLastEventByTypes: (
         tenantId: string,
         topic: string,
@@ -85,19 +89,22 @@ export interface Client {
         tenantId: string,
         topic: string,
         correlationId: string,
-        consumerGroups: string[]
+        consumerGroups: string[],
+        parallelTopicProcessing: boolean
     ) => Promise<void>;
     listErroneousEvents: (
         tenantId: string,
         topic: string,
         eventTypes: string[],
+        parallelTopicProcessing: boolean,
         limit: number
     ) => Promise<ErroneousEvent[]>;
     resendErroneousEvent: (
         tenantId: string,
         topic: string,
         consumerGroup: string,
-        eventId: string
+        eventId: string,
+        parallelTopicProcessing: boolean
     ) => Promise<void>;
 }
 
@@ -147,8 +154,14 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
         getLastEvent: async (tenantId, topic) => {
             return await getLastEvent(tenantId, topic, serviceClient);
         },
-        getLastHandledEvent: async (tenantId, topic) => {
-            return await getLastHandledEvent(tenantId, topic, config.groupId, serviceClient);
+        getLastHandledEvent: async (tenantId, topic, parallelTopicProcessing) => {
+            return await getLastHandledEvent(
+                tenantId,
+                topic,
+                config.groupId,
+                parallelTopicProcessing,
+                serviceClient
+            );
         },
         getLastEventByTypes: async (tenantId, topic, types) => {
             return await getLastEventByTypes(tenantId, topic, types, serviceClient);
@@ -304,24 +317,51 @@ export const newClient = async (inputConfig: ClientConfig): Promise<Client> => {
         renameEventType: async (topic, oldEventType, newEventType) => {
             return await renameEventType(topic, oldEventType, newEventType, serviceClient);
         },
-        waitForTransactionalConsistency: async (tenantId, topic, correlationId, consumerGroups) => {
+        waitForTransactionalConsistency: async (
+            tenantId,
+            topic,
+            correlationId,
+            consumerGroups,
+            parallelTopicProcessing
+        ) => {
             return await waitForTransactionalConsistency(
                 tenantId,
                 topic,
                 correlationId,
                 consumerGroups,
+                parallelTopicProcessing,
                 serviceClient
             );
         },
-        listErroneousEvents: async (tenantId, topic, eventTypes, limit) => {
-            return await listErroneousEvents(tenantId, topic, eventTypes, limit, serviceClient);
+        listErroneousEvents: async (
+            tenantId,
+            topic,
+            eventTypes,
+            parallelTopicProcessing,
+            limit
+        ) => {
+            return await listErroneousEvents(
+                tenantId,
+                topic,
+                eventTypes,
+                parallelTopicProcessing,
+                limit,
+                serviceClient
+            );
         },
-        resendErroneousEvent: async (tenantId, topic, consumerGroup, eventId) => {
+        resendErroneousEvent: async (
+            tenantId,
+            topic,
+            consumerGroup,
+            eventId,
+            parallelTopicProcessing
+        ) => {
             return await resendErroneousEvent(
                 tenantId,
                 topic,
                 consumerGroup,
                 eventId,
+                parallelTopicProcessing,
                 serviceClient
             );
         },
